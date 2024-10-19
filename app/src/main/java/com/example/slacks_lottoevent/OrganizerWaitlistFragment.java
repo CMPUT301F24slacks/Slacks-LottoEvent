@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link OrganizerFirstFragment#newInstance} factory method to
+ * Use the {@link OrganizerWaitlistFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OrganizerFirstFragment extends Fragment {
+public class OrganizerWaitlistFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +24,7 @@ public class OrganizerFirstFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public OrganizerFirstFragment() {
+    public OrganizerWaitlistFragment() {
         // Required empty public constructor
     }
 
@@ -37,8 +37,8 @@ public class OrganizerFirstFragment extends Fragment {
      * @return A new instance of fragment OrganizerFirstFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static OrganizerFirstFragment newInstance(String param1, String param2) {
-        OrganizerFirstFragment fragment = new OrganizerFirstFragment();
+    public static OrganizerWaitlistFragment newInstance(String param1, String param2) {
+        OrganizerWaitlistFragment fragment = new OrganizerWaitlistFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,6 +59,6 @@ public class OrganizerFirstFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_organizer_first, container, false);
+        return inflater.inflate(R.layout.fragment_organizer_waitlist, container, false);
     }
 }
