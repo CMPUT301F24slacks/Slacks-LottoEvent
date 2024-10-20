@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_t"
+    app:startDestination="@id/OrganizerMyEvents">
+
+    <fragment
+        android:id="@+id/OrganizerMyEvents"
+        android:name="com.example.slacks_lottoevent.OrganizerMyEvents"
+        android:label="@string/manage_my_events"
+        tools:layout="@layout/fragment_organizer_manage_events">
+
+        <action
+            android:id="@+id/action_ManageEvents_to_CreateEvents"
+            app:destination="@id/OrganizerCreateEvent"/>
+    </fragment>
+    <fragment
+        android:id="@+id/OrganizerCreateEvent"
+        android:name="com.example.slacks_lottoevent.OrganizerCreateEvent"
+        android:label="Create Events"
+        tools:layout="@layout/fragment_organizer_create_events">
+
+        <action
+            android:id="@+id/action_CreateEvents_to_ManageEvents"
+            app:destination="@id/OrganizerMyEvents" />
+    </fragment>
+</navigation>

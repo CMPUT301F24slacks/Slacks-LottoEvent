@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
 
+//testing purposes
+import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
@@ -26,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = new Intent(MainActivity.this, OrganizerMainEventsPage.class);
+        startActivity(intent);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

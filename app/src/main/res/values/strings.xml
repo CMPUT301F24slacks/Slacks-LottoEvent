@@ -6,6 +6,11 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="myEvents">My Events</string>
+    <string name="look_at_my_events">Look At My Events</string>
+    <string name="manage_my_events">Manage My Events</string>
+    <string name="manage_my_facility">Manage My Facility</string>
+
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

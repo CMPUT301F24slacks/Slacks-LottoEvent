@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OrganizerCreateEvent">
+
+<!--    TODO: Implement Nav Bar and make sure you can still see tabs -->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="24dp"
+        android:textAlignment="center"
+        android:text="Create Events" />
+
+    <Button
+        android:id="@+id/manageEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="10dp"
+        android:text="&lt;--"
+        android:textSize="25sp"
+        android:padding="8dp"
+        android:minWidth="60dp"
+        android:minHeight="50dp" />
+</FrameLayout>
