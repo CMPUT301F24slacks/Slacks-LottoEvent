@@ -22,6 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".EventsHomeActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SlacksLottoEvent" />
         <activity android:name=".SignUpActivity"/>
     </application>
 

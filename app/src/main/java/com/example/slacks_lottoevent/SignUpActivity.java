@@ -13,14 +13,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.databinding.SignUpActivityBinding;
-import com.google.firebase.Firebase;
+
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 /*
 *
@@ -47,15 +48,13 @@ public class SignUpActivity extends AppCompatActivity {
     private String email;
     private String phoneNumber;
 
-    private DatabaseReference rootRef;
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         binding = SignUpActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         db = FirebaseFirestore.getInstance();
-        rootRef = FirebaseDatabase.getInstance().getReference();
+
         usersRef = db.collection("users");
 
         nameInput = binding.nameInput;
@@ -75,8 +74,8 @@ public class SignUpActivity extends AppCompatActivity {
                     // Inserting the info Device and DB
                     saveUserInfoToDevice();
                     saveUserInfoToFirebase();
-                    Intent homeIntent = new Intent(SignUpActivity.this, EventHomeActivity.class);
-                    startActivity(homeIntent);
+//                    Intent homeIntent = new Intent(SignUpActivity.this, EventHomeActivity.class);
+//                    startActivity(homeIntent);
                     finish(); // Closing the SignUpActivity to prevent any possible other Activity navigating back to it.
                 }
 
@@ -138,16 +137,20 @@ public class SignUpActivity extends AppCompatActivity {
         String phone = phoneInput.getText().toString().trim();
 
 
-        String uniqueKey = rootRef.child("users").push().getKey();
+        UUID uuid = UUID.fromString(UUID.randomUUID().toString());
         // Generating a Unique key so we can then push a User Object to the DB.
 
         User user = new User(name,phone,email);
-        Gson gson = new Gson();
-        String json = gson.toJson(user);
-        System.out.println(uniqueKey + "" + user);
 
-        usersRef.document(uniqueKey).set(json);
 
+        String userId = UUID.randomUUID().toString();
+        usersRef.document(userId).set(user)
+                .addOnSuccessListener(nothing -> {
+                    System.out.println("Added to DB");
+                })
+                .addOnFailureListener(nothing -> {
+                    System.out.println("failed");
+                });
 
 
     }

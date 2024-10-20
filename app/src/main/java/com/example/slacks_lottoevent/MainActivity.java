@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             Map<String, ?> userInfo = sharedPreferences.getAll();
 
             if (userInfo.containsKey("isSignedUp") && Objects.equals(userInfo.get("isSignedUp"), true)) {
-                Intent homeIntent = new Intent(MainActivity.this, EventHomeActivity.class);
+                Intent homeIntent = new Intent(MainActivity.this, EventsHomeActivity.class);
                 startActivity(homeIntent);
             } else {
                 System.out.println("We made it here!");
