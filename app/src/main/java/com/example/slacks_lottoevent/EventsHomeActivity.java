@@ -2,7 +2,10 @@ package com.example.slacks_lottoevent;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.ui.AppBarConfiguration;
 
@@ -26,6 +29,10 @@ public class EventsHomeActivity extends AppCompatActivity {
         toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
 
+
+        /*
+         * QR code scanner button, opens the QR code scanner.
+         */
         binding.qrCodeScannerFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,8 +41,22 @@ public class EventsHomeActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        /*
+         * Handle app bar title clicks here.
+         */
+        setSupportActionBar(toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(EventsHomeActivity.this, "Toolbar title clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
+    /*
+     * Inflate the menu; this adds items to the action bar if it is present.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -43,5 +64,24 @@ public class EventsHomeActivity extends AppCompatActivity {
         return true;
     }
 
+    /*
+     * Handle action bar item clicks here.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.profile) {
+            return true;
+        }
+        if (id == R.id.notifications) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 }
