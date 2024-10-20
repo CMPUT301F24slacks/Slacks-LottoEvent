@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="nav_bar_background">#6D6E75</color>
+    <color name="tab_background_selected">#3F3F46</color>
+    <color name="tab_background_unselected">#27272A</color>
+    <color name="tab_text_selected">#FFFFFF</color>
+    <color name="tab_text_unselected">#EC7CEE</color>
+    <color name="background">#18181B</color>
+    <color name="button_background">#7B24EB</color>
 </resources>

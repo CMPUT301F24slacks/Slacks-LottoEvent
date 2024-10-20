@@ -3,8 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.slacks_lottoevent.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/events_home"
         android:orderInCategory="100"
+        android:title="Events Home" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="101"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 </menu>
