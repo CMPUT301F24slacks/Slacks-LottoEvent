@@ -26,6 +26,7 @@
             android:name=".EventsHomeActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
+        <activity android:name=".SignUpActivity"/>
     </application>
 
 </manifest>
