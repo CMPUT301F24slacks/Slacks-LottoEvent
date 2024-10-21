@@ -1,20 +1,26 @@
 package com.example.slacks_lottoevent;
 
 public class Entrant {
-    EventList entrantEventList;
+    private final EventList waitlistedEvents;
+    private final EventList finalistEvents;
+    private final EventList invitedEvents;
 
-    public EventList getEntrantEventList() {
-        return entrantEventList;
+    public Entrant() {
+        this.waitlistedEvents = new EventList();
+        this.finalistEvents = new EventList();
+        this.invitedEvents = new EventList();
     }
 
-    public void setEntrantEventList(EventList entrantEventList) {
-        this.entrantEventList = entrantEventList;
+    public EventList getWaitlistedEvents() {
+        return waitlistedEvents;
     }
 
-    public Entrant(){
+    public EventList getFinalistEvents() {
+        return finalistEvents;
+    }
 
-        this.entrantEventList = new EventList();
-
+    public EventList getInvitedEvents() {
+        return invitedEvents;
     }
 
 }
