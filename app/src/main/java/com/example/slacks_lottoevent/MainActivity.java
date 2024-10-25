@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = new Intent(MainActivity.this, OrganizerMainEventsPage.class);
+        Intent intent = new Intent(MainActivity.this, OrganizerMainEventsPageAcitvity.class);
         startActivity(intent);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());

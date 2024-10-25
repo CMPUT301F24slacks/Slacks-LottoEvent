@@ -6,12 +6,9 @@ import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import com.google.android.material.tabs.TabLayout;
 
-public class OrganizerMainEventsPage extends AppCompatActivity {
+public class OrganizerMainEventsPageAcitvity extends AppCompatActivity {
     FrameLayout framelayout;
     TabLayout tabLayout;
 
@@ -23,29 +20,27 @@ public class OrganizerMainEventsPage extends AppCompatActivity {
         framelayout = (FrameLayout) findViewById(R.id.FrameLayout);
         tabLayout = (TabLayout) findViewById(R.id.tab_Layout);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, new OrganizerMyEvents())
-                .addToBackStack(null)
-                .commit();
-
+        // Set default activity on start
+        startActivity(new Intent(OrganizerMainEventsPageAcitvity.this, OrganizerManageEventsActivity.class));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Fragment selected_fragment = null;
+                Intent intent = null;
                 switch (tab.getPosition()){
                     case 0:
-                        selected_fragment = new OrganizerLookAtEvents();
+                        intent = new Intent(OrganizerMainEventsPageAcitvity.this, OrganizerLookAtEventsActivity.class);
                         break;
                     case 1:
-                        selected_fragment = new OrganizerMyEvents();
+                        intent = new Intent(OrganizerMainEventsPageAcitvity.this, OrganizerManageEventsActivity.class);
                         break;
                     case 2:
-                        selected_fragment = new OrganizerManageFacility();
+                        intent = new Intent(OrganizerMainEventsPageAcitvity.this, OrganizerManageFacilityActivity.class);
                         break;
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, selected_fragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .commit();
+                if (intent != null) {
+                    startActivity(intent);
+                }
             }
 
             @Override
@@ -60,3 +55,4 @@ public class OrganizerMainEventsPage extends AppCompatActivity {
         });
     }
 }
+
