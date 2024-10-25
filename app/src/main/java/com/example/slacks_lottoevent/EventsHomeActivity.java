@@ -12,6 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import com.example.slacks_lottoevent.databinding.ActivityEventsHomeBinding;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 
 public class EventsHomeActivity extends AppCompatActivity {
 
@@ -28,7 +29,6 @@ public class EventsHomeActivity extends AppCompatActivity {
 
         toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
-
 
         /*
          * QR code scanner button, opens the QR code scanner.

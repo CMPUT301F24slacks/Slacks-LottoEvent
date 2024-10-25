@@ -3,17 +3,13 @@ package com.example.slacks_lottoevent;
 import java.util.ArrayList;
 
 public class EventList {
-    ArrayList eventList;
+    ArrayList<Event> eventList;
 
-    public ArrayList getEventList() {
+    public EventList() {
+        this.eventList = new ArrayList<Event>();
+    }
+
+    public ArrayList<Event> getEventList() {
         return eventList;
-    }
-
-    public void setEventList(ArrayList eventList) {
-        this.eventList = eventList;
-    }
-
-    public EventList(){
-        this.eventList = new ArrayList<String>();
     }
 }
