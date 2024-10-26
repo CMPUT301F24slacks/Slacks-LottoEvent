@@ -6,7 +6,7 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
-
+    <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
@@ -41,6 +41,10 @@
 
 
         </activity>
+        <activity
+            android:name=".FullscreenQrScanner"
+            android:exported="true"
+            android:theme="@style/Theme.SlacksLottoEvent"/>
     </application>
 
 </manifest>
