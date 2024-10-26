@@ -12,4 +12,8 @@ public class EventList {
     public ArrayList<Event> getEventList() {
         return eventList;
     }
+
+    public void addEvent(Event event) {
+        eventList.add(event);
+    }
 }

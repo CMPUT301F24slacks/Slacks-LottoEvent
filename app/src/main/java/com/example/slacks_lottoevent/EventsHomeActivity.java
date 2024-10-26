@@ -36,12 +36,8 @@ public class EventsHomeActivity extends AppCompatActivity {
         TabLayout eventsTabs = findViewById(R.id.events_home_tab_layout); // Get the tab layout in EventsHomeActivity
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_events_home); // Get the navigation controller
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build(); // Build the app bar configuration
 
-
-        /*
-         * TODO:If my_events_tab is selected, display my_events_fragment.
-         */
         eventsTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -63,7 +59,6 @@ public class EventsHomeActivity extends AppCompatActivity {
                 // Do nothing
             }
         });
-
 
         /*
          * QR code scanner button, opens the QR code scanner.

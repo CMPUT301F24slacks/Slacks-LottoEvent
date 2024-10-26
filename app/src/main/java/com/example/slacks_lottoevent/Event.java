@@ -2,34 +2,34 @@ package com.example.slacks_lottoevent;
 
 public class Event {
 
-    private Organizer organizer;
+    private final Organizer organizer;
     private Facility facility;
     private String name;
     private String date;
     private String time;
-    private int waitlistCapacity;
+    private String description;
     private int capacity;
     private final EntrantList waitlisted;
     private final EntrantList finalists;
+    private final EntrantList unselected;
+    private final EntrantList invited;
 
-    public Event(Organizer organizer, Facility facility, String name, String date, String time, int waitlistCapacity, int capacity) {
+    public Event(Organizer organizer, Facility facility, String name, String date, String time, String description, int capacity) {
         this.organizer = organizer;
         this.facility = facility;
         this.name = name;
         this.date = date;
         this.time = time;
-        this.waitlistCapacity = waitlistCapacity;
+        this.description = description;
         this.capacity = capacity;
         this.waitlisted = new EntrantList();
         this.finalists = new EntrantList();
+        this.unselected = new EntrantList();
+        this.invited = new EntrantList();
     }
 
     public Organizer getOrganizer() {
         return organizer;
-    }
-
-    public void setOrganizer(Organizer organizer) {
-        this.organizer = organizer;
     }
 
     public Facility getFacility() {
@@ -64,12 +64,12 @@ public class Event {
         this.time = time;
     }
 
-    public int getWaitlistCapacity() {
-        return waitlistCapacity;
+    public String getDescription() {
+        return description;
     }
 
-    public void setWaitlistCapacity(int waitlistCapacity) {
-        this.waitlistCapacity = waitlistCapacity;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getCapacity() {
@@ -86,6 +86,14 @@ public class Event {
 
     public EntrantList getFinalists() {
         return finalists;
+    }
+
+    public EntrantList getUnselected() {
+        return unselected;
+    }
+
+    public EntrantList getInvited() {
+        return invited;
     }
 
 }

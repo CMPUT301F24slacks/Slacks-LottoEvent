@@ -5,9 +5,9 @@ public class Organizer {
     private Facility facility;
     private final EventList events;
 
-    public Organizer(Facility facility) {
-        this.facility = facility;
+    public Organizer() {
         this.events = new EventList();
+        this.facility = null;
     }
 
     public Facility getFacility() {
