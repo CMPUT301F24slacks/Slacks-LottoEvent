@@ -29,9 +29,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        Intent intent = new Intent(MainActivity.this, OrganizerMainEventsPageAcitvity.class);
-//        startActivity(intent);
         setContentView(R.layout.splash_activity);
 
         new Handler().postDelayed(() ->{

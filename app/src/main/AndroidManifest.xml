@@ -13,21 +13,11 @@
         android:theme="@style/Theme.SlacksLottoEvent"
         tools:targetApi="31">
         <activity
-            android:name=".OrganizerCreateEventActivity"
+            android:name=".CreateEvent"
             android:exported="false" />
         <activity
-            android:name=".OrganizerManageFacilityActivity"
-            android:exported="false" />
-        <activity
-            android:name=".OrganizerLookAtEventsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".OrganizerManageEventsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".OrganizerMainEventsPageAcitvity"
+            android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.SlacksLottoEvent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +29,7 @@
             android:name=".EventsHomeActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
-        <activity android:name=".SignUpActivity"/>
+        <activity android:name=".SignUpActivity" />
     </application>
 
 </manifest>
