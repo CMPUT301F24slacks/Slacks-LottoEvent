@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/MyEventsFragment">
 
     <fragment
         android:id="@+id/FirstFragment"
@@ -25,4 +25,25 @@
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/MyEventsFragment"
+        android:name="com.example.slacks_lottoevent.MyEventsFragment"
+        android:label="My Events Fragment"
+        tools:layout="@layout/fragment_my_events">
+
+        <action
+            android:id="@+id/action_MyEventsFragment_to_ManageMyEventsFragment"
+            app:destination="@id/ManageMyEventsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ManageMyEventsFragment"
+        android:name="com.example.slacks_lottoevent.ManageMyEventsFragment"
+        android:label="Manage My Events Fragment"
+        tools:layout="@layout/fragment_manage_my_events">
+
+        <action
+            android:id="@+id/action_ManageMyEventsFragment_to_MyEventsFragment"
+            app:destination="@id/MyEventsFragment" />
+    </fragment>
+
 </navigation>
