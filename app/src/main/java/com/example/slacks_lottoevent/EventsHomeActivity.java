@@ -44,9 +44,17 @@ public class EventsHomeActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getText().equals("My Events")) {
                     navController.navigate(R.id.MyEventsFragment);
+                    // show the QR code scanner button
+                    binding.qrCodeScannerFAB.setVisibility(View.VISIBLE);
+                    // hide the create event button
+                    binding.createEventFAB.setVisibility(View.GONE);
                 }
                 if (tab.getText().equals("Manage My Events")) {
                     navController.navigate(R.id.ManageMyEventsFragment);
+                    // hide the QR code scanner button
+                    binding.qrCodeScannerFAB.setVisibility(View.GONE);
+                    // show the create event button
+                    binding.createEventFAB.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -69,6 +77,17 @@ public class EventsHomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(EventsHomeActivity.this,EventQrScanner.class);
                 startActivity(intent);
+            }
+        });
+
+        /*
+         * TODO: Create event button. Organizers clicks this buttons to create an event.
+         */
+        binding.createEventFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // create event button
+                Toast.makeText(EventsHomeActivity.this, "Create Event Button Clicked", Toast.LENGTH_SHORT).show();
             }
         });
 
