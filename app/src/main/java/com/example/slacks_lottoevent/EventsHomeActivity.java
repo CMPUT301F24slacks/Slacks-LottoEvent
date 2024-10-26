@@ -1,5 +1,6 @@
 package com.example.slacks_lottoevent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,9 +37,8 @@ public class EventsHomeActivity extends AppCompatActivity {
         binding.qrCodeScannerFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAnchorView(R.id.qr_code_scanner_FAB)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(EventsHomeActivity.this,EventQrScanner.class);
+                startActivity(intent);
             }
         });
 

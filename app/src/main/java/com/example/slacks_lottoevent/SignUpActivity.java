@@ -18,7 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.gson.Gson;
+
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -74,8 +74,8 @@ public class SignUpActivity extends AppCompatActivity {
                     // Inserting the info Device and DB
                     saveUserInfoToDevice();
                     saveUserInfoToFirebase();
-//                    Intent homeIntent = new Intent(SignUpActivity.this, EventHomeActivity.class);
-//                    startActivity(homeIntent);
+                    Intent homeIntent = new Intent(SignUpActivity.this, EventsHomeActivity.class);
+                    startActivity(homeIntent);
                     finish(); // Closing the SignUpActivity to prevent any possible other Activity navigating back to it.
                 }
 
