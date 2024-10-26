@@ -36,7 +36,10 @@ android {
 }
 
 dependencies {
+    implementation(libs.activity)
+    val fragment_version = "1.6.1"
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+    implementation("com.google.code.gson:gson:2.11.0")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
@@ -45,4 +48,15 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("androidx.fragment:fragment:$fragment_version")
+//    implementation("androidx.navigation:navigation-fragment-ktx:2.8.3")
+//    implementation("androidx.navigation:navigation-ui-ktx:2.8.3")
+    implementation("androidx.navigation:navigation-ui:2.8.3")
+    implementation("androidx.navigation:navigation-fragment:2.8.3")
+//
+//    implementation ('androidx.navigation:navigation-fragment:2.3.0')
+//    implementation ('androidx.navigation:navigation-ui:2.3.0')
+
+    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+    implementation("com.google.firebase:firebase-firestore")
 }
