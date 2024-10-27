@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,12 +13,15 @@ import androidx.navigation.ui.AppBarConfiguration;
 import com.example.slacks_lottoevent.databinding.ActivityEventsHomeBinding;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 
 public class EventsHomeActivity extends AppCompatActivity {
 
     private ActivityEventsHomeBinding binding;
     private AppBarConfiguration appBarConfiguration;
     private MaterialToolbar toolbar;
+    private Button createFacilitiesButton;
+    private TabLayout eventTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,8 @@ public class EventsHomeActivity extends AppCompatActivity {
         toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
 
+        createFacilitiesButton = findViewById(R.id.create_facility_button);
+        eventTabLayout = findViewById(R.id.events_home_tab_layout);
 
         /*
          * QR code scanner button, opens the QR code scanner.
@@ -83,5 +89,8 @@ public class EventsHomeActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
 
 }
