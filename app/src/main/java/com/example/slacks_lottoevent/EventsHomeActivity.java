@@ -1,5 +1,6 @@
 package com.example.slacks_lottoevent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,7 +9,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.slacks_lottoevent.databinding.ActivityEventsHomeBinding;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -35,6 +39,40 @@ public class EventsHomeActivity extends AppCompatActivity {
 
         createFacilitiesButton = findViewById(R.id.create_facility_button);
         eventTabLayout = findViewById(R.id.events_home_tab_layout);
+        TabLayout eventsTabs = findViewById(R.id.events_home_tab_layout); // Get the tab layout in EventsHomeActivity
+
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_events_home); // Get the navigation controller
+        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build(); // Build the app bar configuration
+
+        eventsTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getText().equals("My Events")) {
+                    navController.navigate(R.id.MyEventsFragment);
+                    // show the QR code scanner button
+                    binding.qrCodeScannerFAB.setVisibility(View.VISIBLE);
+                    // hide the create event button
+                    binding.createEventFAB.setVisibility(View.GONE);
+                }
+                if (tab.getText().equals("Manage My Events")) {
+                    navController.navigate(R.id.ManageMyEventsFragment);
+                    // hide the QR code scanner button
+                    binding.qrCodeScannerFAB.setVisibility(View.GONE);
+                    // show the create event button
+                    binding.createEventFAB.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // Do nothing
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // Do nothing
+            }
+        });
 
         /*
          * QR code scanner button, opens the QR code scanner.
@@ -42,9 +80,19 @@ public class EventsHomeActivity extends AppCompatActivity {
         binding.qrCodeScannerFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAnchorView(R.id.qr_code_scanner_FAB)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(EventsHomeActivity.this,EventQrScanner.class);
+                startActivity(intent);
+            }
+        });
+
+        /*
+         * TODO: Create event button. Organizers clicks this buttons to create an event.
+         */
+        binding.createEventFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // create event button
+                Toast.makeText(EventsHomeActivity.this, "Create Event Button Clicked", Toast.LENGTH_SHORT).show();
             }
         });
 

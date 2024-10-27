@@ -18,13 +18,22 @@ public class Facility {
         this.country = country;
         this.postalCode = postalCode;
     }
+    private final Organizer organizer;
+    private String name;
+    private String address;
 
     public String getFacilityName() {
         return facilityName;
+    public Facility(Organizer organizer, String name, String address) {
+        this.organizer = organizer;
+        this.name = name;
+        this.address = address;
     }
 
     public void setFacilityName(String facilityName) {
         this.facilityName = facilityName;
+    public Organizer getOrganizer() {
+        return organizer;
     }
 
     public String getStreetAddress1() {
