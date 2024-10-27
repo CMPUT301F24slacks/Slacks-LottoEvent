@@ -32,8 +32,8 @@ public class MyEventsFragment extends Fragment {
 
         String tempDescription = "Join us for the Tech Innovators Summit 2024, where industry leaders, startups, and tech enthusiasts come together to explore the latest in AI, blockchain, cybersecurity, and more. Enjoy keynote talks, interactive workshops, and networking opportunities designed to inspire and connect innovators. Be part of the future of technology!";
         Organizer tempOrganizer = new Organizer();
-        Facility tempFacility = new Facility(tempOrganizer, "Facility Name", "111 9th St, Edmonton, Canada");
-        tempOrganizer.setFacility(tempFacility);
+        // Facility tempFacility = new Facility(tempOrganizer, "Facility Name", "111 9th St, Edmonton, Canada");
+        //tempOrganizer.setFacility(tempFacility);
         Event tempEvent = new Event(tempOrganizer, tempOrganizer.getFacility(), "Tech Innovators Summit 2024", "2024-01-23", "14:00-15:00", tempDescription, 1000);
         EventList tempEventList = new EventList();
         tempEventList.addEvent(tempEvent);

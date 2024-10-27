@@ -2,6 +2,7 @@ package com.example.slacks_lottoevent;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +20,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-public class EventsHomeActivity extends AppCompatActivity {
+public class EventsHomeActivity extends AppCompatActivity implements AddFacilityFragment.AddFacilityDialogListener {
 
     private ActivityEventsHomeBinding binding;
     private AppBarConfiguration appBarConfiguration;
@@ -38,6 +39,9 @@ public class EventsHomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         createFacilitiesButton = findViewById(R.id.create_facility_button);
+        // initially hide the button since it loads my events page first
+        createFacilitiesButton.setVisibility(View.GONE);
+
         eventTabLayout = findViewById(R.id.events_home_tab_layout);
         TabLayout eventsTabs = findViewById(R.id.events_home_tab_layout); // Get the tab layout in EventsHomeActivity
 
@@ -53,6 +57,8 @@ public class EventsHomeActivity extends AppCompatActivity {
                     binding.qrCodeScannerFAB.setVisibility(View.VISIBLE);
                     // hide the create event button
                     binding.createEventFAB.setVisibility(View.GONE);
+                    // hide the create facility button
+                    createFacilitiesButton.setVisibility(View.GONE);
                 }
                 if (tab.getText().equals("Manage My Events")) {
                     navController.navigate(R.id.ManageMyEventsFragment);
@@ -60,6 +66,9 @@ public class EventsHomeActivity extends AppCompatActivity {
                     binding.qrCodeScannerFAB.setVisibility(View.GONE);
                     // show the create event button
                     binding.createEventFAB.setVisibility(View.VISIBLE);
+                    // Show the create facility button
+
+                    createFacilitiesButton.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -106,6 +115,13 @@ public class EventsHomeActivity extends AppCompatActivity {
                 Toast.makeText(EventsHomeActivity.this, "Toolbar title clicked", Toast.LENGTH_SHORT).show();
             }
         });
+
+        createFacilitiesButton.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v){
+                new AddFacilityFragment().show(getSupportFragmentManager(), "Add Facility");
+            }
+        });
+
     }
 
     /*
@@ -139,6 +155,8 @@ public class EventsHomeActivity extends AppCompatActivity {
     }
 
 
-
-
+    @Override
+    public void addFacility(Facility facility) {
+        Log.d("hi", "made it here");
+    }
 }

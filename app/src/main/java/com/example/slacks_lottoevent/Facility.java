@@ -8,6 +8,7 @@ public class Facility {
     private String province;
     private String country;
     private String postalCode;
+    // private final Organizer organizer;
 
     public Facility(String facilityName, String streetAddress1, String streetAddress2, String city, String province, String country, String postalCode){
         this.facilityName = facilityName;
@@ -17,23 +18,15 @@ public class Facility {
         this.province = province;
         this.country = country;
         this.postalCode = postalCode;
+        //this.organizer = organizer;
     }
-    private final Organizer organizer;
-    private String name;
-    private String address;
 
     public String getFacilityName() {
         return facilityName;
-    public Facility(Organizer organizer, String name, String address) {
-        this.organizer = organizer;
-        this.name = name;
-        this.address = address;
     }
 
     public void setFacilityName(String facilityName) {
         this.facilityName = facilityName;
-    public Organizer getOrganizer() {
-        return organizer;
     }
 
     public String getStreetAddress1() {
@@ -63,6 +56,9 @@ public class Facility {
     public String getProvince() {
         return province;
     }
+//    public Organizer getOrganizer() {
+//        return organizer;
+//    }
 
     public void setProvince(String province) {
         this.province = province;
