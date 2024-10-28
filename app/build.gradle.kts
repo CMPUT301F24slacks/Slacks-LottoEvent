@@ -54,7 +54,7 @@ tasks.register<JavaExec>("generateJavadoc") {
         "-d", "$buildDir/docs/javadoc", // Output directory
         "-sourcepath", "src/main/java", // Source directory
         "-classpath", files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar").asPath,
-        "-subpackages", "com.example.yourpackage" // Replace with your package name
+        "-subpackages", "com.example.slacks_lottoevent" // Replace with your package name
     )
 
     // Set the classpath to include android.jar
