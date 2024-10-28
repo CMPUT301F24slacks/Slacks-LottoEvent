@@ -7,6 +7,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +18,9 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class OrganizerInvitedFragment extends Fragment {
+
+    private ListView listViewEntrantsInvited;
+    private ArrayList<String> dummyEntrants;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,7 +65,20 @@ public class OrganizerInvitedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_organizer_invited, container, false);
+        View view = inflater.inflate(R.layout.fragment_organizer_invited, container, false);
+
+        // Setup ListView
+        listViewEntrantsInvited = view.findViewById(R.id.listViewEntrantsInvited);
+
+        // Dummy data
+        dummyEntrants = new ArrayList<>();
+        dummyEntrants.add("Mike");
+        dummyEntrants.add("November");
+
+        // Adapter to populate ListView
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, dummyEntrants);
+        listViewEntrantsInvited.setAdapter(adapter);
+
+        return view;
     }
 }

@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".OrganizerEnrolledFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ListView
+        android:id="@+id/listViewEntrantsEnrolled"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="24dp"
-        android:textAlignment="center"
-        android:text="This is Enrolled" />
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:padding="16dp"/>
 
 </FrameLayout>
