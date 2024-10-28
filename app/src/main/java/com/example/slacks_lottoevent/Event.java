@@ -12,15 +12,16 @@ public class Event {
     private String description;
     private String price;
     private int capacity;
-    private int signupAcpt;
+    private int pplSelected;
     private String extraDesc;
     private final EntrantList waitlisted;
     private final EntrantList finalists;
     private final EntrantList unselected;
     private final EntrantList invited;
     private String qrCodeData;
+    private String eventID;
 
-    public Event(Organizer organizer, Facility facility, String name, String date, String time, String price, String description, int capacity, int signupAccpt, String xtraDesc, String qrData) {
+    public Event(Organizer organizer, Facility facility, String name, String date, String time, String price, String description, int pplSelected, int capacity, String xtraDesc, String qrData, String eventId) {
         this.organizer = organizer;
         this.facility = facility;
         this.name = name;
@@ -29,13 +30,14 @@ public class Event {
         this.price = price;
         this.description = description;
         this.capacity = capacity;
-        this.signupAcpt = signupAccpt;
+        this.pplSelected = pplSelected;
         this.extraDesc = xtraDesc;
         this.waitlisted = new EntrantList();
         this.finalists = new EntrantList();
         this.unselected = new EntrantList();
         this.invited = new EntrantList();
         this.qrCodeData = qrData;
+        this.eventID = eventId;
     }
 
     public Organizer getOrganizer() {
@@ -98,12 +100,12 @@ public class Event {
         this.capacity = capacity;
     }
 
-    public int getSignupAcpt() {
-        return signupAcpt;
+    public int getPplSelected() {
+        return pplSelected;
     }
 
-    public void setSignupAcpt(int signupAcpt) {
-        this.signupAcpt = signupAcpt;
+    public void setPplSelected(int pplSelected) {
+        this.pplSelected = pplSelected;
     }
 
     public String getQRData() {
@@ -112,6 +114,14 @@ public class Event {
 
     public void setQRData(String qrCodeData) {
         this.qrCodeData = qrCodeData;
+    }
+
+    public String getEventID() {
+        return eventID;
+    }
+
+    public void setEventID(String eventID) {
+        this.eventID = eventID;
     }
 
     public String getExtraDesc() {

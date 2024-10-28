@@ -91,15 +91,17 @@ public class ManageMyEventsFragment extends Fragment {
                                     String time = (String) eventDetails.get("time");
                                     String price = (String) eventDetails.get("price");
                                     String details = (String) eventDetails.get("description");
-                                    String hash = (String) eventDetails.get("qrdata");
+                                    String qrData = (String) eventDetails.get("qrdata");
                                     Long capacityLong = (Long) eventDetails.get("capacity");
                                     Integer capacity = (capacityLong != null) ? capacityLong.intValue() : 0; // Default value
 
                                     Long signupAcptLong = (Long) eventDetails.get("signupAcpt");
-                                    Integer signupAcpt = (signupAcptLong != null) ? signupAcptLong.intValue() : 0;
+                                    Integer pplAccpt = (signupAcptLong != null) ? signupAcptLong.intValue() : 0;
                                     String extraDesc = (String) eventDetails.get("extraDesc");
 
-                                    Event newEvent = new Event(organizer, facility, name, date, time, price, details, capacity, signupAcpt, extraDesc, hash);
+                                    String eventID = (String) eventDetails.get("eventid");
+
+                                    Event newEvent = new Event(organizer, facility, name, date, time, price, details, pplAccpt, capacity, extraDesc, qrData, eventID);
                                     eventList.add(newEvent);
                                     organzierEventArrayAdapter.notifyDataSetChanged();
                                     Log.d("EventSuccess", "Added to eventList!!");
