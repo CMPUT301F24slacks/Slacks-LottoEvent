@@ -2,6 +2,9 @@ package com.example.slacks_lottoevent;
 
 import com.google.zxing.common.BitMatrix;
 
+/**
+ * Event class that holds all the information for an event
+ */
 public class Event {
 
     private final Organizer organizer;
@@ -21,6 +24,21 @@ public class Event {
     private String qrCodeData;
     private String eventID;
 
+    /**
+     * Constructor for Event
+     * @param organizer
+     * @param facility
+     * @param name
+     * @param date
+     * @param time
+     * @param price
+     * @param description
+     * @param pplSelected
+     * @param capacity
+     * @param xtraDesc
+     * @param qrData
+     * @param eventId
+     */
     public Event(Organizer organizer, Facility facility, String name, String date, String time, String price, String description, int pplSelected, int capacity, String xtraDesc, String qrData, String eventId) {
         this.organizer = organizer;
         this.facility = facility;

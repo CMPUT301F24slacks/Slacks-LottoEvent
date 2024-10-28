@@ -23,6 +23,9 @@ import com.google.zxing.common.BitMatrix;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This activity is responsible for managing the events created by the organizer.
+ */
 public class ManageMyEventsFragment extends Fragment {
 
     private OrganzierEventArrayAdapter organzierEventArrayAdapter;

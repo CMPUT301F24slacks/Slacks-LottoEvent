@@ -21,10 +21,19 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Custom ArrayAdapter for displaying events in the OrganizerEventsActivity
+ */
 public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
     private Context context;
     private ArrayList<Event> events;
 
+    /**
+     * Constructor for the OrganzierEventArrayAdapter
+     *
+     * @param context The context of the activity
+     * @param events  The list of events to display
+     */
     public OrganzierEventArrayAdapter(@NonNull Context context, ArrayList<Event> events) {
         super(context, 0, events);
         this.context = context;
@@ -77,6 +86,13 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
         return convertView;
     }
 
+    /**
+     * Deserializes a BitMatrix from a string
+     *
+     * @param data The string to deserialize
+     * @return The deserialized BitMatrix
+     * @throws WriterException If the string cannot be deserialized
+     */
     private BitMatrix deserializeBitMatrix(String data) throws WriterException {
         String[] lines = data.split("\n");
         int width = lines[0].length();
