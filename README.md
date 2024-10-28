@@ -1,3 +1,3 @@
 # Slacks-LottoEvent
 
-https://CMPUT301F24slacks.github.io/Slacks-LottoEvent/javadoc/
+[Documentation](https://cmput301f24slacks.github.io/Slacks-LottoEvent/javadoc/)
