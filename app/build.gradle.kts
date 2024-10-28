@@ -53,30 +53,23 @@ afterEvaluate {
         // Set failOnError to false to prevent build failure on Javadoc errors
         isFailOnError = false
 
+        // Set the destination directory for the generated Javadoc
+        setDestinationDir(file("$buildDir/docs/javadoc"))
+
         doFirst {
             val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
 
             // Set the classpath to include Android boot classpath and runtime classpath
             classpath = files(
                 android.bootClasspath, // Android boot classpath
-                configurations.getByName("releaseRuntimeClasspath") // Runtime classpath for release build
+                configurations.getByName("releaseRuntimeClasspath"), // Runtime classpath for release build
+                androidJar
             )
             (options as StandardJavadocDocletOptions).addStringOption("-show-members", "package")
         }
 
         // Exclude generated files and unnecessary resources
         exclude("**/R.java", "**/BuildConfig.java", "**/Manifest.java")
-
-        // Set Javadoc options
-        options.encoding = "UTF-8"
-
-        // Suppress warnings for Java 11 and above
-        if (JavaVersion.current().isJava11Compatible) {
-            (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
-        }
-
-        // Set the destination directory for the generated Javadoc
-        setDestinationDir(file("$buildDir/docs/javadoc"))
     }
 }
 
