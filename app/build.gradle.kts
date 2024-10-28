@@ -39,27 +39,29 @@ android {
     }
 }
 
-// Set the destination directory for the generated Javadoc
-//setDestinationDir(file("$buildDir/docs/javadoc"))
-
-tasks.register<JavaExec>("generateJavadoc") {
+tasks.register<Javadoc>("generateJavadoc") {
     group = "documentation"
     description = "Generates Javadoc for the project."
 
-    // Specify the command to run Javadoc
-    mainClass.set("javadoc")
+    // Set the source directories
+    source = fileTree("src/main/java")
 
-    // Arguments for the Javadoc tool
-    args(
-        "-d", "$buildDir/docs/javadoc", // Output directory
-        "-sourcepath", "src/main/java", // Source directory
-        "-classpath", files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar").asPath,
-        "-subpackages", "com.example.slacks_lottoevent" // Replace with your package name
-    )
+    // Include android.jar in the classpath
+    classpath = files(
+        "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+    ) + files(android.sourceSets["main"].java.srcDirs)
 
-    // Set the classpath to include android.jar
-    classpath = files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
+    // Set the output directory
+    setDestinationDir(file("$buildDir/docs/javadoc"))
+
+    // Add additional options if needed
+    options.memberLevel = JavadocMemberLevel.PUBLIC
+    isFailOnError = false
+
+    // Add custom options
+    (options as StandardJavadocDocletOptions).addStringOption("subpackages", "com.example.slacks_lottoevent")
 }
+
 
 dependencies {
 //    implementation(files("C:/Users/dcui7/AppData/Local/Android/Sdk/platforms/android-34/android.jar"))
