@@ -84,14 +84,13 @@ public class EventsHomeActivity extends AppCompatActivity {
             }
         });
 
-        /*
-         * TODO: Create event button. Organizers clicks this buttons to create an event.
-         */
         binding.createEventFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // create event button
-                Toast.makeText(EventsHomeActivity.this, "Create Event Button Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(EventsHomeActivity.this, CreateEvent.class);
+                startActivity(intent);
+
             }
         });
 
