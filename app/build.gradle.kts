@@ -46,9 +46,8 @@ val androidJavadocs by tasks.registering(Javadoc::class) {
     // Convert each source directory to a FileTree and combine them
     source = android.sourceSets["main"].java.srcDirs.map { project.fileTree(it) }.reduce(FileTree::plus)
 
-    // Include all compile-time dependencies in the classpath
-    val compileClasspath = configurations["debugCompileClasspath"]
-    classpath += files(compileClasspath) + files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
+    // Include all runtime dependencies in the classpath
+    classpath += files(configurations["runtimeClasspath"]) + files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
 
     // Exclude unnecessary files from the generated Javadocs
     exclude("**/R.html", "**/R.*.html", "**/index.html")
@@ -56,6 +55,7 @@ val androidJavadocs by tasks.registering(Javadoc::class) {
     // Set the output directory for the generated Javadocs
     setDestinationDir(file("$rootDir/doc/javadoc"))
 }
+
 
 
 dependencies {
