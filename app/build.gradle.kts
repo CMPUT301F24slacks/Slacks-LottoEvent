@@ -35,6 +35,25 @@ android {
     }
 }
 
+android.applicationVariants.all { variant ->
+    task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+        description "Generate $variant.name Javadoc"
+
+        source = variant.javaCompile.source
+        destinationDir = file("$rootDir/doc/javadoc/")
+        // TODO: change to true
+        failOnError false
+
+        doFirst {
+            ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+
+            classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
+            options.addStringOption "-show-members", "package"
+        }
+        exclude '**/BuildConfig.java'
+    }
+}
+
 dependencies {
     implementation("com.google.guava:guava:31.0.1-android")
     implementation(libs.appcompat)
