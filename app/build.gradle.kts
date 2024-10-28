@@ -50,7 +50,7 @@ val androidJavadocs by tasks.registering(Javadoc::class) {
     exclude("**/R.html", "**/R.*.html", "**/index.html")
 
     // Set the output directory for the generated Javadocs
-    setDestinationDir(file("doc/javadoc"))
+    setDestinationDir(file("$rootDir/doc/javadoc"))
 }
 
 dependencies {
