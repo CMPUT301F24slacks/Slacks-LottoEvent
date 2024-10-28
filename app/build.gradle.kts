@@ -1,39 +1,13 @@
+import com.android.build.gradle.LibraryExtension
+import org.gradle.api.tasks.javadoc.Javadoc
+import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
+import org.gradle.external.javadoc.StandardJavadocDocletOptions
+
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
     id("org.jetbrains.dokka") version "1.8.10"
 }
-
-tasks.register<Javadoc>("generateJavadoc") {
-    description = "Generates Javadoc for the Java files in the Android project."
-
-    // Get the Android boot classpath (requires the Android Gradle plugin)
-    val androidBootClasspath = project.extensions.getByType<com.android.build.gradle.BaseExtension>().bootClasspath
-
-    // Set the source directories to Java sources only
-    val mainJavaSrcDirs = project.extensions.getByType<com.android.build.gradle.BaseExtension>()
-        .sourceSets.getByName("main").java.srcDirs
-
-    source = files(mainJavaSrcDirs).asFileTree
-
-    // Set the classpath to include project dependencies and Android SDK
-    classpath = files(androidBootClasspath) + files(sourceSets["main"].compileClasspath)
-
-    // Exclude generated files and unnecessary resources
-    exclude("**/R.java", "**/BuildConfig.java", "**/Manifest.java")
-
-    // Set Javadoc options
-    options.encoding = "UTF-8"
-
-    // Suppress warnings for Java 11 and above
-    if (JavaVersion.current().isJava11Compatible) {
-        (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
-    }
-
-    // Set the destination directory for the generated Javadoc
-    setDestinationDir(file("$buildDir/docs/javadoc"))
-}
-
 
 android {
     namespace = "com.example.slacks_lottoevent"
@@ -65,6 +39,38 @@ android {
     buildFeatures {
         viewBinding = true
     }
+}
+
+// Register Javadoc task for Android
+tasks.register<Javadoc>("generateJavadoc") {
+    description = "Generates Javadoc for Java files in the Android project."
+
+    val androidExtension = extensions.getByType<com.android.build.gradle.internal.dsl.BaseAppModuleExtension>()
+
+    // Get the Java source directories for the main source set
+    val mainJavaSrcDirs = androidExtension.sourceSets.getByName("main").java.srcDirs
+
+    source = files(mainJavaSrcDirs).asFileTree
+
+    // Set the classpath to include the Android boot classpath and runtime classpath
+    classpath = files(
+        androidExtension.bootClasspath, // Android boot classpath
+        configurations["releaseRuntimeClasspath"] // Runtime classpath for release build
+    )
+
+    // Exclude generated files
+    exclude("**/R.java", "**/BuildConfig.java", "**/Manifest.java")
+
+    // Set Javadoc options
+    options.encoding = "UTF-8"
+
+    // Suppress warnings for Java 11 and above
+    if (JavaVersion.current().isJava11Compatible) {
+        (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
+    }
+
+    // Set the destination directory for the generated Javadoc
+    setDestinationDir(file("$buildDir/docs/javadoc"))
 }
 
 dependencies {
