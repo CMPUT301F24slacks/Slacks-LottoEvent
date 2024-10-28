@@ -2,6 +2,7 @@ import com.android.build.gradle.LibraryExtension
 import org.gradle.api.tasks.javadoc.Javadoc
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import org.gradle.external.javadoc.StandardJavadocDocletOptions
+import java.net.URL
 
 plugins {
     alias(libs.plugins.android.application)
@@ -41,45 +42,22 @@ android {
     }
 }
 
-// Set the destination directory for the generated Javadoc
-//setDestinationDir(file("$buildDir/docs/javadoc"))
+tasks.dokkaHtml {
+    outputDirectory.set(file("$buildDir/docs/dokka"))
 
-afterEvaluate {
-    tasks.register<Javadoc>("generateJavadoc") {
-        description = "Generates Javadoc for Java files in the Android project."
+    dokkaSourceSets {
+        configureEach {
+            noAndroidSdkLink.set(false)
+            skipDeprecated.set(true)
+            reportUndocumented.set(true)
+            sourceRoots.from(file("src/main/java"))
+            sourceRoots.from(file("src/main/kotlin"))
 
-        // Set the Java source directories
-        val mainJavaSrcDirs = android.sourceSets.getByName("main").java.srcDirs
-        source = files(mainJavaSrcDirs).asFileTree
-
-        // Prevent build failure on Javadoc errors
-        isFailOnError = false
-
-        // Set the destination directory for Javadoc
-        setDestinationDir(file("$buildDir/docs/javadoc"))
-
-        doFirst {
-            val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-
-            // Include Android boot classpath and runtime dependencies
-            classpath = files(
-                android.bootClasspath, // Android boot classpath
-                configurations.getByName("releaseRuntimeClasspath"), // Runtime classpath
-                androidJar // Specific Android platform JAR
-            )
-
-            (options as StandardJavadocDocletOptions).apply {
-                addStringOption("-show-members", "package")
-                addStringOption("Xdoclint:none", "-quiet") // Suppress warnings
+            // Add external documentation links for Android SDK
+            externalDocumentationLink {
+                url.set(URL("https://developer.android.com/reference/"))
             }
         }
-
-        // Exclude generated files and unnecessary resources
-        exclude("**/R.java", "**/BuildConfig.java", "**/Manifest.java")
-
-        // Exclude classes that Javadoc cannot resolve
-        exclude("**/databinding/**", "**/Firebase**", "**/AppCompatActivity**", "**/Fragment**")
-
     }
 }
 
