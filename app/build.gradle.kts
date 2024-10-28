@@ -46,16 +46,13 @@ afterEvaluate {
     tasks.register<Javadoc>("generateJavadoc") {
         description = "Generates Javadoc for Java files in the Android project."
 
-        // Get the Android extension to access source sets and boot classpath
-        val androidExtension = extensions.getByName("android") as com.android.build.gradle.internal.dsl.BaseAppModuleExtension
-
-        // Get the Java source directories for the main source set
-        val mainJavaSrcDirs = androidExtension.sourceSets.getByName("main").java.srcDirs
+        // Access the Java source directories for the main source set
+        val mainJavaSrcDirs = android.sourceSets.getByName("main").java.srcDirs
         source = files(mainJavaSrcDirs).asFileTree
 
-        // Set the classpath to include the Android boot classpath and runtime classpath
+        // Set the classpath to include Android boot classpath and runtime classpath
         classpath = files(
-            androidExtension.bootClasspath, // Android boot classpath
+            android.bootClasspath, // Android boot classpath
             configurations.getByName("releaseRuntimeClasspath") // Runtime classpath for release build
         )
 
