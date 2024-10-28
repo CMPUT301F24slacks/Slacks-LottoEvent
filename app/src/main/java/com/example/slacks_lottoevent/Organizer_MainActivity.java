@@ -1,8 +1,11 @@
 package com.example.slacks_lottoevent;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -20,6 +23,8 @@ public class Organizer_MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organizer_main_activity);
 
+
+        //Set Up ArrayAdapter, do getUsername() for every user in said category, change it in the case-by-case tabLayout system
         Intent intent = getIntent();
         frameLayout = (FrameLayout) findViewById(R.id.FrameLayout);
         tabLayout = (TabLayout) findViewById(R.id.tab_Layout);
@@ -53,7 +58,14 @@ public class Organizer_MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+//                // Change the background color of the tab to white
+//                tab.view.setBackgroundColor(Color.WHITE);
+//
+//                // Change the text color of the tab to pink
+//                TextView tabTextView = (TextView) ((LinearLayout) tab.view).getChildAt(1);
+//                if (tabTextView != null) {
+//                    tabTextView.setTextColor(Color.parseColor("#FFC0CB")); // Pink color
+//                }
             }
 
             @Override

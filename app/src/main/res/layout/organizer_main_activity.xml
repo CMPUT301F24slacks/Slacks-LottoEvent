@@ -1,48 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:background="@color/black">
+
+    <FrameLayout
+        android:id="@+id/FrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp">
+
+    </FrameLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_Layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#075E53"
+        android:background="#27272A"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:tabIndicatorColor="@color/white"
-        app:tabSelectedTextColor="@color/white">
-        
+        app:tabSelectedTextColor="#EC7CEE"
+        tools:layout_editor_absoluteY="142dp">
+
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_Waitlist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Waitlist"/>
+            android:text="Waitlist" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_Invited"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Invited"/>
+            android:text="Invited" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_Cancelled"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancelled"/>
+            android:text="Cancelled" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_Enrolled"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Enrolled"/>
+            android:text="Enrolled" />
 
     </com.google.android.material.tabs.TabLayout>
-    
-    <FrameLayout
-        android:id="@+id/FrameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="16dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start"
+        android:layout_marginTop="20dp"
+        android:background="@color/black"
+        android:elevation="10dp"
+        android:src="@drawable/rectangle_shape"
+        app:layout_constraintStart_toStartOf="@+id/tab_Layout"
+        app:layout_constraintTop_toBottomOf="@+id/Notifications_Title" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="20dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/black"
+        android:elevation="10dp"
+        android:src="@drawable/rectangle_shape"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/Notifications_Title" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="20dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start"
+        android:layout_marginTop="20dp"
+        android:background="@color/black"
+        android:elevation="10dp"
+        android:src="@drawable/rectangle_shape"
+        app:layout_constraintTop_toBottomOf="@+id/Notifications_Title"
+        tools:layout_editor_absoluteX="101dp" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="20dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/black"
+        android:elevation="10dp"
+        android:src="@drawable/rectangle_shape"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/Notifications_Title" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="20dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start"
+        android:layout_marginTop="20dp"
+        android:background="@color/black"
+        android:elevation="10dp"
+        android:src="@drawable/rectangle_shape"
+        app:layout_constraintTop_toBottomOf="@+id/Notifications_Title"
+        tools:layout_editor_absoluteX="195dp" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="20dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/black"
+        android:elevation="10dp"
+        android:src="@drawable/rectangle_shape"
+        app:layout_constraintStart_toEndOf="@+id/imageView6"
+        app:layout_constraintTop_toBottomOf="@+id/Notifications_Title" />
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="20dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start"
+        android:layout_marginTop="20dp"
+        android:background="@color/black"
+        android:elevation="10dp"
+        android:src="@drawable/rectangle_shape"
+        app:layout_constraintTop_toBottomOf="@+id/Notifications_Title"
+        tools:layout_editor_absoluteX="308dp" />
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="20dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start"
+        android:layout_marginTop="20dp"
+        android:background="@color/black"
+        android:elevation="10dp"
+        android:src="@drawable/rectangle_shape"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/imageView8"
+        app:layout_constraintTop_toBottomOf="@+id/Notifications_Title" />
+
+    <TextView
+        android:id="@+id/Notifications_Title"
+        android:layout_width="331dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="64dp"
+        android:fontFamily="@font/inter_bold"
+        android:text="List of Entrants"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/mapButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/tab_Layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/Notifications_Title"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.714"
+        app:srcCompat="@android:drawable/ic_dialog_map" />
+
+    <ListView
+        android:id="@+id/EntrantsListView"
+        android:layout_width="409dp"
+        android:layout_height="513dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tab_Layout"
+        app:layout_constraintVertical_bias="1.0"></ListView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
