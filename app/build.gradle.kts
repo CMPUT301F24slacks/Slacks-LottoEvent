@@ -60,8 +60,6 @@ androidComponents {
 }
 
 dependencies {
-//    implementation(files("C:/Users/dcui7/AppData/Local/Android/Sdk/platforms/android-34/android.jar"))
-
     implementation("com.google.guava:guava:31.0.1-android")
     implementation(libs.appcompat)
     implementation(libs.material)
