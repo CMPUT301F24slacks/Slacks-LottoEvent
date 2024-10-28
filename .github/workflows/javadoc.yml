@@ -2,7 +2,7 @@ name: Generate Javadoc
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "YuHuaiCui-patch-1" ]
     paths-ignore:
       - 'doc/**'
 
