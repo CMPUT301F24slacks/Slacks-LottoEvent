@@ -1,5 +1,6 @@
 import org.gradle.api.tasks.javadoc.Javadoc
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
+import com.google.common.collect.FluentIterable.from
 import org.gradle.external.javadoc.StandardJavadocDocletOptions
 
 plugins {
@@ -39,30 +40,24 @@ android {
     }
 }
 
-tasks.register<Javadoc>("generateJavadoc") {
-    group = "documentation"
-    description = "Generates Javadoc for the project."
-
-    // Set the source directories
-    source = fileTree("src/main/java")
-
-    // Include android.jar in the classpath
-    classpath = files(
-        "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-    ) + files(android.sourceSets["main"].java.srcDirs)
-
-    // Set the output directory
-    setDestinationDir(file("$buildDir/docs/javadoc"))
-
-    // Add additional options if needed
-    options.memberLevel = JavadocMemberLevel.PUBLIC
+val androidJavadocs by tasks.registering(Javadoc::class) {
     isFailOnError = false
+    from(android.sourceSets["main"].java.srcDirs)
 
-    // Add custom options
-    (options as StandardJavadocDocletOptions).addStringOption("subpackages", "com.example.slacks_lottoevent")
+    val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+    classpath += files(androidJar)
+
+    exclude("**/R.html", "**/R.*.html", "**/index.html")
+
+    // Set the output directory for the generated Javadocs
+    setDestinationDir(file("build/doc/javadoc"))
 }
 
-
+val androidJavadocsJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+    dependsOn(androidJavadocs)
+    from(androidJavadocs.get().destinationDir)
+}
 dependencies {
 //    implementation(files("C:/Users/dcui7/AppData/Local/Android/Sdk/platforms/android-34/android.jar"))
 
