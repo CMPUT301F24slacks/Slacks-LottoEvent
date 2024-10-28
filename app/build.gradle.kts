@@ -1,13 +1,10 @@
-import com.android.build.gradle.LibraryExtension
 import org.gradle.api.tasks.javadoc.Javadoc
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import org.gradle.external.javadoc.StandardJavadocDocletOptions
-import java.net.URL
 
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
-    id("org.jetbrains.dokka") version "1.8.10"
 }
 
 android {
@@ -42,26 +39,31 @@ android {
     }
 }
 
-tasks.dokkaHtml {
-    outputDirectory.set(file("$buildDir/docs/dokka"))
+// Set the destination directory for the generated Javadoc
+//setDestinationDir(file("$buildDir/docs/javadoc"))
 
-    dokkaSourceSets {
-        configureEach {
-            noAndroidSdkLink.set(false)
-            skipDeprecated.set(true)
-            reportUndocumented.set(true)
-            sourceRoots.from(file("src/main/java"))
-            sourceRoots.from(file("src/main/kotlin"))
+tasks.register<JavaExec>("generateJavadoc") {
+    group = "documentation"
+    description = "Generates Javadoc for the project."
 
-            // Add external documentation links for Android SDK
-            externalDocumentationLink {
-                url.set(URL("https://developer.android.com/reference/"))
-            }
-        }
-    }
+    // Specify the command to run Javadoc
+    mainClass.set("javadoc")
+
+    // Arguments for the Javadoc tool
+    args(
+        "-d", "$buildDir/docs/javadoc", // Output directory
+        "-sourcepath", "src/main/java", // Source directory
+        "-classpath", files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar").asPath,
+        "-subpackages", "com.example.yourpackage" // Replace with your package name
+    )
+
+    // Set the classpath to include android.jar
+    classpath = files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
 }
 
 dependencies {
+//    implementation(files("C:/Users/dcui7/AppData/Local/Android/Sdk/platforms/android-34/android.jar"))
+
     implementation("com.google.guava:guava:31.0.1-android")
     implementation(libs.appcompat)
     implementation(libs.material)
