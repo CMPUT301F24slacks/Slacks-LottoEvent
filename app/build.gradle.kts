@@ -43,22 +43,22 @@ android {
 val androidJavadocs by tasks.registering(Javadoc::class) {
     isFailOnError = false
 
-    // Convert each source directory to a FileTree and combine them
-    source = android.sourceSets["main"].java.srcDirs.map { project.fileTree(it) }.reduce(FileTree::plus)
+    // Convert the FileCollection to a FileTree using asFileTree
+    source = files(
+        android.sourceSets["main"].java.srcDirs,
+        "$buildDir/generated/source/buildConfig/debug",
+        "$buildDir/generated/not_namespaced_r_class_sources/debug/r",
+        "$buildDir/generated/source/dataBinding/java/main",
+        "$buildDir/generated/source/kaptKotlin/debug"
+    ).asFileTree
 
-    // Include only project-specific classes in the classpath
-    val compileClasspath = configurations["debugCompileClasspath"]
-    classpath += files(compileClasspath) + files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
 
-    // Exclude AndroidX, Firebase, and other unnecessary packages from Javadoc
-    exclude(
-        "**/androidx/**",
-        "**/com/google/**",
-        "**/android/**",
-        "**/R.html",
-        "**/R.*.html",
-        "**/index.html"
-    )
+    // Include all compile-time dependencies
+    classpath += files(android.bootClasspath.joinToString(File.pathSeparator))
+    classpath += configurations["debugCompileClasspath"]
+
+    // Exclude unwanted packages from the Javadoc output
+    exclude("**/androidx/**", "**/com/google/**", "**/android/**")
 
     // Set the output directory for the generated Javadocs
     setDestinationDir(file("$rootDir/doc/javadoc"))
