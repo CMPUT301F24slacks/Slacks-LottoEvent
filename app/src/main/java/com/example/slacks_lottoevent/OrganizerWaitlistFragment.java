@@ -76,8 +76,8 @@ public class OrganizerWaitlistFragment extends Fragment {
         dummyEntrants.add("Delta");
         dummyEntrants.add("Echo");
 
-        // Adapter to populate ListView
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, dummyEntrants);
+        // Adapter to populate ListView with custom layout
+        EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), dummyEntrants);
         listViewEntrantsWaitlisted.setAdapter(adapter);
 
         return view;

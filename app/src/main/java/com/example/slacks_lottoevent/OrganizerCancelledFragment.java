@@ -84,7 +84,7 @@ public class OrganizerCancelledFragment extends Fragment {
         dummyEntrants.add("Charlie");
 
         // Adapter to populate ListView
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, dummyEntrants);
+        EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), dummyEntrants);
         listViewEntrantsCancelled.setAdapter(adapter);
 
         // The button will be replaced by the list modification functionality
@@ -95,6 +95,8 @@ public class OrganizerCancelledFragment extends Fragment {
         return view;
     }
 
+    // TODO: If an entrantName cancelled their selection/enrollment:
+    //Note: Will have to enable app notifications for slacks-lotto from the settings in the emulator
     private void showCancellationNotification(String entrantName) {
         NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         String channelId = "cancellation_channel";
@@ -108,11 +110,14 @@ public class OrganizerCancelledFragment extends Fragment {
         Notification notification = new NotificationCompat.Builder(getContext(), channelId)
                 .setContentTitle("Entrant Cancellation")
                 .setContentText(entrantName + " has cancelled their entry.")
-                .setSmallIcon(android.R.drawable.btn_star_big_on)
+                .setSmallIcon(android.R.drawable.ic_popup_reminder)
                 .build();
 
         notificationManager.notify(1, notification);
     }
+
+    // TODO: another button for re-selection from organizer part
+
 }
 
 

@@ -77,7 +77,7 @@ public class OrganizerEnrolledFragment extends Fragment {
         dummyEntrants.add("Hector");
 
         // Adapter to populate ListView
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, dummyEntrants);
+        EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), dummyEntrants);
         listViewEntrantsEnrolled.setAdapter(adapter);
 
         return view;

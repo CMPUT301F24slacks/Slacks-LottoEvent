@@ -76,7 +76,7 @@ public class OrganizerInvitedFragment extends Fragment {
         dummyEntrants.add("November");
 
         // Adapter to populate ListView
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, dummyEntrants);
+        EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), dummyEntrants);
         listViewEntrantsInvited.setAdapter(adapter);
 
         return view;
