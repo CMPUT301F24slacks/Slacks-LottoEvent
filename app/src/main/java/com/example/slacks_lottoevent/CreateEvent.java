@@ -1,40 +1,33 @@
 package com.example.slacks_lottoevent;
 
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
+
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
-import com.example.slacks_lottoevent.databinding.SignUpActivityBinding;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.WriterException;
+import com.google.zxing.qrcode.QRCodeWriter;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class CreateEvent extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private ActivityCreateEventBinding binding;
-
-    private EditText eventName;
-    private EditText eventDate;
-    private EditText eventTime;
-    private EditText eventPrice;
-    private EditText eventDetails;
-    private EditText inputpeopleAccepted;
-    private EditText entrantsAccepted;
-    private EditText extraDetails;
 
     private String name;
     private String date;
@@ -44,10 +37,7 @@ public class CreateEvent extends AppCompatActivity {
     private String xtrDetails;
     private Integer pplAccpt;
     private Integer entrantsAccpt;
-
-
-
-
+    ImageView eventPoster;
 
 
     @Override
@@ -60,41 +50,26 @@ public class CreateEvent extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
 
-
 //        Cancel Button
         Button cancel = findViewById(R.id.cancelBtn);
         cancel.setOnClickListener(v -> finish());
 
-
 //        Create Button
-
         Button create = findViewById(R.id.createBtn);
-
         create.setOnClickListener(v -> {
             if (validateInputs()) {
                 createEvent();
+                finish();
             }
         });
-
-//        if(validateInputs()){
-//            Toast.makeText(SignUpActivity.this,"Sign-Up Successful",Toast.LENGTH_SHORT).show();
-//
-//            // Inserting the info Device and DB
-//            saveUserInfoToDevice();
-//            saveUserInfoToFirebase();
-////                    Intent homeIntent = new Intent(SignUpActivity.this, EventHomeActivity.class);
-////                    startActivity(homeIntent);
-//            finish(); // Closing the SignUpActivity to prevent any possible other Activity navigating back to it.
-//        }
-
     }
 
     private boolean validateInputs() {
-        String name = binding.eventName.getText().toString().trim();
-        String date = binding.eventDate.getText().toString().trim();
-        String time = binding.eventTime.getText().toString().trim();
-        String price = binding.eventPrice.getText().toString().trim();
-        String details = binding.eventDetails.getText().toString().trim();
+        name = binding.eventName.getText().toString().trim();
+        date = binding.eventDate.getText().toString().trim();
+        time = binding.eventTime.getText().toString().trim();
+        price = binding.eventPrice.getText().toString().trim();
+        details = binding.eventDetails.getText().toString().trim();
         String pplAccpt = binding.noPeopleAccpt.getText().toString().trim();
         String entrantsAccpt = binding.noEntratAccpt.getText().toString().trim();
 
@@ -111,7 +86,7 @@ public class CreateEvent extends AppCompatActivity {
             return false;
         }
 
-        if (!isValidDate(date)){
+        if (!isValidDate(date)) {
             binding.eventTime.setError("Event date needs to be in MM/DD/YY format");
             binding.eventTime.requestFocus();
             return false;
@@ -123,7 +98,7 @@ public class CreateEvent extends AppCompatActivity {
             binding.eventTime.requestFocus();
             return false;
         }
-        if (!isValidTimeFormat(time)){
+        if (!isValidTimeFormat(time)) {
             binding.eventTime.setError("Event time needs to be in hh:mm format");
             binding.eventTime.requestFocus();
             return false;
@@ -154,11 +129,11 @@ public class CreateEvent extends AppCompatActivity {
             return false;
         }
 
-//        if (TextUtils.isEmpty(entrantsAccpt)) {
-//            entrantsAccpt = null;
-//        } else {
-//            entrantsAccpt = String.valueOf(Integer.parseInt(entrantsAccpt));
-//        }
+        if (TextUtils.isEmpty(entrantsAccpt)) {
+            entrantsAccpt = "0";
+        } else {
+            entrantsAccpt = String.valueOf(Integer.parseInt(entrantsAccpt));
+        }
         return true;
     }
 
@@ -189,33 +164,75 @@ public class CreateEvent extends AppCompatActivity {
     }
 
     private void createEvent() {
-        String name = binding.eventName.getText().toString().trim();
-        String date = binding.eventDate.getText().toString().trim();
-        String time = binding.eventTime.getText().toString().trim();
-        String price = binding.eventPrice.getText().toString().trim();
-        String details = binding.eventDetails.getText().toString().trim();
+        name = binding.eventName.getText().toString().trim();
+        date = binding.eventDate.getText().toString().trim();
+        time = binding.eventTime.getText().toString().trim();
+        price = binding.eventPrice.getText().toString().trim();
+        details = binding.eventDetails.getText().toString().trim();
+        xtrDetails = binding.extraDetails.getText().toString().trim();
+//        Gets the amount of people that can get put on the waitlist
+        pplAccpt = Integer.valueOf(binding.noPeopleAccpt.getText().toString().trim());
+//        Number of entrants actually chosen on the waitlist
+        entrantsAccpt = Integer.valueOf(binding.noEntratAccpt.getText().toString().trim());
 
 //        unique one
+        String eventId = UUID.randomUUID().toString();
 
-        HashMap<String, Object> event = new HashMap<>();
-        event.put("name", name);
-        event.put("date", date);
-        event.put("time", time);
-        event.put("price", price);
-        event.put("details", details);
+        Organizer organizer = new Organizer();
+        Facility facility = new Facility(organizer, "Facility Name", "2021 95th St SW");
 
-        eventsRef.add(event)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
-                    generateQRCode(documentReference.getId()); // Generate QR code with the document ID
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(CreateEvent.this, "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+//        QR Code Creation
+
+        QRCodeWriter writer = new QRCodeWriter();
+        try {
+            BitMatrix bitMatrix = writer.encode(eventId, BarcodeFormat.QR_CODE, 300, 300);
+            String hash = serializeBitMatrix(bitMatrix);
+
+            Event event = new Event(organizer, facility, name, date, time, price, details, entrantsAccpt, pplAccpt, xtrDetails, hash);
+
+            HashMap<String, Object> eventData = new HashMap<>();
+            eventData.put("eventId", eventId);
+            eventData.put("eventDetails",event);
+
+            eventsRef.document(eventId).set(eventData)
+                    .addOnSuccessListener(nothing -> {
+                        System.out.println("Added to DB");
+                        Toast.makeText(CreateEvent.this, "Event created successfully", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(nothing -> {
+                        System.out.println("failed");
+                        Toast.makeText(CreateEvent.this, "Failed to create event", Toast.LENGTH_SHORT).show();
+                    });
+
+        } catch (WriterException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    private String generateHash(String data) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256"); // or any hashing algorithm
+            byte[] hashBytes = digest.digest(data.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-
-
+    private String serializeBitMatrix(BitMatrix bitMatrix) {
+        StringBuilder sb = new StringBuilder();
+        for (int y = 0; y < bitMatrix.getHeight(); y++) {
+            for (int x = 0; x < bitMatrix.getWidth(); x++) {
+                sb.append(bitMatrix.get(x, y) ? '1' : '0'); // Use '1' for black and '0' for white
+            }
+            sb.append('\n'); // New line for each row
+        }
+        return sb.toString();
+    }
 }

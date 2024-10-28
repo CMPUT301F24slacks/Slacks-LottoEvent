@@ -58,4 +58,8 @@ dependencies {
     implementation(libs.zxing.android.embedded.v410)
     implementation(libs.core)
 
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    implementation("androidx.multidex:multidex:2.0.1")
+
 }
