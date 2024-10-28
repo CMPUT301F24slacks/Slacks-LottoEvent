@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.slacks_lottoevent"},{"l":"com.example.slacks_lottoevent.databinding"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.slacks_lottoevent"},{"l":"com.example.slacks_lottoevent.databinding"},{"l":"com.example.slacks_lottoevent.placeholder"}];updateSearchResults();
