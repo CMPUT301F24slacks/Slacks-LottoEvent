@@ -1,6 +1,4 @@
 import org.gradle.api.tasks.javadoc.Javadoc
-import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
-import com.google.common.collect.FluentIterable.from
 import org.gradle.external.javadoc.StandardJavadocDocletOptions
 
 plugins {
@@ -40,31 +38,26 @@ android {
     }
 }
 
-val androidJavadocs by tasks.registering(Javadoc::class) {
-    isFailOnError = false
+androidComponents {
+    onVariants { variant ->
+        tasks.register("generate${variant.name.capitalize()}Javadoc", Javadoc::class) {
+            description = "Generate ${variant.name} Javadoc"
 
-    // Convert the FileCollection to a FileTree using asFileTree
-    source = files(
-        android.sourceSets["main"].java.srcDirs,
-        "$buildDir/generated/source/buildConfig/debug",
-        "$buildDir/generated/not_namespaced_r_class_sources/debug/r",
-        "$buildDir/generated/source/dataBinding/java/main",
-        "$buildDir/generated/source/kaptKotlin/debug"
-    ).asFileTree
+            val javaCompileTask = tasks.named("compile${variant.name.capitalize()}JavaWithJavac", JavaCompile::class.java)
+            source = javaCompileTask.get().source
+            setDestinationDir(file("$rootDir/doc/javadoc"))
 
+            isFailOnError = false
 
-    // Include all compile-time dependencies
-    classpath += files(android.bootClasspath.joinToString(File.pathSeparator))
-    classpath += configurations["debugCompileClasspath"]
+            doFirst {
+                val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
 
-    // Exclude unwanted packages from the Javadoc output
-    exclude("**/androidx/**", "**/com/google/**", "**/android/**")
-
-    // Set the output directory for the generated Javadocs
-    setDestinationDir(file("$rootDir/doc/javadoc"))
+                classpath = files(variant.compileClasspath) + files(androidJar)
+                (options as StandardJavadocDocletOptions).addStringOption("show-members", "package")
+            }
+        }
+    }
 }
-
-
 
 dependencies {
 //    implementation(files("C:/Users/dcui7/AppData/Local/Android/Sdk/platforms/android-34/android.jar"))
