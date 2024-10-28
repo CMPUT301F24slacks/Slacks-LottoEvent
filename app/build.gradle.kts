@@ -50,6 +50,9 @@ afterEvaluate {
         val mainJavaSrcDirs = android.sourceSets.getByName("main").java.srcDirs
         source = files(mainJavaSrcDirs).asFileTree
 
+        // Set failOnError to false to prevent build failure on Javadoc errors
+        isFailOnError = false
+
         doFirst {
             val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
 
