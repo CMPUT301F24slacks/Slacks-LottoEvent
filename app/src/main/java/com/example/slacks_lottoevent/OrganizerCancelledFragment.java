@@ -1,13 +1,20 @@
 package com.example.slacks_lottoevent;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -80,6 +87,32 @@ public class OrganizerCancelledFragment extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, dummyEntrants);
         listViewEntrantsCancelled.setAdapter(adapter);
 
+        // The button will be replaced by the list modification functionality
+        Button buttonCancelNotification = view.findViewById(R.id.buttonCancelNotification);
+        buttonCancelNotification.setOnClickListener(v -> showCancellationNotification("Alpha"));
+
+
         return view;
     }
+
+    private void showCancellationNotification(String entrantName) {
+        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        String channelId = "cancellation_channel";
+
+        // Only for Android 8.0 and higher
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, "Entrant Cancellations", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        Notification notification = new NotificationCompat.Builder(getContext(), channelId)
+                .setContentTitle("Entrant Cancellation")
+                .setContentText(entrantName + " has cancelled their entry.")
+                .setSmallIcon(android.R.drawable.btn_star_big_on)
+                .build();
+
+        notificationManager.notify(1, notification);
+    }
 }
+
+
