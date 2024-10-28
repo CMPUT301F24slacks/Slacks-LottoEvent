@@ -4,16 +4,32 @@ plugins {
     id("org.jetbrains.dokka") version "1.8.10"
 }
 
-// Dokka configuration at the top level
-tasks.dokkaHtml {
-    outputDirectory.set(file("${layout.buildDirectory}/docs"))
-    dokkaSourceSets {
-        configureEach {
-            noAndroidSdkLink.set(false)
-            skipDeprecated.set(true)
-            reportUndocumented.set(true)
-        }
+tasks.register<Javadoc>("generateJavadoc") {
+    description = "Generates Javadoc for the Java files in the project."
+
+    // Set the source directories to Java sources only
+    source = fileTree("src/main/java")
+
+    // Set the classpath to include project dependencies and Android SDK (if applicable)
+    classpath = files(
+        sourceSets["main"].compileClasspath,
+        android.bootClasspath // If it's an Android project
+    )
+
+    // Exclude generated files and unnecessary resources
+    exclude("**/R.java", "**/BuildConfig.java", "**/Manifest.java")
+
+    // Set Javadoc options
+    options.encoding = "UTF-8"
+
+
+    // Suppress warnings for Java 11 and above
+    if (JavaVersion.current().isJava11Compatible) {
+        (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
     }
+
+    // Set the destination directory for the generated Javadoc
+    setDestinationDir(file("$buildDir/docs/javadoc"))
 }
 
 android {
