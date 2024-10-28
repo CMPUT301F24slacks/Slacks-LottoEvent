@@ -42,7 +42,8 @@ android {
 
 val androidJavadocs by tasks.registering(Javadoc::class) {
     isFailOnError = false
-    source = project.fileTree(android.sourceSets["main"].java.srcDirs)
+    // Convert each source directory to a FileTree and combine them
+    source = android.sourceSets["main"].java.srcDirs.map { project.fileTree(it) }.reduce(FileTree::plus)
 
     val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
     classpath += files(androidJar)
