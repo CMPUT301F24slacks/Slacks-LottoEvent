@@ -58,7 +58,7 @@ afterEvaluate {
                 android.bootClasspath, // Android boot classpath
                 configurations.getByName("releaseRuntimeClasspath") // Runtime classpath for release build
             )
-            (options as StandardJavadocDocletOptions).addStringOption("show-members", "package")
+            (options as StandardJavadocDocletOptions).addStringOption("-show-members", "package")
         }
 
         // Exclude generated files and unnecessary resources
