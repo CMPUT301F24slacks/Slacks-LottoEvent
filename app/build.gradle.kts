@@ -1,8 +1,19 @@
-import org.gradle.api.tasks.javadoc.Javadoc
-
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+    id("org.jetbrains.dokka") version "1.8.10"
+}
+
+// Dokka configuration at the top level
+tasks.dokkaHtml {
+    outputDirectory.set(file("${layout.buildDirectory}/docs"))
+    dokkaSourceSets {
+        configureEach {
+            noAndroidSdkLink.set(false)
+            skipDeprecated.set(true)
+            reportUndocumented.set(true)
+        }
+    }
 }
 
 android {
@@ -29,62 +40,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     buildFeatures {
         viewBinding = true
     }
-
-//    applicationVariants.all {
-//        tasks.register("generateReleaseJavadoc", Javadoc::class) {
-//            description = "Generates Javadoc for the release build."
-//
-//            // Set the source files for Javadoc generation
-//            source = fileTree("src/main/java") {
-//                include("**/*.java")
-//            }
-//
-//            // Specify the destination directory for the generated Javadoc
-//            setDestinationDir(file("$buildDir/docs/javadoc/release"))
-//
-//            // Set the classpath to include the runtime classpath and the Android SDK
-//            doFirst {
-//                val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-//                classpath = files(configurations["runtimeClasspath"]) + files(androidJar)
-//            }
-//
-//            // Exclude generated files from Javadoc
-//            exclude("**/BuildConfig.java", "**/R.java")
-//        }
-//    }
-
-    afterEvaluate {
-        // Check if the task is already defined to avoid duplicate task registration
-        if (tasks.findByName("generateReleaseJavadoc") == null) {
-            tasks.register("generateReleaseJavadoc", Javadoc::class) {
-                description = "Generates Javadoc for the release build."
-
-                // Set the source files for Javadoc generation
-                source = fileTree("src/main/java") {
-                    include("**/*.java")
-                }
-
-                // Specify the destination directory for the generated Javadoc
-                setDestinationDir(file("$buildDir/docs/javadoc/release"))
-
-                // Set the classpath to include the runtime classpath and the Android SDK
-                doFirst {
-                    val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-                    classpath = files(configurations["runtimeClasspath"]) + files(androidJar)
-                }
-
-                // Exclude generated files from Javadoc
-                exclude("**/BuildConfig.java", "**/R.java")
-            }
-        }
-    }
-
 }
 
 dependencies {
@@ -109,5 +70,4 @@ dependencies {
     implementation("androidx.camera:camera-view:1.2.0")
     implementation(libs.zxing.android.embedded.v410)
     implementation(libs.core)
-
 }
