@@ -31,6 +31,19 @@
         app:maxImageSize="36dp"
         app:srcCompat="@drawable/baseline_qr_code_scanner_36" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/create_event_FAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="16dp"
+        app:backgroundTint="@color/button_background"
+        app:maxImageSize="36dp"
+        app:srcCompat="@drawable/baseline_add_box_36"
+        android:visibility="gone"
+        app:tint="@color/white" />
+
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
