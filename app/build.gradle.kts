@@ -50,11 +50,16 @@ afterEvaluate {
         val mainJavaSrcDirs = android.sourceSets.getByName("main").java.srcDirs
         source = files(mainJavaSrcDirs).asFileTree
 
-        // Set the classpath to include Android boot classpath and runtime classpath
-        classpath = files(
-            android.bootClasspath, // Android boot classpath
-            configurations.getByName("releaseRuntimeClasspath") // Runtime classpath for release build
-        )
+        doFirst {
+            val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+
+            // Set the classpath to include Android boot classpath and runtime classpath
+            classpath = files(
+                android.bootClasspath, // Android boot classpath
+                configurations.getByName("releaseRuntimeClasspath") // Runtime classpath for release build
+            )
+            (options as StandardJavadocDocletOptions).addStringOption("show-members", "package")
+        }
 
         // Exclude generated files and unnecessary resources
         exclude("**/R.java", "**/BuildConfig.java", "**/Manifest.java")
