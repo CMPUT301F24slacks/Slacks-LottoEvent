@@ -42,7 +42,7 @@ android {
 
 val androidJavadocs by tasks.registering(Javadoc::class) {
     isFailOnError = false
-    from(android.sourceSets["main"].java.srcDirs)
+    source = project.fileTree(android.sourceSets["main"].java.srcDirs)
 
     val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
     classpath += files(androidJar)
