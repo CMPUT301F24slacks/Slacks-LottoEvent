@@ -53,7 +53,7 @@ androidComponents {
                 val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
 
                 classpath = files(variant.compileClasspath) + files(androidJar)
-                (options as StandardJavadocDocletOptions).addStringOption("show-members", "package")
+                (options as StandardJavadocDocletOptions).addStringOption("-show-members", "package")
             }
         }
     }
