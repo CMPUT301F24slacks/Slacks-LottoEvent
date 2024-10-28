@@ -50,14 +50,9 @@ val androidJavadocs by tasks.registering(Javadoc::class) {
     exclude("**/R.html", "**/R.*.html", "**/index.html")
 
     // Set the output directory for the generated Javadocs
-    setDestinationDir(file("build/doc/javadoc"))
+    setDestinationDir(file("doc/javadoc"))
 }
 
-val androidJavadocsJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("javadoc")
-    dependsOn(androidJavadocs)
-    from(androidJavadocs.get().destinationDir)
-}
 dependencies {
 //    implementation(files("C:/Users/dcui7/AppData/Local/Android/Sdk/platforms/android-34/android.jar"))
 
