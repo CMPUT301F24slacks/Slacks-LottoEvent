@@ -9,4 +9,6 @@
     <color name="tab_text_unselected">#EC7CEE</color>
     <color name="background">#18181B</color>
     <color name="button_background">#7B24EB</color>
+    <color name="basebg">#A9A9A9</color>
+    <color name="text_buttons">#EF2DE6</color>
 </resources>

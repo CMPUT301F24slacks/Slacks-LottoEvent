@@ -1,5 +1,7 @@
 package com.example.slacks_lottoevent;
 
+import com.google.zxing.common.BitMatrix;
+
 public class Event {
 
     private final Organizer organizer;
@@ -8,24 +10,32 @@ public class Event {
     private String date;
     private String time;
     private String description;
+    private String price;
     private int capacity;
+    private int signupAcpt;
+    private String extraDesc;
     private final EntrantList waitlisted;
     private final EntrantList finalists;
     private final EntrantList unselected;
     private final EntrantList invited;
+    private String qrCodeData;
 
-    public Event(Organizer organizer, Facility facility, String name, String date, String time, String description, int capacity) {
+    public Event(Organizer organizer, Facility facility, String name, String date, String time, String price, String description, int capacity, int signupAccpt, String xtraDesc, String qrData) {
         this.organizer = organizer;
         this.facility = facility;
         this.name = name;
         this.date = date;
         this.time = time;
+        this.price = price;
         this.description = description;
         this.capacity = capacity;
+        this.signupAcpt = signupAccpt;
+        this.extraDesc = xtraDesc;
         this.waitlisted = new EntrantList();
         this.finalists = new EntrantList();
         this.unselected = new EntrantList();
         this.invited = new EntrantList();
+        this.qrCodeData = qrData;
     }
 
     public Organizer getOrganizer() {
@@ -64,6 +74,14 @@ public class Event {
         this.time = time;
     }
 
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -79,6 +97,28 @@ public class Event {
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
+
+    public int getSignupAcpt() {
+        return signupAcpt;
+    }
+
+    public void setSignupAcpt(int signupAcpt) {
+        this.signupAcpt = signupAcpt;
+    }
+
+    public String getQRData() {
+        return qrCodeData;
+    }
+
+    public void setQRData(String qrCodeData) {
+        this.qrCodeData = qrCodeData;
+    }
+
+    public String getExtraDesc() {
+        return extraDesc;
+    }
+
+    public void setExtraDesc(String xtraDescription) { this.description = xtraDescription; }
 
     public EntrantList getWaitlisted() {
         return waitlisted;
