@@ -41,35 +41,45 @@ android {
     }
 }
 
-// Ensure the task is registered after Android configuration
+// Set the destination directory for the generated Javadoc
+//setDestinationDir(file("$buildDir/docs/javadoc"))
+
 afterEvaluate {
     tasks.register<Javadoc>("generateJavadoc") {
         description = "Generates Javadoc for Java files in the Android project."
 
-        // Access the Java source directories for the main source set
+        // Set the Java source directories
         val mainJavaSrcDirs = android.sourceSets.getByName("main").java.srcDirs
         source = files(mainJavaSrcDirs).asFileTree
 
-        // Set failOnError to false to prevent build failure on Javadoc errors
+        // Prevent build failure on Javadoc errors
         isFailOnError = false
 
-        // Set the destination directory for the generated Javadoc
+        // Set the destination directory for Javadoc
         setDestinationDir(file("$buildDir/docs/javadoc"))
 
         doFirst {
             val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
 
-            // Set the classpath to include Android boot classpath and runtime classpath
+            // Include Android boot classpath and runtime dependencies
             classpath = files(
                 android.bootClasspath, // Android boot classpath
-                configurations.getByName("releaseRuntimeClasspath"), // Runtime classpath for release build
-                androidJar
+                configurations.getByName("releaseRuntimeClasspath"), // Runtime classpath
+                androidJar // Specific Android platform JAR
             )
-            (options as StandardJavadocDocletOptions).addStringOption("-show-members", "package")
+
+            (options as StandardJavadocDocletOptions).apply {
+                addStringOption("-show-members", "package")
+                addStringOption("Xdoclint:none", "-quiet") // Suppress warnings
+            }
         }
 
         // Exclude generated files and unnecessary resources
         exclude("**/R.java", "**/BuildConfig.java", "**/Manifest.java")
+
+        // Exclude classes that Javadoc cannot resolve
+        exclude("**/databinding/**", "**/Firebase**", "**/AppCompatActivity**", "**/Fragment**")
+
     }
 }
 
