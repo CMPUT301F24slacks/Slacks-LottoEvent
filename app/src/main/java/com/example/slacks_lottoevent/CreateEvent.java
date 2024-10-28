@@ -35,9 +35,8 @@ public class CreateEvent extends AppCompatActivity {
     private String price;
     private String details;
     private String xtrDetails;
-    private Integer pplAccpt;
-    private Integer entrantsAccpt;
-    ImageView eventPoster;
+    private String pplAccptString;
+    private String waitlistCapacity;
 
 
     @Override
@@ -70,8 +69,8 @@ public class CreateEvent extends AppCompatActivity {
         time = binding.eventTime.getText().toString().trim();
         price = binding.eventPrice.getText().toString().trim();
         details = binding.eventDetails.getText().toString().trim();
-        String pplAccpt = binding.noPeopleAccpt.getText().toString().trim();
-        String entrantsAccpt = binding.noEntratAccpt.getText().toString().trim();
+        pplAccptString = binding.noPeopleAccpt.getText().toString().trim();
+        waitlistCapacity = binding.noEntratAccpt.getText().toString().trim();
 
 //        Event Name validation
         if (TextUtils.isEmpty(name)) {
@@ -123,16 +122,27 @@ public class CreateEvent extends AppCompatActivity {
             return false;
         }
 
-        if (TextUtils.isEmpty(pplAccpt)) {
-            binding.eventDetails.setError("Number of People Accepted are required");
-            binding.eventDetails.requestFocus();
+        if (TextUtils.isEmpty(pplAccptString)) {
+            binding.noPpAccpt.setError("Number of People Accepted to the event are required");
+            binding.noPpAccpt.requestFocus();
             return false;
         }
 
-        if (TextUtils.isEmpty(entrantsAccpt)) {
-            entrantsAccpt = "0";
-        } else {
-            entrantsAccpt = String.valueOf(Integer.parseInt(entrantsAccpt));
+        if (!pplAccptString.matches("\\d+")){
+            binding.noPpAccpt.setError("Number of selected people must be a number");
+            binding.noPpAccpt.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(waitlistCapacity) || Integer.parseInt(waitlistCapacity) == 0) {
+//            Signifies they did not pick a number for this capacity so any amount of people can be selected
+            waitlistCapacity = "0";
+        }
+
+        if (Integer.parseInt(waitlistCapacity) < Integer.parseInt(pplAccptString)){
+            binding.noEntratAccpt.setError("Waiting list capacity must be bigger than the number of people selected");
+            binding.noEntratAccpt.requestFocus();
+            return false;
         }
         return true;
     }
@@ -143,11 +153,10 @@ public class CreateEvent extends AppCompatActivity {
         timeFormat.setLenient(false); // Ensures strict parsing
 
         try {
-            // Try parsing the input time string
             timeFormat.parse(time);
-            return true; // Valid if parsing succeeds
+            return true;
         } catch (ParseException e) {
-            return false; // Invalid if parsing fails
+            return false;
         }
     }
 
@@ -170,10 +179,12 @@ public class CreateEvent extends AppCompatActivity {
         price = binding.eventPrice.getText().toString().trim();
         details = binding.eventDetails.getText().toString().trim();
         xtrDetails = binding.extraDetails.getText().toString().trim();
-//        Gets the amount of people that can get put on the waitlist
-        pplAccpt = Integer.valueOf(binding.noPeopleAccpt.getText().toString().trim());
-//        Number of entrants actually chosen on the waitlist
-        entrantsAccpt = Integer.valueOf(binding.noEntratAccpt.getText().toString().trim());
+
+//        Gets the amount of people that can be selected from signing up
+        Integer pplAccpt = Integer.valueOf(binding.noPeopleAccpt.getText().toString().trim());
+
+        //        Number of people that can sign up to event
+        Integer waitingListCapacity = Integer.valueOf(binding.noEntratAccpt.getText().toString().trim());
 
 //        unique one
         String eventId = UUID.randomUUID().toString();
@@ -186,13 +197,16 @@ public class CreateEvent extends AppCompatActivity {
         QRCodeWriter writer = new QRCodeWriter();
         try {
             BitMatrix bitMatrix = writer.encode(eventId, BarcodeFormat.QR_CODE, 300, 300);
-            String hash = serializeBitMatrix(bitMatrix);
+            String serializedQRcode = serializeBitMatrix(bitMatrix);
+            String hash = generateHash(serializedQRcode);
 
-            Event event = new Event(organizer, facility, name, date, time, price, details, entrantsAccpt, pplAccpt, xtrDetails, hash);
+            Event event = new Event(organizer, facility, name, date, time, price, details, pplAccpt, waitingListCapacity, xtrDetails, serializedQRcode, eventId);
 
             HashMap<String, Object> eventData = new HashMap<>();
             eventData.put("eventId", eventId);
             eventData.put("eventDetails",event);
+            eventData.put("qrHash",hash);
+
 
             eventsRef.document(eventId).set(eventData)
                     .addOnSuccessListener(nothing -> {
