@@ -85,7 +85,7 @@ public class EventsHomeActivity extends AppCompatActivity {
         });
 
         /*
-         * Create event button, opens the create event screen.
+         * Create event button, opens the create event screen upon being clicked.
          */
         binding.createEventFAB.setOnClickListener(new View.OnClickListener() {
             @Override
