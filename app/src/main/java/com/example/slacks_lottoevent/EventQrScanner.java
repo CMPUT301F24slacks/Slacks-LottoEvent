@@ -46,6 +46,9 @@ import java.util.concurrent.ExecutionException;
 * https://stackoverflow.com/questions/54513936/how-to-change-zxingscannerview-default-appearance Custom Layout
 * */
 
+/**
+ * This class is responsible for scanning the QR code of the event.
+ */
 public class EventQrScanner extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
@@ -58,9 +61,6 @@ public class EventQrScanner extends AppCompatActivity {
 
         eventsRef = db.collection("events");
 
-
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_qr_scanner);
         cameraPreview = findViewById(R.id.cameraPreview);
@@ -72,12 +72,10 @@ public class EventQrScanner extends AppCompatActivity {
             startCamera();
         }
 
-
         ImageView backArrow = findViewById(R.id.back_arrow);
         backArrow.setOnClickListener(v -> finish());
 
         Button readyButton = findViewById(R.id.readyButton);
-
 
         readyButton.setOnClickListener(v -> {
             IntentIntegrator integrator = new IntentIntegrator(this);
@@ -86,12 +84,9 @@ public class EventQrScanner extends AppCompatActivity {
             integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
             integrator.setOrientationLocked(true);
 
-
             // Starting scanner
             integrator.initiateScan();
         });
-
-
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -104,12 +99,15 @@ public class EventQrScanner extends AppCompatActivity {
                         if (task.isSuccessful() && !task.getResult().isEmpty()) {
                             DocumentSnapshot document = task.getResult().getDocuments().get(0);
                         }
-
                     });
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    /**
+     * This method is responsible for starting the camera.
+     */
     private void startCamera(){
         // Getting an instance of ProcessCameraProvider.
         com.google.common.util.concurrent.ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
@@ -126,6 +124,11 @@ public class EventQrScanner extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this)); // The Executor for the listener is the Main Thread
 
     }
+
+    /**
+     * This method is responsible for binding the preview to the camera to display the camera preview.
+     * @param cameraProvider The camera provider to bind the preview to.
+     */
     private void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
         // Creating a new preview use case.
         Preview preview = new Preview.Builder().build();
@@ -139,9 +142,6 @@ public class EventQrScanner extends AppCompatActivity {
             // Binding the camera's lifecycle to current actvity
             // lifecycle Owner is this activity, using the back camera and the use case is the preview cameraPreview of the scanner which is bound to the lifecycle.
             cameraProvider.bindToLifecycle(this, cameraSelector, preview);
-        } catch (Exception e) {
-
-        }
+        } catch (Exception e) {}
     }
-
 }

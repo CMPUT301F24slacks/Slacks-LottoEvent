@@ -24,6 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * This class is responsible for creating an event and adding it to the database.
+ */
 public class CreateEvent extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
@@ -63,6 +66,10 @@ public class CreateEvent extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method validates the inputs for creating an event.
+     * @return true if all inputs are valid, false otherwise
+     */
     private boolean validateInputs() {
         name = binding.eventName.getText().toString().trim();
         date = binding.eventDate.getText().toString().trim();
@@ -147,6 +154,11 @@ public class CreateEvent extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * This method checks if the time is in the correct format.
+     * @param time the time to be checked
+     * @return true if the time is in the correct format, false otherwise
+     */
     private boolean isValidTimeFormat(String time) {
         // Define the expected time format (24-hour format "HH:mm" in this case)
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
@@ -160,6 +172,11 @@ public class CreateEvent extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method checks if the date is in the correct format.
+     * @param date the date to be checked
+     * @return true if the date is in the correct format, false otherwise
+     */
     private boolean isValidDate(String date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         dateFormat.setLenient(false); // Ensures strict date parsing
@@ -172,6 +189,9 @@ public class CreateEvent extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method creates an event and adds it to the database.
+     */
     private void createEvent() {
         name = binding.eventName.getText().toString().trim();
         date = binding.eventDate.getText().toString().trim();
@@ -223,6 +243,11 @@ public class CreateEvent extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method generates a hash for the QR code.
+     * @param data the string data to be hashed
+     * @return the string hash of the data
+     */
     private String generateHash(String data) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256"); // or any hashing algorithm
@@ -239,6 +264,11 @@ public class CreateEvent extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method serializes the BitMatrix to a string.
+     * @param bitMatrix the BitMatrix to be serialized
+     * @return the string representation of the BitMatrix
+     */
     private String serializeBitMatrix(BitMatrix bitMatrix) {
         StringBuilder sb = new StringBuilder();
         for (int y = 0; y < bitMatrix.getHeight(); y++) {

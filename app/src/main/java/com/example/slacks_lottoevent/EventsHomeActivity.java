@@ -84,6 +84,9 @@ public class EventsHomeActivity extends AppCompatActivity {
             }
         });
 
+        /*
+         * Create event button, opens the create event screen.
+         */
         binding.createEventFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,15 +128,12 @@ public class EventsHomeActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         if (id == R.id.profile) {
             return true;
         }
         if (id == R.id.notifications) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
 }

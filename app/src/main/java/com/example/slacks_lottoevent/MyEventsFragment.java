@@ -12,6 +12,9 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.slacks_lottoevent.databinding.FragmentMyEventsBinding;
 
+/**
+ * This class is a fragment that displays the list of events the user has signed up for.
+ */
 public class MyEventsFragment extends Fragment {
 
     private FragmentMyEventsBinding binding;
