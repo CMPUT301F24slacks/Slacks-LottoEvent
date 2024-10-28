@@ -41,36 +41,38 @@ android {
     }
 }
 
-// Register Javadoc task for Android
-tasks.register<Javadoc>("generateJavadoc") {
-    description = "Generates Javadoc for Java files in the Android project."
+// Ensure the task is registered after Android configuration
+afterEvaluate {
+    tasks.register<Javadoc>("generateJavadoc") {
+        description = "Generates Javadoc for Java files in the Android project."
 
-    val androidExtension = extensions.getByType<com.android.build.gradle.internal.dsl.BaseAppModuleExtension>()
+        // Get the Android extension to access source sets and boot classpath
+        val androidExtension = extensions.getByName("android") as com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 
-    // Get the Java source directories for the main source set
-    val mainJavaSrcDirs = androidExtension.sourceSets.getByName("main").java.srcDirs
+        // Get the Java source directories for the main source set
+        val mainJavaSrcDirs = androidExtension.sourceSets.getByName("main").java.srcDirs
+        source = files(mainJavaSrcDirs).asFileTree
 
-    source = files(mainJavaSrcDirs).asFileTree
+        // Set the classpath to include the Android boot classpath and runtime classpath
+        classpath = files(
+            androidExtension.bootClasspath, // Android boot classpath
+            configurations.getByName("releaseRuntimeClasspath") // Runtime classpath for release build
+        )
 
-    // Set the classpath to include the Android boot classpath and runtime classpath
-    classpath = files(
-        androidExtension.bootClasspath, // Android boot classpath
-        configurations["releaseRuntimeClasspath"] // Runtime classpath for release build
-    )
+        // Exclude generated files and unnecessary resources
+        exclude("**/R.java", "**/BuildConfig.java", "**/Manifest.java")
 
-    // Exclude generated files
-    exclude("**/R.java", "**/BuildConfig.java", "**/Manifest.java")
+        // Set Javadoc options
+        options.encoding = "UTF-8"
 
-    // Set Javadoc options
-    options.encoding = "UTF-8"
+        // Suppress warnings for Java 11 and above
+        if (JavaVersion.current().isJava11Compatible) {
+            (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
+        }
 
-    // Suppress warnings for Java 11 and above
-    if (JavaVersion.current().isJava11Compatible) {
-        (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
+        // Set the destination directory for the generated Javadoc
+        setDestinationDir(file("$buildDir/docs/javadoc"))
     }
-
-    // Set the destination directory for the generated Javadoc
-    setDestinationDir(file("$buildDir/docs/javadoc"))
 }
 
 dependencies {
