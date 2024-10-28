@@ -18,6 +18,10 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
+
+/**
+ * EventsHomeActivity is the main activity for the Events Home screen.
+ */
 public class EventsHomeActivity extends AppCompatActivity {
 
     private ActivityEventsHomeBinding binding;
