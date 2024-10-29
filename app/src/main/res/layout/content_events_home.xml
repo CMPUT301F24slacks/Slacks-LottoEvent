@@ -31,23 +31,6 @@
 
     </com.google.android.material.tabs.TabLayout>
 
-    <Button
-        android:id="@+id/create_facility_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="215dp"
-        android:backgroundTint="#A050E1"
-        android:drawablePadding="8dp"
-        android:padding="16dp"
-        android:text="Create Facility"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/events_home_tab_layout"
-        app:layout_constraintVertical_bias="0.0" />
-
     <fragment
         android:id="@+id/nav_host_fragment_content_events_home"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -60,19 +43,4 @@
         app:layout_constraintTop_toBottomOf="@id/events_home_tab_layout"
         app:navGraph="@navigation/nav_graph" />
 
-    <TextView
-        android:id="@+id/facility_created"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_background"
-        android:gravity="center"
-        android:padding="16dp"
-        android:textColor="#EC7CEE"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/events_home_tab_layout"
-        app:layout_constraintVertical_bias="0.079" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -89,10 +89,13 @@ public class ManageMyEventsFragment extends Fragment {
                                         String facilityPostalCode = (String) facilityData.get("postalCode");
 
                                         facility = new Facility(facilityName, facilityStreetAddress1, facilityStreetAddress2, facilityCity, facilityProvince, facilityCountry, facilityPostalCode);
+                                        User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
+
                                     }
 
                                     // Create an Organizer instance (you may want to modify this as per your data structure)
-                                    Organizer organizer = new Organizer();
+                                    User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
+                                    Organizer organizer = new Organizer(tempUser);
 
                                     String name = (String) eventDetails.get("name");
                                     String date = (String) eventDetails.get("date");

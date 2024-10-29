@@ -33,6 +33,8 @@ public class MyEventsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+        User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
         String tempDescription = "Join us for the Tech Innovators Summit 2024, where industry leaders, startups, and tech enthusiasts come together to explore the latest in AI, blockchain, cybersecurity, and more. Enjoy keynote talks, interactive workshops, and networking opportunities designed to inspire and connect innovators. Be part of the future of technology!";
         Organizer tempOrganizer = new Organizer();
         // Facility tempFacility = new Facility(tempOrganizer, "Facility Name", "111 9th St, Edmonton, Canada");

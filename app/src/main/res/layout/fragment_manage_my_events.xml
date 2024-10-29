@@ -6,12 +6,41 @@
     android:layout_height="match_parent"
     tools:context="ManageMyEventsFragment">
 
+    <Button
+        android:id="@+id/create_facility_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#A050E1"
+        android:drawablePadding="8dp"
+        android:padding="16dp"
+        android:text="Create Facility"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/myEventsListView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/facility_created"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_background"
+        android:gravity="center"
+        android:padding="16dp"
+        android:textColor="#EC7CEE"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/create_facility_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ListView
         android:id="@+id/myEventsListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
+        android:layout_width="369dp"
+        android:layout_height="559dp"
+        android:layout_marginTop="172dp"
         android:dividerHeight="36dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp" />
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="21dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
