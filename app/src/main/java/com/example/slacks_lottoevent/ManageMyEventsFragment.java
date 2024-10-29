@@ -83,11 +83,13 @@ public class ManageMyEventsFragment extends Fragment {
                                         String facilityName = (String) facilityData.get("name");
                                         String facilityAddress = (String) facilityData.get("address");
 
-                                        facility = new Facility(new Organizer(), facilityName, facilityAddress);
+                                        User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
+                                        facility = new Facility(new Organizer(tempUser), facilityName, facilityAddress);
                                     }
 
                                     // Create an Organizer instance (you may want to modify this as per your data structure)
-                                    Organizer organizer = new Organizer();
+                                    User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
+                                    Organizer organizer = new Organizer(tempUser);
 
                                     String name = (String) eventDetails.get("name");
                                     String date = (String) eventDetails.get("date");

@@ -6,15 +6,21 @@ package com.example.slacks_lottoevent;
  */
 public class Organizer {
 
+    private final User user;
     private Facility facility;
     private final EventList events;
 
     /**
      * Constructor for Organizer class.
      */
-    public Organizer() {
+    public Organizer(User user) {
+        this.user = user;
         this.events = new EventList();
         this.facility = null;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public Facility getFacility() {
