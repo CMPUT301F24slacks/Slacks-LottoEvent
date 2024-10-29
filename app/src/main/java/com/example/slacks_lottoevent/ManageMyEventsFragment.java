@@ -36,8 +36,6 @@ public class ManageMyEventsFragment extends Fragment {
     private CollectionReference eventsRef;
     private ArrayList<Event> eventList;
 
-//    organzierEventArrayAdapter = new void OrganzierEventArrayAdapter(getContext(), eventList);
-
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
@@ -100,11 +98,11 @@ public class ManageMyEventsFragment extends Fragment {
 
                                     Long signupAcptLong = (Long) eventDetails.get("signupAcpt");
                                     Integer pplAccpt = (signupAcptLong != null) ? signupAcptLong.intValue() : 0;
-                                    String extraDesc = (String) eventDetails.get("extraDesc");
+                                    Boolean geoLoc = (Boolean) eventDetails.get("geoLocation");
 
                                     String eventID = (String) eventDetails.get("eventid");
 
-                                    Event newEvent = new Event(organizer, facility, name, date, time, price, details, pplAccpt, capacity, extraDesc, qrData, eventID);
+                                    Event newEvent = new Event(organizer, facility, name, date, time, price, details, pplAccpt, capacity, qrData, eventID,geoLoc);
                                     eventList.add(newEvent);
                                     organzierEventArrayAdapter.notifyDataSetChanged();
                                     Log.d("EventSuccess", "Added to eventList!!");

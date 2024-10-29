@@ -37,9 +37,9 @@ public class CreateEvent extends AppCompatActivity {
     private String time;
     private String price;
     private String details;
-    private String xtrDetails;
     private String pplAccptString;
     private String waitlistCapacity;
+    private Boolean geoLocation;
 
 
     @Override
@@ -78,6 +78,7 @@ public class CreateEvent extends AppCompatActivity {
         details = binding.eventDetails.getText().toString().trim();
         pplAccptString = binding.noPeopleAccpt.getText().toString().trim();
         waitlistCapacity = binding.noEntratAccpt.getText().toString().trim();
+
 
 //        Event Name validation
         if (TextUtils.isEmpty(name)) {
@@ -141,16 +142,12 @@ public class CreateEvent extends AppCompatActivity {
             return false;
         }
 
-        if (TextUtils.isEmpty(waitlistCapacity) || Integer.parseInt(waitlistCapacity) == 0) {
-//            Signifies they did not pick a number for this capacity so any amount of people can be selected
-            waitlistCapacity = "0";
-        }
-
         if (Integer.parseInt(waitlistCapacity) < Integer.parseInt(pplAccptString)){
             binding.noEntratAccpt.setError("Waiting list capacity must be bigger than the number of people selected");
             binding.noEntratAccpt.requestFocus();
             return false;
         }
+
         return true;
     }
 
@@ -198,29 +195,36 @@ public class CreateEvent extends AppCompatActivity {
         time = binding.eventTime.getText().toString().trim();
         price = binding.eventPrice.getText().toString().trim();
         details = binding.eventDetails.getText().toString().trim();
-        xtrDetails = binding.extraDetails.getText().toString().trim();
+        Boolean geoLoc = binding.checkBoxGeo.isChecked();
 
 //        Gets the amount of people that can be selected from signing up
         Integer pplAccpt = Integer.valueOf(binding.noPeopleAccpt.getText().toString().trim());
 
-        //        Number of people that can sign up to event
-        Integer waitingListCapacity = Integer.valueOf(binding.noEntratAccpt.getText().toString().trim());
+//        Number of people that can sign up to event
+        String waitingListCapacity = binding.noEntratAccpt.getText().toString().trim();
+
+        if (TextUtils.isEmpty(waitlistCapacity) || Integer.parseInt(waitlistCapacity) == 0) {
+//            Signifies they did not pick a number for this capacity so any amount of people can be selected
+            waitlistCapacity = "0";
+        }
 
 //        unique one
         String eventId = UUID.randomUUID().toString();
-
         Organizer organizer = new Organizer();
+
+//        TODO: Change facility
         Facility facility = new Facility(organizer, "Facility Name", "2021 95th St SW");
 
 //        QR Code Creation
-
         QRCodeWriter writer = new QRCodeWriter();
         try {
             BitMatrix bitMatrix = writer.encode(eventId, BarcodeFormat.QR_CODE, 300, 300);
             String serializedQRcode = serializeBitMatrix(bitMatrix);
             String hash = generateHash(serializedQRcode);
 
-            Event event = new Event(organizer, facility, name, date, time, price, details, pplAccpt, waitingListCapacity, xtrDetails, serializedQRcode, eventId);
+            geoLoc = binding.checkBoxGeo.isChecked() ? false: true;
+
+            Event event = new Event(organizer, facility, name, date, time, price, details, pplAccpt, Integer.parseInt(waitingListCapacity), serializedQRcode, eventId, geoLoc);
 
             HashMap<String, Object> eventData = new HashMap<>();
             eventData.put("eventId", eventId);
