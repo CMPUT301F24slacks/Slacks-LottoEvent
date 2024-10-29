@@ -19,29 +19,43 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link OrganizerCancelledFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 public class OrganizerCancelledFragment extends Fragment {
 
     private ListView listViewEntrantsCancelled;
-    private ArrayList<String> entrantNames;
+    private ArrayList<String> dummyEntrants;
 
-    private static final String ARG_CANCELLED = "cancelled";
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
 
     public OrganizerCancelledFragment() {
         // Required empty public constructor
     }
 
-    // Factory method to create new instance with cancelled entrants list
-    public static OrganizerCancelledFragment newInstance(EntrantList cancelled) {
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment OrganizerCancelledFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static OrganizerCancelledFragment newInstance(String param1, String param2) {
         OrganizerCancelledFragment fragment = new OrganizerCancelledFragment();
         Bundle args = new Bundle();
-        ArrayList<String> names = new ArrayList<>();
-
-        // Convert EntrantList to ArrayList of String names
-        for (Entrant entrant : cancelled.getEntrants()) {
-            names.add(entrant.getUser().getName());
-        }
-
-        args.putStringArrayList(ARG_CANCELLED, names);
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,7 +64,8 @@ public class OrganizerCancelledFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            entrantNames = getArguments().getStringArrayList(ARG_CANCELLED);
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -62,21 +77,31 @@ public class OrganizerCancelledFragment extends Fragment {
         // Setup ListView
         listViewEntrantsCancelled = view.findViewById(R.id.listViewEntrantsCancelled);
 
-        // Set adapter with passed entrant names
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, entrantNames);
+        // Dummy data
+        dummyEntrants = new ArrayList<>();
+        dummyEntrants.add("Alpha");
+        dummyEntrants.add("Beta");
+        dummyEntrants.add("Charlie");
+
+        // Adapter to populate ListView
+        EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), dummyEntrants);
         listViewEntrantsCancelled.setAdapter(adapter);
 
-        // Example button for sending notifications (same as original)
+        // The button will be replaced by the list modification functionality
         Button buttonCancelNotification = view.findViewById(R.id.buttonCancelNotification);
         buttonCancelNotification.setOnClickListener(v -> showCancellationNotification("Alpha"));
+
 
         return view;
     }
 
+    // TODO: If an entrantName cancelled their selection/enrollment:
+    //Note: Will have to enable app notifications for slacks-lotto from the settings in the emulator
     private void showCancellationNotification(String entrantName) {
         NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         String channelId = "cancellation_channel";
 
+        // Only for Android 8.0 and higher
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId, "Entrant Cancellations", NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
@@ -90,4 +115,9 @@ public class OrganizerCancelledFragment extends Fragment {
 
         notificationManager.notify(1, notification);
     }
+
+    // TODO: another button for re-selection from organizer part
+
 }
+
+

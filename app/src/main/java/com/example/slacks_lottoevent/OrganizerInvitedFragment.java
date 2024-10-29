@@ -12,28 +12,43 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link OrganizerInvitedFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 public class OrganizerInvitedFragment extends Fragment {
 
     private ListView listViewEntrantsInvited;
-    private ArrayList<String> entrantNames;
+    private ArrayList<String> dummyEntrants;
 
-    private static final String ARG_INVITED = "invited";
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
 
     public OrganizerInvitedFragment() {
         // Required empty public constructor
     }
 
-    // Factory method to create new instance with invited entrants list
-    public static OrganizerInvitedFragment newInstance(EntrantList invited) {
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment OrganizerInvitedFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static OrganizerInvitedFragment newInstance(String param1, String param2) {
         OrganizerInvitedFragment fragment = new OrganizerInvitedFragment();
         Bundle args = new Bundle();
-        ArrayList<String> names = new ArrayList<>();
-
-        for (Entrant entrant : invited.getEntrants()) {
-            names.add(entrant.getUser().getName());
-        }
-
-        args.putStringArrayList(ARG_INVITED, names);
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -42,7 +57,8 @@ public class OrganizerInvitedFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            entrantNames = getArguments().getStringArrayList(ARG_INVITED);
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -51,10 +67,16 @@ public class OrganizerInvitedFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_organizer_invited, container, false);
 
+        // Setup ListView
         listViewEntrantsInvited = view.findViewById(R.id.listViewEntrantsInvited);
 
-        // Set adapter with passed entrant names
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, entrantNames);
+        // Dummy data
+        dummyEntrants = new ArrayList<>();
+        dummyEntrants.add("Mike");
+        dummyEntrants.add("November");
+
+        // Adapter to populate ListView
+        EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), dummyEntrants);
         listViewEntrantsInvited.setAdapter(adapter);
 
         return view;

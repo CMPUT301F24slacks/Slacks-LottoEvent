@@ -2,12 +2,10 @@ package com.example.slacks_lottoevent;
 
 import com.google.zxing.common.BitMatrix;
 
-import java.io.Serializable;
-
 /**
  * Event class that holds all the information for an event
  */
-public class Event implements Serializable {
+public class Event {
 
     private final Organizer organizer;
     private Facility facility;

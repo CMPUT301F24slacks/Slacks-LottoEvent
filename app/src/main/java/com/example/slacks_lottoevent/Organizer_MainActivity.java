@@ -1,8 +1,11 @@
 package com.example.slacks_lottoevent;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -14,23 +17,26 @@ public class Organizer_MainActivity extends AppCompatActivity {
 
     FrameLayout frameLayout;
     TabLayout tabLayout;
-    Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organizer_main_activity);
 
-        // Retrieve the Event object from the Intent
-        Intent intent = getIntent();
-        event = (Event) intent.getSerializableExtra("event");
-
         frameLayout = findViewById(R.id.FrameLayout);
         tabLayout = findViewById(R.id.tab_Layout);
 
-        // Load OrganizerWaitlistFragment with waitlisted EntrantList data
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FrameLayout, OrganizerWaitlistFragment.newInstance(event.getWaitlisted()))
+        // Set up the custom back button
+        ImageView backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();  // This will close Organizer_MainActivity and go back to the previous screen
+            }
+        });
+
+        // Load the first fragment by default
+        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, new OrganizerWaitlistFragment())
                 .addToBackStack(null)
                 .commit();
 
@@ -40,20 +46,19 @@ public class Organizer_MainActivity extends AppCompatActivity {
                 Fragment selected_fragment = null;
                 switch (tab.getPosition()) {
                     case 0:
-                        selected_fragment = OrganizerWaitlistFragment.newInstance(event.getWaitlisted());
+                        selected_fragment = new OrganizerWaitlistFragment();
                         break;
                     case 1:
-                        selected_fragment = OrganizerInvitedFragment.newInstance(event.getInvited());
+                        selected_fragment = new OrganizerInvitedFragment();
                         break;
                     case 2:
-                        selected_fragment = OrganizerCancelledFragment.newInstance(event.getUnselected());
+                        selected_fragment = new OrganizerCancelledFragment();
                         break;
                     case 3:
-                        selected_fragment = OrganizerEnrolledFragment.newInstance(event.getFinalists());
+                        selected_fragment = new OrganizerEnrolledFragment();
                         break;
                 }
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.FrameLayout, selected_fragment)
+                getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, selected_fragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit();
             }

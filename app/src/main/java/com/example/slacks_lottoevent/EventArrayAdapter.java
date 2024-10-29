@@ -44,10 +44,14 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         eventDescription.setText(event.getDescription());
         Button eventButton = convertView.findViewById(R.id.event_button);
 
-        // Set up button click to navigate to Organizer_MainActivity and pass the event
         eventButton.setOnClickListener(v -> {
+            // Create an Intent to navigate to Organizer_MainActivity
             Intent intent = new Intent(getContext(), Organizer_MainActivity.class);
-            intent.putExtra("event", event);  // Pass the event object as a Serializable extra
+
+            // Pass any additional data if needed
+            // intent.putExtra("EXTRA_EVENT_ID", event.getId());  // Example of passing data
+
+            // Start Organizer_MainActivity
             getContext().startActivity(intent);
         });
 
