@@ -39,8 +39,6 @@ public class CreateEvent extends AppCompatActivity {
     private String details;
     private String pplAccptString;
     private String waitlistCapacity;
-    private Boolean geoLocation;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +92,8 @@ public class CreateEvent extends AppCompatActivity {
         }
 
         if (!isValidDate(date)) {
-            binding.eventTime.setError("Event date needs to be in MM/DD/YY format");
-            binding.eventTime.requestFocus();
+            binding.eventDate.setError("Event date needs to be in MM/DD/YY format");
+            binding.eventDate.requestFocus();
             return false;
         }
 
