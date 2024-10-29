@@ -19,7 +19,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -34,6 +33,11 @@ import java.util.UUID;
 * https://github.com/google/gson
 * */
 
+/**
+ * SignUpActivity is the Activity that allows the user to sign up for the event.
+ * It takes in the user's name, email, and phone number and validates the inputs.
+ * If the inputs are valid, it saves the user's information to the device and to the Firebase Firestore database.
+ */
 public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
@@ -58,9 +62,7 @@ public class SignUpActivity extends AppCompatActivity {
         usersRef = db.collection("users");
 
         nameInput = binding.nameInput;
-
         emailInput = binding.emailInput;
-
         phoneInput = binding.phoneInput;
 
         Button signUpBtn = binding.signUpButton;
@@ -78,12 +80,15 @@ public class SignUpActivity extends AppCompatActivity {
                     startActivity(homeIntent);
                     finish(); // Closing the SignUpActivity to prevent any possible other Activity navigating back to it.
                 }
-
             }
         });
-
-
     }
+
+    /**
+     * Validates the user's input for name, email, and phone number.
+     * If the input is invalid, it sets an error message on the input field.
+     * @return true if the input is valid, false otherwise.
+     */
     private boolean validateInputs(){
         name = binding.nameInput.getText().toString().trim();
         email = binding.emailInput.getText().toString().trim();
@@ -113,36 +118,33 @@ public class SignUpActivity extends AppCompatActivity {
             }
         }
         return true;
-
     }
+
+    /**
+     * Saves the user's information to the device's SharedPreferences.
+     */
     private void saveUserInfoToDevice() {
         SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putString("userName", nameInput.getText().toString().trim());
         editor.putString("userEmail", emailInput.getText().toString().trim());
-
-
         editor.putString("userPhone", phoneInput.getText().toString().trim());
-
-
         editor.putBoolean("isSignedUp", true); // Mark the user as signed up so MainActivity can check this.
         editor.apply(); // Saving changes to sharedPreferences
     }
+
+    /**
+     * Saves the user's information to the Firebase Firestore database.
+     */
     private void saveUserInfoToFirebase(){
         String name = nameInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
-
-
         String phone = phoneInput.getText().toString().trim();
 
-
-        UUID uuid = UUID.fromString(UUID.randomUUID().toString());
         // Generating a Unique key so we can then push a User Object to the DB.
-
+        UUID uuid = UUID.fromString(UUID.randomUUID().toString());
         User user = new User(name,phone,email);
-
-
         String userId = UUID.randomUUID().toString();
         usersRef.document(userId).set(user)
                 .addOnSuccessListener(nothing -> {
@@ -151,8 +153,5 @@ public class SignUpActivity extends AppCompatActivity {
                 .addOnFailureListener(nothing -> {
                     System.out.println("failed");
                 });
-
-
     }
-
 }

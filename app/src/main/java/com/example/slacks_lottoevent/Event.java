@@ -1,6 +1,13 @@
 package com.example.slacks_lottoevent;
 
-public class Event {
+import com.google.zxing.common.BitMatrix;
+
+import java.io.Serializable;
+
+/**
+ * Event class that holds all the information for an event
+ */
+public class Event implements Serializable {
 
     private final Organizer organizer;
     private Facility facility;
@@ -8,24 +15,49 @@ public class Event {
     private String date;
     private String time;
     private String description;
+    private String price;
     private int capacity;
+    private int pplSelected;
+    private String extraDesc;
     private final EntrantList waitlisted;
     private final EntrantList finalists;
     private final EntrantList unselected;
     private final EntrantList invited;
+    private String qrCodeData;
+    private String eventID;
 
-    public Event(Organizer organizer, Facility facility, String name, String date, String time, String description, int capacity) {
+    /**
+     * Constructor for Event
+     * @param organizer
+     * @param facility
+     * @param name
+     * @param date
+     * @param time
+     * @param price
+     * @param description
+     * @param pplSelected
+     * @param capacity
+     * @param xtraDesc
+     * @param qrData
+     * @param eventId
+     */
+    public Event(Organizer organizer, Facility facility, String name, String date, String time, String price, String description, int pplSelected, int capacity, String xtraDesc, String qrData, String eventId) {
         this.organizer = organizer;
         this.facility = facility;
         this.name = name;
         this.date = date;
         this.time = time;
+        this.price = price;
         this.description = description;
         this.capacity = capacity;
+        this.pplSelected = pplSelected;
+        this.extraDesc = xtraDesc;
         this.waitlisted = new EntrantList();
         this.finalists = new EntrantList();
         this.unselected = new EntrantList();
         this.invited = new EntrantList();
+        this.qrCodeData = qrData;
+        this.eventID = eventId;
     }
 
     public Organizer getOrganizer() {
@@ -64,6 +96,14 @@ public class Event {
         this.time = time;
     }
 
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -79,6 +119,36 @@ public class Event {
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
+
+    public int getPplSelected() {
+        return pplSelected;
+    }
+
+    public void setPplSelected(int pplSelected) {
+        this.pplSelected = pplSelected;
+    }
+
+    public String getQRData() {
+        return qrCodeData;
+    }
+
+    public void setQRData(String qrCodeData) {
+        this.qrCodeData = qrCodeData;
+    }
+
+    public String getEventID() {
+        return eventID;
+    }
+
+    public void setEventID(String eventID) {
+        this.eventID = eventID;
+    }
+
+    public String getExtraDesc() {
+        return extraDesc;
+    }
+
+    public void setExtraDesc(String xtraDescription) { this.description = xtraDescription; }
 
     public EntrantList getWaitlisted() {
         return waitlisted;
