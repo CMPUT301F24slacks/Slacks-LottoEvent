@@ -21,6 +21,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -45,7 +46,6 @@ public class EventsHomeActivity extends AppCompatActivity implements AddFacility
         facilityCreated.setText(facilityName);
         existingFacility = facility;
 
-        // Create a map or directly use facility if it is serializable for Firestore
         Map<String, Object> facilityData = new HashMap<>();
         facilityData.put("name", facilityName);
         // Add other attributes as needed, like location, type, etc.
@@ -63,6 +63,9 @@ public class EventsHomeActivity extends AppCompatActivity implements AddFacility
                     existingFacility.setDocumentId(documentReference.getId()); // Set document ID here
                 })
                 .addOnFailureListener(e -> Log.w("addFacility", "Error adding facility", e));
+
+        // Hide the create facility button
+        createFacilitiesButton.setVisibility(View.GONE);
 
     }
 
@@ -116,6 +119,9 @@ public class EventsHomeActivity extends AppCompatActivity implements AddFacility
         createFacilitiesButton.setVisibility(View.GONE);
         facilityCreated = findViewById(R.id.facility_created);
 
+        // initially hide the textview since it loads my events page first
+        facilityCreated.setVisibility(View.GONE);
+
         eventTabLayout = findViewById(R.id.events_home_tab_layout);
         TabLayout eventsTabs = findViewById(R.id.events_home_tab_layout); // Get the tab layout in EventsHomeActivity
 
@@ -133,6 +139,8 @@ public class EventsHomeActivity extends AppCompatActivity implements AddFacility
                     binding.createEventFAB.setVisibility(View.GONE);
                     // hide the create facility button
                     createFacilitiesButton.setVisibility(View.GONE);
+                    // hides the facility textview
+                    facilityCreated.setVisibility(View.GONE);
                 }
                 if (tab.getText().equals("Manage My Events")) {
                     navController.navigate(R.id.ManageMyEventsFragment);
@@ -140,9 +148,29 @@ public class EventsHomeActivity extends AppCompatActivity implements AddFacility
                     binding.qrCodeScannerFAB.setVisibility(View.GONE);
                     // show the create event button
                     binding.createEventFAB.setVisibility(View.VISIBLE);
-                    // Show the create facility button
+                    // Shows the facility textview
+                    facilityCreated.setVisibility(View.VISIBLE);
 
-                    createFacilitiesButton.setVisibility(View.VISIBLE);
+                    facilitiesRef.addSnapshotListener((querySnapshot, e) -> {
+                        if (e != null) {
+                            Log.w("Firestore", "Listen failed.", e);
+                            return;
+                        }
+
+                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                            DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                            String facilityName = document.getString("name");
+                            if (facilityName != null && !facilityName.isEmpty()) {
+                                facilityCreated.setText(facilityName);
+                                facilityCreated.setVisibility(View.VISIBLE);
+                            } else {
+                                facilityCreated.setVisibility(View.GONE);
+                            }
+                        } else {
+                            facilityCreated.setVisibility(View.GONE);
+                            createFacilitiesButton.setVisibility(View.VISIBLE);
+                        }
+                    });
                 }
             }
 
