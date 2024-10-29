@@ -1,5 +1,9 @@
 package com.example.slacks_lottoevent;
 
+/**
+ * Entrant class represents an entrant in the app.
+ * An entrant has a list of waitlisted events, finalist events, invited events, and uninvited events.
+ */
 public class Entrant {
     private final EventList waitlistedEvents;
     private final EventList finalistEvents;

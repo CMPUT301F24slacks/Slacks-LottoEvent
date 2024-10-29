@@ -1,5 +1,8 @@
 package com.example.slacks_lottoevent;
 
+/**
+ * Facility represents a location where an event can be held.
+ */
 public class Facility {
     private String facilityName;
     private String streetAddress1;
