@@ -8,6 +8,7 @@ public class Facility {
     private String province;
     private String country;
     private String postalCode;
+    private String documentId;
     // private final Organizer organizer;
 
     public Facility(String facilityName, String streetAddress1, String streetAddress2, String city, String province, String country, String postalCode){
@@ -78,5 +79,12 @@ public class Facility {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 }
