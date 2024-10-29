@@ -76,14 +76,19 @@ public class ManageMyEventsFragment extends Fragment {
                                 HashMap<String, Object> eventDetails = (HashMap<String, Object>) eventData.get("eventDetails");
                                 if (eventDetails != null) {
                                     // Now you can access fields within eventDetails
-                                    HashMap<String, Object> facilityData = (HashMap<String, Object>) eventDetails.get("facility");
+                                    HashMap<String, Object> facilityData = (HashMap<String, Object>) eventDetails.get("facilities");
                                     Facility facility = null;
 
                                     if (facilityData != null) {
                                         String facilityName = (String) facilityData.get("name");
-                                        String facilityAddress = (String) facilityData.get("address");
+                                        String facilityStreetAddress1 = (String) facilityData.get("streetAddress1");
+                                        String facilityStreetAddress2 = (String) facilityData.get("streetAddress2");
+                                        String facilityCity = (String) facilityData.get("city");
+                                        String facilityProvince = (String) facilityData.get("province");
+                                        String facilityCountry = (String) facilityData.get("country");
+                                        String facilityPostalCode = (String) facilityData.get("postalCode");
 
-                                        facility = new Facility(new Organizer(), facilityName, facilityAddress);
+                                        facility = new Facility(facilityName, facilityStreetAddress1, facilityStreetAddress2, facilityCity, facilityProvince, facilityCountry, facilityPostalCode);
                                     }
 
                                     // Create an Organizer instance (you may want to modify this as per your data structure)
