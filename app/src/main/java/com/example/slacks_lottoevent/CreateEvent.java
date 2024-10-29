@@ -210,7 +210,7 @@ public class CreateEvent extends AppCompatActivity {
         String eventId = UUID.randomUUID().toString();
 
         Organizer organizer = new Organizer();
-        Facility facility = new Facility("Facility1", "148 St NW", "5603", "Edmonton", "Alberta", "Canada", "T6H 4T7")
+        Facility facility = new Facility("Facility1", "148 St NW", "5603", "Edmonton", "Alberta", "Canada", "T6H 4T7");
 
 //        QR Code Creation
 
