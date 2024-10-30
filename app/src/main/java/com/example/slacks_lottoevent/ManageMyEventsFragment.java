@@ -132,6 +132,13 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         createFacilitiesButton = view.findViewById(R.id.create_facility_button);
         facilityCreated = view.findViewById(R.id.facility_created);
 
+        if (existingFacility == null) {
+            createFacilitiesButton.setVisibility(View.GONE);
+        } else {
+            createFacilitiesButton.setVisibility(View.VISIBLE);
+        }
+
+
         eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -167,7 +174,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
                                     }
 
-                                    // Create an Organizer instance (you may want to modify this as per your data structure)
                                     User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
                                     Organizer organizer = new Organizer(tempUser);
 
@@ -207,15 +213,19 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                 Log.w("Firestore", "Listen failed.", e);
                 return;
             }
-
             if (querySnapshot != null && !querySnapshot.isEmpty()) {
                 DocumentSnapshot document = querySnapshot.getDocuments().get(0);
                 String facilityName = document.getString("name");
                 if (facilityName != null && !facilityName.isEmpty()) {
                     facilityCreated.setText(facilityName);
                     facilityCreated.setVisibility(View.VISIBLE);
+                    // Populate existingFacility with data from Firestore
+                    existingFacility = document.toObject(Facility.class);
+                    existingFacility.setDocumentId(document.getId());
+                    existingFacility.setFacilityName(facilityName);
                 } else {
                     facilityCreated.setVisibility(View.GONE);
+                    existingFacility = null;
                 }
             } else {
                 facilityCreated.setVisibility(View.GONE);
@@ -225,14 +235,15 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
         createFacilitiesButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
-                new AddFacilityFragment().show(getParentFragmentManager(), "Add Facility");
+                // Referenced ChatGPT with prompt "How to show a dialog within a fragment" on Oct 29, 2024
+                // License: OpenAI
+                new AddFacilityFragment().show(getChildFragmentManager(), "Add Facility");
             }
         });
 
         facilityCreated.setOnClickListener(v -> {
-            new AddFacilityFragment(existingFacility, true).show(getParentFragmentManager(), "Edit Facility");
+            new AddFacilityFragment(existingFacility, true).show(getChildFragmentManager(), "Edit Facility");
         });
-
     }
     @Override
     public void onDestroyView() {

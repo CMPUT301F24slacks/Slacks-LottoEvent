@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.SparseBooleanArrayKt;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 public class AddFacilityFragment extends DialogFragment {
     public Facility facility;
@@ -27,11 +28,20 @@ public class AddFacilityFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        try {
-            // Set listener from the hosting Activity or Fragment
-            listener = (AddFacilityDialogListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement AddFacilityDialogListener");
+//        try {
+//            // Set listener from the hosting Activity or Fragment
+//            listener = (AddFacilityDialogListener) context;
+//        } catch (ClassCastException e) {
+//            throw new ClassCastException(context.toString() + " must implement AddFacilityDialogListener");
+//        }
+
+        Fragment parentFragment = getParentFragment();
+        if (parentFragment instanceof AddFacilityDialogListener) {
+            listener = (AddFacilityDialogListener) parentFragment; // Set listener from ParentFragment
+        } else if (context instanceof AddFacilityDialogListener) {
+            listener = (AddFacilityDialogListener) context; // Fallback to Activity if ParentFragment is not the listener
+        } else {
+            throw new ClassCastException("Parent fragment or activity must implement AddFacilityDialogListener");
         }
     }
 

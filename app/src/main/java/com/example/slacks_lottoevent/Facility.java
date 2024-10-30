@@ -13,6 +13,9 @@ public class Facility {
     private String postalCode;
     private String documentId;
 
+    // No-argument constructor required for Firestore
+    public Facility() {}
+
     public Facility(String facilityName, String streetAddress1, String streetAddress2, String city, String province, String country, String postalCode){
         this.facilityName = facilityName;
         this.streetAddress1 = streetAddress1;

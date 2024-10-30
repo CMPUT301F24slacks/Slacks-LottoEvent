@@ -2,71 +2,42 @@ package com.example.slacks_lottoevent;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.slacks_lottoevent.databinding.ActivityEventsHomeBinding;
-import com.example.slacks_lottoevent.databinding.FragmentManageMyEventsBinding;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class EventsHomeActivity extends AppCompatActivity {
 
 /**
  * EventsHomeActivity is the main activity for the Events Home screen.
  */
+public class EventsHomeActivity extends AppCompatActivity {
 
-    private ActivityEventsHomeBinding bindingEventsHome;
-    private FragmentManageMyEventsBinding bindingManageMyEvents;
+    private ActivityEventsHomeBinding binding;
     private AppBarConfiguration appBarConfiguration;
     private MaterialToolbar toolbar;
-
-    private TabLayout eventTabLayout;
-
-    private FirebaseFirestore db;
-    private CollectionReference facilitiesRef;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        binding = ActivityEventsHomeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        bindingEventsHome = ActivityEventsHomeBinding.inflate(getLayoutInflater());
-        bindingManageMyEvents = FragmentManageMyEventsBinding.inflate(getLayoutInflater());
-        setContentView(bindingEventsHome.getRoot());
-        setContentView(bindingManageMyEvents.getRoot());
-
-        toolbar = bindingEventsHome.toolbar;
+        toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
 
-
-
-        // initially hide the button since it loads my events page first
-//        createFacilitiesButton.setVisibility(View.GONE);
-        //facilityCreated = findViewById(R.id.facility_created);
-
-        // initially hide the textview since it loads my events page first
-        // facilityCreated.setVisibility(View.GONE);
-
-        eventTabLayout = findViewById(R.id.events_home_tab_layout);
         TabLayout eventsTabs = findViewById(R.id.events_home_tab_layout); // Get the tab layout in EventsHomeActivity
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_events_home); // Get the navigation controller
@@ -78,43 +49,16 @@ public class EventsHomeActivity extends AppCompatActivity {
                 if (tab.getText().equals("My Events")) {
                     navController.navigate(R.id.MyEventsFragment);
                     // show the QR code scanner button
-                    bindingEventsHome.qrCodeScannerFAB.setVisibility(View.VISIBLE);
+                    binding.qrCodeScannerFAB.setVisibility(View.VISIBLE);
                     // hide the create event button
-                    bindingEventsHome.createEventFAB.setVisibility(View.GONE);
-                    // hide the create facility button
-                    //createFacilitiesButton.setVisibility(View.GONE);
-                    // hides the facility textview
-                    //facilityCreated.setVisibility(View.GONE);
+                    binding.createEventFAB.setVisibility(View.GONE);
                 }
                 if (tab.getText().equals("Manage My Events")) {
                     navController.navigate(R.id.ManageMyEventsFragment);
                     // hide the QR code scanner button
-                    bindingEventsHome.qrCodeScannerFAB.setVisibility(View.GONE);
+                    binding.qrCodeScannerFAB.setVisibility(View.GONE);
                     // show the create event button
-                    bindingEventsHome.createEventFAB.setVisibility(View.VISIBLE);
-                    // Shows the facility textview
-                    //facilityCreated.setVisibility(View.VISIBLE);
-
-//                    facilitiesRef.addSnapshotListener((querySnapshot, e) -> {
-//                        if (e != null) {
-//                            Log.w("Firestore", "Listen failed.", e);
-//                            return;
-//                        }
-//
-//                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
-//                            DocumentSnapshot document = querySnapshot.getDocuments().get(0);
-//                            String facilityName = document.getString("name");
-//                            if (facilityName != null && !facilityName.isEmpty()) {
-//                                facilityCreated.setText(facilityName);
-//                                facilityCreated.setVisibility(View.VISIBLE);
-//                            } else {
-//                                facilityCreated.setVisibility(View.GONE);
-//                            }
-//                        } else {
-//                            facilityCreated.setVisibility(View.GONE);
-//                            createFacilitiesButton.setVisibility(View.VISIBLE);
-//                        }
-//                    });
+                    binding.createEventFAB.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -132,7 +76,7 @@ public class EventsHomeActivity extends AppCompatActivity {
         /*
          * QR code scanner button, opens the QR code scanner.
          */
-        bindingEventsHome.qrCodeScannerFAB.setOnClickListener(new View.OnClickListener() {
+        binding.qrCodeScannerFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EventsHomeActivity.this,EventQrScanner.class);
@@ -143,7 +87,7 @@ public class EventsHomeActivity extends AppCompatActivity {
         /*
          * Create event button, opens the create event screen upon being clicked.
          */
-        bindingEventsHome.createEventFAB.setOnClickListener(new View.OnClickListener() {
+        binding.createEventFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // create event button
@@ -163,18 +107,6 @@ public class EventsHomeActivity extends AppCompatActivity {
                 Toast.makeText(EventsHomeActivity.this, "Toolbar title clicked", Toast.LENGTH_SHORT).show();
             }
         });
-
-//        createFacilitiesButton.setOnClickListener(new Button.OnClickListener(){
-//            public void onClick(View v){
-//                new AddFacilityFragment().show(getSupportFragmentManager(), "Add Facility");
-//            }
-//        });
-//
-//        facilityCreated.setOnClickListener(v -> {
-//            new AddFacilityFragment(existingFacility, true).show(getSupportFragmentManager(), "Edit Facility");
-//        });
-
-
     }
 
     /*
@@ -204,8 +136,4 @@ public class EventsHomeActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }
-
