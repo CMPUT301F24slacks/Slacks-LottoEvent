@@ -4,42 +4,88 @@ package com.example.slacks_lottoevent;
  * Facility represents a location where an event can be held.
  */
 public class Facility {
+    private String facilityName;
+    private String streetAddress1;
+    private String streetAddress2;
+    private String city;
+    private String province;
+    private String country;
+    private String postalCode;
+    private String facilityId;
 
-    private final Organizer organizer;
-    private String name;
-    private String address;
+    // No-argument constructor required for Firestore
+    public Facility() {}
 
-    /**
-     * Constructs a new Facility object.
-     *
-     * @param organizer the organizer of the facility
-     * @param name the name of the facility
-     * @param address the address of the facility
-     */
-    public Facility(Organizer organizer, String name, String address) {
-        this.organizer = organizer;
-        this.name = name;
-        this.address = address;
+    public Facility(String facilityName, String streetAddress1, String streetAddress2, String city, String province, String country, String postalCode){
+        this.facilityName = facilityName;
+        this.streetAddress1 = streetAddress1;
+        this.streetAddress2 = streetAddress2;
+        this.city = city;
+        this.province = province;
+        this.country = country;
+        this.postalCode = postalCode;
     }
 
-    public Organizer getOrganizer() {
-        return organizer;
+    public String getFacilityName() {
+        return facilityName;
     }
 
-    public String getName() {
-        return name;
+    public void setFacilityName(String facilityName) {
+        this.facilityName = facilityName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getStreetAddress1() {
+        return streetAddress1;
     }
 
-    public String getAddress() {
-        return address;
+    public void setStreetAddress1(String streetAddress1) {
+        this.streetAddress1 = streetAddress1;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public String getStreetAddress2() {
+        return streetAddress2;
     }
 
+    public void setStreetAddress2(String streetAddress2) {
+        this.streetAddress2 = streetAddress2;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+    public String getFacilityId() {
+        return facilityId;
+    }
+
+    public void setFacilityId(String facilityId) {
+        this.facilityId = facilityId;
+    }
 }

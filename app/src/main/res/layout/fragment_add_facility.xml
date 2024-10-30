@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#1A1A1A"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/facility_name_input"
+        android:layout_width="294dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="100dp"
+        android:hint="Name"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#808080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/street_address_1"
+        android:layout_width="294dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="24dp"
+        android:hint="Street Address 1"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#808080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/facility_name_input" />
+
+    <EditText
+        android:id="@+id/street_address_2"
+        android:layout_width="294dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="24dp"
+        android:hint="Street Address 2"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#808080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/street_address_1" />
+
+    <EditText
+        android:id="@+id/city"
+        android:layout_width="294dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="24dp"
+        android:hint="City"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#808080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/street_address_2" />
+
+    <EditText
+        android:id="@+id/province"
+        android:layout_width="294dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="24dp"
+        android:hint="Province"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#808080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/city" />
+
+    <EditText
+        android:id="@+id/country"
+        android:layout_width="294dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="24dp"
+        android:hint="Country"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#808080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/province" />
+
+    <EditText
+        android:id="@+id/postal_code"
+        android:layout_width="294dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="24dp"
+        android:hint="Postal Code"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#808080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/country" />
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="51dp"
+        android:text="Confirm"
+        app:backgroundTint="#7B24EB"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.269"
+        app:layout_constraintStart_toEndOf="@+id/cancel_button"
+        app:layout_constraintTop_toBottomOf="@+id/postal_code"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="444dp"
+        android:layout_marginTop="51dp"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="10dp"
+        android:text="Cancel"
+        android:textColor="#000000"
+        app:backgroundTint="#E3E3E3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/postal_code"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

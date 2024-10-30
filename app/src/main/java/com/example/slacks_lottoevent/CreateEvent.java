@@ -209,9 +209,10 @@ public class CreateEvent extends AppCompatActivity {
 //        unique one
         String eventId = UUID.randomUUID().toString();
 
+        Facility facility = new Facility("Facility1", "148 St NW", "5603", "Edmonton", "Alberta", "Canada", "T6H 4T7");
         User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
         Organizer organizer = new Organizer(tempUser);
-        Facility facility = new Facility(organizer, "Facility Name", "2021 95th St SW");
+
 
 //        QR Code Creation
         QRCodeWriter writer = new QRCodeWriter();
