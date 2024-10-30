@@ -59,7 +59,7 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
                 Bitmap bitmap = encoder.createBitmap(bitMatrix); // Create Bitmap from BitMatrix
                 qrCode.setImageBitmap(bitmap); // Set the QR code image
             } catch (WriterException e) {
-                Log.e("QRCodeError", "Error converting QR code string to BitMatrix", e);
+                Log.e("QRCodeError", "Error converting QR code string to BitMatrix");
             }
         } else {
             qrCode.setImageBitmap(null); // Clear the image if QR data is null or empty
