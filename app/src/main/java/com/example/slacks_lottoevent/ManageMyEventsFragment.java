@@ -141,23 +141,26 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
         eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
                 if (error != null) {
                     Log.e("FirestoreError", "Listen failed.", error);
                     return;
                 }
 
-                if (value != null && !value.isEmpty()) {
-                    eventList.clear();
-                    for (DocumentSnapshot document : value.getDocuments()) {
+                if (snapshots != null && !snapshots.isEmpty()) {
+                    ArrayList<Event> newEvents = new ArrayList<>(); // Temporary list to minimize UI updates
+
+                    for (DocumentSnapshot document : snapshots.getDocuments()) {
                         HashMap<String, Object> eventData = (HashMap<String, Object>) document.getData();
 
                         if (eventData != null) {
                             try {
+                                // Extract event details
                                 HashMap<String, Object> eventDetails = (HashMap<String, Object>) eventData.get("eventDetails");
                                 if (eventDetails != null) {
                                     // Now you can access fields within eventDetails
                                     HashMap<String, Object> facilityData = (HashMap<String, Object>) eventDetails.get("facilities");
+                                    // Facility and organizer setup
                                     Facility facility = null;
 
                                     if (facilityData != null) {
@@ -177,33 +180,33 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                                     User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
                                     Organizer organizer = new Organizer(tempUser);
 
+                                    // Retrieve and cast event fields
                                     String name = (String) eventDetails.get("name");
                                     String date = (String) eventDetails.get("date");
                                     String time = (String) eventDetails.get("time");
                                     String price = (String) eventDetails.get("price");
                                     String details = (String) eventDetails.get("description");
                                     String qrData = (String) eventDetails.get("qrdata");
-                                    Long capacityLong = (Long) eventDetails.get("capacity");
-                                    Integer capacity = (capacityLong != null) ? capacityLong.intValue() : 0; // Default value
-
-                                    Long signupAcptLong = (Long) eventDetails.get("signupAcpt");
-                                    Integer pplAccpt = (signupAcptLong != null) ? signupAcptLong.intValue() : 0;
-                                    String extraDesc = (String) eventDetails.get("extraDesc");
-
+                                    Integer capacity = ((Long) eventDetails.getOrDefault("capacity", 0L)).intValue();
+                                    Integer pplAccpt = ((Long) eventDetails.getOrDefault("signupAcpt", 0L)).intValue();
+                                    Boolean geoLoc = (Boolean) eventDetails.get("geoLocation");
                                     String eventID = (String) eventDetails.get("eventid");
 
-                                    Event newEvent = new Event(organizer, facility, name, date, time, price, details, pplAccpt, capacity, extraDesc, qrData, eventID);
-                                    eventList.add(newEvent);
-                                    organzierEventArrayAdapter.notifyDataSetChanged();
-                                    Log.d("EventSuccess", "Added to eventList!!");
-
-                                } else {
-                                    Log.e("EventDataError", "eventDetails map is null for document: " + document.getId());
+                                    // Add new event to the temporary list
+                                    Event newEvent = new Event(organizer, facility, name, date, time, price, details, pplAccpt, capacity, qrData, eventID, geoLoc);
+                                    newEvents.add(newEvent);
                                 }
-                            } catch (ClassCastException cce) {
-                                Log.e("EventError", "ClassCastException: " + cce.getMessage());
+                            } catch (ClassCastException e) {
+                                Log.e("EventError", "ClassCastException while processing event data", e);
                             }
                         }
+                    }
+
+                    // Update eventList and UI only if there are changes
+                    if (!newEvents.equals(eventList)) {
+                        eventList.clear();
+                        eventList.addAll(newEvents);
+                        organzierEventArrayAdapter.notifyDataSetChanged();
                     }
                 }
             }

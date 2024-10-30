@@ -16,13 +16,13 @@ public class Event {
     private String price;
     private int capacity;
     private int pplSelected;
-    private String extraDesc;
     private final EntrantList waitlisted;
     private final EntrantList finalists;
     private final EntrantList unselected;
     private final EntrantList invited;
     private String qrCodeData;
     private String eventID;
+    private Boolean geoLocation;
 
     /**
      * Constructor for Event
@@ -35,11 +35,11 @@ public class Event {
      * @param description
      * @param pplSelected
      * @param capacity
-     * @param xtraDesc
      * @param qrData
      * @param eventId
+     * @param geoLocation
      */
-    public Event(Organizer organizer, Facility facility, String name, String date, String time, String price, String description, int pplSelected, int capacity, String xtraDesc, String qrData, String eventId) {
+    public Event(Organizer organizer, Facility facility, String name, String date, String time, String price, String description, int pplSelected, int capacity, String qrData, String eventId, Boolean geoLocation) {
         this.organizer = organizer;
         this.facility = facility;
         this.name = name;
@@ -49,13 +49,13 @@ public class Event {
         this.description = description;
         this.capacity = capacity;
         this.pplSelected = pplSelected;
-        this.extraDesc = xtraDesc;
         this.waitlisted = new EntrantList();
         this.finalists = new EntrantList();
         this.unselected = new EntrantList();
         this.invited = new EntrantList();
         this.qrCodeData = qrData;
         this.eventID = eventId;
+        this.geoLocation = geoLocation;
     }
 
     public Organizer getOrganizer() {
@@ -142,11 +142,13 @@ public class Event {
         this.eventID = eventID;
     }
 
-    public String getExtraDesc() {
-        return extraDesc;
+    public Boolean getgeoLocation() {
+        return geoLocation;
     }
 
-    public void setExtraDesc(String xtraDescription) { this.description = xtraDescription; }
+    public void setGeoLocation(Boolean new_geoLocation) {
+        this.geoLocation = new_geoLocation;
+    }
 
     public EntrantList getWaitlisted() {
         return waitlisted;

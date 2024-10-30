@@ -261,41 +261,6 @@
 
         <!--       cancel/ creating -->
 
-        <TextView
-            android:id="@+id/xtra_details"
-            android:layout_width="128dp"
-            android:layout_height="27dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="333dp"
-            android:text="Extra Details"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.057"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/waiting_list"
-            tools:ignore="MissingConstraints" />
-
-        <EditText
-            android:id="@+id/extra_details"
-            android:layout_width="370dp"
-            android:layout_height="39dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/rounded_borders"
-            android:ems="10"
-            android:inputType="textMultiLine"
-            android:maxLines="5"
-            android:padding="8dp"
-            android:maxLength="250"
-            android:textColor="@android:color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.39"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/xtra_details"
-            tools:ignore="MissingConstraints" />
-
         <Button
             android:id="@+id/cancelBtn"
             android:layout_width="149dp"
@@ -306,22 +271,20 @@
             android:text="Cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/extra_details"
-            app:layout_constraintVertical_bias="0.923"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxGeo"
             tools:ignore="MissingConstraints" />
 
         <Button
             android:id="@+id/createBtn"
             android:layout_width="149dp"
             android:layout_height="36dp"
-            android:layout_marginStart="68dp"
+            android:layout_marginStart="64dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="11dp"
             android:text="Create"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cancelBtn"
-            app:layout_constraintTop_toBottomOf="@+id/extra_details"
-            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxGeo"
             tools:ignore="MissingConstraints" />
 
         <CheckBox
@@ -376,6 +339,29 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/no_people_accpt" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="24dp"
+            android:text="No Geo Location"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/waiting_list" />
+
+        <CheckBox
+            android:id="@+id/checkBoxGeo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="10dp"
+            android:buttonTint="@color/white"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/cancelled" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
