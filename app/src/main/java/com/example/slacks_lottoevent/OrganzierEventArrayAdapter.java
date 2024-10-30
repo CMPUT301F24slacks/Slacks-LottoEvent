@@ -52,7 +52,6 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
         String qrData = event.getQRData();
 
 
-        Log.d("QRCodeData", "QR Data: " + qrData);
         if (qrData != null && !qrData.isEmpty()) {
             try {
                 BitMatrix bitMatrix = deserializeBitMatrix(qrData); // Convert back to BitMatrix

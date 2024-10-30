@@ -94,10 +94,11 @@ public class EventQrScanner extends AppCompatActivity {
         if (result != null && result.getContents() != null) {
             String qrCodeValue = result.getContents();
             System.out.println("qr code value:"+ " " + qrCodeValue);
-            eventsRef.whereEqualTo("qrCode",qrCodeValue).get()
+            eventsRef.whereEqualTo("eventDetails.eventID", qrCodeValue).get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful() && !task.getResult().isEmpty()) {
                             DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                            Intent intent = new Intent(EventQrScanner.this,EventDetails.class);
                         }
                     });
         } else {
