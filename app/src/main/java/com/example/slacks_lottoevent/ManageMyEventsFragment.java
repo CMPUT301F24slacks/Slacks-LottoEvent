@@ -65,7 +65,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilitiesRef.add(facilityData)
                 .addOnSuccessListener(documentReference -> {
                     Log.d("addFacility", "Facility added with ID: " + documentReference.getId());
-                    existingFacility.setDocumentId(documentReference.getId()); // Set document ID here
+                    existingFacility.setFacilityId(documentReference.getId()); // Set document ID here
                 })
                 .addOnFailureListener(e -> Log.w("addFacility", "Error adding facility", e));
 
@@ -85,7 +85,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         }
 
         // Retrieve the document ID for the existing facility
-        String documentId = existingFacility.getDocumentId();
+        String documentId = existingFacility.getFacilityId();
         if (documentId == null || documentId.isEmpty()) {
             Log.w("updateFacility", "No document ID provided for update");
             return;
@@ -220,7 +220,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                     facilityCreated.setVisibility(View.VISIBLE);
                     // Populate existingFacility with data from Firestore
                     existingFacility = document.toObject(Facility.class);
-                    existingFacility.setDocumentId(document.getId());
+                    existingFacility.setFacilityId(document.getId());
                     existingFacility.setFacilityName(facilityName);
                 } else {
                     facilityCreated.setVisibility(View.GONE);

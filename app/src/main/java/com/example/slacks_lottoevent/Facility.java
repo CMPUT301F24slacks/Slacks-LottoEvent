@@ -11,7 +11,7 @@ public class Facility {
     private String province;
     private String country;
     private String postalCode;
-    private String documentId;
+    private String facilityId;
 
     // No-argument constructor required for Firestore
     public Facility() {}
@@ -81,11 +81,11 @@ public class Facility {
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
-    public String getDocumentId() {
-        return documentId;
+    public String getFacilityId() {
+        return facilityId;
     }
 
-    public void setDocumentId(String documentId) {
-        this.documentId = documentId;
+    public void setFacilityId(String facilityId) {
+        this.facilityId = facilityId;
     }
 }
