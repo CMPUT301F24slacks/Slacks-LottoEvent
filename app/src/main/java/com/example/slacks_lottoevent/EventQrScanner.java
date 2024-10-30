@@ -99,6 +99,7 @@ public class EventQrScanner extends AppCompatActivity {
                         if (task.isSuccessful() && !task.getResult().isEmpty()) {
                             DocumentSnapshot document = task.getResult().getDocuments().get(0);
                             Intent intent = new Intent(EventQrScanner.this,EventDetails.class);
+                            startActivity(intent);
                         }
                     });
         } else {
