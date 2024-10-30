@@ -4,14 +4,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.util.SparseBooleanArrayKt;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
@@ -57,7 +55,7 @@ public class AddFacilityFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.facility_add_fragment, null);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_add_facility, null);
         EditText editFacilityName = view.findViewById(R.id.facility_name_input);
         EditText editStreetAddress1 = view.findViewById(R.id.street_address_1);
         EditText editStreetAddress2 = view.findViewById(R.id.street_address_2);
