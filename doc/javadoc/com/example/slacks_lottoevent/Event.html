@@ -89,7 +89,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.example.slacks_lottoevent.Organizer,com.example.slacks_lottoevent.Facility,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">Event</a><wbr>(<a href="Organizer.html" title="class in com.example.slacks_lottoevent">Organizer</a>&nbsp;organizer,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.example.slacks_lottoevent.Organizer,com.example.slacks_lottoevent.Facility,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,java.lang.Boolean)" class="member-name-link">Event</a><wbr>(<a href="Organizer.html" title="class in com.example.slacks_lottoevent">Organizer</a>&nbsp;organizer,
  <a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facility,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;date,
@@ -98,9 +98,9 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description,
  int&nbsp;pplSelected,
  int&nbsp;capacity,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;xtraDesc,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qrData,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&nbsp;geoLocation)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructor for Event</div>
 </div>
@@ -130,14 +130,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEventID()" class="member-name-link">getEventID</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getExtraDesc()" class="member-name-link">getExtraDesc</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFacility()" class="member-name-link">getFacility</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFacility()" class="member-name-link">getFacility</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="EntrantList.html" title="class in com.example.slacks_lottoevent">EntrantList</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFinalists()" class="member-name-link">getFinalists</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="EntrantList.html" title="class in com.example.slacks_lottoevent">EntrantList</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFinalists()" class="member-name-link">getFinalists</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getgeoLocation()" class="member-name-link">getgeoLocation</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="EntrantList.html" title="class in com.example.slacks_lottoevent">EntrantList</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInvited()" class="member-name-link">getInvited</a>()</code></div>
@@ -179,10 +179,10 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEventID(java.lang.String)" class="member-name-link">setEventID</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setExtraDesc(java.lang.String)" class="member-name-link">setExtraDesc</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;xtraDescription)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFacility(com.example.slacks_lottoevent.Facility)" class="member-name-link">setFacility</a><wbr>(<a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facility)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFacility(com.example.slacks_lottoevent.Facility)" class="member-name-link">setFacility</a><wbr>(<a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facility)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setGeoLocation(java.lang.Boolean)" class="member-name-link">setGeoLocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&nbsp;new_geoLocation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setName(java.lang.String)" class="member-name-link">setName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
@@ -217,7 +217,7 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.example.slacks_lottoevent.Organizer,com.example.slacks_lottoevent.Facility,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,java.lang.String)">
+<section class="detail" id="&lt;init&gt;(com.example.slacks_lottoevent.Organizer,com.example.slacks_lottoevent.Facility,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,java.lang.Boolean)">
 <h3>Event</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Event</span><wbr><span class="parameters">(<a href="Organizer.html" title="class in com.example.slacks_lottoevent">Organizer</a>&nbsp;organizer,
  <a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facility,
@@ -228,9 +228,9 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description,
  int&nbsp;pplSelected,
  int&nbsp;capacity,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;xtraDesc,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qrData,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&nbsp;geoLocation)</span></div>
 <div class="block">Constructor for Event</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -243,9 +243,9 @@ loadScripts(document, 'script');</script>
 <dd><code>description</code> - </dd>
 <dd><code>pplSelected</code> - </dd>
 <dd><code>capacity</code> - </dd>
-<dd><code>xtraDesc</code> - </dd>
 <dd><code>qrData</code> - </dd>
 <dd><code>eventId</code> - </dd>
+<dd><code>geoLocation</code> - </dd>
 </dl>
 </section>
 </li>
@@ -384,15 +384,15 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getExtraDesc()">
-<h3>getExtraDesc</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getExtraDesc</span>()</div>
+<section class="detail" id="getgeoLocation()">
+<h3>getgeoLocation</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">getgeoLocation</span>()</div>
 </section>
 </li>
 <li>
-<section class="detail" id="setExtraDesc(java.lang.String)">
-<h3>setExtraDesc</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setExtraDesc</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;xtraDescription)</span></div>
+<section class="detail" id="setGeoLocation(java.lang.Boolean)">
+<h3>setGeoLocation</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setGeoLocation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&nbsp;new_geoLocation)</span></div>
 </section>
 </li>
 <li>
