@@ -18,7 +18,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.view.PreviewView;
 
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.google.firebase.firestore.CollectionReference;
@@ -93,15 +95,10 @@ public class EventQrScanner extends AppCompatActivity {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null && result.getContents() != null) {
             String qrCodeValue = result.getContents();
-            System.out.println("qr code value:"+ " " + qrCodeValue);
-            eventsRef.whereEqualTo("eventDetails.eventID", qrCodeValue).get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                            Intent intent = new Intent(EventQrScanner.this,EventDetails.class);
-                            startActivity(intent);
-                        }
-                    });
+            Intent intent = new Intent(EventQrScanner.this, EventDetails.class);
+            intent.putExtra("qrCodeValue", qrCodeValue);
+            startActivity(intent);
+
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
