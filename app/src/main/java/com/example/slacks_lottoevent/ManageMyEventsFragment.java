@@ -132,11 +132,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         createFacilitiesButton = view.findViewById(R.id.create_facility_button);
         facilityCreated = view.findViewById(R.id.facility_created);
 
-        if (existingFacility == null) {
-            createFacilitiesButton.setVisibility(View.GONE);
-        } else {
-            createFacilitiesButton.setVisibility(View.VISIBLE);
-        }
+
 
 
         eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -235,6 +231,12 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                 createFacilitiesButton.setVisibility(View.VISIBLE);
             }
         });
+
+        if (existingFacility == null) {
+            createFacilitiesButton.setVisibility(View.GONE);
+        } else {
+            createFacilitiesButton.setVisibility(View.VISIBLE);
+        }
 
         createFacilitiesButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
