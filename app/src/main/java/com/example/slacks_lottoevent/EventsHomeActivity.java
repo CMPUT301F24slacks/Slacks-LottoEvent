@@ -26,7 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EventsHomeActivity extends AppCompatActivity implements AddFacilityFragment.AddFacilityDialogListener {
+public class EventsHomeActivity extends AppCompatActivity {
 
 /**
  * EventsHomeActivity is the main activity for the Events Home screen.
@@ -36,82 +36,19 @@ public class EventsHomeActivity extends AppCompatActivity implements AddFacility
     private FragmentManageMyEventsBinding bindingManageMyEvents;
     private AppBarConfiguration appBarConfiguration;
     private MaterialToolbar toolbar;
-    private Button createFacilitiesButton;
+
     private TabLayout eventTabLayout;
-    private TextView facilityCreated;
-    private Facility existingFacility;
+
     private FirebaseFirestore db;
     private CollectionReference facilitiesRef;
 
-    @Override
-    public void addFacility(Facility facility) {
-        // Retrieve the facility name and set it to display on the screen
-        String facilityName = facility.getFacilityName();
-        facilityCreated.setText(facilityName);
-        existingFacility = facility;
 
-        Map<String, Object> facilityData = new HashMap<>();
-        facilityData.put("name", facilityName);
-        // Add other attributes as needed, like location, type, etc.
-        facilityData.put("streetAddress1", facility.getStreetAddress1());
-        facilityData.put("streetAddress2", facility.getStreetAddress2());
-        facilityData.put("city", facility.getCity());
-        facilityData.put("province", facility.getProvince());
-        facilityData.put("country", facility.getCountry());
-        facilityData.put("postalCode", facility.getProvince());
-
-        // Add the facility data to Firestore
-        facilitiesRef.add(facilityData)
-                .addOnSuccessListener(documentReference -> {
-                    Log.d("addFacility", "Facility added with ID: " + documentReference.getId());
-                    existingFacility.setDocumentId(documentReference.getId()); // Set document ID here
-                })
-                .addOnFailureListener(e -> Log.w("addFacility", "Error adding facility", e));
-
-        // Hide the create facility button
-        createFacilitiesButton.setVisibility(View.GONE);
-
-    }
-
-    @Override
-    public void updateFacility() {
-        String facilityName = existingFacility.getFacilityName();
-        facilityCreated.setText(facilityName);
-
-        if (existingFacility == null) {
-            Log.w("updateFacility", "No facility selected to update");
-            return;
-        }
-
-        // Retrieve the document ID for the existing facility
-        String documentId = existingFacility.getDocumentId();
-        if (documentId == null || documentId.isEmpty()) {
-            Log.w("updateFacility", "No document ID provided for update");
-            return;
-        }
-
-        // Prepare the updated facility data
-        Map<String, Object> facilityData = new HashMap<>();
-        facilityData.put("name", existingFacility.getFacilityName());
-        facilityData.put("streetAddress1", existingFacility.getStreetAddress1());
-        facilityData.put("streetAddress2", existingFacility.getStreetAddress2());
-        facilityData.put("city", existingFacility.getCity());
-        facilityData.put("province", existingFacility.getProvince());
-        facilityData.put("country", existingFacility.getCountry());
-        facilityData.put("postalCode", existingFacility.getPostalCode());
-
-        // Update the document in Firestore
-        facilitiesRef.document(documentId).update(facilityData)
-                .addOnSuccessListener(aVoid -> Log.d("updateFacility", "Facility updated successfully"))
-                .addOnFailureListener(e -> Log.w("updateFacility", "Error updating facility", e));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = FirebaseFirestore.getInstance();
-        facilitiesRef = db.collection("facilities");
+
         bindingEventsHome = ActivityEventsHomeBinding.inflate(getLayoutInflater());
         bindingManageMyEvents = FragmentManageMyEventsBinding.inflate(getLayoutInflater());
         setContentView(bindingEventsHome.getRoot());
@@ -120,11 +57,11 @@ public class EventsHomeActivity extends AppCompatActivity implements AddFacility
         toolbar = bindingEventsHome.toolbar;
         setSupportActionBar(toolbar);
 
-        createFacilitiesButton = findViewById(R.id.create_facility_button);
+
 
         // initially hide the button since it loads my events page first
 //        createFacilitiesButton.setVisibility(View.GONE);
-        facilityCreated = findViewById(R.id.facility_created);
+        //facilityCreated = findViewById(R.id.facility_created);
 
         // initially hide the textview since it loads my events page first
         // facilityCreated.setVisibility(View.GONE);
@@ -145,9 +82,9 @@ public class EventsHomeActivity extends AppCompatActivity implements AddFacility
                     // hide the create event button
                     bindingEventsHome.createEventFAB.setVisibility(View.GONE);
                     // hide the create facility button
-                    createFacilitiesButton.setVisibility(View.GONE);
+                    //createFacilitiesButton.setVisibility(View.GONE);
                     // hides the facility textview
-                    facilityCreated.setVisibility(View.GONE);
+                    //facilityCreated.setVisibility(View.GONE);
                 }
                 if (tab.getText().equals("Manage My Events")) {
                     navController.navigate(R.id.ManageMyEventsFragment);
@@ -156,28 +93,28 @@ public class EventsHomeActivity extends AppCompatActivity implements AddFacility
                     // show the create event button
                     bindingEventsHome.createEventFAB.setVisibility(View.VISIBLE);
                     // Shows the facility textview
-                    facilityCreated.setVisibility(View.VISIBLE);
+                    //facilityCreated.setVisibility(View.VISIBLE);
 
-                    facilitiesRef.addSnapshotListener((querySnapshot, e) -> {
-                        if (e != null) {
-                            Log.w("Firestore", "Listen failed.", e);
-                            return;
-                        }
-
-                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                            DocumentSnapshot document = querySnapshot.getDocuments().get(0);
-                            String facilityName = document.getString("name");
-                            if (facilityName != null && !facilityName.isEmpty()) {
-                                facilityCreated.setText(facilityName);
-                                facilityCreated.setVisibility(View.VISIBLE);
-                            } else {
-                                facilityCreated.setVisibility(View.GONE);
-                            }
-                        } else {
-                            facilityCreated.setVisibility(View.GONE);
-                            createFacilitiesButton.setVisibility(View.VISIBLE);
-                        }
-                    });
+//                    facilitiesRef.addSnapshotListener((querySnapshot, e) -> {
+//                        if (e != null) {
+//                            Log.w("Firestore", "Listen failed.", e);
+//                            return;
+//                        }
+//
+//                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+//                            DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+//                            String facilityName = document.getString("name");
+//                            if (facilityName != null && !facilityName.isEmpty()) {
+//                                facilityCreated.setText(facilityName);
+//                                facilityCreated.setVisibility(View.VISIBLE);
+//                            } else {
+//                                facilityCreated.setVisibility(View.GONE);
+//                            }
+//                        } else {
+//                            facilityCreated.setVisibility(View.GONE);
+//                            createFacilitiesButton.setVisibility(View.VISIBLE);
+//                        }
+//                    });
                 }
             }
 
@@ -227,15 +164,15 @@ public class EventsHomeActivity extends AppCompatActivity implements AddFacility
             }
         });
 
-        createFacilitiesButton.setOnClickListener(new Button.OnClickListener(){
-            public void onClick(View v){
-                new AddFacilityFragment().show(getSupportFragmentManager(), "Add Facility");
-            }
-        });
-
-        facilityCreated.setOnClickListener(v -> {
-            new AddFacilityFragment(existingFacility, true).show(getSupportFragmentManager(), "Edit Facility");
-        });
+//        createFacilitiesButton.setOnClickListener(new Button.OnClickListener(){
+//            public void onClick(View v){
+//                new AddFacilityFragment().show(getSupportFragmentManager(), "Add Facility");
+//            }
+//        });
+//
+//        facilityCreated.setOnClickListener(v -> {
+//            new AddFacilityFragment(existingFacility, true).show(getSupportFragmentManager(), "Edit Facility");
+//        });
 
 
     }
