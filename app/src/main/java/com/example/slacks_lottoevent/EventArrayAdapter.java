@@ -15,6 +15,10 @@ import org.w3c.dom.Text;
 
 import java.io.Serializable;
 
+/**
+ * EventArrayAdapter is a custom ArrayAdapter that is used to display the individual events in event lists.
+ * It is used to display the name, date, time, address, and description of each event.
+ */
 public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
     public EventArrayAdapter(@NonNull Context context, EventList eventList) {
         super(context, 0, eventList.getEventList());
@@ -36,7 +40,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         eventName.setText(event.getName());
         eventDate.setText(event.getDate());
         eventTime.setText(event.getTime());
-        eventAddress.setText(event.getFacility().getAddress());
+        // eventAddress.setText(event.getFacility().getStreetAddress1());
         eventDescription.setText(event.getDescription());
         Button eventButton = convertView.findViewById(R.id.event_button);
 

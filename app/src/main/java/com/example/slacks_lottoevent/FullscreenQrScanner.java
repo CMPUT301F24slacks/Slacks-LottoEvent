@@ -6,6 +6,10 @@ import android.widget.ImageView;
 
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
+/**
+ * FullscreenQrScanner is a custom Activity that extends CaptureActivity from the ZXing library.
+ * It is used to display a fullscreen QR code scanner with a back arrow button.
+ */
 public class FullscreenQrScanner extends com.journeyapps.barcodescanner.CaptureActivity {
 
 

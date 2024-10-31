@@ -1,11 +1,13 @@
 package com.example.slacks_lottoevent;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
 
+//testing purposes
+import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Map;
@@ -27,12 +29,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-
-        //for testing Peter's notifications as organizer to entrants
-        Intent intent = new Intent(MainActivity.this, Organizer_MainActivity.class);
-        startActivity(intent);
-
         setContentView(R.layout.splash_activity);
 
         new Handler().postDelayed(() ->{
