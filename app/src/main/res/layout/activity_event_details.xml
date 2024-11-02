@@ -144,11 +144,11 @@
                     app:tint="#FFFFFF" />
 
                 <TextView
-                    android:id="@+id/eventCapacity"
+                    android:id="@+id/eventWaitlistCapacity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Capacity: 1000 attendees"
+                    android:text="Waitlist Capacity: 1000"
                     android:textColor="#FFFFFF" />
             </LinearLayout>
 
