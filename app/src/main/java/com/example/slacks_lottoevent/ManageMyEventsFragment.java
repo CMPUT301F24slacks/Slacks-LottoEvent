@@ -123,6 +123,9 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         eventList = new ArrayList<>(); // Initialize the event list
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events"); // Reference to events collection
+
+//        TODO: remove the facilities collection from here because it is unneeded and grab the organizer data pertainng to it
+//        TODO: grab organizer collection, grab the ID, grab the facility object and grab the event ID list
         facilitiesRef = db.collection("facilities");
 
         myEventsListView = binding.myEventsListView;
@@ -134,6 +137,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
 
 
+//        TODO: compare with the events in facility ID and grab the events in the event collection and grab the event object and then yeah
 
         eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -183,13 +187,23 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                                     String price = (String) eventDetails.get("price");
                                     String details = (String) eventDetails.get("description");
                                     String qrData = (String) eventDetails.get("qrdata");
-                                    Integer capacity = ((Long) eventDetails.getOrDefault("capacity", 0L)).intValue();
-                                    Integer pplAccpt = ((Long) eventDetails.getOrDefault("signupAcpt", 0L)).intValue();
+                                    String qrHash = (String) eventDetails.get("qrhash");
+
+//                                    TODO: Make sure this is the name for waitlist capacity same with eventSlots
+                                    Integer waitListCapacity = ((Long) eventDetails.getOrDefault("waitingListCapacity", 0L)).intValue();
+                                    Integer eventSlots = ((Long) eventDetails.getOrDefault("eventSlots", 0L)).intValue();
+
                                     Boolean geoLoc = (Boolean) eventDetails.get("geoLocation");
                                     String eventID = (String) eventDetails.get("eventid");
 
+//                                    TODO: check for the notifications in the databse to make sure its the right name
+
+                                    Boolean waitListNotis = (Boolean) eventDetails.get("waitlistnotis");
+                                    Boolean selectedNotis = (Boolean) eventDetails.get("selectednotis");
+                                    Boolean cancelledNotis = (Boolean) eventDetails.get("cancellednotis");
+
                                     // Add new event to the temporary list
-                                    Event newEvent = new Event(name, date, time, price, details, pplAccpt, capacity, qrData, eventID, geoLoc, null, false, false, false);
+                                    Event newEvent = new Event(name, date, time, price, details, eventSlots, waitListCapacity, qrData, eventID, geoLoc, qrHash, waitListNotis, selectedNotis, cancelledNotis);
                                     newEvents.add(newEvent);
                                 }
                             } catch (ClassCastException e) {
@@ -197,6 +211,8 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                             }
                         }
                     }
+
+//                    TODO: leave this here
 
                     // Update eventList and UI only if there are changes
                     if (!newEvents.equals(eventList)) {

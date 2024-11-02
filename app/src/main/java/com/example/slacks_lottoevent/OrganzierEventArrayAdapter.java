@@ -74,6 +74,7 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
         eventName.setText(event.getName());
         eventDate.setText(event.getDate());
         eventTime.setText(event.getTime());
+//        TODO: get the facility form the user we are at and display it there
 //        if (event.getFacility() != null) {
 //            eventAddress.setText(
 //                    event.getFacility().getStreetAddress1() + " " +

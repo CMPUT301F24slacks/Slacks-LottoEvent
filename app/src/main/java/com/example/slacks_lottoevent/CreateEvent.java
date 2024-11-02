@@ -153,6 +153,7 @@ public class CreateEvent extends AppCompatActivity {
         cancel.setOnClickListener(v -> finish());
 
 //        Create Button
+//        TODO:  CHECK IF Facilitiesis not null, if it is null then you cannot add an event and add a pop up for it if there is one then add it and continue on with the functionality (need to get the organizers ID tho)
         Button create = findViewById(R.id.createBtn);
         create.setOnClickListener(v -> {
             if (validateInputs()) {
@@ -277,7 +278,7 @@ public class CreateEvent extends AppCompatActivity {
 
         String eventId = UUID.randomUUID().toString();
 
-//        TODO: Wherever the eventID is defined by the organizer grab the facility that THAT organizer has to be uploaded as the place it is at
+//        TODO: after adding event, add the eventID to the event list for this specific organizer
 
 
 //        QR Code Creation
