@@ -74,19 +74,19 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
         eventName.setText(event.getName());
         eventDate.setText(event.getDate());
         eventTime.setText(event.getTime());
-        if (event.getFacility() != null) {
-            eventAddress.setText(
-                    event.getFacility().getStreetAddress1() + " " +
-                            event.getFacility().getStreetAddress2() + ", " +
-                            event.getFacility().getCity() + ", " +
-                            event.getFacility().getProvince() + ", " +
-                            event.getFacility().getCountry() + " " +
-                            event.getFacility().getPostalCode()
-            );
+//        if (event.getFacility() != null) {
+//            eventAddress.setText(
+//                    event.getFacility().getStreetAddress1() + " " +
+//                            event.getFacility().getStreetAddress2() + ", " +
+//                            event.getFacility().getCity() + ", " +
+//                            event.getFacility().getProvince() + ", " +
+//                            event.getFacility().getCountry() + " " +
+//                            event.getFacility().getPostalCode()
+//            );
 
-        } else {
-            eventAddress.setText("No Address Available");
-        }
+//        } else {
+//            eventAddress.setText("No Address Available");
+//        }
 
         eventDescription.setText(event.getDescription());
         eventDescription.setText(event.getDescription());

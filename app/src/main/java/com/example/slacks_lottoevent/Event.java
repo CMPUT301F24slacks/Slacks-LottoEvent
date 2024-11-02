@@ -1,74 +1,78 @@
 package com.example.slacks_lottoevent;
 
-import com.google.zxing.common.BitMatrix;
-
 /**
  * Event class that holds all the information for an event
  */
 public class Event {
 
-    private final Organizer organizer;
-    private Facility facility;
     private String name;
     private String date;
     private String time;
     private String description;
     private String price;
-    private int capacity;
-    private int pplSelected;
+    private int waitListCapacity;
+    private int eventSlots;
     private final EntrantList waitlisted;
     private final EntrantList finalists;
-    private final EntrantList unselected;
-    private final EntrantList invited;
+    private final EntrantList cancelled;
+    private final EntrantList selected;
     private String qrCodeData;
+    private String qrHash;
     private String eventID;
     private Boolean geoLocation;
+    private Boolean waitlistNotifications;
+    private Boolean selectedNotifications;
+    private Boolean cancelledNotifications;
+    private EntrantList waitlistedNotificationsList;
+    private EntrantList selectedNotificationsList;
+    private EntrantList joinedNotificationsList;
+    private EntrantList cancelledNotificationsList;
 
     /**
      * Constructor for Event
-     * @param organizer
-     * @param facility
      * @param name
      * @param date
      * @param time
      * @param price
      * @param description
-     * @param pplSelected
-     * @param capacity
+     * @param eventSlots
+     * @param waitListCapacity
      * @param qrData
      * @param eventId
      * @param geoLocation
+     * @param waitlistNotifications
+     * @param selectedNotifications
+     * @param cancelledNotifications
+     * @param qrHash
      */
-    public Event(Organizer organizer, Facility facility, String name, String date, String time, String price, String description, int pplSelected, int capacity, String qrData, String eventId, Boolean geoLocation) {
-        this.organizer = organizer;
-        this.facility = facility;
+    public Event(String name, String date, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventId, Boolean geoLocation, String qrHash, Boolean waitlistNotifications, Boolean selectedNotifications, Boolean cancelledNotifications) {
         this.name = name;
         this.date = date;
         this.time = time;
         this.price = price;
         this.description = description;
-        this.capacity = capacity;
-        this.pplSelected = pplSelected;
+        this.eventSlots = eventSlots;
+        this.waitListCapacity = waitListCapacity;
         this.waitlisted = new EntrantList();
         this.finalists = new EntrantList();
-        this.unselected = new EntrantList();
-        this.invited = new EntrantList();
+        this.cancelled = new EntrantList();
+        this.selected = new EntrantList();
+
+        this.waitlistedNotificationsList = new EntrantList();
+        this.selectedNotificationsList = new EntrantList();
+        this.cancelledNotificationsList = new EntrantList();
+        this.joinedNotificationsList = new EntrantList();
+
         this.qrCodeData = qrData;
         this.eventID = eventId;
+        this.qrHash = qrHash;
         this.geoLocation = geoLocation;
+
+        this.waitlistNotifications = waitlistNotifications;
+        this.cancelledNotifications = cancelledNotifications;
+        this.selectedNotifications = selectedNotifications;
     }
 
-    public Organizer getOrganizer() {
-        return organizer;
-    }
-
-    public Facility getFacility() {
-        return facility;
-    }
-
-    public void setFacility(Facility facility) {
-        this.facility = facility;
-    }
 
     public String getName() {
         return name;
@@ -110,20 +114,20 @@ public class Event {
         this.description = description;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public int getWaitListCapacity() {
+        return waitListCapacity;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void setWaitListCapacity(int waitListCapacity) {
+        this.waitListCapacity = waitListCapacity;
     }
 
-    public int getPplSelected() {
-        return pplSelected;
+    public int getEventSlots() {
+        return eventSlots;
     }
 
-    public void setPplSelected(int pplSelected) {
-        this.pplSelected = pplSelected;
+    public void setEventSlots(int eventSlots) {
+        this.eventSlots = eventSlots;
     }
 
     public String getQRData() {
@@ -132,6 +136,14 @@ public class Event {
 
     public void setQRData(String qrCodeData) {
         this.qrCodeData = qrCodeData;
+    }
+
+    public String getQRHash() {
+        return qrHash;
+    }
+
+    public void setQRHash(String qrHash) {
+        this.qrHash = qrHash;
     }
 
     public String getEventID() {
@@ -158,12 +170,45 @@ public class Event {
         return finalists;
     }
 
-    public EntrantList getUnselected() {
-        return unselected;
+    public EntrantList getCancelled() {
+        return cancelled;
     }
 
-    public EntrantList getInvited() {
-        return invited;
+    public EntrantList getSelected() {
+        return selected;
     }
+
+    public Boolean getWaitlistNotifications() {
+        return waitlistNotifications;
+    }
+
+    public void setWaitlistNotifications(Boolean waitlistNotifications) {
+        this.waitlistNotifications = waitlistNotifications;
+    }
+
+    public Boolean getSelectedNotifications() {
+        return selectedNotifications;
+    }
+
+    public void setSelectedNotifications(Boolean selectedNotifications) {
+        this.selectedNotifications = selectedNotifications;
+    }
+
+    public Boolean getCancelledNotifications() {
+        return cancelledNotifications;
+    }
+
+    public void setCancelledNotifications(Boolean cancelled_notifications) {
+        this.cancelledNotifications = cancelledNotifications;
+    }
+
+    public EntrantList getSelectedNotificationsList(){return selectedNotificationsList; }
+
+    public EntrantList getWaitlistedNotificationsList(){return waitlistedNotificationsList; }
+
+    public EntrantList getJoinedNotificationsList(){return joinedNotificationsList; }
+
+    public EntrantList getCancelledNotificationsList(){return cancelledNotificationsList; }
+
 
 }

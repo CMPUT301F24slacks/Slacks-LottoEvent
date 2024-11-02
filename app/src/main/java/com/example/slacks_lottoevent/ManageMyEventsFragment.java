@@ -189,7 +189,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                                     String eventID = (String) eventDetails.get("eventid");
 
                                     // Add new event to the temporary list
-                                    Event newEvent = new Event(organizer, facility, name, date, time, price, details, pplAccpt, capacity, qrData, eventID, geoLoc);
+                                    Event newEvent = new Event(name, date, time, price, details, pplAccpt, capacity, qrData, eventID, geoLoc, null, false, false, false);
                                     newEvents.add(newEvent);
                                 }
                             } catch (ClassCastException e) {

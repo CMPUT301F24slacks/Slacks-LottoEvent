@@ -39,7 +39,7 @@ public class MyEventsFragment extends Fragment {
         Organizer tempOrganizer = new Organizer(tempUser);
         Facility tempFacility = new Facility("facilityname", "9th Street", "111 Unit", "Edmonton", "Province", "country", "t6m0n5");
         tempOrganizer.setFacility(tempFacility);
-        Event tempEvent = new Event(tempOrganizer, tempOrganizer.getFacility(), "Tech Innovators Summit 2024", "2024-01-23", "14:00-15:00", "400",tempDescription, 1000, 0,  null, "randomeventID", false);
+        Event tempEvent = new Event("Tech Innovators Summit 2024", "2024-01-23", "14:00-15:00", "400",tempDescription, 1000, 0,  null, "randomeventID", false, null, false, false, false);
         EventList tempEventList = new EventList();
         tempEventList.addEvent(tempEvent);
         tempEventList.addEvent(tempEvent);
