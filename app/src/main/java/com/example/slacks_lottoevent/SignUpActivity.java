@@ -1,8 +1,10 @@
 package com.example.slacks_lottoevent;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -20,6 +22,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /*
@@ -34,7 +37,7 @@ import java.util.UUID;
 * */
 
 /**
- * SignUpActivity is the Activity that allows the user to sign up for the event.
+ * SignUpActivity is the Activity that allows the user to sign up for the.
  * It takes in the user's name, email, and phone number and validates the inputs.
  * If the inputs are valid, it saves the user's information to the device and to the Firebase Firestore database.
  */
@@ -76,9 +79,8 @@ public class SignUpActivity extends AppCompatActivity {
                     // Inserting the info Device and DB
                     saveUserInfoToDevice();
                     saveUserInfoToFirebase();
-                    Intent homeIntent = new Intent(SignUpActivity.this, EventsHomeActivity.class);
-                    startActivity(homeIntent);
                     finish(); // Closing the SignUpActivity to prevent any possible other Activity navigating back to it.
+                    // Will just return to whatever the previous activity was
                 }
             }
         });
@@ -142,11 +144,12 @@ public class SignUpActivity extends AppCompatActivity {
         String email = emailInput.getText().toString().trim();
         String phone = phoneInput.getText().toString().trim();
 
-        // Generating a Unique key so we can then push a User Object to the DB.
-        UUID uuid = UUID.fromString(UUID.randomUUID().toString());
-        User user = new User(name,phone,email);
-        String userId = UUID.randomUUID().toString();
-        usersRef.document(userId).set(user)
+        @SuppressLint("HardwareIds") String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("name", name);
+        userInfo.put("email", email);
+        userInfo.put("phone", phone);
+        usersRef.document(deviceId).set(userInfo)
                 .addOnSuccessListener(nothing -> {
                     System.out.println("Added to DB");
                 })
