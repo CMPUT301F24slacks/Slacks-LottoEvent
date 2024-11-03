@@ -39,7 +39,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.104"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="83dp" />
+            tools:layout_editor_absoluteY="83dp"
+            tools:ignore="MissingConstraints" />
 
         <TextView
             android:id="@+id/textView_Event_Invitations"
