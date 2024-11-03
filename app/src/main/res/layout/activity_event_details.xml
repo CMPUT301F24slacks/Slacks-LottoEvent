@@ -198,6 +198,15 @@
             android:text="Join"
 
             android:textColor="#FFFFFF" />
+        <TextView
+            android:id="@+id/waitlistFullBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Waitlist Full, Check Back Later"
+            android:backgroundTint="#7B24EB"
+            android:padding="8dp"
+            android:textColor="#FFFFFF"
+            android:visibility="gone"/>
 
     </LinearLayout>
 </LinearLayout>
