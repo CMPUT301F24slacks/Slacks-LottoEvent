@@ -69,12 +69,13 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
         TextView eventName = convertView.findViewById(R.id.event_name);
         TextView eventDate = convertView.findViewById(R.id.event_date);
         TextView eventTime = convertView.findViewById(R.id.event_time);
+//        TODO: Fix this
         TextView eventAddress = convertView.findViewById(R.id.event_address);
         TextView eventDescription = convertView.findViewById(R.id.event_description);
         eventName.setText(event.getName());
         eventDate.setText(event.getDate());
         eventTime.setText(event.getTime());
-//        TODO: get the facility form the user we are at and display it there
+//        TODO: get the facility from the user we are at and display it there
 //        if (event.getFacility() != null) {
 //            eventAddress.setText(
 //                    event.getFacility().getStreetAddress1() + " " +

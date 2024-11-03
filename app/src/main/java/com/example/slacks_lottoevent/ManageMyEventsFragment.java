@@ -124,7 +124,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events"); // Reference to events collection
 
-//        TODO: remove the facilities collection from here because it is unneeded and grab the organizer data pertainng to it
+//        TODO: remove the facilities collection from here because it is unneeded and grab the organizer data pertaining to it
 //        TODO: grab organizer collection, grab the ID, grab the facility object and grab the event ID list
         facilitiesRef = db.collection("facilities");
 
@@ -137,7 +137,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
 
 
-//        TODO: compare with the events in facility ID and grab the events in the event collection and grab the event object and then yeah
+//        TODO: compare with the events in organizer collection and grab the events in the event collection and grab the event object and then yeah
 
         eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -161,24 +161,24 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                                     // Now you can access fields within eventDetails
                                     HashMap<String, Object> facilityData = (HashMap<String, Object>) eventDetails.get("facilities");
                                     // Facility and organizer setup
-                                    Facility facility = null;
+//                                    Facility facility = null;
+//
+//                                    if (facilityData != null) {
+//                                        String facilityName = (String) facilityData.get("name");
+//                                        String facilityStreetAddress1 = (String) facilityData.get("streetAddress1");
+//                                        String facilityStreetAddress2 = (String) facilityData.get("streetAddress2");
+//                                        String facilityCity = (String) facilityData.get("city");
+//                                        String facilityProvince = (String) facilityData.get("province");
+//                                        String facilityCountry = (String) facilityData.get("country");
+//                                        String facilityPostalCode = (String) facilityData.get("postalCode");
+//
+//                                        facility = new Facility(facilityName, facilityStreetAddress1, facilityStreetAddress2, facilityCity, facilityProvince, facilityCountry, facilityPostalCode);
+//                                        User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
+//
+//                                    }
 
-                                    if (facilityData != null) {
-                                        String facilityName = (String) facilityData.get("name");
-                                        String facilityStreetAddress1 = (String) facilityData.get("streetAddress1");
-                                        String facilityStreetAddress2 = (String) facilityData.get("streetAddress2");
-                                        String facilityCity = (String) facilityData.get("city");
-                                        String facilityProvince = (String) facilityData.get("province");
-                                        String facilityCountry = (String) facilityData.get("country");
-                                        String facilityPostalCode = (String) facilityData.get("postalCode");
-
-                                        facility = new Facility(facilityName, facilityStreetAddress1, facilityStreetAddress2, facilityCity, facilityProvince, facilityCountry, facilityPostalCode);
-                                        User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
-
-                                    }
-
-                                    User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
-                                    Organizer organizer = new Organizer(tempUser);
+//                                    User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
+//                                    Organizer organizer = new Organizer(tempUser);
 
                                     // Retrieve and cast event fields
                                     String name = (String) eventDetails.get("name");
@@ -188,6 +188,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                                     String details = (String) eventDetails.get("description");
                                     String qrData = (String) eventDetails.get("qrdata");
                                     String qrHash = (String) eventDetails.get("qrhash");
+
 
 //                                    TODO: Make sure this is the name for waitlist capacity same with eventSlots
                                     Integer waitListCapacity = ((Long) eventDetails.getOrDefault("waitingListCapacity", 0L)).intValue();
@@ -204,6 +205,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
                                     // Add new event to the temporary list
                                     Event newEvent = new Event(name, date, time, price, details, eventSlots, waitListCapacity, qrData, eventID, geoLoc, qrHash, waitListNotis, selectedNotis, cancelledNotis);
+//                                    TODO: Set the lists and set up empty event constructor to make it easier
                                     newEvents.add(newEvent);
                                 }
                             } catch (ClassCastException e) {

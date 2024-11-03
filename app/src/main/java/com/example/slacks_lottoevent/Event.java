@@ -53,6 +53,8 @@ public class Event {
         this.description = description;
         this.eventSlots = eventSlots;
         this.waitListCapacity = waitListCapacity;
+
+
         this.waitlisted = new EntrantList();
         this.finalists = new EntrantList();
         this.cancelled = new EntrantList();
