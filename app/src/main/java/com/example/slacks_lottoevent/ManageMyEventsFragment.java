@@ -138,6 +138,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
 
 //        TODO: compare with the events in organizer collection and grab the events in the event collection and grab the event object and then yeah
+//        Grab organizer id, go into that collection, grab events, cross reference with the events collections, grab eventIDs and then dislpay
 
         eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -151,71 +152,12 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                     ArrayList<Event> newEvents = new ArrayList<>(); // Temporary list to minimize UI updates
 
                     for (DocumentSnapshot document : snapshots.getDocuments()) {
-                        HashMap<String, Object> eventData = (HashMap<String, Object>) document.getData();
-
-                        if (eventData != null) {
-                            try {
-                                // Extract event details
-                                HashMap<String, Object> eventDetails = (HashMap<String, Object>) eventData.get("eventDetails");
-                                if (eventDetails != null) {
-                                    // Now you can access fields within eventDetails
-                                    HashMap<String, Object> facilityData = (HashMap<String, Object>) eventDetails.get("facilities");
-                                    // Facility and organizer setup
-//                                    Facility facility = null;
-//
-//                                    if (facilityData != null) {
-//                                        String facilityName = (String) facilityData.get("name");
-//                                        String facilityStreetAddress1 = (String) facilityData.get("streetAddress1");
-//                                        String facilityStreetAddress2 = (String) facilityData.get("streetAddress2");
-//                                        String facilityCity = (String) facilityData.get("city");
-//                                        String facilityProvince = (String) facilityData.get("province");
-//                                        String facilityCountry = (String) facilityData.get("country");
-//                                        String facilityPostalCode = (String) facilityData.get("postalCode");
-//
-//                                        facility = new Facility(facilityName, facilityStreetAddress1, facilityStreetAddress2, facilityCity, facilityProvince, facilityCountry, facilityPostalCode);
-//                                        User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
-//
-//                                    }
-
-//                                    User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
-//                                    Organizer organizer = new Organizer(tempUser);
-
-                                    // Retrieve and cast event fields
-                                    String name = (String) eventDetails.get("name");
-                                    String date = (String) eventDetails.get("date");
-                                    String time = (String) eventDetails.get("time");
-                                    String price = (String) eventDetails.get("price");
-                                    String details = (String) eventDetails.get("description");
-                                    String qrData = (String) eventDetails.get("qrdata");
-                                    String qrHash = (String) eventDetails.get("qrhash");
-
-
-//                                    TODO: Make sure this is the name for waitlist capacity same with eventSlots
-                                    Integer waitListCapacity = ((Long) eventDetails.getOrDefault("waitingListCapacity", 0L)).intValue();
-                                    Integer eventSlots = ((Long) eventDetails.getOrDefault("eventSlots", 0L)).intValue();
-
-                                    Boolean geoLoc = (Boolean) eventDetails.get("geoLocation");
-                                    String eventID = (String) eventDetails.get("eventid");
-
-//                                    TODO: check for the notifications in the databse to make sure its the right name
-
-                                    Boolean waitListNotis = (Boolean) eventDetails.get("waitlistnotis");
-                                    Boolean selectedNotis = (Boolean) eventDetails.get("selectednotis");
-                                    Boolean cancelledNotis = (Boolean) eventDetails.get("cancellednotis");
-
-                                    // Add new event to the temporary list
-                                    Event newEvent = new Event(name, date, time, price, details, eventSlots, waitListCapacity, qrData, eventID, geoLoc, qrHash, waitListNotis, selectedNotis, cancelledNotis);
-//                                    TODO: Set the lists and set up empty event constructor to make it easier
-                                    newEvents.add(newEvent);
-                                }
-                            } catch (ClassCastException e) {
-                                Log.e("EventError", "ClassCastException while processing event data", e);
-                            }
+                        // Convert each document into an Event object using Firestore’s built-in method
+                        Event event = document.toObject(Event.class);
+                        if (event != null) {
+                            newEvents.add(event);
                         }
                     }
-
-//                    TODO: leave this here
-
                     // Update eventList and UI only if there are changes
                     if (!newEvents.equals(eventList)) {
                         eventList.clear();
@@ -225,6 +167,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                 }
             }
         });
+
         facilitiesRef.addSnapshotListener((querySnapshot, e) -> {
             if (e != null) {
                 Log.w("Firestore", "Listen failed.", e);

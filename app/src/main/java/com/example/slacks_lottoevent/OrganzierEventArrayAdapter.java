@@ -89,8 +89,7 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
 //        } else {
 //            eventAddress.setText("No Address Available");
 //        }
-
-        eventDescription.setText(event.getDescription());
+        eventAddress.setText("Need to grab facility");
         eventDescription.setText(event.getDescription());
         return convertView;
     }

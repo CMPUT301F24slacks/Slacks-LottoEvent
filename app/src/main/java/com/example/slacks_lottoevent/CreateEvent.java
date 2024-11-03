@@ -153,7 +153,7 @@ public class CreateEvent extends AppCompatActivity {
         cancel.setOnClickListener(v -> finish());
 
 //        Create Button
-//        TODO:  CHECK IF Facilitiesis not null, if it is null then you cannot add an event and add a pop up for it if there is one then add it and continue on with the functionality (need to get the organizers ID tho)
+//        TODO:  CHECK IF Facilities is not null, if it is null then you cannot add an event and add a pop up for it if there is one then add it and continue on with the functionality (need to get the organizers ID tho)
         Button create = findViewById(R.id.createBtn);
         create.setOnClickListener(v -> {
             if (validateInputs()) {
@@ -174,8 +174,6 @@ public class CreateEvent extends AppCompatActivity {
         String price = binding.eventPrice.getText().toString().trim();
         String details = binding.eventDetails.getText().toString().trim();
         String eventSlot = binding.eventSlots.getText().toString().trim();
-        String waitlistCapacity = binding.waitListCapacity.getText().toString().trim();
-
 
 //        Event Name validation
         if (TextUtils.isEmpty(name)) {
@@ -288,12 +286,7 @@ public class CreateEvent extends AppCompatActivity {
             String qrData = serializeBitMatrix(bitMatrix);
             String qrHash = generateHash(qrData);
 
-            Event event =  new Event(name, date, time, price, details, eventSlots, Integer.parseInt(waitingListCapacity), qrData, eventId, geoLoc, qrHash, waitListNotis, selectedNotis, cancelledNotis);
-
-
-//          Adding the event object to the event collection database
-            HashMap<String, Object> eventData = new HashMap<>();
-            eventData.put("eventDetails",event);
+            Event eventData =  new Event(name, date, time, price, details, eventSlots, Integer.parseInt(waitingListCapacity), qrData, eventId, geoLoc, qrHash, waitListNotis, selectedNotis, cancelledNotis);
             eventsRef.document(eventId).set(eventData)
                     .addOnSuccessListener(nothing -> {
                         System.out.println("Added to DB");

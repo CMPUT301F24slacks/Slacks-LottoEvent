@@ -42,6 +42,8 @@ public class EventDetails extends AppCompatActivity {
         setContentView(binding.getRoot());
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
 
+//        TODO: Fix how we do the firebase
+
         db = FirebaseFirestore.getInstance();
         db.collection("events").whereEqualTo("eventDetails.eventID", qrCodeValue).get()
                 .addOnCompleteListener(task -> {
@@ -136,6 +138,7 @@ public class EventDetails extends AppCompatActivity {
         cancelButton.setOnClickListener(view -> dialog.dismiss());
         confirmButton.setOnClickListener(view -> {
             addEntrantToWaitlist();
+//            TODO: add notification entrants to the respective lists in the event
             dialog.dismiss();
 
         });
@@ -146,6 +149,8 @@ public class EventDetails extends AppCompatActivity {
 
 
     private void addEntrantToWaitlist(){
+
+//        TODO: Fix here the database implementation
 
         @SuppressLint("HardwareIds") String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         db.collection("events").whereEqualTo("eventDetails.eventID",qrCodeValue)

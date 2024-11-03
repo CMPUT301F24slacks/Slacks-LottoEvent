@@ -12,10 +12,10 @@ public class Event {
     private String price;
     private int waitListCapacity;
     private int eventSlots;
-    private final EntrantList waitlisted;
-    private final EntrantList finalists;
-    private final EntrantList cancelled;
-    private final EntrantList selected;
+    private EntrantList waitlisted;
+    private EntrantList finalists;
+    private EntrantList cancelled;
+    private EntrantList selected;
     private String qrCodeData;
     private String qrHash;
     private String eventID;
@@ -27,6 +27,10 @@ public class Event {
     private EntrantList selectedNotificationsList;
     private EntrantList joinedNotificationsList;
     private EntrantList cancelledNotificationsList;
+
+    public Event(){
+
+    }
 
     /**
      * Constructor for Event
