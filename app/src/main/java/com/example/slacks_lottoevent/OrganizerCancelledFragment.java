@@ -89,7 +89,7 @@ public class OrganizerCancelledFragment extends Fragment {
 
         // The button will be replaced by the list modification functionality
         Button buttonCancelNotification = view.findViewById(R.id.buttonCancelNotification);
-        buttonCancelNotification.setOnClickListener(v -> showCancellationNotification("Alpha"));
+//        buttonCancelNotification.setOnClickListener(v -> showCancellationNotification("Alpha"));
 
 
         return view;
@@ -97,24 +97,24 @@ public class OrganizerCancelledFragment extends Fragment {
 
     // TODO: If an entrantName cancelled their selection/enrollment:
     //Note: Will have to enable app notifications for slacks-lotto from the settings in the emulator
-    private void showCancellationNotification(String entrantName) {
-        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        String channelId = "cancellation_channel";
-
-        // Only for Android 8.0 and higher
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId, "Entrant Cancellations", NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        Notification notification = new NotificationCompat.Builder(getContext(), channelId)
-                .setContentTitle("Entrant Cancellation")
-                .setContentText(entrantName + " has cancelled their entry.")
-                .setSmallIcon(android.R.drawable.ic_popup_reminder)
-                .build();
-
-        notificationManager.notify(1, notification);
-    }
+//    private void showCancellationNotification(String entrantName) {
+//        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+//        String channelId = "cancellation_channel";
+//
+//        // Only for Android 8.0 and higher
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            NotificationChannel channel = new NotificationChannel(channelId, "Entrant Cancellations", NotificationManager.IMPORTANCE_DEFAULT);
+//            notificationManager.createNotificationChannel(channel);
+//        }
+//
+//        Notification notification = new NotificationCompat.Builder(getContext(), channelId)
+//                .setContentTitle("Entrant Cancellation")
+//                .setContentText(entrantName + " has cancelled their entry.")
+//                .setSmallIcon(android.R.drawable.ic_popup_reminder)
+//                .build();
+//
+//        notificationManager.notify(1, notification);
+//    }
 
     // TODO: another button for re-selection from organizer part
 
