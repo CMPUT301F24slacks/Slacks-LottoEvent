@@ -14,14 +14,13 @@ import com.example.slacks_lottoevent.databinding.ActivityEventDetailsBinding;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
 import java.util.Map;
 
 public class EventDetails extends AppCompatActivity {
     private ActivityEventDetailsBinding binding;
 
 
-    private TextView eventTitle, eventDate, eventLocation, eventDescription, eventCapacity;
-    private Button joinButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,20 +33,15 @@ public class EventDetails extends AppCompatActivity {
         db.collection("events").whereEqualTo("eventDetails.eventID", qrCodeValue).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
-
                         DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                        System.out.println(document);
                         Map<String, Object> eventDetails = (Map<String, Object>) document.get("eventDetails");
-
-
-
+                        List<Object>  entrants = (List<Object>) document.get("eventDetails.finalists.entrants");
                         String eventName = (String) eventDetails.get("name");
                         String date = (String) eventDetails.get("date");
                         String description = (String) eventDetails.get("description");
                         Long capacity = (Long) eventDetails.get("capacity");
-                        Long pplSelected = document.getLong("pplSelected");
+                        Long pplSelected = (Long) eventDetails.get("pplSelected");
                         String time = document.getString("time");
-                        System.out.println("eventName"+eventName);
                         binding.eventTitle.setText(eventName);
                         binding.eventDate.setText(date);
                         assert capacity != null;
@@ -55,19 +49,19 @@ public class EventDetails extends AppCompatActivity {
                         Map<String, Object> facilityDetails =  (Map<String, Object>) eventDetails.get("facility");
                         String location = (String) facilityDetails.get("streetAddress1") + ", "+ facilityDetails.get("city") + ", " + facilityDetails.get("country") + ", " + facilityDetails.get("postalCode");
                         binding.eventLocation.setText(location);
-                        String waitlistCapcity = "Waitlist Capacity" + capacityAsString;
+                        String waitlistCapcity = "Waitlist Capacity " + capacityAsString;
                         binding.eventWaitlistCapacity.setText(waitlistCapcity);
                         binding.eventDescription.setText(description);
-
-
-
-
+                        System.out.println("Enterants Array: " + entrants + "People Selected" + pplSelected);
+                        Long spotsRemaining = pplSelected - entrants.size();
+                        String spotsRemainingText = "Only " + spotsRemaining.toString() + " spots available";
+                        binding.spotsAvailable.setText(spotsRemainingText);
 
 
                     }
                 });
 
-
+                
 
 
     }

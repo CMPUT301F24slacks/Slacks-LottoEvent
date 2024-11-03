@@ -26,11 +26,12 @@
                 android:scaleType="centerCrop" />
 
             <ImageView
-                android:layout_width="24dp"
+                android:layout_width="48dp"
                 android:layout_height="24dp"
-
+                android:layout_marginTop="20dp"
                 android:contentDescription="Back"
-                android:src="@drawable/arrow_left_solid" />
+                android:src="@drawable/arrow_left_solid"
+                app:tint="#7B24EB" />
 
         </FrameLayout>
 
@@ -153,30 +154,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:contentDescription="Notification Icon"
-                    android:src="@drawable/baseline_circle_notifications_24"
-                    app:tint="#B39DDB" />
-
-                <TextView
-                    android:id="@+id/notificationText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Receive Notifications from this Organization"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -199,6 +176,13 @@
                     android:textColor="#BDBDBD" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"/>
 
 
         </LinearLayout>
