@@ -45,9 +45,12 @@
             android:name=".FullscreenQrScanner"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent"/>
-
         <activity
             android:name=".CreateEvent"
+            android:exported="true"
+            android:theme="@style/Theme.SlacksLottoEvent" />
+        <activity
+            android:name=".User_Notifications"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
 
