@@ -11,11 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.slacks_lottoevent.databinding.ActivityEventsHomeBinding;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 
@@ -132,6 +130,8 @@ public class EventsHomeActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.notifications) {
+            Intent intent = new Intent(EventsHomeActivity.this, User_Notifications.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
