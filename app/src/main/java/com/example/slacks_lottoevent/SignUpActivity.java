@@ -62,7 +62,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         db = FirebaseFirestore.getInstance();
 
-        usersRef = db.collection("users");
+        usersRef = db.collection("profiles");
 
         nameInput = binding.nameInput;
         emailInput = binding.emailInput;
@@ -145,10 +145,8 @@ public class SignUpActivity extends AppCompatActivity {
         String phone = phoneInput.getText().toString().trim();
 
         @SuppressLint("HardwareIds") String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        Map<String, Object> userInfo = new HashMap<>();
-        userInfo.put("name", name);
-        userInfo.put("email", email);
-        userInfo.put("phone", phone);
+        Profile userInfo = new Profile(name,phone,email);
+
         usersRef.document(deviceId).set(userInfo)
                 .addOnSuccessListener(nothing -> {
                     System.out.println("Added to DB");

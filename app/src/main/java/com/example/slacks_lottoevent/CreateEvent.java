@@ -12,6 +12,7 @@ import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.WriterException;
@@ -210,7 +211,7 @@ public class CreateEvent extends AppCompatActivity {
         String eventId = UUID.randomUUID().toString();
 
         Facility facility = new Facility("Facility1", "148 St NW", "5603", "Edmonton", "Alberta", "Canada", "T6H 4T7");
-        User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
+        Profile tempUser = new Profile("John Doe", "123-456-7890", "123@gmail.com");
         Organizer organizer = new Organizer(tempUser);
 
 
