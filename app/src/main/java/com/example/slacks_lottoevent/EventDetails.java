@@ -1,6 +1,7 @@
 package com.example.slacks_lottoevent;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,9 +17,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.example.slacks_lottoevent.databinding.ActivityEventDetailsBinding;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+import android.provider.Settings;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,14 +33,16 @@ public class EventDetails extends AppCompatActivity {
     private String date;
     private String time;
     private Boolean usesGeolocation;
+    FirebaseFirestore db;
+    String qrCodeValue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityEventDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        String qrCodeValue = getIntent().getStringExtra("qrCodeValue");
+        qrCodeValue = getIntent().getStringExtra("qrCodeValue");
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         db.collection("events").whereEqualTo("eventDetails.eventID", qrCodeValue).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
@@ -50,7 +55,7 @@ public class EventDetails extends AppCompatActivity {
                         String description = (String) eventDetails.get("description");
                         Long capacity = (Long) eventDetails.get("capacity");
                         Long pplSelected = (Long) eventDetails.get("pplSelected");
-                        time = document.getString("time");
+                        time = document.getString("eventDetails.time");
                         binding.eventTitle.setText(eventName);
                         binding.eventDate.setText(date);
                         assert capacity != null;
@@ -118,24 +123,42 @@ public class EventDetails extends AppCompatActivity {
         bellChosen.setOnClickListener(v -> {
             boolean negation = !chosenForLottery.get();
             chosenForLottery.set(negation);
-            bellChosen.setColorFilter(chosenForLottery.get() ? Color.parseColor("#8E24AA") : Color.parseColor("#BDBDBD"));
+            bellChosen.setImageResource(chosenForLottery.get() ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
         });
 
         bellNotChosen.setOnClickListener(v -> {
             boolean negation = !notChosenForLottery.get();
             notChosenForLottery.set(negation);
-            bellNotChosen.setColorFilter(notChosenForLottery.get() ? Color.parseColor("#8E24AA") : Color.parseColor("#BDBDBD"));
+            bellNotChosen.setImageResource(notChosenForLottery.get() ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
         });
 
 
         cancelButton.setOnClickListener(view -> dialog.dismiss());
         confirmButton.setOnClickListener(view -> {
-
-
+            addEntrantToWaitlist();
+            dialog.dismiss();
 
         });
 
         dialog.show();
 
     }
+
+
+    private void addEntrantToWaitlist(){
+
+        @SuppressLint("HardwareIds") String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        db.collection("events").whereEqualTo("eventDetails.eventID",qrCodeValue)
+                .get()
+                .addOnSuccessListener(task -> {
+                    DocumentSnapshot eventDocumentSnapshot = task.getDocuments().get(0);
+                    DocumentReference eventRef = eventDocumentSnapshot.getReference();
+                    eventRef.update("eventDetails.waitlisted.entrants", FieldValue.arrayUnion(deviceId));
+
+                })
+                .addOnFailureListener(task -> {
+                    System.err.println("Error fetching event document: " + task);
+                });
+    }
+
 }
