@@ -51,6 +51,7 @@ public class EventDetails extends AppCompatActivity {
         binding = ActivityEventDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
+        Log.d("EventDetails", "QR Code Value: " + qrCodeValue);
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
 //        TODO: Fix how we do the firebase
@@ -59,13 +60,14 @@ public class EventDetails extends AppCompatActivity {
         db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        QueryDocumentSnapshot document = (QueryDocumentSnapshot) task.getResult().getDocuments().get(0);
+                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
 
                         Event event = document.toObject(Event.class); // Converts the document to an Event object
                         binding.eventTitle.setText(event.getName());
                         date = String.valueOf(event.getDate());
                         binding.eventDate.setText(event.getDate());
                         binding.eventDescription.setText(event.getDescription());
+
 
 //                        TODO: grab the facility from the organizer once it is connected
                         location = "Wait for facility";
@@ -158,7 +160,7 @@ public class EventDetails extends AppCompatActivity {
             addEntrantToNotis(chosenForLottery,notChosenForLottery);
             dialog.dismiss();
             Intent eventsHome = new Intent(this,EventsHomeActivity.class);
-            startActivity(eventsHome);
+//            startActivity(eventsHome);
 
         });
 
