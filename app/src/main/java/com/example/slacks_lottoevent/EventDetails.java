@@ -160,7 +160,7 @@ public class EventDetails extends AppCompatActivity {
             addEntrantToNotis(chosenForLottery,notChosenForLottery);
             dialog.dismiss();
             Intent eventsHome = new Intent(this,EventsHomeActivity.class);
-//            startActivity(eventsHome);
+            startActivity(eventsHome);
 
         });
 
