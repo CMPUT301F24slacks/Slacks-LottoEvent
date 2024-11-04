@@ -1,5 +1,7 @@
 package com.example.slacks_lottoevent;
 
+import java.util.ArrayList;
+
 /**
  * Event class that holds all the information for an event
  */
@@ -12,10 +14,10 @@ public class Event {
     private String price;
     private int waitListCapacity;
     private int eventSlots;
-    private EntrantList waitlisted;
-    private EntrantList finalists;
-    private EntrantList cancelled;
-    private EntrantList selected;
+    private ArrayList<String> waitlisted;
+    private ArrayList<String> finalists;
+    private ArrayList<String> cancelled;
+    private ArrayList<String> selected;
     private String qrCodeData;
     private String qrHash;
     private String eventID;
@@ -23,10 +25,10 @@ public class Event {
     private Boolean waitlistNotifications;
     private Boolean selectedNotifications;
     private Boolean cancelledNotifications;
-    private EntrantList waitlistedNotificationsList;
-    private EntrantList selectedNotificationsList;
-    private EntrantList joinedNotificationsList;
-    private EntrantList cancelledNotificationsList;
+    private ArrayList<String> waitlistedNotificationsList;
+    private ArrayList<String> selectedNotificationsList;
+    private ArrayList<String> joinedNotificationsList;
+    private ArrayList<String> cancelledNotificationsList;
 
     public Event(){
 
@@ -59,15 +61,15 @@ public class Event {
         this.waitListCapacity = waitListCapacity;
 
 
-        this.waitlisted = new EntrantList();
-        this.finalists = new EntrantList();
-        this.cancelled = new EntrantList();
-        this.selected = new EntrantList();
+        this.waitlisted = new ArrayList<>();
+        this.finalists = new ArrayList<>();
+        this.cancelled = new ArrayList<>();
+        this.selected = new ArrayList<>();
 
-        this.waitlistedNotificationsList = new EntrantList();
-        this.selectedNotificationsList = new EntrantList();
-        this.cancelledNotificationsList = new EntrantList();
-        this.joinedNotificationsList = new EntrantList();
+        this.waitlistedNotificationsList = new ArrayList<>();
+        this.selectedNotificationsList = new ArrayList<>();
+        this.cancelledNotificationsList = new ArrayList<>();
+        this.joinedNotificationsList = new ArrayList<>();
 
         this.qrCodeData = qrData;
         this.eventID = eventId;
@@ -168,21 +170,29 @@ public class Event {
         this.geoLocation = new_geoLocation;
     }
 
-    public EntrantList getWaitlisted() {
+    public ArrayList<String> getWaitlisted() {
         return waitlisted;
     }
 
-    public EntrantList getFinalists() {
+    public void addWaitlisted(String entrant) { this.waitlisted.add(entrant); }
+
+    public ArrayList<String> getFinalists() {
         return finalists;
     }
 
-    public EntrantList getCancelled() {
+    public void addFinalist(String entrant) {this.finalists.add(entrant);}
+
+    public ArrayList<String> getCancelled() {
         return cancelled;
     }
 
-    public EntrantList getSelected() {
+    public void addCancelled(String entrant) {this.cancelled.add(entrant);}
+
+    public ArrayList<String> getSelected() {
         return selected;
     }
+
+    public void addSelected(String entrant) {this.selected.add(entrant);}
 
     public Boolean getWaitlistNotifications() {
         return waitlistNotifications;
@@ -204,17 +214,23 @@ public class Event {
         return cancelledNotifications;
     }
 
-    public void setCancelledNotifications(Boolean cancelled_notifications) {
-        this.cancelledNotifications = cancelledNotifications;
-    }
+    public void setCancelledNotifications(Boolean cancelled_notifications) { this.cancelledNotifications = cancelledNotifications; }
 
-    public EntrantList getSelectedNotificationsList(){return selectedNotificationsList; }
+    public ArrayList<String> getSelectedNotificationsList(){return selectedNotificationsList; }
 
-    public EntrantList getWaitlistedNotificationsList(){return waitlistedNotificationsList; }
+    public void addSelectedNotification(String notification) { selectedNotificationsList.add(notification); }
 
-    public EntrantList getJoinedNotificationsList(){return joinedNotificationsList; }
+    public ArrayList<String> getWaitlistedNotificationsList(){return waitlistedNotificationsList; }
 
-    public EntrantList getCancelledNotificationsList(){return cancelledNotificationsList; }
+    public void addWaitlistedNotification(String notification) { waitlistedNotificationsList.add(notification); }
+
+    public ArrayList<String> getJoinedNotificationsList(){return joinedNotificationsList; }
+
+    public void addJoinedNotification(String notification) { joinedNotificationsList.add(notification);}
+
+    public ArrayList<String> getCancelledNotificationsList(){return cancelledNotificationsList; }
+
+    public void addCancelledNotification(String notification) {cancelledNotificationsList.add(notification);}
 
 
 }
