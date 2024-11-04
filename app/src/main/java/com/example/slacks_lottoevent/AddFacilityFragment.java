@@ -26,12 +26,6 @@ public class AddFacilityFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-//        try {
-//            // Set listener from the hosting Activity or Fragment
-//            listener = (AddFacilityDialogListener) context;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(context.toString() + " must implement AddFacilityDialogListener");
-//        }
 
         Fragment parentFragment = getParentFragment();
         if (parentFragment instanceof AddFacilityDialogListener) {
