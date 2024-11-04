@@ -44,14 +44,14 @@ public class Event {
      * @param eventSlots
      * @param waitListCapacity
      * @param qrData
-     * @param eventId
+     * @param eventID
      * @param geoLocation
      * @param waitlistNotifications
      * @param selectedNotifications
      * @param cancelledNotifications
      * @param qrHash
      */
-    public Event(String name, String date, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventId, Boolean geoLocation, String qrHash, Boolean waitlistNotifications, Boolean selectedNotifications, Boolean cancelledNotifications) {
+    public Event(String name, String date, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventID, Boolean geoLocation, String qrHash, Boolean waitlistNotifications, Boolean selectedNotifications, Boolean cancelledNotifications) {
         this.name = name;
         this.date = date;
         this.time = time;
@@ -72,7 +72,7 @@ public class Event {
         this.joinedNotificationsList = new ArrayList<>();
 
         this.qrCodeData = qrData;
-        this.eventID = eventId;
+        this.eventID = eventID;
         this.qrHash = qrHash;
         this.geoLocation = geoLocation;
 
@@ -214,23 +214,22 @@ public class Event {
         return cancelledNotifications;
     }
 
-    public void setCancelledNotifications(Boolean cancelled_notifications) { this.cancelledNotifications = cancelledNotifications; }
+    public void setCancelledNotifications(Boolean cancelled_notifications) { this.cancelledNotifications = cancelled_notifications; }
 
     public ArrayList<String> getSelectedNotificationsList(){return selectedNotificationsList; }
 
-    public void addSelectedNotification(String notification) { selectedNotificationsList.add(notification); }
+    public void addSelectedNotification(String notification) { this.selectedNotificationsList.add(notification); }
 
     public ArrayList<String> getWaitlistedNotificationsList(){return waitlistedNotificationsList; }
 
-    public void addWaitlistedNotification(String notification) { waitlistedNotificationsList.add(notification); }
+    public void addWaitlistedNotification(String notification) { this.waitlistedNotificationsList.add(notification); }
 
     public ArrayList<String> getJoinedNotificationsList(){return joinedNotificationsList; }
 
-    public void addJoinedNotification(String notification) { joinedNotificationsList.add(notification);}
+    public void addJoinedNotification(String notification) { this.joinedNotificationsList.add(notification);}
 
     public ArrayList<String> getCancelledNotificationsList(){return cancelledNotificationsList; }
 
-    public void addCancelledNotification(String notification) {cancelledNotificationsList.add(notification);}
-
+    public void addCancelledNotification(String notification) {this.cancelledNotificationsList.add(notification);}
 
 }

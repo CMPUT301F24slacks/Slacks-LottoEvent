@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -62,13 +63,16 @@ public class EventDetails extends AppCompatActivity {
 
                         Event event = document.toObject(Event.class); // Converts the document to an Event object
                         binding.eventTitle.setText(event.getName());
+                        date = String.valueOf(event.getDate());
                         binding.eventDate.setText(event.getDate());
                         binding.eventDescription.setText(event.getDescription());
 
 //                        TODO: grab the facility from the organizer once it is connected
+                        location = "Wait for facility";
                         binding.eventLocation.setText("Set the facility once connected");
                         binding.eventWaitlistCapacity.setText("Waitlist Capacity " + event.getWaitListCapacity());
                         binding.eventTime.setText(event.getTime());
+                        time = String.valueOf(event.getTime());
 
                         Long spotsRemaining = (long) (event.getEventSlots() - event.getFinalists().size());
                         binding.spotsAvailable.setText("Only " + spotsRemaining + " spots available");
@@ -154,30 +158,13 @@ public class EventDetails extends AppCompatActivity {
             addEntrantToNotis(chosenForLottery,notChosenForLottery);
             dialog.dismiss();
             Intent eventsHome = new Intent(this,EventsHomeActivity.class);
+            startActivity(eventsHome);
 
         });
 
         dialog.show();
 
     }
-
-
-
-//    private void addEntrantToWaitlist(){
-//
-//        @SuppressLint("HardwareIds") String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-//        db.collection("events").whereEqualTo("eventDetails.eventID",qrCodeValue)
-//                .get()
-//                .addOnSuccessListener(task -> {
-//                    DocumentSnapshot eventDocumentSnapshot = task.getDocuments().get(0);
-//                    DocumentReference eventRef = eventDocumentSnapshot.getReference();
-//                    eventRef.update("eventDetails.waitlisted.entrants", FieldValue.arrayUnion(deviceId));
-//
-//                })
-//                .addOnFailureListener(task -> {
-//                    System.err.println("Error fetching event document: " + task);
-//                });
-//    }
 
     private void addEntrantToWaitlist() {
         // Get the device ID
@@ -249,25 +236,23 @@ public class EventDetails extends AppCompatActivity {
                         QueryDocumentSnapshot document = (QueryDocumentSnapshot) task.getResult().getDocuments().get(0);
                         Event event = document.toObject(Event.class); // Convert the document to an Event object
 
-//                        Add to waitlist if organizer specified
-                        if (event.getWaitlistNotifications()) { event.addWaitlistedNotification(deviceId);}
-//                      Add to Selected if user wants to be
-                        if (chosenForLottery.get()) { event.addSelectedNotification(deviceId);}
-//                        Add to cancelled if not
-                        if (chosenForLottery.get()) { event.addCancelledNotification(deviceId);}
+
+                        event.addWaitlistedNotification(deviceId);
+                        if (chosenForLottery.get()) { event.addSelectedNotification(deviceId); System.out.println("SelectedNotis List updated successfully.");}
+                        if (notChosenForLottery.get()) { event.addCancelledNotification(deviceId); System.out.println("CancelledNotis List updated successfully."); }
 
 
                         db.collection("events").document(event.getEventID())
-                                .update("waitlisted", event.getWaitlisted(), // Assuming this method returns the list
-                                        "selected", event.getSelectedNotificationsList(),      // Assuming this method returns the list
-                                        "cancelled", event.getCancelledNotificationsList())
+                                .update("waitlistedNotificationsList", event.getWaitlistedNotificationsList(), // Assuming this method returns the list
+                                        "selectedNotificationsList", event.getSelectedNotificationsList(),      // Assuming this method returns the list
+                                        "cancelledNotificationsList", event.getCancelledNotificationsList())
                                 .addOnSuccessListener(aVoid -> {
                                     // Successfully updated Firestore
-                                    System.out.println("Waitlisted updated successfully.");
+                                    System.out.println("Notifications updated successfully.");
                                 })
                                 .addOnFailureListener(e -> {
                                     // Handle failure
-                                    System.err.println("Error updating waitlisted: " + e.getMessage());
+                                    System.err.println("Error updating notifications: " + e.getMessage());
                                 });
                     } else {
                         // Handle case where no events were found
