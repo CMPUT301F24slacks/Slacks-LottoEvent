@@ -182,7 +182,6 @@ public class EventDetails extends AppCompatActivity {
             dialog.dismiss();
             Intent eventsHome = new Intent(this,EventsHomeActivity.class);
             startActivity(eventsHome);
-
         });
 
         dialog.show();
@@ -225,22 +224,17 @@ public class EventDetails extends AppCompatActivity {
                 });
     }
 
-
     private void addEventToEntrant(){
         DocumentReference entrantDocRef = db.collection("entrants").document(deviceId);
 
-
         entrantDocRef.get().addOnSuccessListener(task -> {
-
             if (task.exists()){
-                Entrant entrant = task.toObject(Entrant.class);
-                entrant.addWaitlistedEvents(qrCodeValue);
-                entrantDocRef.set(entrant);
+                entrantDocRef.update("eventDetails.waitlisted.entrants", FieldValue.arrayUnion(deviceId));
             }
             else {
                 // Entrant not already in the database
                 Entrant newEntrant = new Entrant();
-                newEntrant.getWaitlistedEvents().add(qrCodeValue);
+                newEntrant.addWaitlistedEvents(qrCodeValue);
                 entrantDocRef.set(newEntrant);
             }
         });
