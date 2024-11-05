@@ -20,6 +20,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -169,11 +170,11 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                                         String facilityPostalCode = (String) facilityData.get("postalCode");
 
                                         facility = new Facility(facilityName, facilityStreetAddress1, facilityStreetAddress2, facilityCity, facilityProvince, facilityCountry, facilityPostalCode);
-                                        User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
+                                        Profile tempUser = new Profile("John Doe", "123-456-7890", "123@gmail.com");
 
                                     }
 
-                                    User tempUser = new User("John Doe", "123-456-7890", "123@gmail.com");
+                                    Profile tempUser = new Profile("John Doe", "123-456-7890", "123@gmail.com");
                                     Organizer organizer = new Organizer(tempUser);
 
                                     // Retrieve and cast event fields

@@ -31,19 +31,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+
+
+        if (!sharedPreferences.contains("isSignedUp")) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isSignedUp", false);
+            editor.apply();
+        }
+
         new Handler().postDelayed(() ->{
-            SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
             Map<String, ?> userInfo = sharedPreferences.getAll();
 
-            if (userInfo.containsKey("isSignedUp") && Objects.equals(userInfo.get("isSignedUp"), true)) {
-                Intent homeIntent = new Intent(MainActivity.this, EventsHomeActivity.class);
-                startActivity(homeIntent);
-            } else {
-                System.out.println("We made it here!");
-                // User is not signed up so
-                Intent signUpIntent = new Intent(MainActivity.this, SignUpActivity.class);
-                startActivity(signUpIntent);
-            }
+            Intent homeIntent = new Intent(MainActivity.this, EventsHomeActivity.class);
+            startActivity(homeIntent);
+
             finish(); // Closing MainActivity to prevent going back to it.
         },2000);
     }
