@@ -3,6 +3,7 @@ package com.example.slacks_lottoevent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Button;
 
@@ -13,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 import com.google.zxing.BarcodeFormat;
@@ -34,6 +37,7 @@ public class CreateEvent extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private ActivityCreateEventBinding binding;
+    private CollectionReference organizersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,7 @@ public class CreateEvent extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
+        organizersRef = db.collection("organizers");
 
 
 //        Check in real time if event date is validated
@@ -279,8 +284,12 @@ public class CreateEvent extends AppCompatActivity {
 
 //        TODO: after adding event, add the eventID to the event list for this specific organizer
         Facility facility = new Facility("Facility1", "148 St NW", "5603", "Edmonton", "Alberta", "Canada", "T6H 4T7");
+        // unique organizer
+        String tempUserId = UUID.randomUUID().toString();
+
+        Facility facility = new Facility("Facility1", "148 St NW", "5603", "Edmonton", "Alberta", "Canada", "T6H 4T7", "orgID", "deviceId");
         Profile tempUser = new Profile("John Doe", "123-456-7890", "123@gmail.com");
-        Organizer organizer = new Organizer(tempUser);
+        Organizer organizer = new Organizer(tempUserId);
 
 
 //        QR Code Creation
@@ -304,6 +313,19 @@ public class CreateEvent extends AppCompatActivity {
         } catch (WriterException e) {
             throw new RuntimeException(e);
         }
+
+        String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        DocumentReference organizerRef = organizersRef.document(organizerId);
+        organizerRef.update("events", FieldValue.arrayUnion(eventId))
+                .addOnSuccessListener(aVoid -> {
+                    // Event ID successfully added to the organizer's events array
+                    Log.d("Firestore", "Event added to organizer's events list.");
+                })
+                .addOnFailureListener(e -> {
+                    // Failed to add event ID
+                    Log.w("Firestore", "Error adding event to organizer's events list", e);
+                });
+
     }
 
     /**

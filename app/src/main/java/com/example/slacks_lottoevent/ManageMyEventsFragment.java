@@ -1,6 +1,7 @@
 package com.example.slacks_lottoevent;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.google.firebase.firestore.auth.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * This activity is responsible for managing the events created by the organizer.
@@ -43,6 +45,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
     private CollectionReference eventsRef;
     private ArrayList<Event> eventList;
     private CollectionReference facilitiesRef;
+    private CollectionReference organizersRef;
 
 //    organzierEventArrayAdapter = new void OrganzierEventArrayAdapter(getContext(), eventList);
 
@@ -61,15 +64,34 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilityData.put("city", facility.getCity());
         facilityData.put("province", facility.getProvince());
         facilityData.put("country", facility.getCountry());
-        facilityData.put("postalCode", facility.getProvince());
+        facilityData.put("postalCode", facility.getPostalCode());
+        facilityData.put("organizerID", facility.getOrganizerId());
+        facilityData.put("deviceID", facility.getDeviceId());
 
-        // Add the facility data to Firestore
         facilitiesRef.add(facilityData)
                 .addOnSuccessListener(documentReference -> {
                     Log.d("addFacility", "Facility added with ID: " + documentReference.getId());
                     existingFacility.setFacilityId(documentReference.getId()); // Set document ID here
+
+                    // Now add the facility data to the organizer after the facility ID is set
+                    Map<String, Object> organizerData = new HashMap<>();
+                    organizerData.put("userId", facility.getOrganizerId());
+                    organizerData.put("facilityId", existingFacility.getFacilityId());
+                    organizerData.put("events", null); // Assuming EventList can be serialized
+
+                    organizersRef.document(facility.getOrganizerId()) // Sets userId as the document ID
+                            .set(organizerData)
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("addFacility", "Organizer updated with facility ID.");
+                                // Successfully added organizer with facility ID
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.w("addFacility", "Error adding organizer", e);
+                                // Handle the error
+                            });
                 })
                 .addOnFailureListener(e -> Log.w("addFacility", "Error adding facility", e));
+
 
         // Hide the create facility button
         createFacilitiesButton.setVisibility(View.GONE);
@@ -129,6 +151,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 //        TODO: remove the facilities collection from here because it is unneeded and grab the organizer data pertaining to it
 //        TODO: grab organizer collection, grab the ID, grab the facility object and grab the event ID list
         facilitiesRef = db.collection("facilities");
+        organizersRef = db.collection("organizers");
 
         myEventsListView = binding.myEventsListView;
         organzierEventArrayAdapter = new OrganzierEventArrayAdapter(getContext(), eventList);
@@ -160,6 +183,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                             newEvents.add(event);
                         }
                     }
+
                     // Update eventList and UI only if there are changes
                     if (!newEvents.equals(eventList)) {
                         eventList.clear();
@@ -195,8 +219,9 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
             }
         });
 
+        // CHANGE HERE BEFORE PUSHING
         if (existingFacility == null) {
-            createFacilitiesButton.setVisibility(View.GONE);
+            createFacilitiesButton.setVisibility(View.VISIBLE);
         } else {
             createFacilitiesButton.setVisibility(View.VISIBLE);
         }

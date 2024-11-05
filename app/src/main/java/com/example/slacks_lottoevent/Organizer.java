@@ -1,39 +1,39 @@
 package com.example.slacks_lottoevent;
 
-import com.google.firebase.firestore.auth.User;
+import java.util.ArrayList;
 
 /**
  * Organizer class is a class that represents the organizer of the event.
- * It has a facility and a list of events.
+ * It has a facilityId and a list of events.
  */
 public class Organizer {
 
-    private final Profile user;
-    private Facility facility;
-    private final EventList events;
+    private final String userId;
+    private String facilityId;
+    private final ArrayList<String> events;
 
     /**
      * Constructor for Organizer class.
      */
-    public Organizer(Profile user) {
-        this.user = user;
-        this.events = new EventList();
-        this.facility = null;
+    public Organizer(String userId) {
+        this.userId = userId;
+        this.events = new ArrayList<>();
+        this.facilityId = null;
     }
 
-    public Profile getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
-    public Facility getFacility() {
-        return facility;
+    public String getFacilityId() {
+        return facilityId;
     }
 
-    public void setFacility(Facility facility) {
-        this.facility = facility;
+    public void setFacilityId(String facilityId) {
+        this.facilityId = facilityId;
     }
 
-    public EventList getEvents() {
+    public ArrayList<String> getEvents() {
         return events;
     }
 }
