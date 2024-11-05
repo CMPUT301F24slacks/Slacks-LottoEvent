@@ -200,7 +200,7 @@ public class EventDetails extends AppCompatActivity {
             else {
                 // Entrant not already in the database
                 Entrant newEntrant = new Entrant();
-                newEntrant.getWaitlistedEvents().add(qrCodeValue);
+                newEntrant.addWaitlistedEvents(qrCodeValue);
                 entrantDocRef.set(newEntrant);
             }
         });
