@@ -105,6 +105,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
         // Hide the create facility button
         createFacilitiesButton.setVisibility(View.GONE);
+        facilityCreated.setVisibility(View.VISIBLE);
 
     }
 
@@ -173,34 +174,61 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         deviceId= Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
 
-//        eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
-//                if (error != null) {
-//                    Log.e("FirestoreError", "Listen failed.", error);
-//                    return;
-//                }
-//
-//                if (snapshots != null && !snapshots.isEmpty()) {
-//                    ArrayList<Event> newEvents = new ArrayList<>(); // Temporary list to minimize UI updates
-//
-//                    for (DocumentSnapshot document : snapshots.getDocuments()) {
-//                        // Convert each document into an Event object using Firestore’s built-in method
-//                        Event event = document.toObject(Event.class);
-//                        if (event != null) {
-//                            newEvents.add(event);
-//                        }
-//                    }
-//
-//                    // Update eventList and UI only if there are changes
-//                    if (!newEvents.equals(eventList)) {
-//                        eventList.clear();
-//                        eventList.addAll(newEvents);
-//                        organzierEventArrayAdapter.notifyDataSetChanged();
-//                    }
-//                }
-//            }
-//        });
+/// Listen for real-time updates to the organizer's document
+        organizersRef.document(deviceId).addSnapshotListener((organizerSnapshot, error) -> {
+            if (error != null) {
+                Log.w("Firestore", "Listen failed.", error);
+                return;
+            }
+
+            if (organizerSnapshot != null && organizerSnapshot.exists()) {
+                // Check if "events" field exists in the snapshot
+                List<String> eventIDs = (List<String>) organizerSnapshot.get("events");
+
+                if (eventIDs != null && !eventIDs.isEmpty()) {
+                    ArrayList<Event> newEvents = new ArrayList<>();
+
+                    // Retrieve each event document and add to the newEvents list
+                    for (String eventID : eventIDs) {
+                        eventsRef.document(eventID).get().addOnCompleteListener(eventTask -> {
+                            if (eventTask.isSuccessful() && eventTask.getResult() != null) {
+                                DocumentSnapshot eventDoc = eventTask.getResult();
+
+                                if (eventDoc.exists()) {
+                                    Event event = eventDoc.toObject(Event.class);
+                                    if (event != null) {
+                                        newEvents.add(event);
+
+                                        // Update the UI when all events are retrieved
+                                        if (newEvents.size() == eventIDs.size()) {
+                                            // Only update if there are changes
+                                            if (!newEvents.equals(eventList)) {
+                                                eventList.clear();
+                                                eventList.addAll(newEvents);
+                                                organzierEventArrayAdapter.notifyDataSetChanged();
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    Log.w("Firestore", "Event document not found: " + eventID);
+                                }
+                            } else {
+                                Log.w("Firestore", "Failed to retrieve event document.", eventTask.getException());
+                            }
+                        });
+                    }
+                } else {
+                    // Handle the case where no events are found for this organizer
+                    eventList.clear();
+                    organzierEventArrayAdapter.notifyDataSetChanged();
+                }
+            } else {
+                Log.w("Firestore", "Organizer document does not exist or eventList missing.");
+                eventList.clear();
+                organzierEventArrayAdapter.notifyDataSetChanged();
+            }
+        });
+
 
 // First, get the event IDs from the organizer document
         organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
@@ -319,7 +347,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
         // CHANGE HERE BEFORE PUSHING
         if (existingFacility == null) {
-            createFacilitiesButton.setVisibility(View.VISIBLE);
+            createFacilitiesButton.setVisibility(View.GONE);
         } else {
             createFacilitiesButton.setVisibility(View.VISIBLE);
         }
