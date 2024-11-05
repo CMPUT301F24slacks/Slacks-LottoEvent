@@ -1,11 +1,8 @@
 package com.example.slacks_lottoevent;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -13,7 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.tabs.TabLayout;
 
-public class Organizer_MainActivity extends AppCompatActivity {
+public class OrganizerNotifications extends AppCompatActivity {
 
     FrameLayout frameLayout;
     TabLayout tabLayout;
@@ -21,8 +18,7 @@ public class Organizer_MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.organizer_main_activity);
-
+        setContentView(R.layout.notifications_organizer);
 
         //Set Up ArrayAdapter, do getUsername() for every user in said category, change it in the case-by-case tabLayout system
         Intent intent = getIntent();

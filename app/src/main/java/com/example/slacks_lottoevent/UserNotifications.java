@@ -4,11 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import com.example.slacks_lottoevent.databinding.ActivityEventsHomeBinding;
@@ -16,7 +13,7 @@ import com.example.slacks_lottoevent.databinding.NotificationsUserBinding;
 import com.google.android.material.appbar.MaterialToolbar;
 
 
-public class User_Notifications extends AppCompatActivity {
+public class UserNotifications extends AppCompatActivity {
     private NotificationsUserBinding binding1;
     private ActivityEventsHomeBinding binding2;
     private AppBarConfiguration appBarConfiguration;
@@ -31,6 +28,16 @@ public class User_Notifications extends AppCompatActivity {
 
         binding1 = NotificationsUserBinding.inflate(getLayoutInflater());
         setContentView(binding1.getRoot());
+
+//        take from the entrant.invited array, then for loop through that and make the object of accepting/declining
+//        with fields using getters on that specific id of that event already in the firestore, then
+//        make if its accepted, we add that to our finalist events in our entrant class, and if declined
+//        we remove ourselves from the entrant.invited array whilst removing ourselves from the events.invited
+//        array, and then updating the count (if there is one) of how many people are invited.
+
+//        for the organizer lists of cancelled joined and etc, take it from the event associated when clicked using intent
+//        then replace that dummy data with the real one, also fix leylas implementation
+
 
 //        binding2 = ActivityEventsHomeBinding.inflate(getLayoutInflater());
 //        setContentView(binding2.getRoot());
@@ -49,7 +56,7 @@ public class User_Notifications extends AppCompatActivity {
 //            @Override
 //            public void onClick(View v) {
 //                finish();
-////                Toast.makeText(User_Notifications.this, "Toolbar title clicked", Toast.LENGTH_SHORT).show();
+////                Toast.makeText(UserNotifications.this, "Toolbar title clicked", Toast.LENGTH_SHORT).show();
 //            }
 //        });
     }
@@ -76,7 +83,7 @@ public class User_Notifications extends AppCompatActivity {
             return true;
         }
 //        if (id == R.id.notifications) {
-//            Intent intent = new Intent(EventsHomeActivity.this, User_Notifications.class);
+//            Intent intent = new Intent(EventsHomeActivity.this, UserNotifications.class);
 //            startActivity(intent);
 //            return true;
 //        }

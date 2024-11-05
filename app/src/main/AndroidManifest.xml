@@ -50,7 +50,7 @@
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
-            android:name=".User_Notifications"
+            android:name=".UserNotifications"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
 

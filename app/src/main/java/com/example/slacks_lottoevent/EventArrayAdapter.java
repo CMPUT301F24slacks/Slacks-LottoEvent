@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import org.w3c.dom.Text;
-
 import java.io.Serializable;
 
 /**
@@ -45,13 +43,13 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         Button eventButton = convertView.findViewById(R.id.event_button);
 
         eventButton.setOnClickListener(v -> {
-            // Create an Intent to navigate to Organizer_MainActivity
-            Intent intent = new Intent(getContext(), Organizer_MainActivity.class);
+            // Create an Intent to navigate to OrganizerNotifications
+            Intent intent = new Intent(getContext(), OrganizerNotifications.class);
 
             // Pass any additional data if needed
             // intent.putExtra("EXTRA_EVENT_ID", event.getId());  // Example of passing data
 
-            // Start Organizer_MainActivity
+            // Start OrganizerNotifications
             getContext().startActivity(intent);
         });
 
