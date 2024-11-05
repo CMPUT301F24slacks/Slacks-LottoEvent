@@ -55,8 +55,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
     private CollectionReference organizersRef;
     String deviceId;
 
-//    organzierEventArrayAdapter = new void OrganzierEventArrayAdapter(getContext(), eventList);
-
     @Override
     public void addFacility(Facility facility) {
         // Retrieve the facility name and set it to display on the screen
@@ -153,14 +151,9 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
         eventList = new ArrayList<>(); // Initialize the event list
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events"); // Reference to events collection
-
-//        TODO: Get organizer Collection, compare deviceId with the one in the collection, then grab event ID List and display
-
         facilitiesRef = db.collection("facilities");
         organizersRef = db.collection("organizers");
 
@@ -229,8 +222,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
             }
         });
 
-
-// First, get the event IDs from the organizer document
         organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 DocumentSnapshot organizerDoc = task.getResult();

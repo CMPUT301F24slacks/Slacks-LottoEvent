@@ -2,6 +2,7 @@ package com.example.slacks_lottoevent;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -27,6 +31,10 @@ import java.util.ArrayList;
 public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
     private Context context;
     private ArrayList<Event> events;
+
+    private FirebaseFirestore db;
+    private CollectionReference facilitiesRef;
+    private CollectionReference organizersRef;
 
     /**
      * Constructor for the OrganzierEventArrayAdapter
@@ -47,6 +55,10 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.content_organizer_events, parent, false);
         }
+
+        db = FirebaseFirestore.getInstance();
+        facilitiesRef = db.collection("facilities");
+        organizersRef = db.collection("organizers");
 
         ImageView qrCode = convertView.findViewById(R.id.qr_code_image);
         String qrData = event.getQRData();
@@ -69,27 +81,43 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
         TextView eventName = convertView.findViewById(R.id.event_name);
         TextView eventDate = convertView.findViewById(R.id.event_date);
         TextView eventTime = convertView.findViewById(R.id.event_time);
-//        TODO: Fix this
         TextView eventAddress = convertView.findViewById(R.id.event_address);
         TextView eventDescription = convertView.findViewById(R.id.event_description);
         eventName.setText(event.getName());
         eventDate.setText(event.getDate());
         eventTime.setText(event.getTime());
-//        TODO: get the facility from the user we are at and display it there
-//        if (event.getFacility() != null) {
-//            eventAddress.setText(
-//                    event.getFacility().getStreetAddress1() + " " +
-//                            event.getFacility().getStreetAddress2() + ", " +
-//                            event.getFacility().getCity() + ", " +
-//                            event.getFacility().getProvince() + ", " +
-//                            event.getFacility().getCountry() + " " +
-//                            event.getFacility().getPostalCode()
-//            );
 
-//        } else {
-//            eventAddress.setText("No Address Available");
-//        }
-        eventAddress.setText("Need to grab facility");
+        String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+
+        organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DocumentSnapshot organizerDoc = task.getResult();
+
+                // Check if the facilityID field exists and is not empty
+                if (organizerDoc.exists() && organizerDoc.contains("facilityId")) {
+                    String facilityID = organizerDoc.getString("facilityId");
+
+                    if (facilityID != null && !facilityID.isEmpty()) {
+                        // Now query the facilities collection with the retrieved facilityID
+                        facilitiesRef.document(facilityID).addSnapshotListener((facilitySnapshot, e) -> {
+                            if (e != null) {
+                                Log.w("Firestore", "Facility listen failed.", e);
+                                return;
+                            }
+
+                            if (facilitySnapshot != null && facilitySnapshot.exists()) {
+                                // Retrieve facility data
+                                String facilityAddress= facilitySnapshot.getString("streetAddress1");
+                                eventAddress.setText(facilityAddress);
+
+
+                            }
+                        });
+                    }
+                }
+            }
+        });
         eventDescription.setText(event.getDescription());
         return convertView;
     }
