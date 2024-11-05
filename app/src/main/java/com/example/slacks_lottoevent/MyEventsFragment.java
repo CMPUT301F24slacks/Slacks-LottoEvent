@@ -41,14 +41,14 @@ public class MyEventsFragment extends Fragment {
         Organizer tempOrganizer = new Organizer(tempUserId);
         Facility tempFacility = new Facility("facilityname", "9th Street", "111 Unit", "Edmonton", "Province", "country", "t6m0n5", "orgID", "devID");
         tempOrganizer.setFacilityId(tempFacility.getFacilityId());
-        Event tempEvent = new Event(tempOrganizer, tempFacility, "Tech Innovators Summit 2024", "2024-01-23", "14:00-15:00", "400",tempDescription, 1000, 0,  null, "randomeventID", false);
-        EventList tempEventList = new EventList();
+        Event tempEvent = new Event("Tech Innovators Summit 2024", "2024-01-23", "14:00-15:00", "400",tempDescription, 1000, 0,  null, "randomeventID", false, null, false, false, false);        EventList tempEventList = new EventList();
         tempEventList.addEvent(tempEvent);
         tempEventList.addEvent(tempEvent);
 
         myEventsListView = binding.myEventsListView;
         eventArrayAdapter = new EventArrayAdapter(getContext(), tempEventList);
         myEventsListView.setAdapter(eventArrayAdapter);
+
     }
 
     @Override

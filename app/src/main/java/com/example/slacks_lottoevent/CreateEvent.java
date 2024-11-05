@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -158,8 +159,7 @@ public class CreateEvent extends AppCompatActivity {
         Button cancel = findViewById(R.id.cancelBtn);
         cancel.setOnClickListener(v -> finish());
 
-//        Create Button
-//        TODO:  CHECK IF Facilities is not null, if it is null then you cannot add an event and add a pop up for it if there is one then add it and continue on with the functionality (need to get the organizers ID tho)
+//        Create Button - Assume that they have a facility created  - if no organizer profile, then we can have a pop up that says they need to create a facility first
         Button create = findViewById(R.id.createBtn);
         create.setOnClickListener(v -> {
             if (validateInputs()) {
@@ -282,14 +282,10 @@ public class CreateEvent extends AppCompatActivity {
 
         String eventId = UUID.randomUUID().toString();
 
-//        TODO: after adding event, add the eventID to the event list for this specific organizer
-        Facility facility = new Facility("Facility1", "148 St NW", "5603", "Edmonton", "Alberta", "Canada", "T6H 4T7");
-        // unique organizer
-        String tempUserId = UUID.randomUUID().toString();
-
-        Facility facility = new Facility("Facility1", "148 St NW", "5603", "Edmonton", "Alberta", "Canada", "T6H 4T7", "orgID", "deviceId");
-        Profile tempUser = new Profile("John Doe", "123-456-7890", "123@gmail.com");
-        Organizer organizer = new Organizer(tempUserId);
+//        DELETE LATER
+//        String tempUserId = UUID.randomUUID().toString();
+//        Facility facility = new Facility("Facility1", "148 St NW", "5603", "Edmonton", "Alberta", "Canada", "T6H 4T7", "orgID", "deviceId");
+//        Organizer organizer = new Organizer(tempUserId);
 
 
 //        QR Code Creation
@@ -364,4 +360,5 @@ public class CreateEvent extends AppCompatActivity {
         }
         return sb.toString();
     }
+
 }

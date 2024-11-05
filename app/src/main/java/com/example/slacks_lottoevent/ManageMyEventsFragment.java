@@ -1,5 +1,10 @@
 package com.example.slacks_lottoevent;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -16,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.slacks_lottoevent.databinding.FragmentManageMyEventsBinding;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
@@ -46,6 +52,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
     private ArrayList<Event> eventList;
     private CollectionReference facilitiesRef;
     private CollectionReference organizersRef;
+    String deviceId;
 
 //    organzierEventArrayAdapter = new void OrganzierEventArrayAdapter(getContext(), eventList);
 
@@ -160,6 +167,8 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         createFacilitiesButton = view.findViewById(R.id.create_facility_button);
         facilityCreated = view.findViewById(R.id.facility_created);
 
+        deviceId= Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+
 
 
 //        TODO: compare with the events in organizer collection and grab the events in the event collection and grab the event object and then yeah
@@ -228,9 +237,26 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
         createFacilitiesButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
-                // Referenced ChatGPT with prompt "How to show a dialog within a fragment" on Oct 29, 2024
-                // License: OpenAI
-                new AddFacilityFragment().show(getChildFragmentManager(), "Add Facility");
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+                boolean isSignedUp = sharedPreferences.getBoolean("isSignedUp", false);
+
+                if (isSignedUp) {
+                    // Referenced ChatGPT with prompt "How to show a dialog within a fragment" on Oct 29, 2024
+                    // License: OpenAI
+                    new AddFacilityFragment().show(getChildFragmentManager(), "Add Facility");
+                } else {
+                    new AlertDialog.Builder(requireContext())
+                            .setTitle("Sign-Up Required")
+                            .setMessage("In order to create a facility, we need to collect some information about you.")
+                            .setPositiveButton("Proceed", (dialog, which) -> {
+                                Intent signUpIntent = new Intent(requireContext(), SignUpActivity.class);
+                                startActivity(signUpIntent);
+                            })
+                            .setNegativeButton("Cancel", (dialog, which) -> {
+                                dialog.dismiss();
+                            })
+                            .show();
+                }
             }
         });
 
