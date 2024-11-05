@@ -51,87 +51,65 @@ public class EventDetails extends AppCompatActivity {
         binding = ActivityEventDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
-        qrCodeValue = getIntent().getStringExtra("qrCodeValue");
-        if (qrCodeValue == null || qrCodeValue.isEmpty()) {
-            Log.e("EventDetails", "QR Code Value is null or empty!");
-            return;
-        }
-        Log.d("EventDetails", "QR Code Value: " + qrCodeValue);
+//        Log.d("EventDetails", "QR Code Value: " + qrCodeValue);
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-//        TODO: Fix how we do the firebase
-
         db = FirebaseFirestore.getInstance();
-        if (db != null) {
-            Log.d("EventDetails", "Firestore instance successfully initialized.");
-        } else {
-            Log.e("EventDetails", "Failed to initialize Firestore instance.");
-        }
 
-        db.collection("events").whereEqualTo("eventID", "7f06ddf3-3e59-4f7d-9ed4-492954263767").get()
+        db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        Log.d("EventDetails", "Event data found.");
-                    } else {
-                        Log.e("EventDetails", "No event found or error: ", task.getException());
-                    }
-                })
-                .addOnFailureListener(e -> Log.e("EventDetails", "Firestore query failed: ", e));
+                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
 
-//        db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-//                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
-//
-//                        Event event = document.toObject(Event.class); // Converts the document to an Event object
-//                        binding.eventTitle.setText(event.getName());
-//                        date = String.valueOf(event.getDate());
-//                        binding.eventDate.setText(event.getDate());
-//                        binding.eventDescription.setText(event.getDescription());
-//
-//
-////                        TODO: grab the facility from the organizer once it is connected
-//                        location = "Wait for facility";
-//                        binding.eventLocation.setText("Set the facility once connected");
-//                        binding.eventWaitlistCapacity.setText("Waitlist Capacity " + event.getWaitListCapacity());
-//                        binding.eventTime.setText(event.getTime());
-//                        time = String.valueOf(event.getTime());
-//
-//                        Long spotsRemaining = (long) (event.getEventSlots() - event.getFinalists().size());
-//                        binding.spotsAvailable.setText("Only " + spotsRemaining + " spots available");
-//                        usesGeolocation = event.getgeoLocation();
-//
-//                        if (event.getEventSlots() == event.getFinalists().size()) {
-//                            // Capacity is full; show the waitlist badge
-//                            binding.joinButton.setVisibility(View.GONE);
-//                            binding.waitlistFullBadge.setVisibility(View.VISIBLE);
-//                        } else {
-//                            binding.joinButton.setVisibility(View.VISIBLE);
-//                            binding.waitlistFullBadge.setVisibility(View.GONE);
-//                        }
-//
-//                        binding.joinButton.setOnClickListener(view -> {
-//                            SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
-//                            boolean isSignedUp = sharedPreferences.getBoolean("isSignedUp", false);
-//                            if (isSignedUp) {
-//                                showRegistrationDialog();
-//                            } else {
-//                                new AlertDialog.Builder(this)
-//                                        .setTitle("Sign-Up Required")
-//                                        .setMessage("In order to join an event, we need to collect some information about you.")
-//                                        .setPositiveButton("Proceed", (dialog, which) -> {
-//                                            Intent signUpIntent = new Intent(EventDetails.this, SignUpActivity.class);
-//                                            startActivity(signUpIntent);
-//                                        })
-//                                        .setNegativeButton("Cancel", (dialog, which) -> {
-//                                            dialog.dismiss();
-//                                        })
-//                                        .show();
-//                            }
-//                        });
-//
-//                    }
-//                });
+                        Event event = document.toObject(Event.class); // Converts the document to an Event object
+                        binding.eventTitle.setText(event.getName());
+                        date = String.valueOf(event.getDate());
+                        binding.eventDate.setText(event.getDate());
+                        binding.eventDescription.setText(event.getDescription());
+
+
+//                        TODO: grab the facility from the organizer once it is connected
+                        location = "Wait for facility";
+                        binding.eventLocation.setText("Set the facility once connected");
+                        binding.eventWaitlistCapacity.setText("Waitlist Capacity " + event.getWaitListCapacity());
+                        binding.eventTime.setText(event.getTime());
+                        time = String.valueOf(event.getTime());
+
+                        Long spotsRemaining = (long) (event.getEventSlots() - event.getFinalists().size());
+                        binding.spotsAvailable.setText("Only " + spotsRemaining + " spots available");
+                        usesGeolocation = event.getgeoLocation();
+
+                        if (event.getEventSlots() == event.getFinalists().size()) {
+                            // Capacity is full; show the waitlist badge
+                            binding.joinButton.setVisibility(View.GONE);
+                            binding.waitlistFullBadge.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.joinButton.setVisibility(View.VISIBLE);
+                            binding.waitlistFullBadge.setVisibility(View.GONE);
+                        }
+
+                        binding.joinButton.setOnClickListener(view -> {
+                            SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+                            boolean isSignedUp = sharedPreferences.getBoolean("isSignedUp", false);
+                            if (isSignedUp) {
+                                showRegistrationDialog();
+                            } else {
+                                new AlertDialog.Builder(this)
+                                        .setTitle("Sign-Up Required")
+                                        .setMessage("In order to join an event, we need to collect some information about you.")
+                                        .setPositiveButton("Proceed", (dialog, which) -> {
+                                            Intent signUpIntent = new Intent(EventDetails.this, SignUpActivity.class);
+                                            startActivity(signUpIntent);
+                                        })
+                                        .setNegativeButton("Cancel", (dialog, which) -> {
+                                            dialog.dismiss();
+                                        })
+                                        .show();
+                            }
+                        });
+
+                    }
+                });
     }
 
     private void showRegistrationDialog(){
@@ -177,7 +155,7 @@ public class EventDetails extends AppCompatActivity {
         cancelButton.setOnClickListener(view -> dialog.dismiss());
         confirmButton.setOnClickListener(view -> {
             addEntrantToWaitlist();
-            addEventToEntrant();
+            addEventToEntrant(chosenForLottery, notChosenForLottery);
             addEntrantToNotis(chosenForLottery,notChosenForLottery);
             dialog.dismiss();
             Intent eventsHome = new Intent(this,EventsHomeActivity.class);
@@ -224,17 +202,36 @@ public class EventDetails extends AppCompatActivity {
                 });
     }
 
-    private void addEventToEntrant(){
+    private void addEventToEntrant(AtomicBoolean chosenForLottery, AtomicBoolean notChosenForLottery){
         DocumentReference entrantDocRef = db.collection("entrants").document(deviceId);
 
         entrantDocRef.get().addOnSuccessListener(task -> {
             if (task.exists()){
-                entrantDocRef.update("eventDetails.waitlisted.entrants", FieldValue.arrayUnion(deviceId));
+                entrantDocRef.update("waitlistedEntrants", FieldValue.arrayUnion(qrCodeValue));
+                entrantDocRef.update("waitlistedEventsNotis", FieldValue.arrayUnion(qrCodeValue));
+                entrantDocRef.update("finalistEventsNotis", FieldValue.arrayUnion(qrCodeValue));
+
+//                Adding to entrants notifications events if they want notifications for that event
+                if (chosenForLottery.get()){entrantDocRef.update("invitedEventsNotis", FieldValue.arrayUnion(qrCodeValue));}
+
+                if (notChosenForLottery.get()){entrantDocRef.update("uninvitedEventsNotis", FieldValue.arrayUnion(qrCodeValue));}
             }
             else {
                 // Entrant not already in the database
                 Entrant newEntrant = new Entrant();
                 newEntrant.addWaitlistedEvents(qrCodeValue);
+
+                newEntrant.addWaitlistedEventsNotis(qrCodeValue);
+                newEntrant.addFinalistEventsNotis(qrCodeValue);
+
+                if(chosenForLottery.get()){
+                    newEntrant.addInvitedEventsNotis(qrCodeValue);
+                }
+
+                if(notChosenForLottery.get()){
+                    newEntrant.addUninvitedEventsNotis(qrCodeValue);
+                }
+
                 entrantDocRef.set(newEntrant);
             }
         });
