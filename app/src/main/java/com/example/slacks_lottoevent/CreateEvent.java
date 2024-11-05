@@ -1,6 +1,8 @@
 package com.example.slacks_lottoevent;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Button;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -37,14 +40,6 @@ public class CreateEvent extends AppCompatActivity {
     private ActivityCreateEventBinding binding;
     private CollectionReference organizersRef;
 
-    private String name;
-    private String date;
-    private String time;
-    private String price;
-    private String details;
-    private String pplAccptString;
-    private String waitlistCapacity;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +51,115 @@ public class CreateEvent extends AppCompatActivity {
         eventsRef = db.collection("events");
         organizersRef = db.collection("organizers");
 
+
+//        Check in real time if event date is validated
+        binding.eventDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Real-time validation for Date format
+                if (!isValidDate(s.toString().trim())) {
+                    binding.eventDate.setError("Date must be in MM/DD/YY format");
+                } else {
+                    binding.eventDate.setError(null); // Clear error if valid
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+//        Check in real time if eventTime is validated
+        binding.eventTime.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Real-time validation for Time format
+                if (!isValidTimeFormat(s.toString().trim())) {
+                    binding.eventTime.setError("Time must be in hh:mm format");
+                } else {
+                    binding.eventTime.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+//        Check in real time if event price is validated
+        binding.eventPrice.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Real-time validation for Price format
+                if (!s.toString().matches("\\d+(\\.\\d{0,2})?")) { // Allow up to 2 decimal places
+                    binding.eventPrice.setError("Price must be a valid number (e.g., 29.99)");
+                } else {
+                    binding.eventPrice.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+//        Check in realtime if event slot is a number
+        binding.eventSlots.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Real-time validation for Slots
+                if (!s.toString().matches("\\d+")) {
+                    binding.eventSlots.setError("Slots must be a number");
+                } else {
+                    binding.eventSlots.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+//        check in real time if waitList capacity is a number
+        binding.waitListCapacity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Real-time validation for Waitlist Capacity
+                String eventSlot = binding.eventSlots.getText().toString().trim();
+
+                if (TextUtils.isEmpty(s)) {
+                    // Clear any error if the waitlist capacity is empty
+                    binding.waitListCapacity.setError(null);
+                } else if (!s.toString().matches("\\d+")) {
+                    binding.waitListCapacity.setError("Waitlist capacity must be a number");
+                } else if (!TextUtils.isEmpty(eventSlot) && Integer.parseInt(s.toString()) < Integer.parseInt(eventSlot)) {
+                    binding.waitListCapacity.setError("Waitlist capacity must be greater than the event slots");
+                } else {
+                    binding.waitListCapacity.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+
 //        Cancel Button
         Button cancel = findViewById(R.id.cancelBtn);
         cancel.setOnClickListener(v -> finish());
 
-//        Create Button
+//        Create Button - Assume that they have a facility created  - if no organizer profile, then we can have a pop up that says they need to create a facility first
         Button create = findViewById(R.id.createBtn);
         create.setOnClickListener(v -> {
             if (validateInputs()) {
@@ -75,14 +174,12 @@ public class CreateEvent extends AppCompatActivity {
      * @return true if all inputs are valid, false otherwise
      */
     private boolean validateInputs() {
-        name = binding.eventName.getText().toString().trim();
-        date = binding.eventDate.getText().toString().trim();
-        time = binding.eventTime.getText().toString().trim();
-        price = binding.eventPrice.getText().toString().trim();
-        details = binding.eventDetails.getText().toString().trim();
-        pplAccptString = binding.noPeopleAccpt.getText().toString().trim();
-        waitlistCapacity = binding.noEntratAccpt.getText().toString().trim();
-
+        String name = binding.eventName.getText().toString().trim();
+        String date = binding.eventDate.getText().toString().trim();
+        String time = binding.eventTime.getText().toString().trim();
+        String price = binding.eventPrice.getText().toString().trim();
+        String details = binding.eventDetails.getText().toString().trim();
+        String eventSlot = binding.eventSlots.getText().toString().trim();
 
 //        Event Name validation
         if (TextUtils.isEmpty(name)) {
@@ -97,20 +194,9 @@ public class CreateEvent extends AppCompatActivity {
             return false;
         }
 
-        if (!isValidDate(date)) {
-            binding.eventDate.setError("Event date needs to be in MM/DD/YY format");
-            binding.eventDate.requestFocus();
-            return false;
-        }
-
 //        time validation
         if (TextUtils.isEmpty(time)) {
             binding.eventTime.setError("Event time is required");
-            binding.eventTime.requestFocus();
-            return false;
-        }
-        if (!isValidTimeFormat(time)) {
-            binding.eventTime.setError("Event time needs to be in hh:mm format");
             binding.eventTime.requestFocus();
             return false;
         }
@@ -118,11 +204,6 @@ public class CreateEvent extends AppCompatActivity {
 //        Event Price validation - empty and it has to be a number
         if (TextUtils.isEmpty(price)) {
             binding.eventPrice.setError("Event price is required");
-            binding.eventPrice.requestFocus();
-            return false;
-        }
-        if (!price.matches("\\d+")) {
-            binding.eventPrice.setError("Event price must be a number");
             binding.eventPrice.requestFocus();
             return false;
         }
@@ -134,21 +215,9 @@ public class CreateEvent extends AppCompatActivity {
             return false;
         }
 
-        if (TextUtils.isEmpty(pplAccptString)) {
-            binding.noPpAccpt.setError("Number of People Accepted to the event are required");
-            binding.noPpAccpt.requestFocus();
-            return false;
-        }
-
-        if (!pplAccptString.matches("\\d+")){
-            binding.noPpAccpt.setError("Number of selected people must be a number");
-            binding.noPpAccpt.requestFocus();
-            return false;
-        }
-
-        if (Integer.parseInt(waitlistCapacity) < Integer.parseInt(pplAccptString)){
-            binding.noEntratAccpt.setError("Waiting list capacity must be bigger than the number of people selected");
-            binding.noEntratAccpt.requestFocus();
+        if (TextUtils.isEmpty(eventSlot)) {
+            binding.eventSlots.setError("Number of People Accepted to the event are required");
+            binding.eventSlots.requestFocus();
             return false;
         }
 
@@ -194,52 +263,39 @@ public class CreateEvent extends AppCompatActivity {
      * This method creates an event and adds it to the database.
      */
     private void createEvent() {
-        name = binding.eventName.getText().toString().trim();
-        date = binding.eventDate.getText().toString().trim();
-        time = binding.eventTime.getText().toString().trim();
-        price = binding.eventPrice.getText().toString().trim();
-        details = binding.eventDetails.getText().toString().trim();
-        Boolean geoLoc = binding.checkBoxGeo.isChecked();
+        String name = binding.eventName.getText().toString().trim();
+        String date = binding.eventDate.getText().toString().trim();
+        String time = binding.eventTime.getText().toString().trim();
+        String price = binding.eventPrice.getText().toString().trim();
+        String details = binding.eventDetails.getText().toString().trim();
+        Boolean geoLoc = binding.checkBoxGeo.isChecked() ? false: true;
+        Boolean waitListNotis = binding.waitingList.isChecked()? true: false;
+        Boolean cancelledNotis = binding.cancelled.isChecked() ? true: false;
+        Boolean selectedNotis = binding.selected.isChecked() ? true: false;
 
-//        Gets the amount of people that can be selected from signing up
-        Integer pplAccpt = Integer.valueOf(binding.noPeopleAccpt.getText().toString().trim());
+        Integer eventSlots = Integer.valueOf(binding.eventSlots.getText().toString().trim());
+        String waitingListCapacity = binding.waitListCapacity.getText().toString().trim();
 
-//        Number of people that can sign up to event
-        String waitingListCapacity = binding.noEntratAccpt.getText().toString().trim();
-
-        if (TextUtils.isEmpty(waitlistCapacity) || Integer.parseInt(waitlistCapacity) == 0) {
-//            Signifies they did not pick a number for this capacity so any amount of people can be selected
-            waitlistCapacity = "0";
+        if (TextUtils.isEmpty(waitingListCapacity) || Integer.parseInt(waitingListCapacity) == 0) {
+            waitingListCapacity = "-1";
         }
 
-//        unique one
         String eventId = UUID.randomUUID().toString();
 
-        // unique organizer
-        String tempUserId = UUID.randomUUID().toString();
-
-        Facility facility = new Facility("Facility1", "148 St NW", "5603", "Edmonton", "Alberta", "Canada", "T6H 4T7", "orgID", "deviceId");
-        Profile tempUser = new Profile("John Doe", "123-456-7890", "123@gmail.com");
-        Organizer organizer = new Organizer(tempUserId);
+//        DELETE LATER
+//        String tempUserId = UUID.randomUUID().toString();
+//        Facility facility = new Facility("Facility1", "148 St NW", "5603", "Edmonton", "Alberta", "Canada", "T6H 4T7", "orgID", "deviceId");
+//        Organizer organizer = new Organizer(tempUserId);
 
 
 //        QR Code Creation
         QRCodeWriter writer = new QRCodeWriter();
         try {
             BitMatrix bitMatrix = writer.encode(eventId, BarcodeFormat.QR_CODE, 300, 300);
-            String serializedQRcode = serializeBitMatrix(bitMatrix);
-            String hash = generateHash(serializedQRcode);
+            String qrData = serializeBitMatrix(bitMatrix);
+            String qrHash = generateHash(qrData);
 
-            geoLoc = binding.checkBoxGeo.isChecked() ? false: true;
-
-            Event event = new Event(organizer, facility, name, date, time, price, details, pplAccpt, Integer.parseInt(waitingListCapacity), serializedQRcode, eventId, geoLoc);
-
-            HashMap<String, Object> eventData = new HashMap<>();
-            eventData.put("eventId", eventId);
-            eventData.put("eventDetails",event);
-            eventData.put("qrHash",hash);
-
-
+            Event eventData =  new Event(name, date, time, price, details, eventSlots, Integer.parseInt(waitingListCapacity), qrData, eventId, geoLoc, qrHash, waitListNotis, selectedNotis, cancelledNotis);
             eventsRef.document(eventId).set(eventData)
                     .addOnSuccessListener(nothing -> {
                         System.out.println("Added to DB");
@@ -304,4 +360,5 @@ public class CreateEvent extends AppCompatActivity {
         }
         return sb.toString();
     }
+
 }

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +24,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import android.provider.Settings;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,54 +51,49 @@ public class EventDetails extends AppCompatActivity {
         binding = ActivityEventDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
+//        Log.d("EventDetails", "QR Code Value: " + qrCodeValue);
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
         db = FirebaseFirestore.getInstance();
-        db.collection("events").whereEqualTo("eventDetails.eventID", qrCodeValue).get()
+
+        db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
 
-                        document = task.getResult().getDocuments().get(0);
-                        Map<String, Object> eventDetails = (Map<String, Object>) document.get("eventDetails");
-                        List<Object>  entrants = (List<Object>) document.get("eventDetails.finalists.entrants");
-                        String eventName = (String) eventDetails.get("name");
-                        date = (String) eventDetails.get("date");
-                        String description = (String) eventDetails.get("description");
-                        Long capacity = (Long) eventDetails.get("capacity");
-                        Long pplSelected = (Long) eventDetails.get("pplSelected");
-                        time = document.getString("eventDetails.time");
-                        binding.eventTitle.setText(eventName);
-                        binding.eventDate.setText(date);
-                        assert capacity != null;
-                        String capacityAsString = capacity.toString();
-                        Map<String, Object> facilityDetails =  (Map<String, Object>) eventDetails.get("facility");
-                        location = (String) facilityDetails.get("streetAddress1") + ", "+ facilityDetails.get("city") + ", " + facilityDetails.get("country") + ", " + facilityDetails.get("postalCode");
-                        binding.eventLocation.setText(location);
-                        String waitlistCapcity = "Waitlist Capacity " + capacityAsString;
-                        binding.eventWaitlistCapacity.setText(waitlistCapcity);
-                        binding.eventDescription.setText(description);
-
-                        Long spotsRemaining = pplSelected - entrants.size();
-                        String spotsRemainingText = "Only " + spotsRemaining.toString() + " spots available";
-                        binding.spotsAvailable.setText(spotsRemainingText);
-                        usesGeolocation = (Boolean) document.get("eventDetails.geoLocation");
+                        Event event = document.toObject(Event.class); // Converts the document to an Event object
+                        binding.eventTitle.setText(event.getName());
+                        date = String.valueOf(event.getDate());
+                        binding.eventDate.setText(event.getDate());
+                        binding.eventDescription.setText(event.getDescription());
 
 
-                        if (capacity.equals((long) entrants.size())) {
-                            // Capacity is full show we want to show the waitlist badge
+//                        TODO: grab the facility from the organizer once it is connected
+                        location = "Wait for facility";
+                        binding.eventLocation.setText("Set the facility once connected");
+                        binding.eventWaitlistCapacity.setText("Waitlist Capacity " + event.getWaitListCapacity());
+                        binding.eventTime.setText(event.getTime());
+                        time = String.valueOf(event.getTime());
+
+                        Long spotsRemaining = (long) (event.getEventSlots() - event.getFinalists().size());
+                        binding.spotsAvailable.setText("Only " + spotsRemaining + " spots available");
+                        usesGeolocation = event.getgeoLocation();
+
+                        if (event.getEventSlots() == event.getFinalists().size()) {
+                            // Capacity is full; show the waitlist badge
                             binding.joinButton.setVisibility(View.GONE);
                             binding.waitlistFullBadge.setVisibility(View.VISIBLE);
                         } else {
                             binding.joinButton.setVisibility(View.VISIBLE);
                             binding.waitlistFullBadge.setVisibility(View.GONE);
                         }
-                        // The reason to add the onClickListener in here is because we don't want the join button to do anything unless this event actually exists in the firebase
+
                         binding.joinButton.setOnClickListener(view -> {
                             SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
                             boolean isSignedUp = sharedPreferences.getBoolean("isSignedUp", false);
-                            if (isSignedUp){
+                            if (isSignedUp) {
                                 showRegistrationDialog();
-                            }
-                            else {
+                            } else {
                                 new AlertDialog.Builder(this)
                                         .setTitle("Sign-Up Required")
                                         .setMessage("In order to join an event, we need to collect some information about you.")
@@ -107,13 +106,12 @@ public class EventDetails extends AppCompatActivity {
                                         })
                                         .show();
                             }
-
                         });
+
                     }
                 });
-
-
     }
+
     private void showRegistrationDialog(){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -157,10 +155,8 @@ public class EventDetails extends AppCompatActivity {
         cancelButton.setOnClickListener(view -> dialog.dismiss());
         confirmButton.setOnClickListener(view -> {
             addEntrantToWaitlist();
-
-            addEventToEntrant();
-
-
+            addEventToEntrant(chosenForLottery, notChosenForLottery);
+            addEntrantToNotis(chosenForLottery,notChosenForLottery);
             dialog.dismiss();
             Intent eventsHome = new Intent(this,EventsHomeActivity.class);
             startActivity(eventsHome);
@@ -170,39 +166,117 @@ public class EventDetails extends AppCompatActivity {
 
     }
 
+    private void addEntrantToWaitlist() {
+        // Get the device ID
+        @SuppressLint("HardwareIds")
+        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-
-    private void addEntrantToWaitlist(){
-        db.collection("events").whereEqualTo("eventDetails.eventID",qrCodeValue)
+        // Query the Firestore for the event based on the QR code value
+        db.collection("events").whereEqualTo("eventID", qrCodeValue)
                 .get()
-                .addOnSuccessListener(task -> {
-                    DocumentSnapshot eventDocumentSnapshot = task.getDocuments().get(0);
-                    DocumentReference eventRef = eventDocumentSnapshot.getReference();
-                    eventRef.update("eventDetails.waitlisted.entrants", FieldValue.arrayUnion(deviceId));
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        QueryDocumentSnapshot document = (QueryDocumentSnapshot) task.getResult().getDocuments().get(0);
+                        Event event = document.toObject(Event.class); // Convert the document to an Event object
 
+                        event.addWaitlisted(deviceId);
+
+                        db.collection("events").document(event.getEventID())
+                                .update("waitlisted", event.getWaitlisted())
+                                .addOnSuccessListener(aVoid -> {
+                                    // Successfully updated Firestore
+                                    System.out.println("Waitlisted updated successfully.");
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle failure
+                                    System.err.println("Error updating waitlisted: " + e.getMessage());
+                                });
+                    } else {
+                        // Handle case where no events were found
+                        Toast.makeText(this, "No event found with the specified ID.", Toast.LENGTH_SHORT).show();
+                    }
                 })
-                .addOnFailureListener(task -> {
-                    System.err.println("Error fetching event document: " + task);
+                .addOnFailureListener(e -> {
+                    // Handle failure in retrieving the event document
+                    Toast.makeText(this, "Error fetching event document: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void addEventToEntrant(){
+    private void addEventToEntrant(AtomicBoolean chosenForLottery, AtomicBoolean notChosenForLottery){
         DocumentReference entrantDocRef = db.collection("entrants").document(deviceId);
 
         entrantDocRef.get().addOnSuccessListener(task -> {
             if (task.exists()){
-                entrantDocRef.update("eventDetails.waitlisted.entrants", FieldValue.arrayUnion(deviceId));
+                entrantDocRef.update("waitlistedEntrants", FieldValue.arrayUnion(qrCodeValue));
+                entrantDocRef.update("waitlistedEventsNotis", FieldValue.arrayUnion(qrCodeValue));
+                entrantDocRef.update("finalistEventsNotis", FieldValue.arrayUnion(qrCodeValue));
+
+//                Adding to entrants notifications events if they want notifications for that event
+                if (chosenForLottery.get()){entrantDocRef.update("invitedEventsNotis", FieldValue.arrayUnion(qrCodeValue));}
+
+                if (notChosenForLottery.get()){entrantDocRef.update("uninvitedEventsNotis", FieldValue.arrayUnion(qrCodeValue));}
             }
             else {
                 // Entrant not already in the database
                 Entrant newEntrant = new Entrant();
                 newEntrant.addWaitlistedEvents(qrCodeValue);
+
+                newEntrant.addWaitlistedEventsNotis(qrCodeValue);
+                newEntrant.addFinalistEventsNotis(qrCodeValue);
+
+                if(chosenForLottery.get()){
+                    newEntrant.addInvitedEventsNotis(qrCodeValue);
+                }
+
+                if(notChosenForLottery.get()){
+                    newEntrant.addUninvitedEventsNotis(qrCodeValue);
+                }
+
                 entrantDocRef.set(newEntrant);
             }
         });
+    }
+
+    private void addEntrantToNotis(AtomicBoolean chosenForLottery, AtomicBoolean notChosenForLottery){
+        // Get the device ID
+        @SuppressLint("HardwareIds")
+        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        // Query the Firestore for the event based on the QR code value
+        db.collection("events").whereEqualTo("eventID", qrCodeValue)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        QueryDocumentSnapshot document = (QueryDocumentSnapshot) task.getResult().getDocuments().get(0);
+                        Event event = document.toObject(Event.class); // Convert the document to an Event object
 
 
+                        event.addWaitlistedNotification(deviceId);
+                        if (chosenForLottery.get()) { event.addSelectedNotification(deviceId); System.out.println("SelectedNotis List updated successfully.");}
+                        if (notChosenForLottery.get()) { event.addCancelledNotification(deviceId); System.out.println("CancelledNotis List updated successfully."); }
 
+
+                        db.collection("events").document(event.getEventID())
+                                .update("waitlistedNotificationsList", event.getWaitlistedNotificationsList(), // Assuming this method returns the list
+                                        "selectedNotificationsList", event.getSelectedNotificationsList(),      // Assuming this method returns the list
+                                        "cancelledNotificationsList", event.getCancelledNotificationsList())
+                                .addOnSuccessListener(aVoid -> {
+                                    // Successfully updated Firestore
+                                    System.out.println("Notifications updated successfully.");
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle failure
+                                    System.err.println("Error updating notifications: " + e.getMessage());
+                                });
+                    } else {
+                        // Handle case where no events were found
+                        Toast.makeText(this, "No event found with the specified ID.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure in retrieving the event document
+                    Toast.makeText(this, "Error fetching event document: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
 
