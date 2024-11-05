@@ -1,6 +1,6 @@
 package com.example.slacks_lottoevent;
 
-import com.google.zxing.common.BitMatrix;
+import com.example.slacks_lottoevent.model.Organizer;
 
 /**
  * Event class that holds all the information for an event
