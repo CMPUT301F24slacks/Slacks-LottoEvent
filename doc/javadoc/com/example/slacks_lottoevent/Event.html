@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.example.slacks_lottoevent.Organizer,com.example.slacks_lottoevent.Facility,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,java.lang.Boolean)" class="member-name-link">Event</a><wbr>(<a href="Organizer.html" title="class in com.example.slacks_lottoevent">Organizer</a>&nbsp;organizer,
- <a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facility,
+ <a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facilityId,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;date,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;time,
@@ -179,7 +179,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEventID(java.lang.String)" class="member-name-link">setEventID</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFacility(com.example.slacks_lottoevent.Facility)" class="member-name-link">setFacility</a><wbr>(<a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facility)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFacility(com.example.slacks_lottoevent.Facility)" class="member-name-link">setFacility</a><wbr>(<a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facilityId)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setGeoLocation(java.lang.Boolean)" class="member-name-link">setGeoLocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&nbsp;new_geoLocation)</code></div>
@@ -220,7 +220,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.example.slacks_lottoevent.Organizer,com.example.slacks_lottoevent.Facility,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,java.lang.Boolean)">
 <h3>Event</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Event</span><wbr><span class="parameters">(<a href="Organizer.html" title="class in com.example.slacks_lottoevent">Organizer</a>&nbsp;organizer,
- <a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facility,
+ <a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facilityId,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;date,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;time,
@@ -235,7 +235,7 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>organizer</code> - </dd>
-<dd><code>facility</code> - </dd>
+<dd><code>facilityId</code> - </dd>
 <dd><code>name</code> - </dd>
 <dd><code>date</code> - </dd>
 <dd><code>time</code> - </dd>
@@ -272,7 +272,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="setFacility(com.example.slacks_lottoevent.Facility)">
 <h3>setFacility</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setFacility</span><wbr><span class="parameters">(<a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facility)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setFacility</span><wbr><span class="parameters">(<a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facilityId)</span></div>
 </section>
 </li>
 <li>

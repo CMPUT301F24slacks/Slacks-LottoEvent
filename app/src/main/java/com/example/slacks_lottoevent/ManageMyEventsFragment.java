@@ -1,6 +1,7 @@
 package com.example.slacks_lottoevent;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.auth.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * This activity is responsible for managing the events created by the organizer.
@@ -42,6 +44,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
     private CollectionReference eventsRef;
     private ArrayList<Event> eventList;
     private CollectionReference facilitiesRef;
+    private CollectionReference organizersRef;
 
 //    organzierEventArrayAdapter = new void OrganzierEventArrayAdapter(getContext(), eventList);
 
@@ -60,15 +63,34 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilityData.put("city", facility.getCity());
         facilityData.put("province", facility.getProvince());
         facilityData.put("country", facility.getCountry());
-        facilityData.put("postalCode", facility.getProvince());
+        facilityData.put("postalCode", facility.getPostalCode());
+        facilityData.put("organizerID", facility.getOrganizerId());
+        facilityData.put("deviceID", facility.getDeviceId());
 
-        // Add the facility data to Firestore
         facilitiesRef.add(facilityData)
                 .addOnSuccessListener(documentReference -> {
                     Log.d("addFacility", "Facility added with ID: " + documentReference.getId());
                     existingFacility.setFacilityId(documentReference.getId()); // Set document ID here
+
+                    // Now add the facility data to the organizer after the facility ID is set
+                    Map<String, Object> organizerData = new HashMap<>();
+                    organizerData.put("userId", facility.getOrganizerId());
+                    organizerData.put("facilityId", existingFacility.getFacilityId());
+                    organizerData.put("events", null); // Assuming EventList can be serialized
+
+                    organizersRef.document(facility.getOrganizerId()) // Sets userId as the document ID
+                            .set(organizerData)
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("addFacility", "Organizer updated with facility ID.");
+                                // Successfully added organizer with facility ID
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.w("addFacility", "Error adding organizer", e);
+                                // Handle the error
+                            });
                 })
                 .addOnFailureListener(e -> Log.w("addFacility", "Error adding facility", e));
+
 
         // Hide the create facility button
         createFacilitiesButton.setVisibility(View.GONE);
@@ -125,6 +147,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events"); // Reference to events collection
         facilitiesRef = db.collection("facilities");
+        organizersRef = db.collection("organizers");
 
         myEventsListView = binding.myEventsListView;
         organzierEventArrayAdapter = new OrganzierEventArrayAdapter(getContext(), eventList);
@@ -168,14 +191,16 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                                         String facilityProvince = (String) facilityData.get("province");
                                         String facilityCountry = (String) facilityData.get("country");
                                         String facilityPostalCode = (String) facilityData.get("postalCode");
+                                        String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-                                        facility = new Facility(facilityName, facilityStreetAddress1, facilityStreetAddress2, facilityCity, facilityProvince, facilityCountry, facilityPostalCode);
+                                        facility = new Facility(facilityName, facilityStreetAddress1, facilityStreetAddress2, facilityCity, facilityProvince, facilityCountry, facilityPostalCode, deviceId, deviceId);
                                         Profile tempUser = new Profile("John Doe", "123-456-7890", "123@gmail.com");
 
                                     }
 
-                                    Profile tempUser = new Profile("John Doe", "123-456-7890", "123@gmail.com");
-                                    Organizer organizer = new Organizer(tempUser);
+                                    //Profile tempUser = new Profile("John Doe", "123-456-7890", "123@gmail.com");
+                                    String tempUserId = UUID.randomUUID().toString();
+                                    Organizer organizer = new Organizer(tempUserId);
 
                                     // Retrieve and cast event fields
                                     String name = (String) eventDetails.get("name");
@@ -233,8 +258,9 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
             }
         });
 
+        // CHANGE HERE BEFORE PUSHING
         if (existingFacility == null) {
-            createFacilitiesButton.setVisibility(View.GONE);
+            createFacilitiesButton.setVisibility(View.VISIBLE);
         } else {
             createFacilitiesButton.setVisibility(View.VISIBLE);
         }
