@@ -60,6 +60,8 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
     public void addFacility(Facility facility) {
         // Retrieve the facility name and set it to display on the screen
         String facilityName = facility.getFacilityName();
+
+//        This is where we query for organizers for facility name
         facilityCreated.setText(facilityName);
         existingFacility = facility;
 
@@ -155,8 +157,8 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events"); // Reference to events collection
 
-//        TODO: remove the facilities collection from here because it is unneeded and grab the organizer data pertaining to it
-//        TODO: grab organizer collection, grab the ID, grab the facility object and grab the event ID list
+//        TODO: Get organizer Collection, compare deviceId with the one in the collection, grab the facility id corresponding to the organizer, and then grab event ID List and display
+
         facilitiesRef = db.collection("facilities");
         organizersRef = db.collection("organizers");
 
@@ -169,10 +171,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
         deviceId= Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-
-
-//        TODO: compare with the events in organizer collection and grab the events in the event collection and grab the event object and then yeah
-//        Grab organizer id, go into that collection, grab events, cross reference with the events collections, grab eventIDs and then dislpay
 
         eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -203,30 +201,86 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
             }
         });
 
-        facilitiesRef.addSnapshotListener((querySnapshot, e) -> {
-            if (e != null) {
-                Log.w("Firestore", "Listen failed.", e);
-                return;
-            }
-            if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                DocumentSnapshot document = querySnapshot.getDocuments().get(0);
-                String facilityName = document.getString("name");
-                if (facilityName != null && !facilityName.isEmpty()) {
-                    facilityCreated.setText(facilityName);
-                    facilityCreated.setVisibility(View.VISIBLE);
-                    // Populate existingFacility with data from Firestore
-                    existingFacility = document.toObject(Facility.class);
-                    existingFacility.setFacilityId(document.getId());
-                    existingFacility.setFacilityName(facilityName);
+//        facilitiesRef.addSnapshotListener((querySnapshot, e) -> {
+//            if (e != null) {
+//                Log.w("Firestore", "Listen failed.", e);
+//                return;
+//            }
+//            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+//                DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+//                String facilityName = document.getString("name");
+//                if (facilityName != null && !facilityName.isEmpty()) {
+//                    facilityCreated.setText(facilityName);
+//                    facilityCreated.setVisibility(View.VISIBLE);
+//                    // Populate existingFacility with data from Firestore
+//                    existingFacility = document.toObject(Facility.class);
+//                    existingFacility.setFacilityId(document.getId());
+//                    existingFacility.setFacilityName(facilityName);
+//                } else {
+//                    facilityCreated.setVisibility(View.GONE);
+//                    existingFacility = null;
+//                }
+//            } else {
+//                facilityCreated.setVisibility(View.GONE);
+//                createFacilitiesButton.setVisibility(View.VISIBLE);
+//            }
+//        });
+
+// First query the organizer collection for the facilityID
+        Log.d("DeviceID", "Device ID:" + deviceId);
+        organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DocumentSnapshot organizerDoc = task.getResult();
+
+                // Check if the facilityID field exists and is not empty
+                if (organizerDoc.exists() && organizerDoc.contains("facilityId")) {
+                    String facilityID = organizerDoc.getString("facilityId");
+
+                    if (facilityID != null && !facilityID.isEmpty()) {
+                        // Now query the facilities collection with the retrieved facilityID
+                        facilitiesRef.document(facilityID).addSnapshotListener((facilitySnapshot, e) -> {
+                            if (e != null) {
+                                Log.w("Firestore", "Facility listen failed.", e);
+                                return;
+                            }
+
+                            if (facilitySnapshot != null && facilitySnapshot.exists()) {
+                                // Retrieve facility data
+                                String facilityName = facilitySnapshot.getString("name");
+                                if (facilityName != null && !facilityName.isEmpty()) {
+                                    facilityCreated.setText(facilityName);
+                                    facilityCreated.setVisibility(View.VISIBLE);
+
+                                    // Populate existingFacility with data from Firestore
+                                    existingFacility = facilitySnapshot.toObject(Facility.class);
+                                    existingFacility.setFacilityId(facilitySnapshot.getId());
+                                    existingFacility.setFacilityName(facilityName);
+                                } else {
+                                    facilityCreated.setVisibility(View.GONE);
+                                    existingFacility = null;
+                                }
+                            } else {
+                                facilityCreated.setVisibility(View.GONE);
+                                createFacilitiesButton.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    } else {
+                        // Handle case when facilityID is null or empty
+                        Log.w("Firestore", "No facilityID found for this organizer.");
+                        facilityCreated.setVisibility(View.GONE);
+                        createFacilitiesButton.setVisibility(View.VISIBLE);
+                    }
                 } else {
+                    // Handle case when organizer document doesn't exist or facilityID is missing
+                    Log.w("Firestore", "Organizer document does not exist or facilityID missing.");
                     facilityCreated.setVisibility(View.GONE);
-                    existingFacility = null;
+                    createFacilitiesButton.setVisibility(View.VISIBLE);
                 }
             } else {
-                facilityCreated.setVisibility(View.GONE);
-                createFacilitiesButton.setVisibility(View.VISIBLE);
+                Log.w("Firestore", "Organizer query failed.", task.getException());
             }
         });
+
 
         // CHANGE HERE BEFORE PUSHING
         if (existingFacility == null) {
