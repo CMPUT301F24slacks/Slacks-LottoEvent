@@ -99,6 +99,7 @@ public class EventQrScanner extends AppCompatActivity {
             intent.putExtra("qrCodeValue", qrCodeValue);
             startActivity(intent);
 
+
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -143,4 +144,5 @@ public class EventQrScanner extends AppCompatActivity {
             cameraProvider.bindToLifecycle(this, cameraSelector, preview);
         } catch (Exception e) {}
     }
+
 }

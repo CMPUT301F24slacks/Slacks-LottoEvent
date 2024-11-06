@@ -200,11 +200,11 @@
 
         <TextView
             android:id="@+id/no_pp_accpt"
-            android:layout_width="179dp"
-            android:layout_height="32dp"
+            android:layout_width="126dp"
+            android:layout_height="27dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="24dp"
-            android:text="No.People Accepted"
+            android:text="No. Event Slots "
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -213,7 +213,7 @@
             tools:ignore="MissingConstraints" />
 
         <EditText
-            android:id="@+id/no_people_accpt"
+            android:id="@+id/eventSlots"
             android:layout_width="69dp"
             android:layout_height="38dp"
             android:layout_marginStart="48dp"
@@ -227,33 +227,35 @@
             app:layout_constraintTop_toBottomOf="@+id/no_pp_accpt"
             tools:ignore="MissingConstraints" />
 
+
+        <!--        Notifications-->
+
         <TextView
             android:id="@+id/no_pp_accpt2"
-            android:layout_width="179dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="16dp"
+            android:layout_width="276dp"
+            android:layout_height="27dp"
+            android:layout_marginStart="44dp"
             android:layout_marginTop="24dp"
-            android:text="Waiting List Capacity"
+            android:text="Waiting List Capacity (Optional)"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/no_pp_accpt"
             app:layout_constraintTop_toBottomOf="@+id/event_details"
             tools:ignore="MissingConstraints" />
 
-        <!--        Notifications-->
         <EditText
-            android:id="@+id/no_entrat_accpt"
+            android:id="@+id/waitListCapacity"
             android:layout_width="69dp"
             android:layout_height="38dp"
             android:layout_marginStart="144dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/rounded_borders"
-            android:textColor="@android:color/white"
             android:ems="10"
-            android:padding="8dp"
             android:inputType="number"
-            app:layout_constraintStart_toEndOf="@+id/no_people_accpt"
+            android:padding="8dp"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toEndOf="@+id/eventSlots"
             app:layout_constraintTop_toBottomOf="@+id/no_pp_accpt2"
             tools:ignore="MissingConstraints" />
 
@@ -298,7 +300,7 @@
             android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/no_people_accpt" />
+            app:layout_constraintTop_toBottomOf="@+id/eventSlots" />
 
         <CheckBox
             android:id="@+id/cancelled"
@@ -311,7 +313,7 @@
             android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/waiting_list"
-            app:layout_constraintTop_toBottomOf="@+id/no_people_accpt" />
+            app:layout_constraintTop_toBottomOf="@+id/eventSlots" />
 
         <CheckBox
             android:id="@+id/selected"
@@ -324,7 +326,7 @@
             android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/cancelled"
-            app:layout_constraintTop_toBottomOf="@+id/no_entrat_accpt" />
+            app:layout_constraintTop_toBottomOf="@+id/waitListCapacity" />
 
         <TextView
             android:id="@+id/textView"
@@ -338,7 +340,7 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/no_people_accpt" />
+            app:layout_constraintTop_toBottomOf="@+id/eventSlots" />
 
         <TextView
             android:id="@+id/textView2"

@@ -15,11 +15,21 @@ public class Entrant {
     private final ArrayList<String> invitedEvents;
     private final ArrayList<String> uninvitedEvents;
 
+    private final ArrayList<String> waitlistedEventsNotis;
+    private final ArrayList<String> finalistEventsNotis;
+    private final ArrayList<String> invitedEventsNotis;
+    private final ArrayList<String> uninvitedEventsNotis;
+
     public Entrant() {
         this.waitlistedEvents = new ArrayList<>();
         this.finalistEvents = new ArrayList<>();
         this.invitedEvents = new ArrayList<>();
         this.uninvitedEvents = new ArrayList<>();
+
+        this.waitlistedEventsNotis = new ArrayList<>();
+        this.finalistEventsNotis = new ArrayList<>();
+        this.invitedEventsNotis = new ArrayList<>();
+        this.uninvitedEventsNotis = new ArrayList<>();
     }
 
 
@@ -55,6 +65,30 @@ public class Entrant {
         uninvitedEvents.add(eventID);
 
     }
+
+    public ArrayList<String> getWaitlistedEventsNotis() {
+        return waitlistedEventsNotis;
+    }
+
+    public ArrayList<String> getFinalistEventsNotis() {
+        return finalistEventsNotis;
+    }
+
+    public ArrayList<String> getInvitedEventsNotis() {
+        return invitedEventsNotis;
+    }
+
+    public ArrayList<String> getUninvitedEventsNotis() {
+        return uninvitedEventsNotis;
+    }
+
+    public void addWaitlistedEventsNotis(String eventID){ waitlistedEventsNotis.add(eventID);}
+
+    public void addFinalistEventsNotis(String eventID){ finalistEventsNotis.add(eventID);}
+
+    public void addInvitedEventsNotis(String eventID){ invitedEventsNotis.add(eventID);}
+
+    public void addUninvitedEventsNotis(String eventID){ uninvitedEventsNotis.add(eventID);}
 
 
 }
