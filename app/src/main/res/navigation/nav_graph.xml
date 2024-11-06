@@ -25,5 +25,4 @@
             android:id="@+id/action_ManageMyEventsFragment_to_MyEventsFragment"
             app:destination="@id/MyEventsFragment" />
     </fragment>
-
 </navigation>

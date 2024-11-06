@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.slacks_lottoevent.controller.HomeFragment"
+        android:label="Home Fragment"
+        tools:layout="@layout/fragment_home">
+    </fragment>
+    <fragment
+        android:id="@+id/manageFragment"
+        android:name="com.example.slacks_lottoevent.controller.ManageFragment"
+        android:label="Manage Fragment"
+        tools:layout="@layout/fragment_manage">
+    </fragment>
+    <fragment
+        android:id="@+id/invitesFragment"
+        android:name="com.example.slacks_lottoevent.controller.InvitesFragment"
+        android:label="Invites Fragment"
+        tools:layout="@layout/fragment_invites">
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.slacks_lottoevent.controller.ProfileFragment"
+        android:label="Profile Fragment"
+        tools:layout="@layout/fragment_profile">
+    </fragment>
+
+</navigation>
