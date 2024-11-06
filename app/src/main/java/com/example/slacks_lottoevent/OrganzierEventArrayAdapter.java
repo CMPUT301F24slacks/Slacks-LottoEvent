@@ -40,6 +40,7 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
     private CollectionReference facilitiesRef;
     private CollectionReference organizersRef;
     private CollectionReference eventsRef;
+    private DocumentReference entrantsRef;
 
     /**
      * Constructor for the OrganzierEventArrayAdapter
@@ -93,7 +94,6 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
         eventTime.setText(event.getTime());
 
         String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-
 
         organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
@@ -162,30 +162,60 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
                 if (eventDoc.exists()) {
                     // Retrieve the waitlist field
                     ArrayList<String> waitlist = (ArrayList<String>) eventDoc.get("waitlisted");
-                    Integer eventSlots = (Integer) eventDoc.get("eventSlots");
+                    Long eventSlotsLong = (Long) eventDoc.get("eventSlots");
+                    Integer eventSlots = eventSlotsLong != null ? eventSlotsLong.intValue() : 0; // Handle null case if needed
                     Integer numOfSelectedEntrants = waitlist.size() >= eventSlots ? eventSlots : waitlist.size();
 
                     if (waitlist != null && !waitlist.isEmpty()) {
                         // Shuffle the waitlist to get a random order
                         Collections.shuffle(waitlist);
                         List<String> selectedEntrants = waitlist.subList(0, numOfSelectedEntrants);
-
-                        //TODO: Events needs to have an array to host the unselected entrants because we need to be able to take from there (or just query waitlist against selected and go from there)
+                        List<String> unselectedEntrants = waitlist.subList(numOfSelectedEntrants, waitlist.size());
 
                         // Reference to the specific event document
                         DocumentReference eventRef = eventsRef.document(eventID);
 
+//                        Inputting entrantId in event so organizer knows who to send notifications for getting selected and who is selected
                         for (String entrant : selectedEntrants) {
-                            eventRef.update("selected", FieldValue.arrayUnion(entrant))
+                            eventRef.update("selected", FieldValue.arrayUnion(entrant),
+                                            "selectedNotificationsList", FieldValue.arrayUnion(entrant))
                                     .addOnSuccessListener(aVoid -> {
                                         Log.d("Firestore", "Entrant added successfully: " + entrant);
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.e("Firestore", "Error adding entrant: " + entrant, e);
                                     });
+
+                            entrantsRef = db.collection("entrants").document(entrant);
+                            entrantsRef.get().addOnSuccessListener(entrantDoc -> {
+                                if (entrantDoc.exists()) {
+                                    // Assuming `notifications` is an array field in the entrant document
+                                    entrantsRef.update("invitedEventsNotis", FieldValue.arrayUnion(eventID))
+                                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "Notification added for entrant: " + entrant))
+                                            .addOnFailureListener(e -> Log.e("Firestore", "Error updating notification for entrant: " + entrant, e));
+                                }
+                            }).addOnFailureListener(e -> {
+                                Log.e("Firestore", "Failed to retrieve entrant document: " + entrant, e);
+                            });
                         }
 
-//                        TODO: Grab each entrant that got selected and add it to there notifications for invited events, and make sure tthat when they click enter to pick if they want notis or not the list holds zero meaning they do not want any notis for this
+//                        Inputting eventID into the unselected entrants so they know they aren't picked for that event (uninvited) - checking if it is not null
+                        if (unselectedEntrants!= null && !unselectedEntrants.isEmpty()) {
+                            for (String entrant : unselectedEntrants) {
+                                entrantsRef = db.collection("entrants").document(entrant);
+                                entrantsRef.get().addOnSuccessListener(entrantDoc -> {
+                                    if (entrantDoc.exists()) {
+                                        // Assuming `notifications` is an array field in the entrant document
+                                        entrantsRef.update("uninvitedEventsNotis", FieldValue.arrayUnion(eventID),
+                                                        "uninvitedEvents", FieldValue.arrayUnion(eventID))
+                                                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Notification added for entrant: " + entrant))
+                                                .addOnFailureListener(e -> Log.e("Firestore", "Error updating notification for entrant: " + entrant, e));
+                                    }
+                                }).addOnFailureListener(e -> {
+                                    Log.e("Firestore", "Failed to retrieve entrant document: " + entrant, e);
+                                });
+                            }
+                        }
                     }
                 }
             } else {

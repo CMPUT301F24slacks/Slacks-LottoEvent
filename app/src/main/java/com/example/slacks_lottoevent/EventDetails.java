@@ -67,10 +67,6 @@ public class EventDetails extends AppCompatActivity {
                         binding.eventDate.setText(event.getDate());
                         binding.eventDescription.setText(event.getDescription());
 
-
-//                        TODO: grab the facility from the organizer once it is connected
-                        location = "Wait for facility";
-                        binding.eventLocation.setText("Set the facility once connected");
                         binding.eventWaitlistCapacity.setText("Waitlist Capacity " + event.getWaitListCapacity());
                         binding.eventTime.setText(event.getTime());
                         time = String.valueOf(event.getTime());
@@ -87,6 +83,32 @@ public class EventDetails extends AppCompatActivity {
                             binding.joinButton.setVisibility(View.VISIBLE);
                             binding.waitlistFullBadge.setVisibility(View.GONE);
                         }
+
+                        db.collection("organizers").document(deviceId) // Replace with the actual organizer ID field name in Event class
+                                .get()
+                                .addOnSuccessListener(organizerDoc -> {
+                                    if (organizerDoc.exists()) {
+                                        String facilityId = organizerDoc.getString("facilityId");
+
+                                        // Now fetch the facility details using the facilityId
+                                        db.collection("facilities").document(facilityId)
+                                                .get()
+                                                .addOnSuccessListener(facilityDoc -> {
+                                                    if (facilityDoc.exists()) {
+                                                        location = facilityDoc.getString("address");
+                                                        binding.eventLocation.setText(location);
+                                                    } else {
+                                                        binding.eventLocation.setText("Facility not found");
+                                                    }
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    binding.eventLocation.setText("Error loading facility");
+                                                });
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    binding.eventLocation.setText("Error loading organizer");
+                                });
 
                         binding.joinButton.setOnClickListener(view -> {
                             SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
@@ -251,11 +273,13 @@ public class EventDetails extends AppCompatActivity {
                         Event event = document.toObject(Event.class); // Convert the document to an Event object
 
 
+//                       IF that entrant wants notifications then we add that entrant too the notifications for selected and or cancelled depending on what they want
                         event.addWaitlistedNotification(deviceId);
                         if (chosenForLottery.get()) { event.addSelectedNotification(deviceId); System.out.println("SelectedNotis List updated successfully.");}
                         if (notChosenForLottery.get()) { event.addCancelledNotification(deviceId); System.out.println("CancelledNotis List updated successfully."); }
 
 
+//                        We update the lists that may have been changed
                         db.collection("events").document(event.getEventID())
                                 .update("waitlistedNotificationsList", event.getWaitlistedNotificationsList(), // Assuming this method returns the list
                                         "selectedNotificationsList", event.getSelectedNotificationsList(),      // Assuming this method returns the list
