@@ -1,6 +1,7 @@
 package com.example.slacks_lottoevent;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,10 +13,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.Serializable;
@@ -90,6 +89,18 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
 
         eventDescription.setText(event.getDescription());
         eventDescription.setText(event.getDescription());
+
+//        eventButton.setOnClickListener(v -> {
+//            // Create an Intent to navigate to OrganizerNotifications
+//            Intent intent = new Intent(EventArrayAdapter.this.getContext(), OrganizerNotifications.class);
+//
+//            // Pass any additional data if needed
+//            intent.putExtra("current_event", (Serializable) event);  // Example of passing data
+//
+//            // Start OrganizerNotifications
+//            getContext().startActivity(intent);
+//        });
+
         return convertView;
     }
 
