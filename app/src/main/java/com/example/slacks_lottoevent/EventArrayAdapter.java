@@ -38,7 +38,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         eventName.setText(event.getName());
         eventDate.setText(event.getDate());
         eventTime.setText(event.getTime());
-        // eventAddress.setText(event.getFacility().getStreetAddress1());
+        // eventAddress.setText(event.getFacilityId().getStreetAddress1());
         eventDescription.setText(event.getDescription());
         Button eventButton = convertView.findViewById(R.id.event_button);
 

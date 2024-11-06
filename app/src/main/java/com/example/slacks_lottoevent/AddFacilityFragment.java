@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -26,12 +27,6 @@ public class AddFacilityFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-//        try {
-//            // Set listener from the hosting Activity or Fragment
-//            listener = (AddFacilityDialogListener) context;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(context.toString() + " must implement AddFacilityDialogListener");
-//        }
 
         Fragment parentFragment = getParentFragment();
         if (parentFragment instanceof AddFacilityDialogListener) {
@@ -48,7 +43,7 @@ public class AddFacilityFragment extends DialogFragment {
         this.isEdit = isEdit;
     }
     public AddFacilityFragment(){
-        this.facility = new Facility("FacilityName", "StreetAddress1", "StreetAddress2", "City", "Province", "Country", "PostalCode");
+        this.facility = new Facility("FacilityName", "StreetAddress1", "StreetAddress2", "City", "Province", "Country", "PostalCode", "OrganizerId", "DeviceId");
         this.isEdit = false;
     }
 
@@ -87,6 +82,7 @@ public class AddFacilityFragment extends DialogFragment {
                     String province = editProvince.getText().toString();
                     String country = editCountry.getText().toString();
                     String postalCode = editPostalCode.getText().toString();
+                    String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
                     if (isEdit){
                         facility.setFacilityName(facilityName);
@@ -100,7 +96,7 @@ public class AddFacilityFragment extends DialogFragment {
                     } else {
                         // Ensure listener is set before calling addFacility()
                         if (listener != null) {
-                            listener.addFacility(new Facility(facilityName, streetAddress1, streetAddress2, city, province, country, postalCode));
+                            listener.addFacility(new Facility(facilityName, streetAddress1, streetAddress2, city, province, country, postalCode, deviceId, deviceId));
                         }
                     }
                 })
