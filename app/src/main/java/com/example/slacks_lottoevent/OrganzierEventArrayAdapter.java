@@ -14,7 +14,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -24,6 +26,8 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Custom ArrayAdapter for displaying events in the OrganizerEventsActivity
@@ -35,6 +39,7 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
     private FirebaseFirestore db;
     private CollectionReference facilitiesRef;
     private CollectionReference organizersRef;
+    private CollectionReference eventsRef;
 
     /**
      * Constructor for the OrganzierEventArrayAdapter
@@ -144,5 +149,49 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
             }
         }
         return bitMatrix;
+    }
+
+    private void selectEntrantsForLottery(String eventID){
+        db = FirebaseFirestore.getInstance();
+        eventsRef = db.collection("events");
+
+        eventsRef.document(eventID).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DocumentSnapshot eventDoc = task.getResult();
+
+                if (eventDoc.exists()) {
+                    // Retrieve the waitlist field
+                    ArrayList<String> waitlist = (ArrayList<String>) eventDoc.get("waitlisted");
+                    Integer eventSlots = (Integer) eventDoc.get("eventSlots");
+                    Integer numOfSelectedEntrants = waitlist.size() >= eventSlots ? eventSlots : waitlist.size();
+
+                    if (waitlist != null && !waitlist.isEmpty()) {
+                        // Shuffle the waitlist to get a random order
+                        Collections.shuffle(waitlist);
+                        List<String> selectedEntrants = waitlist.subList(0, numOfSelectedEntrants);
+
+                        //TODO: Events needs to have an array to host the unselected entrants because we need to be able to take from there (or just query waitlist against selected and go from there)
+
+                        // Reference to the specific event document
+                        DocumentReference eventRef = eventsRef.document(eventID);
+
+                        for (String entrant : selectedEntrants) {
+                            eventRef.update("selected", FieldValue.arrayUnion(entrant))
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d("Firestore", "Entrant added successfully: " + entrant);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("Firestore", "Error adding entrant: " + entrant, e);
+                                    });
+                        }
+
+//                        TODO: Grab each entrant that got selected and add it to there notifications for invited events, and make sure tthat when they click enter to pick if they want notis or not the list holds zero meaning they do not want any notis for this
+                    }
+                }
+            } else {
+                Log.e("LotteryEntrant", "Failed to retrieve event document", task.getException());
+            }
+        });
+
     }
 }
