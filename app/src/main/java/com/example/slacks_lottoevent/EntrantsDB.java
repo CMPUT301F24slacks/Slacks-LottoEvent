@@ -1,5 +1,7 @@
 package com.example.slacks_lottoevent;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
@@ -12,11 +14,11 @@ import java.util.ArrayList;
 /**
  * EntrantDB is a class that interacts with the Firebase Firestore database to perform CRUD operations on entrants.
  */
-public class EntrantDB {
+public class EntrantsDB {
     private FirebaseFirestore db;
     private CollectionReference entrantRef;
 
-    public EntrantDB() {
+    public EntrantsDB() {
         db = FirebaseFirestore.getInstance();
         entrantRef = db.collection("entrants"); // Reference to entrants collection
     }
@@ -51,11 +53,14 @@ public class EntrantDB {
 
             // Check if the task was successful and the document exists
             if (task.isSuccessful() && task.getResult() != null) {
+                Log.d("EntrantsDB", "got the entrant");
                 return task.getResult().toObject(Entrant.class);
             } else {
                 return null;
             }
         } catch (Exception e) {
+            Log.d("EntrantsDB", "failed to get the entrant");
+            Log.e("EntrantsDB", e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -68,31 +73,6 @@ public class EntrantDB {
      */
     public void addWaitlistedEvent(String entrantId, String eventId) {
         entrantRef.document(entrantId).update("waitlistedEvents", FieldValue.arrayUnion(eventId));
-    }
-
-    /**
-     * Checks if an entrant exists for a given user ID synchronously.
-     *
-     * @param userId the user ID to check
-     * @return true if the entrant exists, false otherwise
-     */
-    public boolean entrantExists(String userId) {
-        try {
-            Task<DocumentSnapshot> task = entrantRef.document(userId).get();
-
-            // Wait for the task to complete (blocking)
-            Tasks.await(task);
-
-            // Check if the task was successful and the document exists
-            if (task.isSuccessful() && task.getResult() != null) {
-                return task.getResult().exists(); // Use .exists() to check existence
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     /**
@@ -109,8 +89,10 @@ public class EntrantDB {
 
             // Check if the task was successful and the document exists
             if (task.isSuccessful() && task.getResult() != null) {
+                Log.d("EntrantsDB", "got the waitlisted events");
                 return task.getResult().toObject(Entrant.class).getWaitlistedEvents();
             } else {
+                Log.d("EntrantsDB", "failed to get the waitlisted events");
                 return null;
             }
         } catch (Exception e) {

@@ -18,10 +18,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.Serializable;
@@ -32,7 +30,7 @@ import java.util.List;
 /**
  * Custom ArrayAdapter for displaying events in the OrganizerEventsActivity
  */
-public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
+public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
     private Context context;
     private ArrayList<Event> events;
 
@@ -48,7 +46,7 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
      * @param context The context of the activity
      * @param events  The list of events to display
      */
-    public OrganzierEventArrayAdapter(@NonNull Context context, ArrayList<Event> events) {
+    public OrganizerEventArrayAdapter(@NonNull Context context, ArrayList<Event> events) {
         super(context, 0, events);
         this.context = context;
         this.events = events;
@@ -115,8 +113,6 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
                                 // Retrieve facility data
                                 String facilityAddress= facilitySnapshot.getString("streetAddress1");
                                 eventAddress.setText(facilityAddress);
-
-
                             }
                         });
                     }

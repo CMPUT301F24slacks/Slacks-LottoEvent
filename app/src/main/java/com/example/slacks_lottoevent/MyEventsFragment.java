@@ -2,6 +2,7 @@ package com.example.slacks_lottoevent;
 
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -28,13 +28,13 @@ import java.util.UUID;
 public class MyEventsFragment extends Fragment {
 
     private FragmentMyEventsBinding binding;
-    private EventArrayAdapter eventArrayAdapter;
+    private OrganizerEventArrayAdapter eventArrayAdapter;
     private ListView myEventsListView;
     private FirebaseFirestore db;
     private CollectionReference entrantRef;
     private CollectionReference eventsRef;
-    private EntrantDB entrantDB;
-    private EventDB eventDB;
+    private EntrantsDB entrantsDB;
+    private EventsDB eventsDB;
     private Entrant entrant;
 
     @Override
@@ -50,57 +50,89 @@ public class MyEventsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         db = FirebaseFirestore.getInstance();
+        entrantsDB = new EntrantsDB();
+        eventsDB = new EventsDB();
         entrantRef = db.collection("entrants"); // Reference to entrants collection
         eventsRef = db.collection("events"); // Reference to events collection
-        entrantDB = new EntrantDB();
 
         // Get the current user's ID
         String userId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        // Get the entrant from the database
-        if (entrantDB.entrantExists(userId)) {
-            entrant = entrantDB.getEntrant(userId);
-        }
+        // Check if the entrant exists in the database
+        entrantExists(userId, exists -> {
+            if (exists) {
+                // Fetch the entrant from the database asynchronously
+                entrantRef.document(userId).get().addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Convert the document snapshot to the Entrant object
+                        entrant = documentSnapshot.toObject(Entrant.class);
+                        Log.d("MyEventsFragment", "Fetched entrant: " + entrant);
+                        // Proceed with using the entrant object (e.g., populate UI or data structures)
+                    } else {
+                        Log.e("MyEventsFragment", "Entrant document does not exist for userId: " + userId);
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.e("MyEventsFragment", "Error fetching entrant for userId: " + userId, e);
+                });
+            } else {
+                Log.d("MyEventsFragment", "No entrant found for userId: " + userId);
+            }
+        });
 
-        EventList eventList = new EventList();
+
+        ArrayList<Event> eventList = new ArrayList<>();
         myEventsListView = binding.myEventsListView;
-        eventArrayAdapter = new EventArrayAdapter(getContext(), eventList);
+        eventArrayAdapter = new OrganizerEventArrayAdapter(getContext(), eventList);
         myEventsListView.setAdapter(eventArrayAdapter);
 
         entrantRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null || entrant == null) {
+                if (error != null) {
                     return;
                 }
 
-                for (int i = 0; i < value.size(); i++) {
-                    ArrayList<String> eventIds = entrant.getWaitlistedEvents();
-
-                    // Get the events from the database and display them in the list view
-                    for (String eventId : eventIds) {
-                        Event event = eventDB.getEvent(eventId);
-                        eventList.addEvent(event);
+                // Fetch entrant's waitlisted events
+                entrantRef.document(userId).get().addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Convert the entrant document to an Entrant object
+                        Entrant entrant = documentSnapshot.toObject(Entrant.class);
+                        if (entrant != null) {
+                            ArrayList<String> eventIds = entrant.getWaitlistedEvents();
+                            if (eventIds != null && !eventIds.isEmpty()) {
+                                // Loop through event IDs and fetch each event from Firestore
+                                for (String eventId : eventIds) {
+                                    eventsRef.document(eventId).get().addOnSuccessListener(eventSnapshot -> {
+                                        if (eventSnapshot.exists()) {
+                                            // Convert the event document to an Event object
+                                            Event event = eventSnapshot.toObject(Event.class);
+                                            if (event != null) {
+                                                eventList.add(event); // Add the event to the list
+                                                eventArrayAdapter.notifyDataSetChanged(); // Update the ListView
+                                            }
+                                        } else {
+                                            Log.e("MyEventsFragment", "Event document not found for ID: " + eventId);
+                                        }
+                                    }).addOnFailureListener(e -> {
+                                        Log.e("MyEventsFragment", "Error fetching event for ID: " + eventId, e);
+                                    });
+                                }
+                            } else {
+                                Log.d("MyEventsFragment", "No waitlisted events found for entrant.");
+                            }
+                        } else {
+                            Log.e("MyEventsFragment", "Failed to convert entrant document to Entrant object.");
+                        }
+                    } else {
+                        Log.d("MyEventsFragment", "Entrant document does not exist for userId: " + userId);
                     }
-                }
+                }).addOnFailureListener(e -> {
+                    Log.e("MyEventsFragment", "Error fetching entrant for userId: " + userId, e);
+                });
 
-                // Update the list view
-                eventArrayAdapter.notifyDataSetChanged();
             }
         });
-
-
-
-
-//        Profile tempUser = new Profile("John Doe", "123-456-7890", "123@gmail.com");
-//        String tempDescription = "Join us for the Tech Innovators Summit 2024, where industry leaders, startups, and tech enthusiasts come together to explore the latest in AI, blockchain, cybersecurity, and more. Enjoy keynote talks, interactive workshops, and networking opportunities designed to inspire and connect innovators. Be part of the future of technology!";
-//        String tempUserId = UUID.randomUUID().toString();
-//        Organizer tempOrganizer = new Organizer(tempUserId);
-//        Facility tempFacility = new Facility("facilityname", "9th Street", "111 Unit", "Edmonton", "Province", "country", "t6m0n5", "orgID", "devID");
-//        tempOrganizer.setFacilityId(tempFacility.getFacilityId());
-//        Event tempEvent = new Event("Tech Innovators Summit 2024", "2024-01-23", "14:00-15:00", "400",tempDescription, 1000, 0,  null, "randomeventID", false, null, false, false, false);        EventList tempEventList = new EventList();
-//        tempEventList.addEvent(tempEvent);
-//        tempEventList.addEvent(tempEvent);
+        eventArrayAdapter.notifyDataSetChanged();
 
     }
 
@@ -108,5 +140,23 @@ public class MyEventsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public void entrantExists(String userId, Callback<Boolean> callback) {
+        entrantRef.document(userId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        boolean exists = task.getResult().exists();
+                        Log.d("EntrantsDB", "Entrant exists for userId: " + userId + " -> " + exists);
+                        callback.onComplete(exists);
+                    } else {
+                        Log.e("EntrantsDB", "Failed to fetch entrant for userId: " + userId, task.getException());
+                        callback.onComplete(false);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("EntrantsDB", "Error fetching entrant for userId: " + userId, e);
+                    callback.onComplete(false);
+                });
     }
 }

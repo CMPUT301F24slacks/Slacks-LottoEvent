@@ -21,6 +21,20 @@ public class Entrant {
     private final ArrayList<String> invitedEventsNotis;
     private final ArrayList<String> uninvitedEventsNotis;
 
+    public Entrant() {
+        this.userId = "";
+        this.waitlistedEvents = new ArrayList<>();
+        this.finalistEvents = new ArrayList<>();
+        this.invitedEvents = new ArrayList<>();
+        this.uninvitedEvents = new ArrayList<>();
+
+        this.waitlistedEventsNotis = new ArrayList<>();
+        this.finalistEventsNotis = new ArrayList<>();
+        this.invitedEventsNotis = new ArrayList<>();
+        this.uninvitedEventsNotis = new ArrayList<>();
+    }
+
+
     public Entrant(String userId) {
         this.userId = userId;
         this.waitlistedEvents = new ArrayList<>();

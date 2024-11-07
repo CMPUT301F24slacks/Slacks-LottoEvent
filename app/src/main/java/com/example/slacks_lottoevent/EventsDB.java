@@ -1,18 +1,20 @@
 package com.example.slacks_lottoevent;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class EventDB {
+public class EventsDB {
     private FirebaseFirestore db;
-    private CollectionReference eventRef;
+    private CollectionReference eventsRef;
 
-    public EventDB() {
+    public EventsDB() {
         db = FirebaseFirestore.getInstance();
-        eventRef = db.collection("events"); // Reference to events collection
+        eventsRef = db.collection("events"); // Reference to events collection
     }
 
     /**
@@ -20,7 +22,7 @@ public class EventDB {
      * @param event the event to update
      */
     public void updateEvent(Event event) {
-        eventRef.document(event.getEventID()).set(event);
+        eventsRef.document(event.getEventID()).set(event);
     }
 
     /**
@@ -28,7 +30,7 @@ public class EventDB {
      * @param event the event to delete
      */
     public void deleteEvent(Event event) {
-        eventRef.document(event.getEventID()).delete();
+        eventsRef.document(event.getEventID()).delete();
     }
 
     /**
@@ -37,7 +39,7 @@ public class EventDB {
      * @return the event object
      */
     public Event getEvent(String eventId) {
-        Task<DocumentSnapshot> task = eventRef.document(eventId).get();
+        Task<DocumentSnapshot> task = eventsRef.document(eventId).get();
 
         // Wait for the task to complete (blocking)
         try {
@@ -45,12 +47,15 @@ public class EventDB {
 
             // Check if the task was successful and the document exists
             if (task.isSuccessful() && task.getResult() != null) {
+                Log.d("EventsDB", "got the event");
                 return task.getResult().toObject(Event.class);
             } else {
+                Log.d("EventsDB", "failed to get the event");
                 return null;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.d("EventsDB", "gotcha bitch");
             return null;
         }
     }
