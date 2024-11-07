@@ -59,6 +59,10 @@ androidComponents {
     }
 }
 
+tasks.withType<Test>{
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation("com.google.guava:guava:31.0.1-android")
     implementation(libs.appcompat)
@@ -69,7 +73,12 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.database)
     implementation(libs.firebase.crashlytics.buildtools)
-    testImplementation(libs.junit)
+    //testImplementation(libs.junit)
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.0.1")
+    testImplementation(libs.test.core)
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.0.1")
+    testImplementation("org.apiguardian:apiguardian-api:1.1.0")
+    testImplementation ("org.robolectric:robolectric:4.8")
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))

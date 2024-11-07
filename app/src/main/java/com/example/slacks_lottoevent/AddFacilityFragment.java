@@ -43,7 +43,7 @@ public class AddFacilityFragment extends DialogFragment {
         this.isEdit = isEdit;
     }
     public AddFacilityFragment(){
-        this.facility = new Facility("FacilityName", "StreetAddress1", "StreetAddress2", "City", "Province", "Country", "PostalCode", "OrganizerId", "DeviceId");
+        this.facility = new Facility("FacilityName", "StreetAddress1", "StreetAddress2", "City", "Province", "Country", "PostalCode", "OrganizerId");
         this.isEdit = false;
     }
 
@@ -82,7 +82,7 @@ public class AddFacilityFragment extends DialogFragment {
                     String province = editProvince.getText().toString();
                     String country = editCountry.getText().toString();
                     String postalCode = editPostalCode.getText().toString();
-                    String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+                    String organizerId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
                     if (isEdit){
                         facility.setFacilityName(facilityName);
@@ -96,7 +96,7 @@ public class AddFacilityFragment extends DialogFragment {
                     } else {
                         // Ensure listener is set before calling addFacility()
                         if (listener != null) {
-                            listener.addFacility(new Facility(facilityName, streetAddress1, streetAddress2, city, province, country, postalCode, deviceId, deviceId));
+                            listener.addFacility(new Facility(facilityName, streetAddress1, streetAddress2, city, province, country, postalCode, organizerId));
                         }
                     }
                 })

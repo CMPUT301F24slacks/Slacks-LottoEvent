@@ -13,12 +13,11 @@ public class Facility {
     private String postalCode;
     private String facilityId;
     private String organizerId;
-    private String deviceId;
 
     // No-argument constructor required for Firestore
     public Facility() {}
 
-    public Facility(String facilityName, String streetAddress1, String streetAddress2, String city, String province, String country, String postalCode, String organizerId, String deviceId){
+    public Facility(String facilityName, String streetAddress1, String streetAddress2, String city, String province, String country, String postalCode, String organizerId){
         this.facilityName = facilityName;
         this.streetAddress1 = streetAddress1;
         this.streetAddress2 = streetAddress2;
@@ -27,7 +26,6 @@ public class Facility {
         this.country = country;
         this.postalCode = postalCode;
         this.organizerId = organizerId;
-        this.deviceId = deviceId;
     }
 
     public String getFacilityName() {
@@ -85,6 +83,7 @@ public class Facility {
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
+
     public String getFacilityId() {
         return facilityId;
     }
@@ -97,7 +96,4 @@ public class Facility {
         return organizerId;
     }
 
-    public String getDeviceId() {
-        return deviceId;
-    }
 }
