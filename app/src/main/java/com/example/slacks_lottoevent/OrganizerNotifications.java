@@ -22,10 +22,12 @@ public class OrganizerNotifications extends AppCompatActivity {
 
         //Set Up ArrayAdapter, do getUsername() for every user in said category, change it in the case-by-case tabLayout system
         Intent intent = getIntent();
+        Event event = (Event) intent.getSerializableExtra("current_event");
+
         frameLayout = (FrameLayout) findViewById(R.id.FrameLayout);
         tabLayout = (TabLayout) findViewById(R.id.tab_Layout);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, new OrganizerWaitlistFragment())
+        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, OrganizerWaitlistFragment.newInstance(event))
                 .addToBackStack(null)
                 .commit();
 
@@ -35,21 +37,24 @@ public class OrganizerNotifications extends AppCompatActivity {
                 Fragment selected_fragment = null;
                 switch (tab.getPosition()){
                     case 0:
-                        selected_fragment = new OrganizerWaitlistFragment();
+                        selected_fragment = OrganizerWaitlistFragment.newInstance(event);
                         break;
                     case 1:
-                        selected_fragment = new OrganizerInvitedFragment();
+                        selected_fragment = OrganizerInvitedFragment.newInstance(event);;
                         break;
                     case 2:
-                        selected_fragment = new OrganizerCancelledFragment();
+                        selected_fragment = OrganizerCancelledFragment.newInstance(event);;
                         break;
                     case 3:
-                        selected_fragment = new OrganizerEnrolledFragment();
+                        selected_fragment = OrganizerEnrolledFragment.newInstance(event);;
                         break;
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, selected_fragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .commit();
+                if (selected_fragment != null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.FrameLayout, selected_fragment)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .commit();
+                }
             }
 
             @Override

@@ -44,10 +44,10 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
 
         eventButton.setOnClickListener(v -> {
             // Create an Intent to navigate to OrganizerNotifications
-            Intent intent = new Intent(getContext(), OrganizerNotifications.class);
+            Intent intent = new Intent(EventArrayAdapter.this.getContext(), OrganizerNotifications.class);
 
             // Pass any additional data if needed
-            // intent.putExtra("EXTRA_EVENT_ID", event.getId());  // Example of passing data
+            intent.putExtra("current_event", (Serializable) event);  // Example of passing data
 
             // Start OrganizerNotifications
             getContext().startActivity(intent);
