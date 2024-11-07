@@ -132,6 +132,12 @@ public class EventDetails extends AppCompatActivity {
 
                     }
                 });
+
+
+        // add a listener to the event details back button, go to the last item in the back stack
+        binding.eventDetailsBackButton.setOnClickListener(v -> {
+            onBackPressed();
+        });
     }
 
     private void showRegistrationDialog(){

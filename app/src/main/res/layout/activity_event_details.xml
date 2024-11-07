@@ -26,6 +26,7 @@
                 android:scaleType="centerCrop" />
 
             <ImageView
+                android:id="@+id/event_details_back_button"
                 android:layout_width="48dp"
                 android:layout_height="24dp"
                 android:layout_marginTop="20dp"

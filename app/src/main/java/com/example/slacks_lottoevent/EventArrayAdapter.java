@@ -14,14 +14,15 @@ import androidx.annotation.NonNull;
 import org.w3c.dom.Text;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * EventArrayAdapter is a custom ArrayAdapter that is used to display the individual events in event lists.
  * It is used to display the name, date, time, address, and description of each event.
  */
 public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
-    public EventArrayAdapter(@NonNull Context context, EventList eventList) {
-        super(context, 0, eventList.getEventList());
+    public EventArrayAdapter(@NonNull Context context, ArrayList eventList) {
+        super(context, 0, eventList);
     }
 
     @NonNull
@@ -45,13 +46,11 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         Button eventButton = convertView.findViewById(R.id.event_button);
 
         eventButton.setOnClickListener(v -> {
-            // Create an Intent to navigate to Organizer_MainActivity
-            Intent intent = new Intent(getContext(), Organizer_MainActivity.class);
+            // Create an Intent to navigate to the EventDetailsActivity
+            Intent intent = new Intent(getContext(), EventDetails.class);
+            intent.putExtra("event", (Serializable) event);
 
-            // Pass any additional data if needed
-            // intent.putExtra("EXTRA_EVENT_ID", event.getId());  // Example of passing data
-
-            // Start Organizer_MainActivity
+            // Start the EventDetailsActivity
             getContext().startActivity(intent);
         });
 

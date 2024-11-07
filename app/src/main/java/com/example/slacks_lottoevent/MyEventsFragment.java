@@ -28,7 +28,7 @@ import java.util.UUID;
 public class MyEventsFragment extends Fragment {
 
     private FragmentMyEventsBinding binding;
-    private OrganizerEventArrayAdapter eventArrayAdapter;
+    private EventArrayAdapter eventArrayAdapter;
     private ListView myEventsListView;
     private FirebaseFirestore db;
     private CollectionReference entrantRef;
@@ -82,7 +82,7 @@ public class MyEventsFragment extends Fragment {
 
         ArrayList<Event> eventList = new ArrayList<>();
         myEventsListView = binding.myEventsListView;
-        eventArrayAdapter = new OrganizerEventArrayAdapter(getContext(), eventList);
+        eventArrayAdapter = new EventArrayAdapter(getContext(), eventList);
         myEventsListView.setAdapter(eventArrayAdapter);
 
         entrantRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -133,7 +133,8 @@ public class MyEventsFragment extends Fragment {
             }
         });
         eventArrayAdapter.notifyDataSetChanged();
-
+        
+        // add an conclicklistener for the array adapter "View" button
     }
 
     @Override
