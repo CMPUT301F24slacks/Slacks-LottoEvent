@@ -43,7 +43,6 @@ public class EventDetails extends AppCompatActivity {
     private Boolean usesGeolocation;
     FirebaseFirestore db;
     String qrCodeValue;
-    String mode;
     String deviceId;
     @SuppressLint("HardwareIds")
     @Override
@@ -52,7 +51,6 @@ public class EventDetails extends AppCompatActivity {
         binding = ActivityEventDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
-        mode = getIntent().getStringExtra("mode");
 
 //        Log.d("EventDetails", "QR Code Value: " + qrCodeValue);
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
