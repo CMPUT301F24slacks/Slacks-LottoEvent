@@ -1,10 +1,12 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.controller;
 
 import android.os.Bundle;
 import android.view.Menu;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.slacks_lottoevent.R;
 import com.google.android.material.appbar.MaterialToolbar;
 
 public class BaseActivity extends AppCompatActivity {

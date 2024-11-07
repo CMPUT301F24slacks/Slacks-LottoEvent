@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".controller.MainActivity">
 
     <!-- Main Content Area -->
@@ -18,8 +17,6 @@
         <!-- Include content_main -->
         <include layout="@layout/content_main" />
     </FrameLayout>
-
-<!--    <include layout="@layout/content_main" />-->
 
     <!-- Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton

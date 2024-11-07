@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.slacks_lottoevent.databinding.FragmentMyEventsBinding;
+import com.example.slacks_lottoevent.model.Facility;
 import com.example.slacks_lottoevent.model.Organizer;
 
 import java.util.UUID;
