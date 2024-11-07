@@ -81,7 +81,6 @@ public class Event {
         this.selectedNotifications = selectedNotifications;
     }
 
-
     public String getName() {
         return name;
     }

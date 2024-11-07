@@ -239,8 +239,10 @@ public class EventDetails extends AppCompatActivity {
                 if (notChosenForLottery.get()){entrantDocRef.update("uninvitedEventsNotis", FieldValue.arrayUnion(qrCodeValue));}
             }
             else {
+                // Get the current user's ID
+                String userId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                 // Entrant not already in the database
-                Entrant newEntrant = new Entrant();
+                Entrant newEntrant = new Entrant(userId);
                 newEntrant.addWaitlistedEvents(qrCodeValue);
 
                 newEntrant.addWaitlistedEventsNotis(qrCodeValue);

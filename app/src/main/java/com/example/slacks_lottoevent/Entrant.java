@@ -10,6 +10,7 @@ import java.util.ArrayList;
  */
 public class Entrant {
 
+    private final String userId;
     private final ArrayList<String> waitlistedEvents;
     private final ArrayList<String> finalistEvents;
     private final ArrayList<String> invitedEvents;
@@ -20,7 +21,8 @@ public class Entrant {
     private final ArrayList<String> invitedEventsNotis;
     private final ArrayList<String> uninvitedEventsNotis;
 
-    public Entrant() {
+    public Entrant(String userId) {
+        this.userId = userId;
         this.waitlistedEvents = new ArrayList<>();
         this.finalistEvents = new ArrayList<>();
         this.invitedEvents = new ArrayList<>();
@@ -32,7 +34,9 @@ public class Entrant {
         this.uninvitedEventsNotis = new ArrayList<>();
     }
 
-
+    public String getUserId() {
+        return userId;
+    }
 
     public ArrayList<String> getWaitlistedEvents() {
         return waitlistedEvents;
