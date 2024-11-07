@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.refactor;
 
 import android.os.Bundle;
 
@@ -7,19 +7,20 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.example.slacks_lottoevent.R;
 
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link OrganizerInvitedFragment#newInstance} factory method to
+ * Use the {@link OrganizerWaitlistFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OrganizerInvitedFragment extends Fragment {
+public class OrganizerWaitlistFragment extends Fragment {
 
-    private ListView listViewEntrantsInvited;
+    private ListView listViewEntrantsWaitlisted;
     private ArrayList<String> dummyEntrants;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -31,7 +32,7 @@ public class OrganizerInvitedFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public OrganizerInvitedFragment() {
+    public OrganizerWaitlistFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +42,11 @@ public class OrganizerInvitedFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment OrganizerInvitedFragment.
+     * @return A new instance of fragment OrganizerFirstFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static OrganizerInvitedFragment newInstance(String param1, String param2) {
-        OrganizerInvitedFragment fragment = new OrganizerInvitedFragment();
+    public static OrganizerWaitlistFragment newInstance(String param1, String param2) {
+        OrganizerWaitlistFragment fragment = new OrganizerWaitlistFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,19 +66,20 @@ public class OrganizerInvitedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_organizer_invited, container, false);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_organizer_waitlist, container, false);
 
         // Setup ListView
-        listViewEntrantsInvited = view.findViewById(R.id.listViewEntrantsInvited);
+        listViewEntrantsWaitlisted = view.findViewById(R.id.listViewEntrantsWaitlisted);
 
         // Dummy data
         dummyEntrants = new ArrayList<>();
-        dummyEntrants.add("Mike");
-        dummyEntrants.add("November");
+        dummyEntrants.add("Delta");
+        dummyEntrants.add("Echo");
 
-        // Adapter to populate ListView
+        // Adapter to populate ListView with custom layout
         EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), dummyEntrants);
-        listViewEntrantsInvited.setAdapter(adapter);
+        listViewEntrantsWaitlisted.setAdapter(adapter);
 
         return view;
     }

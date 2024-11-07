@@ -1,16 +1,14 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.refactor;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.databinding.ActivityEventsHomeBinding;
 import com.example.slacks_lottoevent.databinding.NotificationsUserBinding;
 import com.google.android.material.appbar.MaterialToolbar;

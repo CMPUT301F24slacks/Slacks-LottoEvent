@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.refactor;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.slacks_lottoevent.databinding.FragmentMyEventsBinding;
-import com.example.slacks_lottoevent.model.Facility;
-import com.example.slacks_lottoevent.model.Organizer;
+import com.example.slacks_lottoevent.data.Facility;
+import com.example.slacks_lottoevent.data.Organizer;
 
 import java.util.UUID;
 

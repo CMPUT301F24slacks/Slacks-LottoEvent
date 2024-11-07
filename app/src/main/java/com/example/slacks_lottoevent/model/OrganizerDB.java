@@ -1,5 +1,6 @@
 package com.example.slacks_lottoevent.model;
 
+import com.example.slacks_lottoevent.data.Organizer;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -38,6 +39,14 @@ public class OrganizerDB {
      */
     public Organizer getOrganizer(String userId) {
         return organizersRef.document(userId).get().getResult().toObject(Organizer.class);
+    }
+
+    /**
+     * Returns a bool if the organizer exists in the database.
+     * @param userId the user ID of the organizer to check
+     */
+    public boolean organizerExists(String userId) {
+        return organizersRef.document(userId).get().isSuccessful();
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.refactor;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -18,8 +18,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.databinding.FragmentManageMyEventsBinding;
-import com.example.slacks_lottoevent.model.Facility;
+import com.example.slacks_lottoevent.data.Facility;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;

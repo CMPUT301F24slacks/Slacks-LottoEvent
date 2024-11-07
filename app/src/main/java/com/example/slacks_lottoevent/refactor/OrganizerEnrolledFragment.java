@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.refactor;
 
 import android.os.Bundle;
 
@@ -7,19 +7,20 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.example.slacks_lottoevent.R;
 
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link OrganizerWaitlistFragment#newInstance} factory method to
+ * Use the {@link OrganizerEnrolledFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OrganizerWaitlistFragment extends Fragment {
+public class OrganizerEnrolledFragment extends Fragment {
 
-    private ListView listViewEntrantsWaitlisted;
+    private ListView listViewEntrantsEnrolled;
     private ArrayList<String> dummyEntrants;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -31,7 +32,7 @@ public class OrganizerWaitlistFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public OrganizerWaitlistFragment() {
+    public OrganizerEnrolledFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +42,11 @@ public class OrganizerWaitlistFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment OrganizerFirstFragment.
+     * @return A new instance of fragment OrganizerEnrolledFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static OrganizerWaitlistFragment newInstance(String param1, String param2) {
-        OrganizerWaitlistFragment fragment = new OrganizerWaitlistFragment();
+    public static OrganizerEnrolledFragment newInstance(String param1, String param2) {
+        OrganizerEnrolledFragment fragment = new OrganizerEnrolledFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,20 +66,20 @@ public class OrganizerWaitlistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_organizer_waitlist, container, false);
+        View view = inflater.inflate(R.layout.fragment_organizer_enrolled, container, false);
 
         // Setup ListView
-        listViewEntrantsWaitlisted = view.findViewById(R.id.listViewEntrantsWaitlisted);
+        listViewEntrantsEnrolled = view.findViewById(R.id.listViewEntrantsEnrolled);
 
         // Dummy data
         dummyEntrants = new ArrayList<>();
-        dummyEntrants.add("Delta");
-        dummyEntrants.add("Echo");
+        dummyEntrants.add("Foxtrot");
+        dummyEntrants.add("Gamma");
+        dummyEntrants.add("Hector");
 
-        // Adapter to populate ListView with custom layout
+        // Adapter to populate ListView
         EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), dummyEntrants);
-        listViewEntrantsWaitlisted.setAdapter(adapter);
+        listViewEntrantsEnrolled.setAdapter(adapter);
 
         return view;
     }

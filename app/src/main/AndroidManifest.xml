@@ -37,26 +37,26 @@
             android:theme="@style/Theme.SlacksLottoEvent">
         </activity>
         <activity
-            android:name=".EventsHomeActivity"
+            android:name=".refactor.EventsHomeActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
-        <activity android:name=".SignUpActivity"/>
-        <activity android:name=".EventDetails"/>
+        <activity android:name=".refactor.SignUpActivity"/>
+        <activity android:name=".refactor.EventDetails"/>
         <activity
-            android:name=".EventQrScanner"
+            android:name=".refactor.EventQrScanner"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent">
         </activity>
         <activity
-            android:name=".FullscreenQrScanner"
+            android:name=".refactor.FullscreenQrScanner"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent"/>
         <activity
-            android:name=".CreateEvent"
+            android:name=".refactor.CreateEvent"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
-            android:name=".User_Notifications"
+            android:name=".refactor.User_Notifications"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
 

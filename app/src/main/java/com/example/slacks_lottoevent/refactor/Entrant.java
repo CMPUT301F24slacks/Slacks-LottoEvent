@@ -1,6 +1,4 @@
-package com.example.slacks_lottoevent;
-
-import com.google.firebase.firestore.auth.User;
+package com.example.slacks_lottoevent.refactor;
 
 import java.util.ArrayList;
 

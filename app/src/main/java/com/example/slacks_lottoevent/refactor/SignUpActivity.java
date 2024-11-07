@@ -1,7 +1,6 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.refactor;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -16,14 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.databinding.SignUpActivityBinding;
 
-import com.google.firebase.database.DatabaseReference;
-
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /*
 *

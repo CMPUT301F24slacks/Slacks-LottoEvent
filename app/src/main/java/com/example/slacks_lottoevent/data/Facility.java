@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.model;
+package com.example.slacks_lottoevent.data;
 
 /**
  * Facility represents a location where an event can be held.

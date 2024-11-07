@@ -1,5 +1,6 @@
 package com.example.slacks_lottoevent.model;
 
+import com.example.slacks_lottoevent.data.Facility;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 

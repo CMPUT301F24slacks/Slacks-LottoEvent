@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.refactor;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,7 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import com.example.slacks_lottoevent.model.Facility;
+import com.example.slacks_lottoevent.R;
+import com.example.slacks_lottoevent.data.Facility;
 
 public class AddFacilityFragment extends DialogFragment {
     public Facility facility;
