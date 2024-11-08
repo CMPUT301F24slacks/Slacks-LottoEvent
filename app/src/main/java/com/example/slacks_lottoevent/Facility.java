@@ -85,6 +85,7 @@ public class Facility {
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
+
     public String getFacilityId() {
         return facilityId;
     }

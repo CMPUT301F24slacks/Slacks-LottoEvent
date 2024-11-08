@@ -44,14 +44,14 @@ import java.util.UUID;
 public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
-    private CollectionReference usersRef;
+    CollectionReference usersRef;
 
     private SignUpActivityBinding binding;
-    private EditText nameInput;
-    private EditText emailInput;
-    private EditText phoneInput;
+    EditText nameInput;
+    EditText emailInput;
+    EditText phoneInput;
 
-    private  String name;
+    private String name;
     private String email;
     private String phoneNumber;
 
@@ -139,7 +139,7 @@ public class SignUpActivity extends AppCompatActivity {
     /**
      * Saves the user's information to the Firebase Firestore database.
      */
-    private void saveUserInfoToFirebase(){
+    void saveUserInfoToFirebase(){
         String name = nameInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
         String phone = phoneInput.getText().toString().trim();
