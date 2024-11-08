@@ -1,22 +1,24 @@
 package com.example.slacks_lottoevent;
-import static androidx.camera.core.impl.utils.ContextUtil.getApplicationContext;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import android.content.Context;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ProfileUnitTest {
     private Profile profile;
+    private Context context;
 
     @BeforeEach
     public void mockProfile(){
-        profile = new Profile("Tate McRae", "7804448883","tateMcRae@gmail.com", getApplicationContext());
+        context = getApplicationContext();
+        profile = new Profile("Tate McRae", "7804448883","tateMcRae@gmail.com", context);
     }
-
 
     @Test
     public void testSetName() {
-        profile.setName("Taylor Swift");
+        profile.setName("Taylor Swift", context);
         assertEquals("Taylor Swift", profile.getName(), "Name updates to new value");
     }
 
@@ -31,5 +33,4 @@ public class ProfileUnitTest {
         profile.setEmail("taylorSwift@ualberta.ca");
         assertEquals("taylorSwift@ualberta.ca", profile.getEmail(), "Email updates to new value");
     }
-
 }
