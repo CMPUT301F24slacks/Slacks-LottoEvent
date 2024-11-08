@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -128,6 +129,19 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
                 }
             }
         });
+
+        Button eventButton = convertView.findViewById(R.id.event_button);
+        eventButton.setOnClickListener(v -> {
+            // Create an Intent to navigate to the EventDetailsActivity
+            Intent intent = new Intent(getContext(), OrganizerEventDetailsActivity.class);
+            String userId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+            intent.putExtra("userId", userId);
+            intent.putExtra("qrCodeValue", event.getEventID());
+
+            // Start the OrganizerDetailsActivity
+            getContext().startActivity(intent);
+        });
+
         eventDescription.setText(event.getDescription());
 
 //        //to connect with entrants cancelled, joined, etc.
@@ -244,6 +258,5 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
                 Log.e("LotteryEntrant", "Failed to retrieve event document", task.getException());
             }
         });
-
     }
 }

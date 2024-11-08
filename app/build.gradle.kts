@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.fragment.testing)
+    implementation(libs.activity)
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.0.1")
     testImplementation(libs.test.core)
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.0.1")

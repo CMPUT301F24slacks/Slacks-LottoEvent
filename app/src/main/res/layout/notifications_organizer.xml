@@ -5,6 +5,19 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
+    <!-- Back Button at the top-left -->
+    <ImageView
+        android:id="@+id/back_button"
+        android:layout_width="48dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:contentDescription="Back"
+        android:src="@drawable/arrow_left_solid"
+        app:tint="#7B24EB"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <!-- Title TextView at the top -->
     <TextView
         android:id="@+id/Notifications_Title"
@@ -19,7 +32,7 @@
         android:fontFamily="@font/inter_bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- TabLayout below the title -->
     <com.google.android.material.tabs.TabLayout
@@ -37,13 +50,21 @@
 
         <!-- Tabs for each category -->
         <com.google.android.material.tabs.TabItem
-            android:text="Waitlist"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+            android:text="Waitlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <com.google.android.material.tabs.TabItem
-            android:text="Invited" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+            android:text="Invited"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <com.google.android.material.tabs.TabItem
-            android:text="Cancelled" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+            android:text="Cancelled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <com.google.android.material.tabs.TabItem
-            android:text="Enrolled" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+            android:text="Enrolled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </com.google.android.material.tabs.TabLayout>
 
     <!-- FrameLayout to hold the selected fragment content -->
@@ -55,5 +76,5 @@
         app:layout_constraintTop_toBottomOf="@id/tab_Layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
