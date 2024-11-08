@@ -1,37 +1,43 @@
 package com.example.slacks_lottoevent;
 
-import static org.mockito.Mockito.mock;
-
 import android.content.Context;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProfileUnitTest {
     private Profile profile;
-    private Context context;
+    private Context mockContext;
 
     @BeforeEach
     public void setup() {
-        context = mock(Context.class); // Mock the Context
-        profile = new Profile("Tate McRae", "7804448883", "tateMcRae@gmail.com", context);
+        // Mock the Android Context
+        mockContext = Mockito.mock(Context.class);
+
+        // Mock file directory behavior
+        Mockito.when(mockContext.getFilesDir()).thenReturn(new java.io.File("mock_directory"));
+
+        // Initialize Profile with mocked context
+        profile = new Profile("Tate McRae", "7804448883", "tateMcRae@gmail.com", mockContext);
     }
 
     @Test
     public void testSetName() {
-        profile.setName("Taylor Swift", context);
-        assertEquals("Taylor Swift", profile.getName());
+        profile.setName("Taylor Swift", mockContext);
+        assertEquals("Taylor Swift", profile.getName(), "Name updates to new value");
     }
 
     @Test
     public void testSetPhone() {
         profile.setPhone("5878895544");
-        assertEquals("5878895544", profile.getPhone());
+        assertEquals("5878895544", profile.getPhone(), "Phone updates to new value");
     }
 
     @Test
     public void testSetEmail() {
         profile.setEmail("taylorSwift@ualberta.ca");
-        assertEquals("taylorSwift@ualberta.ca", profile.getEmail());
+        assertEquals("taylorSwift@ualberta.ca", profile.getEmail(), "Email updates to new value");
     }
 }
