@@ -72,6 +72,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilityData.put("country", facility.getCountry());
         facilityData.put("postalCode", facility.getPostalCode());
         facilityData.put("organizerID", facility.getOrganizerId());
+        facilityData.put("deviceID", facility.getDeviceId());
 
         facilitiesRef.add(facilityData)
                 .addOnSuccessListener(documentReference -> {
