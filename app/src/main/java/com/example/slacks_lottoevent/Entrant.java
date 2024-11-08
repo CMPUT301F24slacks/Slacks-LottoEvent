@@ -10,29 +10,19 @@ import java.util.ArrayList;
  */
 public class Entrant {
 
-    private final ArrayList<String> waitlistedEvents;
-    private final ArrayList<String> finalistEvents;
-    private final ArrayList<String> invitedEvents;
-    private final ArrayList<String> uninvitedEvents;
-
-    private final ArrayList<String> waitlistedEventsNotis;
-    private final ArrayList<String> finalistEventsNotis;
-    private final ArrayList<String> invitedEventsNotis;
-    private final ArrayList<String> uninvitedEventsNotis;
+    private ArrayList<String> waitlistedEvents;
+    private ArrayList<String> finalistEvents;
+    private ArrayList<String> invitedEvents;
+    private ArrayList<String> uninvitedEvents;
+    private ArrayList<String> invites;
 
     public Entrant() {
         this.waitlistedEvents = new ArrayList<>();
         this.finalistEvents = new ArrayList<>();
         this.invitedEvents = new ArrayList<>();
         this.uninvitedEvents = new ArrayList<>();
-
-        this.waitlistedEventsNotis = new ArrayList<>();
-        this.finalistEventsNotis = new ArrayList<>();
-        this.invitedEventsNotis = new ArrayList<>();
-        this.uninvitedEventsNotis = new ArrayList<>();
+        this.invites = new ArrayList<>();
     }
-
-
 
     public ArrayList<String> getWaitlistedEvents() {
         return waitlistedEvents;
@@ -66,29 +56,11 @@ public class Entrant {
 
     }
 
-    public ArrayList<String> getWaitlistedEventsNotis() {
-        return waitlistedEventsNotis;
+    private void addEventInvite(String eventID){
+        invites.add(eventID);
     }
-
-    public ArrayList<String> getFinalistEventsNotis() {
-        return finalistEventsNotis;
+    private void removeEventInvite(String eventID){
+        invites.remove(eventID);
     }
-
-    public ArrayList<String> getInvitedEventsNotis() {
-        return invitedEventsNotis;
-    }
-
-    public ArrayList<String> getUninvitedEventsNotis() {
-        return uninvitedEventsNotis;
-    }
-
-    public void addWaitlistedEventsNotis(String eventID){ waitlistedEventsNotis.add(eventID);}
-
-    public void addFinalistEventsNotis(String eventID){ finalistEventsNotis.add(eventID);}
-
-    public void addInvitedEventsNotis(String eventID){ invitedEventsNotis.add(eventID);}
-
-    public void addUninvitedEventsNotis(String eventID){ uninvitedEventsNotis.add(eventID);}
-
 
 }

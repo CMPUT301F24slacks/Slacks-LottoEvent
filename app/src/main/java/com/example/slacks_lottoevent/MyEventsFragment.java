@@ -35,19 +35,6 @@ public class MyEventsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        Profile tempUser = new Profile("John Doe", "123-456-7890", "123@gmail.com");
-        String tempDescription = "Join us for the Tech Innovators Summit 2024, where industry leaders, startups, and tech enthusiasts come together to explore the latest in AI, blockchain, cybersecurity, and more. Enjoy keynote talks, interactive workshops, and networking opportunities designed to inspire and connect innovators. Be part of the future of technology!";
-        String tempUserId = UUID.randomUUID().toString();
-        Organizer tempOrganizer = new Organizer(tempUserId);
-        Facility tempFacility = new Facility("facilityname", "9th Street", "111 Unit", "Edmonton", "Province", "country", "t6m0n5", "orgID", "devID");
-        tempOrganizer.setFacilityId(tempFacility.getFacilityId());
-        Event tempEvent = new Event("Tech Innovators Summit 2024", "2024-01-23", "14:00-15:00", "400",tempDescription, 1000, 0,  null, "randomeventID", false, null, false, false, false);        EventList tempEventList = new EventList();
-        tempEventList.addEvent(tempEvent);
-        tempEventList.addEvent(tempEvent);
-
-        myEventsListView = binding.myEventsListView;
-        eventArrayAdapter = new EventArrayAdapter(getContext(), tempEventList);
-        myEventsListView.setAdapter(eventArrayAdapter);
 
     }
 
