@@ -70,37 +70,72 @@ public class AddFacilityFragment extends DialogFragment {
             editPostalCode.setText(facility.getPostalCode());
         }
 
-        return builder
-                .setView(view)
+        builder.setView(view)
                 .setTitle("Create/Edit Facility")
                 .setNegativeButton("Cancel", null)
-                .setPositiveButton("Confirm", (dialog, which) -> {
-                    String facilityName = editFacilityName.getText().toString();
-                    String streetAddress1 = editStreetAddress1.getText().toString();
-                    String streetAddress2 = editStreetAddress2.getText().toString();
-                    String city = editCity.getText().toString();
-                    String province = editProvince.getText().toString();
-                    String country = editCountry.getText().toString();
-                    String postalCode = editPostalCode.getText().toString();
-                    String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+                .setPositiveButton("Confirm", null);
 
-                    if (isEdit){
-                        facility.setFacilityName(facilityName);
-                        facility.setStreetAddress1(streetAddress1);
-                        facility.setStreetAddress2(streetAddress2);
-                        facility.setCity(city);
-                        facility.setProvince(province);
-                        facility.setCountry(country);
-                        facility.setPostalCode(postalCode);
-                        listener.updateFacility();
-                    } else {
-                        // Ensure listener is set before calling addFacility()
-                        if (listener != null) {
-                            listener.addFacility(new Facility(facilityName, streetAddress1, streetAddress2, city, province, country, postalCode, deviceId, deviceId));
-                        }
+        AlertDialog dialog = builder.create();
+
+        // Override the positive button click listener to perform validation
+        dialog.setOnShowListener(dlg -> {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                String facilityName = editFacilityName.getText().toString().trim();
+                String streetAddress1 = editStreetAddress1.getText().toString().trim();
+                String streetAddress2 = editStreetAddress2.getText().toString().trim();
+                String city = editCity.getText().toString().trim();
+                String province = editProvince.getText().toString().trim();
+                String country = editCountry.getText().toString().trim();
+                String postalCode = editPostalCode.getText().toString().trim();
+
+
+                if (facilityName.isEmpty()) {
+                    editFacilityName.setError("Facility Name is required");
+                    return;
+                }
+                if (streetAddress1.isEmpty()) {
+                    editStreetAddress1.setError("Street Address 1 is required");
+                    return;
+                }
+                if (city.isEmpty()) {
+                    editCity.setError("City is required");
+                    return;
+                }
+                if (province.isEmpty()) {
+                    editProvince.setError("Province is required");
+                    return;
+                }
+                if (country.isEmpty()) {
+                    editCountry.setError("Country is required");
+                    return;
+                }
+                if (postalCode.isEmpty()) {
+                    editPostalCode.setError("Postal Code is required");
+                    return;
+                }
+
+
+                String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+                if (isEdit) {
+                    facility.setFacilityName(facilityName);
+                    facility.setStreetAddress1(streetAddress1);
+                    facility.setStreetAddress2(streetAddress2);
+                    facility.setCity(city);
+                    facility.setProvince(province);
+                    facility.setCountry(country);
+                    facility.setPostalCode(postalCode);
+                    listener.updateFacility();
+                } else {
+                    if (listener != null) {
+                        listener.addFacility(new Facility(facilityName, streetAddress1, streetAddress2, city, province, country, postalCode, deviceId, deviceId));
                     }
-                })
-                .create();
+                }
 
+                dialog.dismiss(); // Close dialog if validation passes
+            });
+        });
+
+        return dialog;
     }
+
 }
