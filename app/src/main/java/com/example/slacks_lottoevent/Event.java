@@ -1,7 +1,8 @@
 package com.example.slacks_lottoevent;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+
+import java.io.Serializable;
 
 /**
  * Event class that holds all the information for an event
@@ -30,7 +31,7 @@ public class Event implements Serializable {
     private ArrayList<String> selectedNotificationsList;
     private ArrayList<String> joinedNotificationsList;
     private ArrayList<String> cancelledNotificationsList;
-
+    private String location;
     public Event(){
 
     }
@@ -52,7 +53,7 @@ public class Event implements Serializable {
      * @param cancelledNotifications
      * @param qrHash
      */
-    public Event(String name, String date, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventID, Boolean geoLocation, String qrHash, Boolean waitlistNotifications, Boolean selectedNotifications, Boolean cancelledNotifications) {
+    public Event(String name, String date, String location, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventID, Boolean geoLocation, String qrHash, Boolean waitlistNotifications, Boolean selectedNotifications, Boolean cancelledNotifications) {
         this.name = name;
         this.date = date;
         this.time = time;
@@ -60,7 +61,7 @@ public class Event implements Serializable {
         this.description = description;
         this.eventSlots = eventSlots;
         this.waitListCapacity = waitListCapacity;
-
+        this.location = location;
 
         this.waitlisted = new ArrayList<>();
         this.finalists = new ArrayList<>();
@@ -82,6 +83,12 @@ public class Event implements Serializable {
         this.selectedNotifications = selectedNotifications;
     }
 
+    public String getLocation(){
+        return location;
+    }
+    public void setLocation(String location){
+        this.location = location;
+    }
     public String getName() {
         return name;
     }

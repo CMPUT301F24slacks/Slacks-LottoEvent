@@ -1,11 +1,8 @@
 package com.example.slacks_lottoevent;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -13,7 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.tabs.TabLayout;
 
-public class Organizer_MainActivity extends AppCompatActivity {
+public class OrganizerNotifications extends AppCompatActivity {
 
     FrameLayout frameLayout;
     TabLayout tabLayout;
@@ -21,15 +18,16 @@ public class Organizer_MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.organizer_main_activity);
-
+        setContentView(R.layout.notifications_organizer);
 
         //Set Up ArrayAdapter, do getUsername() for every user in said category, change it in the case-by-case tabLayout system
         Intent intent = getIntent();
+        Event event = (Event) intent.getSerializableExtra("current_event");
+
         frameLayout = (FrameLayout) findViewById(R.id.FrameLayout);
         tabLayout = (TabLayout) findViewById(R.id.tab_Layout);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, new OrganizerWaitlistFragment())
+        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, OrganizerWaitlistFragment.newInstance(event))
                 .addToBackStack(null)
                 .commit();
 
@@ -39,21 +37,24 @@ public class Organizer_MainActivity extends AppCompatActivity {
                 Fragment selected_fragment = null;
                 switch (tab.getPosition()){
                     case 0:
-                        selected_fragment = new OrganizerWaitlistFragment();
+                        selected_fragment = OrganizerWaitlistFragment.newInstance(event);
                         break;
                     case 1:
-                        selected_fragment = new OrganizerInvitedFragment();
+                        selected_fragment = OrganizerInvitedFragment.newInstance(event);;
                         break;
                     case 2:
-                        selected_fragment = new OrganizerCancelledFragment();
+                        selected_fragment = OrganizerCancelledFragment.newInstance(event);;
                         break;
                     case 3:
-                        selected_fragment = new OrganizerEnrolledFragment();
+                        selected_fragment = OrganizerEnrolledFragment.newInstance(event);;
                         break;
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, selected_fragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .commit();
+                if (selected_fragment != null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.FrameLayout, selected_fragment)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .commit();
+                }
             }
 
             @Override
