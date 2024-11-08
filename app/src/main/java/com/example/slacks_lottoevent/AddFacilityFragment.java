@@ -101,6 +101,5 @@ public class AddFacilityFragment extends DialogFragment {
                     }
                 })
                 .create();
-
     }
 }

@@ -127,6 +127,7 @@ public class EventsHomeActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.profile) {
+
             return true;
         }
         if (id == R.id.notifications) {
