@@ -82,7 +82,7 @@
             android:layout_marginStart="8dp"
             android:backgroundTint="#03A9F4"
             android:text="Edit Picture"
-            android:textColor="#FFFFFF"
+            android:textColor="#FFFFFF" />
 
         <!-- Hidden Confirm and Cancel Buttons -->
         <Button
