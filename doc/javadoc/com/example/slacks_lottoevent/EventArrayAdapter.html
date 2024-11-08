@@ -116,8 +116,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(android.content.Context,com.example.slacks_lottoevent.EventList)" class="member-name-link">EventArrayAdapter</a><wbr>(android.content.Context&nbsp;context,
- <a href="EventList.html" title="class in com.example.slacks_lottoevent">EventList</a>&nbsp;eventList)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(android.content.Context,java.util.ArrayList)" class="member-name-link">EventArrayAdapter</a><wbr>(android.content.Context&nbsp;context,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&nbsp;eventList)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -137,7 +137,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getView(int,android.view.View,android.view.ViewGroup)" class="member-name-link">getView</a><wbr>(int&nbsp;position,
  android.view.View&nbsp;convertView,
  android.view.ViewGroup&nbsp;parent)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">getView is a method that is called to display the individual events in the event list.</div>
+</div>
 </div>
 </div>
 </div>
@@ -165,11 +167,11 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(android.content.Context,com.example.slacks_lottoevent.EventList)">
+<section class="detail" id="&lt;init&gt;(android.content.Context,java.util.ArrayList)">
 <h3>EventArrayAdapter</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EventArrayAdapter</span><wbr><span class="parameters">(@NonNull
  android.content.Context&nbsp;context,
- <a href="EventList.html" title="class in com.example.slacks_lottoevent">EventList</a>&nbsp;eventList)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&nbsp;eventList)</span></div>
 </section>
 </li>
 </ul>
@@ -188,11 +190,20 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  android.view.View&nbsp;convertView,
  @NonNull
  android.view.ViewGroup&nbsp;parent)</span></div>
+<div class="block">getView is a method that is called to display the individual events in the event list.
+ It sets the text of the event name, date, time, address, and description.
+ It also sets the onClickListener for the event button to navigate to the EventDetailsActivity.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>getView</code>&nbsp;in interface&nbsp;<code>android.widget.Adapter</code></dd>
 <dt>Overrides:</dt>
 <dd><code>getView</code>&nbsp;in class&nbsp;<code>android.widget.ArrayAdapter&lt;<a href="Event.html" title="class in com.example.slacks_lottoevent">Event</a>&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>position</code> - The position of the event in the event list</dd>
+<dd><code>convertView</code> - The view that is being converted</dd>
+<dd><code>parent</code> - The parent view group</dd>
+<dt>Returns:</dt>
+<dd>The view that is being displayed</dd>
 </dl>
 </section>
 </li>

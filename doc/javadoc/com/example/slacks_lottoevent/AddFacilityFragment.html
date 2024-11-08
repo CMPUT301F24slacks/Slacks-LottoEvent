@@ -85,6 +85,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">AddFacilityFragment</span>
 <span class="extends-implements">extends androidx.fragment.app.DialogFragment</span></div>
+<div class="block">AddFacilityFragment is a DialogFragment that allows the user to create or edit a Facility.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -127,10 +128,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">AddFacilityFragment</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructor for AddFacilityFragment
+ Default constructor for creating a new Facility</div>
+</div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.example.slacks_lottoevent.Facility,java.lang.Boolean)" class="member-name-link">AddFacilityFragment</a><wbr>(<a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facility,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&nbsp;isEdit)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Constructor for AddFacilityFragment</div>
+</div>
 </div>
 </section>
 </li>
@@ -147,10 +153,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onAttach(android.content.Context)" class="member-name-link">onAttach</a><wbr>(android.content.Context&nbsp;context)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">onAttach is called when the fragment is associated with an activity.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>android.app.Dialog</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreateDialog(android.os.Bundle)" class="member-name-link">onCreateDialog</a><wbr>(android.os.Bundle&nbsp;savedInstanceState)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">onCreateDialog creates the AlertDialog for the AddFacilityFragment</div>
+</div>
 </div>
 </div>
 </div>
@@ -193,12 +203,20 @@ loadScripts(document, 'script');</script>
 <h3>AddFacilityFragment</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AddFacilityFragment</span><wbr><span class="parameters">(<a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facility,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&nbsp;isEdit)</span></div>
+<div class="block">Constructor for AddFacilityFragment</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>facility</code> - The Facility object to edit</dd>
+<dd><code>isEdit</code> - Boolean flag to determine if the dialog is for editing an existing Facility</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="&lt;init&gt;()">
 <h3>AddFacilityFragment</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AddFacilityFragment</span>()</div>
+<div class="block">Constructor for AddFacilityFragment
+ Default constructor for creating a new Facility</div>
 </section>
 </li>
 </ul>
@@ -214,9 +232,12 @@ loadScripts(document, 'script');</script>
 <h3>onAttach</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onAttach</span><wbr><span class="parameters">(@NonNull
  android.content.Context&nbsp;context)</span></div>
+<div class="block">onAttach is called when the fragment is associated with an activity.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onAttach</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.DialogFragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>context</code> - Context object</dd>
 </dl>
 </section>
 </li>
@@ -226,9 +247,14 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations">@NonNull
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">android.app.Dialog</span>&nbsp;<span class="element-name">onCreateDialog</span><wbr><span class="parameters">(@Nullable
  android.os.Bundle&nbsp;savedInstanceState)</span></div>
+<div class="block">onCreateDialog creates the AlertDialog for the AddFacilityFragment</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onCreateDialog</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.DialogFragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>savedInstanceState</code> - Bundle object containing the saved state</dd>
+<dt>Returns:</dt>
+<dd>Dialog object</dd>
 </dl>
 </section>
 </li>
