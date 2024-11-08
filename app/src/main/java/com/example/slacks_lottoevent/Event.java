@@ -2,10 +2,12 @@ package com.example.slacks_lottoevent;
 
 import java.util.ArrayList;
 
+import java.io.Serializable;
+
 /**
  * Event class that holds all the information for an event
  */
-public class Event {
+public class Event implements Serializable {
 
     private String name;
     private String date;
