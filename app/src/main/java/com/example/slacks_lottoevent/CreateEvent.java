@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
@@ -30,6 +31,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This class is responsible for creating an event and adding it to the database.
@@ -282,30 +284,35 @@ public class CreateEvent extends AppCompatActivity {
 
         String eventId = UUID.randomUUID().toString();
 
-//        DELETE LATER
-//        String tempUserId = UUID.randomUUID().toString();
-//        Facility facility = new Facility("Facility1", "148 St NW", "5603", "Edmonton", "Alberta", "Canada", "T6H 4T7", "orgID", "deviceId");
-//        Organizer organizer = new Organizer(tempUserId);
-
-
-//        QR Code Creation
         QRCodeWriter writer = new QRCodeWriter();
         try {
+            AtomicReference<String> location = new AtomicReference<>("");
             BitMatrix bitMatrix = writer.encode(eventId, BarcodeFormat.QR_CODE, 300, 300);
             String qrData = serializeBitMatrix(bitMatrix);
             String qrHash = generateHash(qrData);
+            String deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            String finalWaitingListCapacity = waitingListCapacity;
+            db.collection("facilities").whereEqualTo("deviceID", deviceID)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if(task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                            location.set(document.getString("streetAddress1") + " "
+                                    + document.getString("city") + ", "
+                                    + document.getString("province") + " "
+                                    + document.getString("postalCode"));
+                            System.out.println("location" + location.get());
+                            Event eventData =  new Event(name, date, location.get(), time, price, details, eventSlots, Integer.parseInt(finalWaitingListCapacity), qrData, eventId, geoLoc, qrHash, waitListNotis, selectedNotis, cancelledNotis);
+                            eventsRef.document(eventId).set(eventData)
+                                    .addOnSuccessListener(nothing -> {
+                                        Toast.makeText(CreateEvent.this, "Event created successfully", Toast.LENGTH_SHORT).show();
+                                    })
+                                    .addOnFailureListener(nothing -> {
 
-            Event eventData =  new Event(name, date, time, price, details, eventSlots, Integer.parseInt(waitingListCapacity), qrData, eventId, geoLoc, qrHash, waitListNotis, selectedNotis, cancelledNotis);
-            eventsRef.document(eventId).set(eventData)
-                    .addOnSuccessListener(nothing -> {
-                        System.out.println("Added to DB");
-                        Toast.makeText(CreateEvent.this, "Event created successfully", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(nothing -> {
-                        System.out.println("failed");
-                        Toast.makeText(CreateEvent.this, "Failed to create event", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(CreateEvent.this, "Failed to create event", Toast.LENGTH_SHORT).show();
+                                    });
+                        }
                     });
-
         } catch (WriterException e) {
             throw new RuntimeException(e);
         }
