@@ -161,37 +161,71 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
         cancelButton.setOnClickListener(view -> dialog.dismiss());
         confirmButton.setOnClickListener(view -> {
-            // check if the user is already in the event
-            // if they are, display a snack bar saying they are already in the event
-            // if they are not, add them to the event
+            // Get the user's unique device ID
             String userId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+            // Check if the entrant exists in Firestore
             db.collection("entrants").document(userId).get().addOnSuccessListener(task -> {
-                if (task.exists()){
+                if (task.exists()) {
+                    // Entrant exists, check their events
                     Entrant entrant = task.toObject(Entrant.class);
+
+                    // Check if the entrant is already associated with this event
                     if (entrant.getWaitlistedEvents().contains(qrCodeValue)
                             || entrant.getFinalistEvents().contains(qrCodeValue)
                             || entrant.getInvitedEvents().contains(qrCodeValue)
-                            || entrant.getUninvitedEvents().contains(qrCodeValue)){
+                            || entrant.getUninvitedEvents().contains(qrCodeValue)) {
 
+                        // Show a toast message and dismiss the dialog
                         Toast.makeText(this, "You are already in the event", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
-                    }
-                    else {
+                    } else {
+                        // Entrant is not in the event, add them to the event
                         addEntrantToWaitlist();
-                        addEntrantToNotis(chosenForLottery,notChosenForLottery);
+                        addEntrantToNotis(chosenForLottery, notChosenForLottery);
                         addEventToEntrant();
-                        Intent intent = new Intent(JoinEventDetailsActivity.this,EventsHomeActivity.class);
-                        startActivity(intent);
+                        navigateToEventsHome();
                         dialog.dismiss();
                     }
+                } else {
+                    // Entrant does not exist, create a new one and add them
+                    Log.d("JoinEventDetails", "Entrant does not exist. Creating a new entrant...");
+                    createNewEntrant(userId);
+                    addEntrantToWaitlist();
+                    addEntrantToNotis(chosenForLottery, notChosenForLottery);
+                    navigateToEventsHome();
+                    dialog.dismiss();
                 }
+            }).addOnFailureListener(e -> {
+                // Handle any errors in fetching the entrant document
+                Log.e("JoinEventDetails", "Error fetching entrant document: " + e.getMessage());
+                // Create a new entrant in case of a failure
+                createNewEntrant(userId);
+                addEntrantToWaitlist();
+                addEntrantToNotis(chosenForLottery, notChosenForLottery);
+                navigateToEventsHome();
+                dialog.dismiss();
             });
         });
+
 
         dialog.show();
 
     }
 
+    private void createNewEntrant(String userId) {
+        Entrant newEntrant = new Entrant();
+        newEntrant.addWaitlistedEvents(qrCodeValue); // Add the event to the waitlist
+        db.collection("entrants").document(userId)
+                .set(newEntrant)
+                .addOnSuccessListener(aVoid -> Log.d("JoinEventDetails", "New entrant created successfully"))
+                .addOnFailureListener(e -> Log.e("JoinEventDetails", "Error creating new entrant: " + e.getMessage()));
+    }
+
+    private void navigateToEventsHome() {
+        Intent intent = new Intent(JoinEventDetailsActivity.this, EventsHomeActivity.class);
+        startActivity(intent);
+    }
 
     private void addEntrantToWaitlist(){
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);

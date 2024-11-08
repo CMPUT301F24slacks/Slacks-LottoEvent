@@ -1,6 +1,8 @@
 package com.example.slacks_lottoevent;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -127,8 +129,26 @@ public class EventsHomeActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.profile) {
-
-            return true;
+            // if the user is not signed up, redirect to the sign up page
+            SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+            if (!sharedPreferences.getBoolean("isSignedUp", false)) {
+                new AlertDialog.Builder(this)
+                        .setTitle("Sign-Up Required")
+                        .setMessage("In order to join an event, we need to collect some information about you.")
+                        .setPositiveButton("Proceed", (dialog, which) -> {
+                            Intent signUpIntent = new Intent(this, SignUpActivity.class);
+                            startActivity(signUpIntent);
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .show();
+                return true;
+            } else {
+                Intent intent = new Intent(EventsHomeActivity.this, ProfileActivity.class);
+                startActivity(intent);
+                return true;
+            }
         }
         if (id == R.id.notifications) {
             Intent intent = new Intent(EventsHomeActivity.this, UserNotifications.class);

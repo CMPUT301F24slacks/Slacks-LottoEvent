@@ -39,7 +39,6 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
                 .addOnCompleteListener(task -> {
-                    Log.d("document details", "task is " + task.getResult());
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
 
                         document = task.getResult().getDocuments().get(0);
