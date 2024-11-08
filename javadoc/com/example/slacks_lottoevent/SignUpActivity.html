@@ -50,7 +50,7 @@ loadScripts(document, 'script');</script>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -122,6 +122,24 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>(package private) android.widget.EditText</code></div>
+<div class="col-second even-row-color"><code><a href="#emailInput" class="member-name-link">emailInput</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>(package private) android.widget.EditText</code></div>
+<div class="col-second odd-row-color"><code><a href="#nameInput" class="member-name-link">nameInput</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>(package private) android.widget.EditText</code></div>
+<div class="col-second even-row-color"><code><a href="#phoneInput" class="member-name-link">phoneInput</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>(package private) com.google.firebase.firestore.CollectionReference</code></div>
+<div class="col-second odd-row-color"><code><a href="#usersRef" class="member-name-link">usersRef</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+</div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-android.app.Activity">Fields inherited from class&nbsp;android.app.Activity</h3>
 <code>DEFAULT_KEYS_DIALER, DEFAULT_KEYS_DISABLE, DEFAULT_KEYS_SEARCH_GLOBAL, DEFAULT_KEYS_SEARCH_LOCAL, DEFAULT_KEYS_SHORTCUT, FOCUSED_STATE_SET, FULLSCREEN_MODE_REQUEST_ENTER, FULLSCREEN_MODE_REQUEST_EXIT, OVERRIDE_TRANSITION_CLOSE, OVERRIDE_TRANSITION_OPEN, RESULT_CANCELED, RESULT_FIRST_USER, RESULT_OK</code></div>
@@ -160,6 +178,11 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreate(android.os.Bundle)" class="member-name-link">onCreate</a><wbr>(android.os.Bundle&nbsp;savedInstanceState)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>(package private) void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveUserInfoToFirebase()" class="member-name-link">saveUserInfoToFirebase</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Saves the user's information to the Firebase Firestore database.</div>
+</div>
 </div>
 </div>
 </div>
@@ -199,6 +222,38 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="usersRef">
+<h3>usersRef</h3>
+<div class="member-signature"><span class="return-type">com.google.firebase.firestore.CollectionReference</span>&nbsp;<span class="element-name">usersRef</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="nameInput">
+<h3>nameInput</h3>
+<div class="member-signature"><span class="return-type">android.widget.EditText</span>&nbsp;<span class="element-name">nameInput</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="emailInput">
+<h3>emailInput</h3>
+<div class="member-signature"><span class="return-type">android.widget.EditText</span>&nbsp;<span class="element-name">emailInput</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="phoneInput">
+<h3>phoneInput</h3>
+<div class="member-signature"><span class="return-type">android.widget.EditText</span>&nbsp;<span class="element-name">phoneInput</span></div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -226,6 +281,13 @@ loadScripts(document, 'script');</script>
 <dt>Overrides:</dt>
 <dd><code>onCreate</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.FragmentActivity</code></dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="saveUserInfoToFirebase()">
+<h3>saveUserInfoToFirebase</h3>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">saveUserInfoToFirebase</span>()</div>
+<div class="block">Saves the user's information to the Firebase Firestore database.</div>
 </section>
 </li>
 </ul>
