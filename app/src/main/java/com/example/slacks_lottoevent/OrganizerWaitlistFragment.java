@@ -14,7 +14,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,8 +45,8 @@ public class OrganizerWaitlistFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
+     //     * @param param1 Parameter 1.
+     //     * @param param2 Parameter 2.
      * @return A new instance of fragment OrganizerFirstFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -89,18 +88,9 @@ public class OrganizerWaitlistFragment extends Fragment {
         EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), entrantNames);
         listViewEntrantsWaitlisted.setAdapter(adapter); // Set the adapter once
 
-        //test event ID 0c781495-f91e-4648-9bb0-c390f558db10, This is the event!ve
-
         if (event != null) {
-//            ArrayList<String> deviceIds = event.getWaitlisted();
+            ArrayList<String> deviceIds = event.getWaitlisted();
 
-            //testing
-            ArrayList<String> deviceIds = new ArrayList<>(Arrays.asList(
-                    "da767e14c6aa6e5f",
-                    "4ab98de1b677d4a5",
-                    "4e56a5bd8bdda648",
-                    "1650c1cc5910ab1a"
-            ));
             for (String deviceId : deviceIds) {
                 // Query Firestore for each profile by device ID
                 db.collection("profiles").document(deviceId).get().addOnCompleteListener(task -> {
@@ -109,16 +99,17 @@ public class OrganizerWaitlistFragment extends Fragment {
                         if (document != null && document.exists()) {
                             String name = document.getString("name"); // Adjust to match your document structure
                             entrantNames.add(name);
-
-                            // Notify the adapter that the data has changed
-                            adapter.notifyDataSetChanged();                        }
+                            requireActivity().runOnUiThread(() -> adapter.notifyDataSetChanged());
+                        }
                     } else {
                         Log.d("Firestore", "Error getting document: ", task.getException());
                     }
                 });
+                adapter.notifyDataSetChanged();
             }
+            adapter.notifyDataSetChanged();
         }
+        adapter.notifyDataSetChanged();
         return view;
     }
-
 }

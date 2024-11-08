@@ -3,12 +3,18 @@ package com.example.slacks_lottoevent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Collection;
 
 /**
  * OrganizerNotifications.java
@@ -18,8 +24,11 @@ import com.google.android.material.tabs.TabLayout;
  */
 public class OrganizerNotifications extends AppCompatActivity {
 
-    FrameLayout frameLayout;
-    TabLayout tabLayout;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference eventRef;
+    private Event event;
+    private FrameLayout frameLayout;
+    private TabLayout tabLayout;
 
     /**
      * This method is called when the activity is first created.
@@ -33,7 +42,26 @@ public class OrganizerNotifications extends AppCompatActivity {
 
         //Set Up ArrayAdapter, do getUsername() for every user in said category, change it in the case-by-case tabLayout system
         Intent intent = getIntent();
-        Event event = (Event) intent.getSerializableExtra("current_event");
+        String eventID = intent.getStringExtra("eventID");
+        // Get the current event's id from the intent
+        // query the database for the event
+        db = FirebaseFirestore.getInstance();
+        eventRef = db.collection("events");
+        eventRef.document(eventID).get().addOnCompleteListener(eventTask -> {
+            if (eventTask.isSuccessful() && eventTask.getResult() != null) {
+                DocumentSnapshot eventDoc = eventTask.getResult();
+
+                if (eventDoc.exists()) {
+                    event = eventDoc.toObject(Event.class);
+                } else {
+                    // Go back to the last thing in the stack
+                    onBackPressed();
+                }
+            } else {
+                // Go back to the last thing in the stack
+                onBackPressed();
+            }
+        });
 
         frameLayout = (FrameLayout) findViewById(R.id.FrameLayout);
         tabLayout = (TabLayout) findViewById(R.id.tab_Layout);
