@@ -28,6 +28,12 @@ public class EventsHomeActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private MaterialToolbar toolbar;
 
+    /**
+     * onCreate method for the EventsHomeActivity.
+     * This method initializes the activity and sets up the toolbar.
+     *
+     * @param savedInstanceState The saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +117,7 @@ public class EventsHomeActivity extends AppCompatActivity {
 
     /*
      * Inflate the menu; this adds items to the action bar if it is present.
+     * @param menu The menu to inflate
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -121,6 +128,7 @@ public class EventsHomeActivity extends AppCompatActivity {
 
     /*
      * Handle action bar item clicks here.
+     * @param item The menu item that was clicked
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -47,6 +47,12 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
     private CollectionReference organizersRef;
     String deviceId;
 
+    /**
+     * This method is called when the user creates a new facility.
+     * It adds the facility to the Firestore database.
+     *
+     * @param facility The facility object to be added
+     */
     @Override
     public void addFacility(Facility facility) {
         // Retrieve the facility name and set it to display on the screen
@@ -98,6 +104,10 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
     }
 
+    /**
+     * This method is called when the user updates an existing facility.
+     * It updates the facility in the Firestore database.
+     */
     @Override
     public void updateFacility() {
         String facilityName = existingFacility.getFacilityName();
@@ -131,6 +141,10 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                 .addOnFailureListener(e -> Log.w("updateFacility", "Error updating facility", e));
     }
 
+    /**
+     * This method is called when the user deletes an existing facility.
+     * It deletes the facility from the Firestore database.
+     */
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
@@ -140,6 +154,10 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         return binding.getRoot();
     }
 
+    /**
+     * This method is called when the user deletes an existing facility.
+     * It deletes the facility from the Firestore database.
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         eventList = new ArrayList<>(); // Initialize the event list

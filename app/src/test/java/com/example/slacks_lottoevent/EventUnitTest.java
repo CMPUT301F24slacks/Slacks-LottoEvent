@@ -9,81 +9,157 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * EventUnitTest is a JUnit test class that tests the Event class.
+ */
 public class EventUnitTest {
     private Event event;
 
+    /**
+     * setUp method initializes the Event object before each test.
+     */
     @BeforeEach
     public void setUp() {
         event = new Event("HackEd", "2024-11-22", "3339 607 St NW Edmonton AB Canada T5J 0X6", "9:00", "29.99", "Hackathon hosted by UAlberta students", 200, 500, "0001", "091fac3e-983a-44c0-b7b8-fcf720958082", true, "20b0a9a34c950844a2e0edd7aa5604691dc1ec738a412e9ad436ed19b00acd98", true, false, true);
     }
 
+    /**
+     * testEventConstructor tests the Event constructor.
+     */
     @Test
-    public void testConstructor() {
-        assertEquals("HackEd", event.getName());
-        assertEquals("2024-11-22", event.getDate());
-        assertEquals("3339 607 St NW Edmonton AB Canada T5J 0X6", event.getLocation());
-        assertEquals("9:00", event.getTime());
-        assertEquals("29.99", event.getPrice());
-        assertEquals("Hackathon hosted by UAlberta students", event.getDescription());
-        assertEquals(200, event.getEventSlots());
-        assertEquals(500, event.getWaitListCapacity());
-        assertEquals("0001", event.getQRData());
-        assertEquals("091fac3e-983a-44c0-b7b8-fcf720958082", event.getEventID());
-        assertTrue(event.getgeoLocation());
-        assertEquals("20b0a9a34c950844a2e0edd7aa5604691dc1ec738a412e9ad436ed19b00acd98", event.getQRHash());
-        assertTrue(event.getWaitlistNotifications());
-        assertFalse(event.getSelectedNotifications());
-        assertTrue(event.getCancelledNotifications());
-    }
-
-    @Test
-    public void testSettersAndGetters() {
+    public void testSetName() {
         event.setName("natHacks");
-        assertEquals("natHacks", event.getName());
-
-        event.setDate("2024-01-01");
-        assertEquals("2024-01-01", event.getDate());
-
-        event.setLocation("9923 602 St NW Edmonton AB Canada T5K 0M6");
-        assertEquals("9923 602 St NW Edmonton AB Canada T5K 0M6", event.getLocation());
-
-        event.setTime("12:00");
-        assertEquals("12:00", event.getTime());
-
-        event.setPrice("29.99");
-        assertEquals("29.99", event.getPrice());
-
-        event.setDescription("Alberta's Neurotech Hackathon");
-        assertEquals("Alberta's Neurotech Hackathon", event.getDescription());
-
-        event.setEventSlots(400);
-        assertEquals(400, event.getEventSlots());
-
-        event.setWaitListCapacity(600);
-        assertEquals(600, event.getWaitListCapacity());
-
-        event.setQRData("1001");
-        assertEquals("1001", event.getQRData());
-
-        event.setEventID("732fac3e-983a-44c0-b7b8-fcf720952024");
-        assertEquals("732fac3e-983a-44c0-b7b8-fcf720952024", event.getEventID());
-
-        event.setGeoLocation(false);
-        assertFalse(event.getgeoLocation());
-
-        event.setQRHash("03b0a9a34c950844a2e0edd7aa5604691dc1ec738a412e9ad436ed19b00usv98");
-        assertEquals("03b0a9a34c950844a2e0edd7aa5604691dc1ec738a412e9ad436ed19b00usv98", event.getQRHash());
-
-        event.setWaitlistNotifications(false);
-        assertFalse(event.getWaitlistNotifications());
-
-        event.setSelectedNotifications(true);
-        assertTrue(event.getSelectedNotifications());
-
-        event.setCancelledNotifications(false);
-        assertFalse(event.getCancelledNotifications());
+        assertEquals("natHacks", event.getName(), "Name should be updated correctly.");
     }
 
+    /**
+     * testEventConstructor tests the Event constructor.
+     */
+    @Test
+    public void testSetDate() {
+        event.setDate("2024-01-01");
+        assertEquals("2024-01-01", event.getDate(), "Date should be updated correctly.");
+    }
+
+    /**
+     * testEventConstructor tests the Event constructor.
+     */
+    @Test
+    public void testSetLocation() {
+        event.setLocation("9923 602 St NW Edmonton AB Canada T5K 0M6");
+        assertEquals("9923 602 St NW Edmonton AB Canada T5K 0M6", event.getLocation(), "Location should be updated correctly.");
+    }
+    /**
+     * Tests that the event time can be set and retrieved correctly.
+     */
+    @Test
+    public void testSetTime() {
+        event.setTime("12:00");
+        assertEquals("12:00", event.getTime(), "Time should be updated correctly.");
+    }
+
+    /**
+     * Tests that the event price can be set and retrieved correctly.
+     */
+    @Test
+    public void testSetPrice() {
+        event.setPrice("29.99");
+        assertEquals("29.99", event.getPrice(), "Price should be updated correctly.");
+    }
+
+    /**
+     * Tests that the event description can be set and retrieved correctly.
+     */
+    @Test
+    public void testSetDescription() {
+        event.setDescription("Alberta's Neurotech Hackathon");
+        assertEquals("Alberta's Neurotech Hackathon", event.getDescription(), "Description should be updated correctly.");
+    }
+
+    /**
+     * Tests that the number of event slots can be set and retrieved correctly.
+     */
+    @Test
+    public void testSetEventSlots() {
+        event.setEventSlots(400);
+        assertEquals(400, event.getEventSlots(), "Event slots should be updated correctly.");
+    }
+
+    /**
+     * Tests that the event waitlist capacity can be set and retrieved correctly.
+     */
+    @Test
+    public void testSetWaitListCapacity() {
+        event.setWaitListCapacity(600);
+        assertEquals(600, event.getWaitListCapacity(), "Waitlist capacity should be updated correctly.");
+    }
+
+    /**
+     * Tests that the QR data for the event can be set and retrieved correctly.
+     */
+    @Test
+    public void testSetQRData() {
+        event.setQRData("1001");
+        assertEquals("1001", event.getQRData(), "QR Data should be updated correctly.");
+    }
+
+    /**
+     * Tests that the event ID can be set and retrieved correctly.
+     */
+    @Test
+    public void testSetEventID() {
+        event.setEventID("732fac3e-983a-44c0-b7b8-fcf720952024");
+        assertEquals("732fac3e-983a-44c0-b7b8-fcf720952024", event.getEventID(), "Event ID should be updated correctly.");
+    }
+
+    /**
+     * Tests that the event GeoLocation flag can be set and retrieved correctly.
+     */
+    @Test
+    public void testSetGeoLocation() {
+        event.setGeoLocation(false);
+        assertFalse(event.getgeoLocation(), "GeoLocation should be updated correctly.");
+    }
+
+    /**
+     * Tests that the QR hash for the event can be set and retrieved correctly.
+     */
+    @Test
+    public void testSetQRHash() {
+        event.setQRHash("03b0a9a34c950844a2e0edd7aa5604691dc1ec738a412e9ad436ed19b00usv98");
+        assertEquals("03b0a9a34c950844a2e0edd7aa5604691dc1ec738a412e9ad436ed19b00usv98", event.getQRHash(), "QR Hash should be updated correctly.");
+    }
+
+    /**
+     * Tests that the waitlist notifications flag can be set and retrieved correctly.
+     */
+    @Test
+    public void testSetWaitlistNotifications() {
+        event.setWaitlistNotifications(false);
+        assertFalse(event.getWaitlistNotifications(), "Waitlist notifications should be updated correctly.");
+    }
+
+    /**
+     * Tests that the selected notifications flag can be set and retrieved correctly.
+     */
+    @Test
+    public void testSetSelectedNotifications() {
+        event.setSelectedNotifications(true);
+        assertTrue(event.getSelectedNotifications(), "Selected notifications should be updated correctly.");
+    }
+
+    /**
+     * Tests that the cancelled notifications flag can be set and retrieved correctly.
+     */
+    @Test
+    public void testSetCancelledNotifications() {
+        event.setCancelledNotifications(false);
+        assertFalse(event.getCancelledNotifications(), "Cancelled notifications should be updated correctly.");
+    }
+
+    /**
+     * Tests that the joined notifications flag can be set and retrieved correctly.
+     */
     @Test
     public void testAddAndRetrieveWaitlisted() {
         event.addWaitlisted("iu767e14c6aa6e0d");
@@ -91,6 +167,9 @@ public class EventUnitTest {
         assertEquals(1, event.getWaitlisted().size());
     }
 
+    /**
+     * Tests that the finalists list can be updated and retrieved correctly.
+     */
     @Test
     public void testAddAndRetrieveFinalists() {
         event.addFinalist("fu767e14c6aa6e0d");
@@ -98,6 +177,9 @@ public class EventUnitTest {
         assertEquals(1, event.getFinalists().size());
     }
 
+    /**
+     * Tests that the cancelled list can be updated and retrieved correctly.
+     */
     @Test
     public void testAddAndRetrieveCancelled() {
         event.addCancelled("po767e14c6aa6e4d");
@@ -105,6 +187,9 @@ public class EventUnitTest {
         assertEquals(1, event.getCancelled().size());
     }
 
+    /**
+     * Tests that the selected list can be updated and retrieved correctly.
+     */
     @Test
     public void testAddAndRetrieveSelected() {
         event.addSelected("uq767e14c6aa6e4q");
@@ -112,6 +197,9 @@ public class EventUnitTest {
         assertEquals(1, event.getSelected().size());
     }
 
+    /**
+     * Tests that the joined list can be updated and retrieved correctly.
+     */
     @Test
     public void testAddAndRetrieveNotifications() {
         event.addWaitlistedNotification("1650c1cc5910ab1a");
@@ -127,46 +215,77 @@ public class EventUnitTest {
         assertTrue(event.getJoinedNotificationsList().contains("2004c1uc5910ab5q"));
     }
 
+    /**
+     * Tests adding and retrieving waitlisted notifications.
+     */
     @Test
-    public void testAddMultipleAndRetrieveNotifications() {
+    public void testAddAndRetrieveWaitlistedNotifications() {
         // Add multiple waitlisted notifications
         event.addWaitlistedNotification("1650c1cc5910ab1a");
         event.addWaitlistedNotification("1650c1cc5910ab1b");
         event.addWaitlistedNotification("1650c1cc5910ab1c");
-        assertTrue(event.getWaitlistedNotificationsList().contains("1650c1cc5910ab1a"));
-        assertTrue(event.getWaitlistedNotificationsList().contains("1650c1cc5910ab1b"));
-        assertTrue(event.getWaitlistedNotificationsList().contains("1650c1cc5910ab1c"));
-        assertEquals(3, event.getWaitlistedNotificationsList().size());
 
+        // Assertions
+        assertTrue(event.getWaitlistedNotificationsList().contains("1650c1cc5910ab1a"), "Waitlisted notifications should include 1650c1cc5910ab1a.");
+        assertTrue(event.getWaitlistedNotificationsList().contains("1650c1cc5910ab1b"), "Waitlisted notifications should include 1650c1cc5910ab1b.");
+        assertTrue(event.getWaitlistedNotificationsList().contains("1650c1cc5910ab1c"), "Waitlisted notifications should include 1650c1cc5910ab1c.");
+        assertEquals(3, event.getWaitlistedNotificationsList().size(), "There should be 3 waitlisted notifications.");
+    }
+
+    /**
+     * Tests adding and retrieving selected notifications.
+     */
+    @Test
+    public void testAddAndRetrieveSelectedNotifications() {
         // Add multiple selected notifications
         event.addSelectedNotification("1773c1cc5910ab7b");
         event.addSelectedNotification("1773c1cc5910ab7c");
         event.addSelectedNotification("1773c1cc5910ab7d");
-        assertTrue(event.getSelectedNotificationsList().contains("1773c1cc5910ab7b"));
-        assertTrue(event.getSelectedNotificationsList().contains("1773c1cc5910ab7c"));
-        assertTrue(event.getSelectedNotificationsList().contains("1773c1cc5910ab7d"));
-        assertEquals(3, event.getSelectedNotificationsList().size());
 
+        // Assertions
+        assertTrue(event.getSelectedNotificationsList().contains("1773c1cc5910ab7b"), "Selected notifications should include 1773c1cc5910ab7b.");
+        assertTrue(event.getSelectedNotificationsList().contains("1773c1cc5910ab7c"), "Selected notifications should include 1773c1cc5910ab7c.");
+        assertTrue(event.getSelectedNotificationsList().contains("1773c1cc5910ab7d"), "Selected notifications should include 1773c1cc5910ab7d.");
+        assertEquals(3, event.getSelectedNotificationsList().size(), "There should be 3 selected notifications.");
+    }
+
+    /**
+     * Tests adding and retrieving cancelled notifications.
+     */
+    @Test
+    public void testAddAndRetrieveCancelledNotifications() {
         // Add multiple cancelled notifications
         event.addCancelledNotification("1850c1cc5910ab9q");
         event.addCancelledNotification("1850c1cc5910ab9r");
         event.addCancelledNotification("1850c1cc5910ab9s");
-        assertTrue(event.getCancelledNotificationsList().contains("1850c1cc5910ab9q"));
-        assertTrue(event.getCancelledNotificationsList().contains("1850c1cc5910ab9r"));
-        assertTrue(event.getCancelledNotificationsList().contains("1850c1cc5910ab9s"));
-        assertEquals(3, event.getCancelledNotificationsList().size());
 
+        // Assertions
+        assertTrue(event.getCancelledNotificationsList().contains("1850c1cc5910ab9q"), "Cancelled notifications should include 1850c1cc5910ab9q.");
+        assertTrue(event.getCancelledNotificationsList().contains("1850c1cc5910ab9r"), "Cancelled notifications should include 1850c1cc5910ab9r.");
+        assertTrue(event.getCancelledNotificationsList().contains("1850c1cc5910ab9s"), "Cancelled notifications should include 1850c1cc5910ab9s.");
+        assertEquals(3, event.getCancelledNotificationsList().size(), "There should be 3 cancelled notifications.");
+    }
+
+    /**
+     * Tests adding and retrieving joined notifications.
+     */
+    @Test
+    public void testAddAndRetrieveJoinedNotifications() {
         // Add multiple joined notifications
         event.addJoinedNotification("2004c1uc5910ab5q");
         event.addJoinedNotification("2004c1uc5910ab5r");
         event.addJoinedNotification("2004c1uc5910ab5s");
-        assertTrue(event.getJoinedNotificationsList().contains("2004c1uc5910ab5q"));
-        assertTrue(event.getJoinedNotificationsList().contains("2004c1uc5910ab5r"));
-        assertTrue(event.getJoinedNotificationsList().contains("2004c1uc5910ab5s"));
-        assertEquals(3, event.getJoinedNotificationsList().size());
+
+        // Assertions
+        assertTrue(event.getJoinedNotificationsList().contains("2004c1uc5910ab5q"), "Joined notifications should include 2004c1uc5910ab5q.");
+        assertTrue(event.getJoinedNotificationsList().contains("2004c1uc5910ab5r"), "Joined notifications should include 2004c1uc5910ab5r.");
+        assertTrue(event.getJoinedNotificationsList().contains("2004c1uc5910ab5s"), "Joined notifications should include 2004c1uc5910ab5s.");
+        assertEquals(3, event.getJoinedNotificationsList().size(), "There should be 3 joined notifications.");
     }
 
-
+    /**
+     * Tests that the event name can be retrieved correctly.
+     */
     @Test
     public void testNotificationsListsInitialization() {
         assertNotNull(event.getWaitlistedNotificationsList());
@@ -175,6 +294,9 @@ public class EventUnitTest {
         assertNotNull(event.getCancelledNotificationsList());
     }
 
+    /**
+     * Tests that the event name can be retrieved correctly.
+     */
     @Test
     public void testEmptyConstructor() {
         Event emptyEvent = new Event();

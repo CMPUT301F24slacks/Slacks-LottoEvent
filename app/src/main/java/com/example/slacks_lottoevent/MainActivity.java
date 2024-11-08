@@ -25,6 +25,10 @@ import java.util.Objects;
  * https://stackoverflow.com/questions/48740056/splash-screen-using-handler
  * */
 
+/**
+ * MainActivity is the main activity for the app.
+ * It is the first activity that is launched when the app is opened.
+ */
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -7,6 +7,10 @@ public class UserEventNotifications {
     private String location;
     private String eventId; // Add event ID field
 
+    /**
+     * UserEventNotifications is a class that represents the user's event notifications.
+     * It takes in the event's name, date, time, location, and event ID.
+     */
     public UserEventNotifications(String name, String date, String time, String location, String eventId) {
         this.name = name;
         this.date = date;

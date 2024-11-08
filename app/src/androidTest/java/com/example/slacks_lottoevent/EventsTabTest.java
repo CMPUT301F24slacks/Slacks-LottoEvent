@@ -13,13 +13,20 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-
+/**
+ * Instrumented test, which will execute on an Android device.
+ *
+ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ */
 public class EventsTabTest {
 
     @Rule
     public ActivityScenarioRule<EventsHomeActivity> activityRule =
             new ActivityScenarioRule<>(EventsHomeActivity.class);
 
+    /**
+     * Test the My Events tab.
+     */
     @Test
     public void testMyEventsTabSelected() {
         // Simulate clicking on "My Events" tab
@@ -30,6 +37,9 @@ public class EventsTabTest {
         onView(withId(R.id.create_event_FAB)).check(matches(withEffectiveVisibility(Visibility.GONE)));
     }
 
+    /**
+     * Test the Manage My Events tab.
+     */
     @Test
     public void testManageMyEventsTabSelected() {
         // Simulate clicking on "Manage My Events" tab

@@ -8,13 +8,23 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+/**
+ * Unit tests for the Entrant class.
+ */
 public class EntrantUnitTest {
     private Entrant testEntrant;
 
+    /**
+     * Set up the testEntrant object before each test.
+     */
     @BeforeEach
     void setUp(){
         testEntrant = new Entrant();
     }
+
+    /**
+     * Test the add and get methods for the entrant's name.
+     */
     @Test
     void testAddAndGetWaitlistedEvents() {
         testEntrant.addWaitlistedEvents("0d7577ae-16f9-5g46-9be4-fe65e9a4e290");
@@ -24,6 +34,9 @@ public class EntrantUnitTest {
         assertTrue(waitlistedEvents.contains("0d7577ae-16f9-5g46-9be4-fe65e9a4e290"));
     }
 
+    /**
+     * Test the add and get methods for the entrant's email.
+     */
     @Test
     void testAddAndGetFinalistEvents() {
         testEntrant.addFinalistEvents("1e2024ie-19f9-5g46-9be4-fe65e9a4e860");
@@ -33,6 +46,9 @@ public class EntrantUnitTest {
         assertTrue(finalistEvents.contains("1e2024ie-19f9-5g46-9be4-fe65e9a4e860"));
     }
 
+    /**
+     * Test the add and get methods for the entrant's phone number.
+     */
     @Test
     void testAddAndGetInvitedEvents() {
         testEntrant.addInvitedEvents("2r2025ie-90f9-5g46-9be4-fe65e9a4e740");
@@ -42,6 +58,9 @@ public class EntrantUnitTest {
         assertTrue(invitedEvents.contains("2r2025ie-90f9-5g46-9be4-fe65e9a4e740"));
     }
 
+    /**
+     * Test the add and get methods for the entrant's address.
+     */
     @Test
     void testAddAndGetUninvitedEvents() {
         testEntrant.addUninvitedEvents("7adf4a5b-b256-408a-a213-ae6f88504c08");
@@ -51,7 +70,9 @@ public class EntrantUnitTest {
         assertTrue(uninvitedEvents.contains("7adf4a5b-b256-408a-a213-ae6f88504c08"));
     }
 
-
+    /**
+     * Test the add methods for multiple events.
+     */
     @Test
     void testMultipleAdditions() {
         testEntrant.addWaitlistedEvents("8i781495-f91e-4648-9bb0-c390f558jc40");

@@ -32,12 +32,20 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Instrumented test, which will execute on an Android device.
+ *
+ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ */
 @RunWith(AndroidJUnit4.class)
 public class SignUpActivityTest {
 
     @Rule
     public ActivityScenarioRule<SignUpActivity> activityRule = new ActivityScenarioRule<>(SignUpActivity.class);
 
+    /**
+     * Clear SharedPreferences before each test.
+     */
     @Before
     public void clearSharedPreferences() {
         // Clear SharedPreferences before each test
@@ -46,6 +54,9 @@ public class SignUpActivityTest {
         sharedPreferences.edit().clear().apply();
     }
 
+    /**
+     * Test the sign-up button with valid input.
+     */
     @Test
     public void testSuccessfulSignUp() {
         // Input valid name, email, and phone number
@@ -65,6 +76,9 @@ public class SignUpActivityTest {
         assertEquals(true, sharedPreferences.getBoolean("isSignedUp", false));
     }
 
+    /**
+     * Test the sign-up button with an empty name field.
+     */
     @Test
     public void testEmptyNameField() {
         // Leave the name field empty, enter valid email and phone number
@@ -78,6 +92,9 @@ public class SignUpActivityTest {
         onView(withId(R.id.name_input)).check(matches(withError("Name is required")));
     }
 
+    /**
+     * Test the sign-up button with an empty email field.
+     */
     @Test
     public void testInvalidEmail() {
         // Enter valid name and phone number, but an invalid email
@@ -92,6 +109,9 @@ public class SignUpActivityTest {
         onView(withId(R.id.email_input)).check(matches(withError("Enter a valid email")));
     }
 
+    /**
+     * Test the sign-up button with an empty phone number field.
+     */
     public static Matcher<View> withError(final String expectedError) {
         return new TypeSafeMatcher<View>() {
             @Override

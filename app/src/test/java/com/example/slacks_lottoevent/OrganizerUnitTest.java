@@ -9,26 +9,41 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+/**
+ * Unit tests for the Organizer class.
+ */
 public class OrganizerUnitTest {
     private Organizer organizer;
 
+    /**
+     * Set up the organizer object before each test.
+     */
     @BeforeEach
     public void setUp(){
         organizer = new Organizer("fe8e1540320d3c3d");
     }
 
+    /**
+     * Test the Organizer constructor.
+     */
     @Test
     public void testGetUserId() {
         // Check if the userId is correctly assigned
         assertEquals("fe8e1540320d3c3d", organizer.getUserId());
     }
 
+    /**
+     * Test the Organizer constructor with a null userId.
+     */
     @Test
     public void testGetFacilityIdInitiallyNull() {
         // Facility ID should be null upon initialization
         assertNull(organizer.getFacilityId());
     }
 
+    /**
+     * Test the Organizer constructor with a null userId.
+     */
     @Test
     public void testSetFacilityId() {
         // Set facility ID and verify the change
@@ -36,12 +51,18 @@ public class OrganizerUnitTest {
         assertEquals("hP1lDlL04Kv8icJKbS2P", organizer.getFacilityId());
     }
 
+    /**
+     * Test the Organizer constructor with a null userId.
+     */
     @Test
     public void testGetEventsInitiallyEmpty() {
         // Events list should be empty upon initialization
         assertTrue(organizer.getEvents().isEmpty());
     }
 
+    /**
+     * Test the Organizer constructor with a null userId.
+     */
     @Test
     public void testAddEvent() {
         // Add an event to the events list and verify it
@@ -50,6 +71,9 @@ public class OrganizerUnitTest {
         assertTrue(organizer.getEvents().contains("0d7577ae-16f9-4f46-9be4-fe65e9a4e180"));
     }
 
+    /**
+     * Test the Organizer constructor with a null userId.
+     */
     @Test
     public void testAddMultipleEvents() {
         // Add multiple events and verify the events list
@@ -62,6 +86,9 @@ public class OrganizerUnitTest {
         assertTrue(organizer.getEvents().contains("3y0096pe-14f9-4f96-4be4-ip90e3a4e390"));
     }
 
+    /**
+     * Test the Organizer constructor with a null userId.
+     */
     @Test
     public void testGetEventsReturnsModifiableList() {
         // Ensure the returned list can be modified without issues

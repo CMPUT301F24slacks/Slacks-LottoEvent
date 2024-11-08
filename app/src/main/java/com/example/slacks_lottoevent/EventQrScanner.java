@@ -50,6 +50,10 @@ public class EventQrScanner extends AppCompatActivity {
     private PreviewView cameraPreview;
     private static final int CAMERA_REQUEST_CODE = 100;
 
+    /**
+     * This method is responsible for creating the activity.
+     * @param savedInstanceState The saved instance state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
@@ -83,6 +87,13 @@ public class EventQrScanner extends AppCompatActivity {
             integrator.initiateScan();
         });
     }
+
+    /**
+     * This method is responsible for handling the camera permission request result.
+     * @param requestCode The request code.
+     * @param resultCode The permissions requested.
+     * @param data The results of the permission requests.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);

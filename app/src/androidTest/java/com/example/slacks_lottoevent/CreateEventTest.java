@@ -17,12 +17,20 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+/**
+ * Instrumented test, which will execute on an Android device.
+ *
+ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ */
 @RunWith(AndroidJUnit4.class)
 public class CreateEventTest {
 
     @Rule
     public ActivityScenarioRule<CreateEvent> activityRule = new ActivityScenarioRule<>(CreateEvent.class);
 
+    /**
+     * Test the create event button.
+     */
     @Test
     public void testDateValidation() {
         onView(withId(R.id.event_date)).perform(replaceText("13/01/2025"));
@@ -32,6 +40,9 @@ public class CreateEventTest {
         onView(withId(R.id.event_date)).check(matches(Matchers.not(ViewMatchers.hasErrorText("Date must be in MM/DD/YY format"))));
     }
 
+    /**
+     * Test the create event button.
+     */
     @Test
     public void testTimeValidation() {
         onView(withId(R.id.event_time)).perform(replaceText("25:00"));
@@ -41,6 +52,9 @@ public class CreateEventTest {
         onView(withId(R.id.event_time)).check(matches(Matchers.not(ViewMatchers.hasErrorText("Time must be in hh:mm format"))));
     }
 
+    /**
+     * Test the create event button.
+     */
     @Test
     public void testPriceValidation() {
         onView(withId(R.id.event_price)).perform(replaceText("abc"));
@@ -50,6 +64,9 @@ public class CreateEventTest {
         onView(withId(R.id.event_price)).check(matches(Matchers.not(ViewMatchers.hasErrorText("Price must be a valid number (e.g., 29.99)"))));
     }
 
+    /**
+     * Test the create event button.
+     */
     @Test
     public void testSlotsValidation() {
         onView(withId(R.id.eventSlots)).perform(replaceText("abc"));
@@ -59,6 +76,9 @@ public class CreateEventTest {
         onView(withId(R.id.eventSlots)).check(matches(Matchers.not(ViewMatchers.hasErrorText("Slots must be a number"))));
     }
 
+    /**
+     * Test the create event button.
+     */
     @Test
     public void testWaitListCapacityValidation() {
         onView(withId(R.id.eventSlots)).perform(replaceText("5"));
@@ -68,6 +88,4 @@ public class CreateEventTest {
         onView(withId(R.id.waitListCapacity)).perform(replaceText("10"));
         onView(withId(R.id.waitListCapacity)).check(matches(Matchers.not(ViewMatchers.hasErrorText("Waitlist capacity must be greater than the event slots"))));
     }
-
-
 }

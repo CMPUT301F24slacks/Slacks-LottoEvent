@@ -37,6 +37,15 @@ public class MyEventsFragment extends Fragment {
     private Entrant entrant;
     private ListenerRegistration entrantListener;
 
+    /**
+     * This method is called when the fragment is created.
+     * It inflates the layout for this fragment and returns the root view.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container          The parent view that the fragment's UI should be attached to
+     * @param savedInstanceState A Bundle object that contains the saved state of the fragment
+     * @return The root view of the fragment
+     */
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
@@ -46,6 +55,13 @@ public class MyEventsFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * This method is called when the fragment's view is created.
+     * It initializes the Firestore database and fetches the entrant object from the database.
+     *
+     * @param view               The root view of the fragment
+     * @param savedInstanceState A Bundle object that contains the saved state of the fragment
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -112,6 +128,10 @@ public class MyEventsFragment extends Fragment {
         eventArrayAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * This method is called when the fragment is destroyed.
+     * It removes the Firestore listener and sets the binding object to null.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -121,6 +141,10 @@ public class MyEventsFragment extends Fragment {
         binding = null;
     }
 
+    /**
+     * This method is called when the fragment is destroyed.
+     * It sets the binding object to null.
+     */
     public void entrantExists(String userId, Callback<Boolean> callback) {
         entrantRef.document(userId).get()
                 .addOnCompleteListener(task -> {

@@ -17,6 +17,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * UserNotifications is an activity that displays the user's event notifications.
+ * It fetches the user's facility ID, location, and invited events from Firestore.
+ */
 public class UserNotifications extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
@@ -26,6 +30,10 @@ public class UserNotifications extends AppCompatActivity {
     private ArrayList<UserEventNotifications> eventList;
     private EventNotificationsArrayAdapter adapter;
 
+    /**
+     * Initialize Firestore and Collections, and set up the adapter.
+     * Fetch and populate invited events.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +81,8 @@ public class UserNotifications extends AppCompatActivity {
 
     /**
      * Fetch the location (city and country) of the facility and invited events.
+     * @param deviceId the device ID of the current user
+     * @param facilityId the facility ID associated with the current user
      */
     private void fetchFacilityLocationAndInvitedEvents(String deviceId, String facilityId) {
         facilitiesRef.document(facilityId).get().addOnCompleteListener(task -> {
@@ -96,6 +106,8 @@ public class UserNotifications extends AppCompatActivity {
 
     /**
      * Fetch the invited events for the current user and facility location.
+     * @param deviceId the device ID of the current user
+     * @param location the location of the facility associated with the current user
      */
     private void fetchInvitedEvents(String deviceId, String location) {
         entrantRef.document(deviceId).get().addOnCompleteListener(task -> {
@@ -121,6 +133,8 @@ public class UserNotifications extends AppCompatActivity {
 
     /**
      * Fetch the event details from the events collection.
+     * @param eventIds the list of event IDs to fetch details for
+     * @param location the location of the facility associated with the current user
      */
     private void fetchEventDetails(List<String> eventIds, String location) {
         for (String eventId : eventIds) {

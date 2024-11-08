@@ -53,6 +53,14 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         this.events = events;
     }
 
+    /**
+     * Gets the view for each item in the list
+     *
+     * @param position    The position of the item in the list
+     * @param convertView The view to convert
+     * @param parent      The parent view
+     * @return The view for the item
+     */
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -160,6 +168,11 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         return bitMatrix;
     }
 
+    /**
+     * Selects entrants for a lottery
+     *
+     * @param eventID The ID of the event
+     */
     private void selectEntrantsForLottery(String eventID){
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");

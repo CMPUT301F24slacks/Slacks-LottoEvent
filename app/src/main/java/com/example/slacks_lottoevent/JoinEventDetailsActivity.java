@@ -31,6 +31,9 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * JoinEventDetailsActivity is the activity for the Join Event Details screen.
+ */
 public class JoinEventDetailsActivity extends AppCompatActivity {
     private ActivityJoinEventDetailsBinding binding;
     private DocumentSnapshot document;
@@ -44,6 +47,13 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     String qrCodeValue;
     @SuppressLint("HardwareIds") String deviceId;
     @Override
+
+    /**
+     * onCreate method for the JoinEventDetailsActivity.
+     * This method initializes the activity and sets up the event details.
+     *
+     * @param savedInstanceState The saved instance state
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityJoinEventDetailsBinding.inflate(getLayoutInflater());
@@ -119,6 +129,11 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         });
 
     }
+
+    /**
+     * showRegistrationDialog method for the JoinEventDetailsActivity.
+     * This method shows the registration dialog for the event.
+     */
     private void showRegistrationDialog(){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -213,6 +228,12 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * createNewEntrant method for the JoinEventDetailsActivity.
+     * This method creates a new entrant in the Firestore database.
+     *
+     * @param userId The unique user ID
+     */
     private void createNewEntrant(String userId) {
         Entrant newEntrant = new Entrant();
         newEntrant.addWaitlistedEvents(qrCodeValue); // Add the event to the waitlist
@@ -222,11 +243,19 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Log.e("JoinEventDetails", "Error creating new entrant: " + e.getMessage()));
     }
 
+    /**
+     * navigateToEventsHome method for the JoinEventDetailsActivity.
+     * This method navigates to the Events Home screen.
+     */
     private void navigateToEventsHome() {
         Intent intent = new Intent(JoinEventDetailsActivity.this, EventsHomeActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * addEntrantToWaitlist method for the JoinEventDetailsActivity.
+     * This method adds the entrant to the waitlist for the event.
+     */
     private void addEntrantToWaitlist(){
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -242,6 +271,11 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     System.err.println("Error fetching event document: " + task);
                 });
     }
+
+    /**
+     * addEventToEntrant method for the JoinEventDetailsActivity.
+     * This method adds the event to the entrant.
+     */
     private void addEventToEntrant(){
         DocumentReference entrantDocRef = db.collection("entrants").document(deviceId);
         entrantDocRef.get().addOnSuccessListener(task -> {
@@ -259,11 +293,14 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * addEntrantToNotis method for the JoinEventDetailsActivity.
+     * This method adds the entrant to the notifications for the event.
+     *
+     * @param chosenForLottery The boolean value for chosen for lottery
+     * @param notChosenForLottery The boolean value for not chosen for lottery
+     */
     private void addEntrantToNotis(AtomicBoolean chosenForLottery, AtomicBoolean notChosenForLottery){
-
-
-
         // Query the Firestore for the event based on the QR code value
         db.collection("events").whereEqualTo("eventID", qrCodeValue)
                 .get()
@@ -302,6 +339,4 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error fetching event document: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-
-
 }

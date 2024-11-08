@@ -47,6 +47,10 @@ public class ProfileActivity extends AppCompatActivity {
     private Button confirmButton;
     private Button cancelButton;
 
+    /**
+     * OnCreate method for the ProfileActivity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,6 +176,10 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method to update the profile picture
+     * @param imageUri
+     */
     private void updateProfilePicture(Uri imageUri) {
         String imagePath = imageUri.toString();
         profile.setProfilePicturePath(imagePath);
@@ -186,6 +194,12 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Method to handle the result of the image picker
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -200,7 +214,10 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Method to open the image picker
+     * @param selectedImageView
+     */
     private void openImagePicker(ImageView selectedImageView) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -210,7 +227,9 @@ public class ProfileActivity extends AppCompatActivity {
         selectedImageView.setTag(R.id.selected_image_view, selectedImageView);
     }
 
-
+    /**
+     * Method to show the edit picture dialog
+     */
     private void showEditPictureDialog() {
         // Create and configure the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -265,7 +284,10 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    // Method to validate user inputs
+    /**
+     * Method to validate the inputs
+     * @return
+     */
     private boolean validateInputs() {
         String name = nameEditText.getText().toString().trim();
         String email = emailEditText.getText().toString().trim();
@@ -292,7 +314,9 @@ public class ProfileActivity extends AppCompatActivity {
         return true;
     }
 
-    // Method to update the UI with profile data
+    /**
+     * Method to update the UI with the profile
+     */
     private void updateUIWithProfile() {
         usernameText.setText(profile.getName());
         nameEditText.setText(profile.getName());
@@ -302,7 +326,10 @@ public class ProfileActivity extends AppCompatActivity {
         notificationsSwitch.setChecked(profile.getAdminNotifications());
     }
 
-    // Method to set fields editable or not
+    /**
+     * Method to set the fields editable
+     * @param isEditable
+     */
     private void setFieldsEditable(boolean isEditable) {
         nameEditText.setEnabled(isEditable);
         emailEditText.setEnabled(isEditable);
