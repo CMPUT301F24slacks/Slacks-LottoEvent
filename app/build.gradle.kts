@@ -59,6 +59,10 @@ androidComponents {
     }
 }
 
+tasks.withType<Test>{
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation("com.google.guava:guava:31.0.1-android")
     implementation(libs.appcompat)
@@ -69,10 +73,17 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.database)
     implementation(libs.firebase.crashlytics.buildtools)
-    implementation(libs.activity)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    implementation(libs.fragment.testing)
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.0.1")
+    testImplementation(libs.test.core)
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.0.1")
+    testImplementation("org.apiguardian:apiguardian-api:1.1.0")
+    testImplementation("org.robolectric:robolectric:4.8")
+    testImplementation("org.hamcrest:hamcrest-library:2.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test:core:1.5.0")
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
     implementation("com.google.firebase:firebase-firestore")
     implementation("androidx.camera:camera-core:1.3.4")
@@ -84,7 +95,4 @@ dependencies {
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
     implementation("androidx.multidex:multidex:2.0.1")
-
-    
-
 }
