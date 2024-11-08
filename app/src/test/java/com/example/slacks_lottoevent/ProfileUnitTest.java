@@ -1,3 +1,5 @@
+package com.example.slacks_lottoevent;
+
 import static org.mockito.Mockito.mock;
 
 import android.content.Context;
