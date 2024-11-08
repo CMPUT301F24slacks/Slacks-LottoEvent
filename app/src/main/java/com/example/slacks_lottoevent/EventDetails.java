@@ -161,6 +161,7 @@ public class EventDetails extends AppCompatActivity {
         confirmButton.setOnClickListener(view -> {
             addEntrantToWaitlist();
             addEntrantToNotis(chosenForLottery,notChosenForLottery);
+            addEventToEntrant();
             Intent intent = new Intent(EventDetails.this,EventsHomeActivity.class);
             startActivity(intent);
             dialog.dismiss();
@@ -187,6 +188,23 @@ public class EventDetails extends AppCompatActivity {
                     System.err.println("Error fetching event document: " + task);
                 });
     }
+    private void addEventToEntrant(){
+        DocumentReference entrantDocRef = db.collection("entrants").document(deviceId);
+        entrantDocRef.get().addOnSuccessListener(task -> {
+            if (task.exists()){
+                Entrant entrant = task.toObject(Entrant.class);
+                entrant.addWaitlistedEvents(qrCodeValue);
+                entrantDocRef.set(entrant);
+            }
+            else {
+                // Entrant not already in the database
+                Entrant newEntrant = new Entrant();
+                newEntrant.getWaitlistedEvents().add(qrCodeValue);
+                entrantDocRef.set(newEntrant);
+            }
+        });
+    }
+
 
     private void addEntrantToNotis(AtomicBoolean chosenForLottery, AtomicBoolean notChosenForLottery){
 
