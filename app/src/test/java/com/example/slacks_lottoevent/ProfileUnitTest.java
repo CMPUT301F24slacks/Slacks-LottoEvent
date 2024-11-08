@@ -1,4 +1,5 @@
 package com.example.slacks_lottoevent;
+import static androidx.camera.core.impl.utils.ContextUtil.getApplicationContext;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +10,7 @@ public class ProfileUnitTest {
 
     @BeforeEach
     public void mockProfile(){
-        profile = new Profile("Tate McRae", "7804448883","tateMcRae@gmail.com");
+        profile = new Profile("Tate McRae", "7804448883","tateMcRae@gmail.com", getApplicationContext());
     }
 
 
