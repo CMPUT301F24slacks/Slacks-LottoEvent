@@ -239,4 +239,16 @@ public class Event implements Serializable {
 
     public void addCancelledNotification(String notification) {this.cancelledNotificationsList.add(notification);}
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Event event = (Event) obj;
+        return eventID.equals(event.eventID); // Assuming eventId uniquely identifies an Event
+    }
+
+    @Override
+    public int hashCode() {
+        return eventID.hashCode();
+    }
 }

@@ -5,9 +5,9 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +18,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import com.example.slacks_lottoevent.databinding.ActivityEventDetailsBinding;
+import com.example.slacks_lottoevent.databinding.ActivityJoinEventDetailsBinding;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -29,11 +29,10 @@ import android.provider.Settings;
 import android.widget.Toast;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class EventDetails extends AppCompatActivity {
-    private ActivityEventDetailsBinding binding;
+public class JoinEventDetailsActivity extends AppCompatActivity {
+    private ActivityJoinEventDetailsBinding binding;
     private DocumentSnapshot document;
     private String location;
     private String date;
@@ -47,7 +46,7 @@ public class EventDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityEventDetailsBinding.inflate(getLayoutInflater());
+        binding = ActivityJoinEventDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
 
@@ -102,7 +101,7 @@ public class EventDetails extends AppCompatActivity {
                                         .setTitle("Sign-Up Required")
                                         .setMessage("In order to join an event, we need to collect some information about you.")
                                         .setPositiveButton("Proceed", (dialog, which) -> {
-                                            Intent signUpIntent = new Intent(EventDetails.this, SignUpActivity.class);
+                                            Intent signUpIntent = new Intent(JoinEventDetailsActivity.this, SignUpActivity.class);
                                             startActivity(signUpIntent);
                                         })
                                         .setNegativeButton("Cancel", (dialog, which) -> {
@@ -114,7 +113,10 @@ public class EventDetails extends AppCompatActivity {
                         });
                     }
                 });
-
+        // add a listener to the event details back button, go to the last item in the back stack
+        binding.eventDetailsBackButton.setOnClickListener(v -> {
+            onBackPressed();
+        });
 
     }
     private void showRegistrationDialog(){
@@ -159,13 +161,31 @@ public class EventDetails extends AppCompatActivity {
 
         cancelButton.setOnClickListener(view -> dialog.dismiss());
         confirmButton.setOnClickListener(view -> {
-            addEntrantToWaitlist();
-            addEntrantToNotis(chosenForLottery,notChosenForLottery);
-            addEventToEntrant();
-            Intent intent = new Intent(EventDetails.this,EventsHomeActivity.class);
-            startActivity(intent);
-            dialog.dismiss();
+            // check if the user is already in the event
+            // if they are, display a snack bar saying they are already in the event
+            // if they are not, add them to the event
+            String userId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            db.collection("entrants").document(userId).get().addOnSuccessListener(task -> {
+                if (task.exists()){
+                    Entrant entrant = task.toObject(Entrant.class);
+                    if (entrant.getWaitlistedEvents().contains(qrCodeValue)
+                            || entrant.getFinalistEvents().contains(qrCodeValue)
+                            || entrant.getInvitedEvents().contains(qrCodeValue)
+                            || entrant.getUninvitedEvents().contains(qrCodeValue)){
 
+                        Toast.makeText(this, "You are already in the event", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                    else {
+                        addEntrantToWaitlist();
+                        addEntrantToNotis(chosenForLottery,notChosenForLottery);
+                        addEventToEntrant();
+                        Intent intent = new Intent(JoinEventDetailsActivity.this,EventsHomeActivity.class);
+                        startActivity(intent);
+                        dialog.dismiss();
+                    }
+                }
+            });
         });
 
         dialog.show();

@@ -2,6 +2,7 @@ package com.example.slacks_lottoevent;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +13,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * EventArrayAdapter is a custom ArrayAdapter that is used to display the individual events in event lists.
  * It is used to display the name, date, time, address, and description of each event.
  */
 public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
-    public EventArrayAdapter(@NonNull Context context, EventList eventList) {
-        super(context, 0, eventList.getEventList());
+    public EventArrayAdapter(@NonNull Context context, ArrayList eventList) {
+        super(context, 0, eventList);
     }
 
     @NonNull
@@ -43,13 +45,13 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         Button eventButton = convertView.findViewById(R.id.event_button);
 
         eventButton.setOnClickListener(v -> {
-            // Create an Intent to navigate to OrganizerNotifications
-            Intent intent = new Intent(EventArrayAdapter.this.getContext(), OrganizerNotifications.class);
+            // Create an Intent to navigate to the EventDetailsActivity
+            Intent intent = new Intent(getContext(), EntrantEventDetailsActivity.class);
+            String userId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+            intent.putExtra("userId", userId);
+            intent.putExtra("qrCodeValue", event.getEventID());
 
-            // Pass any additional data if needed
-            intent.putExtra("current_event", (Serializable) event);  // Example of passing data
-
-            // Start OrganizerNotifications
+            // Start the EventDetailsActivity
             getContext().startActivity(intent);
         });
 
