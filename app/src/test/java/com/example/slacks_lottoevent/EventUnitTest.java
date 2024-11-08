@@ -14,15 +14,16 @@ public class EventUnitTest {
 
     @BeforeEach
     public void setUp() {
-        event = new Event("HackEd", "2024-11-22", "9:00", "$10", "Hackathon hosted by UAlberta students", 200, 500, "0001", "091fac3e-983a-44c0-b7b8-fcf720958082", true, "20b0a9a34c950844a2e0edd7aa5604691dc1ec738a412e9ad436ed19b00acd98", true, false, true);
+        event = new Event("HackEd", "2024-11-22", "3339 607 St NW Edmonton AB Canada T5J 0X6", "9:00", "29.99", "Hackathon hosted by UAlberta students", 200, 500, "0001", "091fac3e-983a-44c0-b7b8-fcf720958082", true, "20b0a9a34c950844a2e0edd7aa5604691dc1ec738a412e9ad436ed19b00acd98", true, false, true);
     }
 
     @Test
     public void testConstructor() {
         assertEquals("HackEd", event.getName());
         assertEquals("2024-11-22", event.getDate());
+        assertEquals("3339 607 St NW Edmonton AB Canada T5J 0X6", event.getLocation());
         assertEquals("9:00", event.getTime());
-        assertEquals("$10", event.getPrice());
+        assertEquals("29.99", event.getPrice());
         assertEquals("Hackathon hosted by UAlberta students", event.getDescription());
         assertEquals(200, event.getEventSlots());
         assertEquals(500, event.getWaitListCapacity());
@@ -43,11 +44,14 @@ public class EventUnitTest {
         event.setDate("2024-01-01");
         assertEquals("2024-01-01", event.getDate());
 
+        event.setLocation("9923 602 St NW Edmonton AB Canada T5K 0M6");
+        assertEquals("9923 602 St NW Edmonton AB Canada T5K 0M6", event.getLocation());
+
         event.setTime("12:00");
         assertEquals("12:00", event.getTime());
 
-        event.setPrice("$15");
-        assertEquals("$15", event.getPrice());
+        event.setPrice("29.99");
+        assertEquals("29.99", event.getPrice());
 
         event.setDescription("Alberta's Neurotech Hackathon");
         assertEquals("Alberta's Neurotech Hackathon", event.getDescription());
@@ -177,6 +181,7 @@ public class EventUnitTest {
         assertNotNull(emptyEvent);
         assertNull(emptyEvent.getName());
         assertNull(emptyEvent.getDate());
+        assertNull(emptyEvent.getLocation());
         assertNull(emptyEvent.getTime());
         assertNull(emptyEvent.getPrice());
         assertNull(emptyEvent.getDescription());

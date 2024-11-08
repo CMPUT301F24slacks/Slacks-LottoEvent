@@ -10,7 +10,7 @@ public class FacilityUnitTest {
 
     @BeforeEach
     void setUp(){
-        facility = new Facility("DICE", "116 St NW", "9211", "Edmonton", "Alberta", "Canada", "T6G 1H9", "jw7e1540320d3c3d" );
+        facility = new Facility("DICE", "116 St NW", "9211", "Edmonton", "Alberta", "Canada", "T6G 1H9", "jw7e1540320d3c3d", "jw7e1540320d3c3d" );
     }
     @Test
     void testFacilityConstructor() {

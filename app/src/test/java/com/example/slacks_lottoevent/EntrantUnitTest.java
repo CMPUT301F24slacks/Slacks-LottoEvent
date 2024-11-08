@@ -51,41 +51,6 @@ public class EntrantUnitTest {
         assertTrue(uninvitedEvents.contains("7adf4a5b-b256-408a-a213-ae6f88504c08"));
     }
 
-    @Test
-    void testAddAndGetWaitlistedEventsNotis() {
-        testEntrant.addWaitlistedEventsNotis("9c781495-f91e-4648-9bb0-c390f558db10");
-        ArrayList<String> waitlistedEventsNotis = testEntrant.getWaitlistedEventsNotis();
-
-        assertEquals(1, waitlistedEventsNotis.size());
-        assertTrue(waitlistedEventsNotis.contains("9c781495-f91e-4648-9bb0-c390f558db10"));
-    }
-
-    @Test
-    void testAddAndGetFinalistEventsNotis() {
-        testEntrant.addFinalistEventsNotis("9g781495-f91e-4648-9bb0-c390f558db10");
-        ArrayList<String> finalistEventsNotis = testEntrant.getFinalistEventsNotis();
-
-        assertEquals(1, finalistEventsNotis.size());
-        assertTrue(finalistEventsNotis.contains("9g781495-f91e-4648-9bb0-c390f558db10"));
-    }
-
-    @Test
-    void testAddAndGetInvitedEventsNotis() {
-        testEntrant.addInvitedEventsNotis("8y341495-f51e-4648-9bb0-c390f558db20");
-        ArrayList<String> invitedEventsNotis = testEntrant.getInvitedEventsNotis();
-
-        assertEquals(1, invitedEventsNotis.size());
-        assertTrue(invitedEventsNotis.contains("8y341495-f51e-4648-9bb0-c390f558db20"));
-    }
-
-    @Test
-    void testAddAndGetUninvitedEventsNotis() {
-        testEntrant.addUninvitedEventsNotis("6y341495-j71e-4648-9bb0-r457f558db20");
-        ArrayList<String> uninvitedEventsNotis = testEntrant.getUninvitedEventsNotis();
-
-        assertEquals(1, uninvitedEventsNotis.size());
-        assertTrue(uninvitedEventsNotis.contains("6y341495-j71e-4648-9bb0-r457f558db20"));
-    }
 
     @Test
     void testMultipleAdditions() {

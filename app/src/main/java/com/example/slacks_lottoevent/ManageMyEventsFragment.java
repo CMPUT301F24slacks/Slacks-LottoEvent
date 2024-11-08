@@ -163,7 +163,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         createFacilitiesButton = view.findViewById(R.id.create_facility_button);
         facilityCreated = view.findViewById(R.id.facility_created);
 
-        deviceId= Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+        deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
 
 /// Listen for real-time updates to the organizer's document
@@ -334,8 +334,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
             }
         });
 
-
-        // CHANGE HERE BEFORE PUSHING
         if (existingFacility == null) {
             createFacilitiesButton.setVisibility(View.GONE);
         } else {
