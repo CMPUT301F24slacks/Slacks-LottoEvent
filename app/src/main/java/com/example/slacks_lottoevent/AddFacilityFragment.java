@@ -31,6 +31,10 @@ public class AddFacilityFragment extends DialogFragment {
     }
     private AddFacilityDialogListener listener;
 
+    /**
+     * onAttach is called when the fragment is associated with an activity.
+     * @param context Context object
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);

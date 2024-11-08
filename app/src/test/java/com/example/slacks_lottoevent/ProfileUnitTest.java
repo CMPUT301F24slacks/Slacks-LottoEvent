@@ -1,6 +1,5 @@
-package com.example.slacks_lottoevent;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
 import android.content.Context;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,9 +10,10 @@ public class ProfileUnitTest {
     private Context context;
 
     @BeforeEach
-    public void mockProfile(){
-        context = getApplicationContext();
-        profile = new Profile("Tate McRae", "7804448883","tateMcRae@gmail.com", context);
+    public void mockProfile() {
+        // Mock the Context
+        context = mock(Context.class);
+        profile = new Profile("Tate McRae", "7804448883", "tateMcRae@gmail.com", context);
     }
 
     @Test

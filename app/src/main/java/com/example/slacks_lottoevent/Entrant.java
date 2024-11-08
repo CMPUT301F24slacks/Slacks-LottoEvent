@@ -16,6 +16,9 @@ public class Entrant {
     private ArrayList<String> uninvitedEvents;
     private ArrayList<String> invites;
 
+    /**
+     * Constructor for Entrant class.
+     */
     public Entrant() {
         this.waitlistedEvents = new ArrayList<>();
         this.finalistEvents = new ArrayList<>();
@@ -23,6 +26,7 @@ public class Entrant {
         this.uninvitedEvents = new ArrayList<>();
         this.invites = new ArrayList<>();
     }
+
 
     public ArrayList<String> getWaitlistedEvents() {
         return waitlistedEvents;
