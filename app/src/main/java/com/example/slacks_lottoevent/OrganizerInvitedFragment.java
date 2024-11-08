@@ -102,15 +102,8 @@ public class OrganizerInvitedFragment extends Fragment {
         //test event ID 0c781495-f91e-4648-9bb0-c390f558db10, This is the event!ve
 
         if (event != null) {
-//            ArrayList<String> deviceIds = event.getSelected();
+            ArrayList<String> deviceIds = event.getSelected();
 
-            //testing
-            ArrayList<String> deviceIds = new ArrayList<>(Arrays.asList(
-                    "da767e14c6aa6e5f",
-                    "4ab98de1b677d4a5",
-                    "4e56a5bd8bdda648",
-                    "1650c1cc5910ab1a"
-            ));
             for (String deviceId : deviceIds) {
                 // Query Firestore for each profile by device ID
                 db.collection("profiles").document(deviceId).get().addOnCompleteListener(task -> {
