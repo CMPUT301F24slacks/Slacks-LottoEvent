@@ -239,6 +239,10 @@ public class Event implements Serializable {
 
     public void addCancelledNotification(String notification) {this.cancelledNotificationsList.add(notification);}
 
+    /**
+     * Checks if the event is full
+     * @return true if the event is full, false otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -247,6 +251,10 @@ public class Event implements Serializable {
         return eventID.equals(event.eventID); // Assuming eventId uniquely identifies an Event
     }
 
+    /**
+     * Hashcode for the event
+     * @return hashcode
+     */
     @Override
     public int hashCode() {
         return eventID.hashCode();

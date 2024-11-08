@@ -17,10 +17,20 @@ public class EventList {
         this.eventList = new ArrayList<Event>();
     }
 
+    /**
+     * Getter method for the event list.
+     *
+     * @return The ArrayList of Event objects
+     */
     public ArrayList<Event> getEventList() {
         return eventList;
     }
 
+    /**
+     * Setter method for the event list.
+     *
+     * @param event The ArrayList of Event objects
+     */
     public void addEvent(Event event) {
         eventList.add(event);
     }

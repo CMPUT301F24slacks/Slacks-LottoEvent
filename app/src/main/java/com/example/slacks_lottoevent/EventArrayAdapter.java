@@ -24,6 +24,16 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         super(context, 0, eventList);
     }
 
+    /**
+     * getView is a method that is called to display the individual events in the event list.
+     * It sets the text of the event name, date, time, address, and description.
+     * It also sets the onClickListener for the event button to navigate to the EventDetailsActivity.
+     *
+     * @param position    The position of the event in the event list
+     * @param convertView The view that is being converted
+     * @param parent      The parent view group
+     * @return The view that is being displayed
+     */
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {

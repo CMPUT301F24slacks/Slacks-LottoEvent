@@ -9,12 +9,27 @@ import android.widget.TextView;
 
 import java.util.List;
 
+/**
+ * Custom ArrayAdapter to display a list of entrants in a ListView
+ */
 public class EntrantListsArrayAdapter extends ArrayAdapter<String> {
 
+    /**
+     * Constructor for the custom ArrayAdapter
+     * @param context The current context
+     * @param items The list of items to display
+     */
     public EntrantListsArrayAdapter(Context context, List<String> items) {
         super(context, 0, items);
     }
 
+    /**
+     * Get a View that displays the data at the specified position in the data set
+     * @param position The position of the item within the adapter's data set
+     * @param convertView The old view to reuse, if possible
+     * @param parent The parent that this view will eventually be attached to
+     * @return A View corresponding to the data at the specified position
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -41,7 +56,9 @@ public class EntrantListsArrayAdapter extends ArrayAdapter<String> {
         return convertView;
     }
 
-    // ViewHolder class to cache the views
+    /**
+     * Cache of the children views for a list item
+     */
     private static class ViewHolder {
         TextView textView;
     }

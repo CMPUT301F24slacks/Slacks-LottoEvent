@@ -17,6 +17,10 @@ import java.util.List;
 
 import com.example.slacks_lottoevent.databinding.ActivityEntrantEventDetailsBinding;
 
+/**
+ * EntrantEventDetailsActivity is the activity that displays the details of an event for an entrant.
+ * The entrant can leave the event from this activity.
+ */
 public class EntrantEventDetailsActivity extends AppCompatActivity {
     private ActivityEntrantEventDetailsBinding binding;
     private DocumentSnapshot document;
@@ -29,6 +33,11 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
     FirebaseFirestore db;
     String qrCodeValue;
     @SuppressLint("HardwareIds") String deviceId;
+
+    /**
+     * onCreate method for EntrantEventDetailsActivity
+     * @param savedInstanceState the saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
