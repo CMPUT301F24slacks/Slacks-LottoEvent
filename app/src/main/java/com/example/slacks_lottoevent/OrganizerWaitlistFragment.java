@@ -37,6 +37,9 @@ public class OrganizerWaitlistFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    /**
+     * Default constructor
+     */
     public OrganizerWaitlistFragment() {}
 
     /**
@@ -56,6 +59,10 @@ public class OrganizerWaitlistFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * onCreate method
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +72,13 @@ public class OrganizerWaitlistFragment extends Fragment {
         }
     }
 
+    /**
+     * onCreateView method
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment

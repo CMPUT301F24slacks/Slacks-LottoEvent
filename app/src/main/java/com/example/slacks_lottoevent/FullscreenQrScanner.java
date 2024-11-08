@@ -12,7 +12,12 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView;
  */
 public class FullscreenQrScanner extends com.journeyapps.barcodescanner.CaptureActivity {
 
-
+    /**
+     * Initialize the content of the FullscreenQrScanner activity.
+     * Set the custom layout for the scanner and return the DecoratedBarcodeView from the custom layout.
+     *
+     * @return The DecoratedBarcodeView from the custom layout
+     */
     @Override
     protected DecoratedBarcodeView initializeContent() {
         // Set the custom layout for the scanner
@@ -22,6 +27,12 @@ public class FullscreenQrScanner extends com.journeyapps.barcodescanner.CaptureA
         return findViewById(R.id.zxing_barcode_scanner);
     }
 
+    /**
+     * onCreate method for the FullscreenQrScanner activity.
+     * This method initializes the activity and sets up the back arrow button.
+     *
+     * @param savedInstanceState The saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -14,16 +14,27 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+/**
+ * AddFacilityFragment is a DialogFragment that allows the user to create or edit a Facility.
+ */
 public class AddFacilityFragment extends DialogFragment {
     public Facility facility;
     private Boolean isEdit;
 
+    /**
+     * AddFacilityDialogListener is an interface that must be implemented by the parent Fragment or Activity
+     * to handle the user's input when adding or editing a Facility.
+     */
     interface AddFacilityDialogListener {
         void addFacility(Facility facility);
         void updateFacility();
     }
     private AddFacilityDialogListener listener;
 
+    /**
+     * onAttach is called when the fragment is associated with an activity.
+     * @param context Context object
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -38,15 +49,30 @@ public class AddFacilityFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Constructor for AddFacilityFragment
+     * @param facility The Facility object to edit
+     * @param isEdit Boolean flag to determine if the dialog is for editing an existing Facility
+     */
     public AddFacilityFragment(Facility facility, Boolean isEdit){
         this.facility = facility;
         this.isEdit = isEdit;
     }
+
+    /**
+     * Constructor for AddFacilityFragment
+     * Default constructor for creating a new Facility
+     */
     public AddFacilityFragment(){
         this.facility = new Facility("FacilityName", "StreetAddress1", "StreetAddress2", "City", "Province", "Country", "PostalCode", "OrganizerId", "DeviceId");
         this.isEdit = false;
     }
 
+    /**
+     * onCreateDialog creates the AlertDialog for the AddFacilityFragment
+     * @param savedInstanceState Bundle object containing the saved state
+     * @return Dialog object
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

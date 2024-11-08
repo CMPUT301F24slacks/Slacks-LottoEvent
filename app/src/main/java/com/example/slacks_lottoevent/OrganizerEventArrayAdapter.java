@@ -19,10 +19,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.Serializable;
@@ -33,7 +31,7 @@ import java.util.List;
 /**
  * Custom ArrayAdapter for displaying events in the OrganizerEventsActivity
  */
-public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
+public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
     private Context context;
     private ArrayList<Event> events;
 
@@ -49,12 +47,20 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
      * @param context The context of the activity
      * @param events  The list of events to display
      */
-    public OrganzierEventArrayAdapter(@NonNull Context context, ArrayList<Event> events) {
+    public OrganizerEventArrayAdapter(@NonNull Context context, ArrayList<Event> events) {
         super(context, 0, events);
         this.context = context;
         this.events = events;
     }
 
+    /**
+     * Gets the view for each item in the list
+     *
+     * @param position    The position of the item in the list
+     * @param convertView The view to convert
+     * @param parent      The parent view
+     * @return The view for the item
+     */
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -116,8 +122,6 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
                                 // Retrieve facility data
                                 String facilityAddress= facilitySnapshot.getString("streetAddress1");
                                 eventAddress.setText(facilityAddress);
-
-
                             }
                         });
                     }
@@ -164,6 +168,11 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
         return bitMatrix;
     }
 
+    /**
+     * Selects entrants for a lottery
+     *
+     * @param eventID The ID of the event
+     */
     private void selectEntrantsForLottery(String eventID){
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");

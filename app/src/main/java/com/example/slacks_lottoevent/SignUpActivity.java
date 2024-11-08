@@ -55,6 +55,17 @@ public class SignUpActivity extends AppCompatActivity {
     private String email;
     private String phoneNumber;
 
+    /**
+     * onCreate is called when the activity is starting.
+     * It sets the content view to the activity_sign_up layout.
+     * It initializes the Firebase Firestore database and the usersRef CollectionReference.
+     * It initializes the nameInput, emailInput, and phoneInput EditTexts.
+     * It sets an onClickListener on the signUpButton.
+     * When the signUpButton is clicked, it validates the user's inputs.
+     * If the inputs are valid, it saves the user's information to the device and to the Firebase Firestore database.
+     * It then displays a toast message saying "Sign-Up Successful" and finishes the activity.
+     * @param savedInstanceState a Bundle object containing the activity's previously saved state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -145,7 +156,7 @@ public class SignUpActivity extends AppCompatActivity {
         String phone = phoneInput.getText().toString().trim();
 
         @SuppressLint("HardwareIds") String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        Profile userInfo = new Profile(name,phone,email);
+        Profile userInfo = new Profile(name,phone,email, getApplicationContext());
 
         usersRef.document(deviceId).set(userInfo)
                 .addOnSuccessListener(nothing -> {

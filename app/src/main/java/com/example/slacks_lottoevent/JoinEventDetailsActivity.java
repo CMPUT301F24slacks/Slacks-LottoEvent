@@ -5,9 +5,9 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +18,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import com.example.slacks_lottoevent.databinding.ActivityEventDetailsBinding;
+import com.example.slacks_lottoevent.databinding.ActivityJoinEventDetailsBinding;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -29,11 +29,13 @@ import android.provider.Settings;
 import android.widget.Toast;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class EventDetails extends AppCompatActivity {
-    private ActivityEventDetailsBinding binding;
+/**
+ * JoinEventDetailsActivity is the activity for the Join Event Details screen.
+ */
+public class JoinEventDetailsActivity extends AppCompatActivity {
+    private ActivityJoinEventDetailsBinding binding;
     private DocumentSnapshot document;
     private String location;
     private String date;
@@ -45,9 +47,16 @@ public class EventDetails extends AppCompatActivity {
     String qrCodeValue;
     @SuppressLint("HardwareIds") String deviceId;
     @Override
+
+    /**
+     * onCreate method for the JoinEventDetailsActivity.
+     * This method initializes the activity and sets up the event details.
+     *
+     * @param savedInstanceState The saved instance state
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityEventDetailsBinding.inflate(getLayoutInflater());
+        binding = ActivityJoinEventDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
 
@@ -102,7 +111,7 @@ public class EventDetails extends AppCompatActivity {
                                         .setTitle("Sign-Up Required")
                                         .setMessage("In order to join an event, we need to collect some information about you.")
                                         .setPositiveButton("Proceed", (dialog, which) -> {
-                                            Intent signUpIntent = new Intent(EventDetails.this, SignUpActivity.class);
+                                            Intent signUpIntent = new Intent(JoinEventDetailsActivity.this, SignUpActivity.class);
                                             startActivity(signUpIntent);
                                         })
                                         .setNegativeButton("Cancel", (dialog, which) -> {
@@ -114,9 +123,17 @@ public class EventDetails extends AppCompatActivity {
                         });
                     }
                 });
-
+        // add a listener to the event details back button, go to the last item in the back stack
+        binding.eventDetailsBackButton.setOnClickListener(v -> {
+            onBackPressed();
+        });
 
     }
+
+    /**
+     * showRegistrationDialog method for the JoinEventDetailsActivity.
+     * This method shows the registration dialog for the event.
+     */
     private void showRegistrationDialog(){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -159,20 +176,86 @@ public class EventDetails extends AppCompatActivity {
 
         cancelButton.setOnClickListener(view -> dialog.dismiss());
         confirmButton.setOnClickListener(view -> {
-            addEntrantToWaitlist();
-            addEntrantToNotis(chosenForLottery,notChosenForLottery);
-            addEventToEntrant();
-            Intent intent = new Intent(EventDetails.this,EventsHomeActivity.class);
-            startActivity(intent);
-            dialog.dismiss();
+            // Get the user's unique device ID
+            String userId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
+            // Check if the entrant exists in Firestore
+            db.collection("entrants").document(userId).get().addOnSuccessListener(task -> {
+                if (task.exists()) {
+                    // Entrant exists, check their events
+                    Entrant entrant = task.toObject(Entrant.class);
+
+                    // Check if the entrant is already associated with this event
+                    if (entrant.getWaitlistedEvents().contains(qrCodeValue)
+                            || entrant.getFinalistEvents().contains(qrCodeValue)
+                            || entrant.getInvitedEvents().contains(qrCodeValue)
+                            || entrant.getUninvitedEvents().contains(qrCodeValue)) {
+
+                        // Show a toast message and dismiss the dialog
+                        Toast.makeText(this, "You are already in the event", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    } else {
+                        // Entrant is not in the event, add them to the event
+                        addEntrantToWaitlist();
+                        addEntrantToNotis(chosenForLottery, notChosenForLottery);
+                        addEventToEntrant();
+                        navigateToEventsHome();
+                        dialog.dismiss();
+                    }
+                } else {
+                    // Entrant does not exist, create a new one and add them
+                    Log.d("JoinEventDetails", "Entrant does not exist. Creating a new entrant...");
+                    createNewEntrant(userId);
+                    addEntrantToWaitlist();
+                    addEntrantToNotis(chosenForLottery, notChosenForLottery);
+                    navigateToEventsHome();
+                    dialog.dismiss();
+                }
+            }).addOnFailureListener(e -> {
+                // Handle any errors in fetching the entrant document
+                Log.e("JoinEventDetails", "Error fetching entrant document: " + e.getMessage());
+                // Create a new entrant in case of a failure
+                createNewEntrant(userId);
+                addEntrantToWaitlist();
+                addEntrantToNotis(chosenForLottery, notChosenForLottery);
+                navigateToEventsHome();
+                dialog.dismiss();
+            });
         });
+
 
         dialog.show();
 
     }
 
+    /**
+     * createNewEntrant method for the JoinEventDetailsActivity.
+     * This method creates a new entrant in the Firestore database.
+     *
+     * @param userId The unique user ID
+     */
+    private void createNewEntrant(String userId) {
+        Entrant newEntrant = new Entrant();
+        newEntrant.addWaitlistedEvents(qrCodeValue); // Add the event to the waitlist
+        db.collection("entrants").document(userId)
+                .set(newEntrant)
+                .addOnSuccessListener(aVoid -> Log.d("JoinEventDetails", "New entrant created successfully"))
+                .addOnFailureListener(e -> Log.e("JoinEventDetails", "Error creating new entrant: " + e.getMessage()));
+    }
 
+    /**
+     * navigateToEventsHome method for the JoinEventDetailsActivity.
+     * This method navigates to the Events Home screen.
+     */
+    private void navigateToEventsHome() {
+        Intent intent = new Intent(JoinEventDetailsActivity.this, EventsHomeActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * addEntrantToWaitlist method for the JoinEventDetailsActivity.
+     * This method adds the entrant to the waitlist for the event.
+     */
     private void addEntrantToWaitlist(){
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -188,6 +271,11 @@ public class EventDetails extends AppCompatActivity {
                     System.err.println("Error fetching event document: " + task);
                 });
     }
+
+    /**
+     * addEventToEntrant method for the JoinEventDetailsActivity.
+     * This method adds the event to the entrant.
+     */
     private void addEventToEntrant(){
         DocumentReference entrantDocRef = db.collection("entrants").document(deviceId);
         entrantDocRef.get().addOnSuccessListener(task -> {
@@ -205,11 +293,14 @@ public class EventDetails extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * addEntrantToNotis method for the JoinEventDetailsActivity.
+     * This method adds the entrant to the notifications for the event.
+     *
+     * @param chosenForLottery The boolean value for chosen for lottery
+     * @param notChosenForLottery The boolean value for not chosen for lottery
+     */
     private void addEntrantToNotis(AtomicBoolean chosenForLottery, AtomicBoolean notChosenForLottery){
-
-
-
         // Query the Firestore for the event based on the QR code value
         db.collection("events").whereEqualTo("eventID", qrCodeValue)
                 .get()
@@ -248,6 +339,4 @@ public class EventDetails extends AppCompatActivity {
                     Toast.makeText(this, "Error fetching event document: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-
-
 }

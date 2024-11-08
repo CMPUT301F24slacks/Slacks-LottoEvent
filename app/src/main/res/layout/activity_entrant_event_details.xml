@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#FFFFFF"
+    tools:context=".EntrantEventDetailsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,6 +28,7 @@
                 android:scaleType="centerCrop" />
 
             <ImageView
+                android:id="@+id/event_details_back_button"
                 android:layout_width="48dp"
                 android:layout_height="24dp"
                 android:layout_marginTop="20dp"
@@ -188,14 +191,15 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/join_button"
+            android:id="@+id/leaveButton"
             android:layout_width="159dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:backgroundTint="#7B24EB"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"
-            android:text="Join"
+             android:clickable="true"
+            android:text="Leave Event"
 
             android:textColor="#FFFFFF" />
         <TextView

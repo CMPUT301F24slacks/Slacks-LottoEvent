@@ -42,6 +42,10 @@ public class CreateEvent extends AppCompatActivity {
     private ActivityCreateEventBinding binding;
     private CollectionReference organizersRef;
 
+    /**
+     * This method initializes the CreateEvent activity.
+     * @param savedInstanceState the saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

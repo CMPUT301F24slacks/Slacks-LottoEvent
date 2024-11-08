@@ -16,11 +16,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+/**
+ * Custom ArrayAdapter for displaying event notifications in a ListView.
+ */
 public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifications> {
     private final Context context;
     private final FirebaseFirestore db;
     private final String deviceId;
 
+    /**
+     * Constructor for the ArrayAdapter.
+     *
+     * @param context The current context.
+     * @param events The list of events to display.
+     */
     public EventNotificationsArrayAdapter(@NonNull Context context, ArrayList<UserEventNotifications> events) {
         super(context, 0, events);
         this.context = context;
@@ -30,6 +39,14 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
         this.deviceId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
     }
 
+    /**
+     * Get the view for a single event notification.
+     *
+     * @param position The position of the event in the list.
+     * @param convertView The view to convert.
+     * @param parent The parent view.
+     * @return The view for the event.
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -64,6 +81,7 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
 
     /**
      * Handle the "Accept" action for an event.
+     * @param event The event to accept.
      */
     private void handleAcceptEvent(UserEventNotifications event) {
         String eventId = event.getEventId();
@@ -78,6 +96,7 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
 
     /**
      * Handle the "Decline" action for an event.
+     * @param event The event to decline.
      */
     private void handleDeclineEvent(UserEventNotifications event) {
         String eventId = event.getEventId();

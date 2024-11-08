@@ -10,11 +10,22 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.tabs.TabLayout;
 
+/**
+ * OrganizerNotifications.java
+ * This class is used to display the notifications for the organizer.
+ * The organizer can view the waitlist, invited, cancelled, and enrolled users for their event.
+ * The organizer can also view the details of the users in each category.
+ */
 public class OrganizerNotifications extends AppCompatActivity {
 
     FrameLayout frameLayout;
     TabLayout tabLayout;
 
+    /**
+     * This method is called when the activity is first created.
+     * It sets up the tab layout for the organizer to view the waitlist, invited, cancelled, and enrolled users.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
