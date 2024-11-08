@@ -1,6 +1,7 @@
 package com.example.slacks_lottoevent;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.Settings;
 import android.util.Log;
@@ -124,6 +125,18 @@ public class OrganzierEventArrayAdapter extends ArrayAdapter<Event> implements S
             }
         });
         eventDescription.setText(event.getDescription());
+
+//        //to connect with entrants cancelled, joined, etc.
+//        eventButton.setOnClickListener(v -> {
+//            // Create an Intent to navigate to OrganizerNotifications
+//            Intent intent = new Intent(EventArrayAdapter.this.getContext(), OrganizerNotifications.class);
+//
+//            // Pass any additional data if needed
+//            intent.putExtra("current_event", (Serializable) event);  // Example of passing data
+//
+//            // Start OrganizerNotifications
+//            getContext().startActivity(intent);
+//        });
         return convertView;
     }
 

@@ -17,19 +17,33 @@ public class EntrantListsArrayAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+
+            // Create a ViewHolder to cache the TextView
+            holder = new ViewHolder();
+            holder.textView = convertView.findViewById(R.id.text_view_item);
+            convertView.setTag(holder); // Store the holder in the view
+        } else {
+            holder = (ViewHolder) convertView.getTag(); // Retrieve cached holder
         }
 
-        // Get the data item for this position
+        // Populate the data into the TextView
         String item = getItem(position);
-
-        // Lookup view for data population
-        TextView textView = convertView.findViewById(R.id.text_view_item); // Use your custom ID here
-        textView.setText(item);
+        if (item != null) {
+            holder.textView.setText(item);
+        }
 
         // Return the completed view to render on screen
         return convertView;
     }
+
+    // ViewHolder class to cache the views
+    private static class ViewHolder {
+        TextView textView;
+    }
+
 }
