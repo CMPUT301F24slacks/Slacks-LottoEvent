@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * Represents a user profile with basic information.
+ */
 public class Profile {
     private String name;
     private String email;
@@ -18,26 +21,52 @@ public class Profile {
     private boolean usingDefaultPicture;
     private boolean adminNotifications;
 
-    // Default no-argument constructor (required by Firestore)
+    /**
+     * Default constructor for Firestore serialization.
+     */
     public Profile() {}
 
+    /**
+     * Constructor for creating a new profile.
+     *
+     * @param name The name of the user.
+     * @param phone The phone number of the user.
+     * @param email The email address of the user.
+     * @param context The application context for file access.
+     */
     public Profile(String name, String phone, String email, Context context) {
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.profilePicturePath = generateProfilePicture(name, context); // Generate and save profile picture
-        this.usingDefaultPicture = true;
+
+        // Skip profile picture generation if Context is null (for testing)
+        if (context != null) {
+            this.profilePicturePath = generateProfilePicture(name, context);
+        } else {
+            this.profilePicturePath = null;
+        }
+
+        this.usingDefaultPicture = context != null;
         this.adminNotifications = true;
     }
+
 
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of the user and updates the profile picture if using the default picture.
+     *
+     * @param name The name of the user.
+     * @param context The application context for file access.
+     */
     public void setName(String name, Context context) {
         this.name = name;
-        if (usingDefaultPicture) {
-            this.profilePicturePath = generateProfilePicture(name, context); // Update profile picture when name changes
+
+        // Skip profile picture update if Context is null
+        if (usingDefaultPicture && context != null) {
+            this.profilePicturePath = generateProfilePicture(name, context);
         }
     }
 
