@@ -75,6 +75,15 @@
             android:text="Edit Profile"
             android:textColor="#FFFFFF" />
 
+        <Button
+            android:id="@+id/btn_edit_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#03A9F4"
+            android:text="Edit Picture"
+            android:textColor="#FFFFFF"
+
         <!-- Hidden Confirm and Cancel Buttons -->
         <Button
             android:id="@+id/btn_confirm"

@@ -1,23 +1,32 @@
 package com.example.slacks_lottoevent;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE_PICK_IMAGE = 1001; // Unique request code
+
     private FirebaseFirestore db;
     private CollectionReference profilesRef;
     private Profile profile;
@@ -32,7 +41,9 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView backButton;
     private ImageView notificationsIcon;
     private Switch notificationsSwitch;
-    private Button editButton;
+    private Button editProfileButton;
+    private Button editPictureButton;
+
     private Button confirmButton;
     private Button cancelButton;
 
@@ -56,7 +67,8 @@ public class ProfileActivity extends AppCompatActivity {
         backButton = findViewById(R.id.back_button);
         notificationsIcon = findViewById(R.id.notifications_icon);
         notificationsSwitch = findViewById(R.id.switch_notifications);
-        editButton = findViewById(R.id.btn_edit_profile);
+        editProfileButton = findViewById(R.id.btn_edit_profile);
+        editPictureButton= findViewById(R.id.btn_edit_picture);
         confirmButton = findViewById(R.id.btn_confirm);
         cancelButton = findViewById(R.id.btn_cancel);
 
@@ -105,12 +117,16 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         // Edit button listener
-        editButton.setOnClickListener(v -> {
+        editProfileButton.setOnClickListener(v -> {
             setFieldsEditable(true);
-            editButton.setVisibility(Button.GONE);
+            editProfileButton.setVisibility(Button.GONE);
             confirmButton.setVisibility(Button.VISIBLE);
             cancelButton.setVisibility(Button.VISIBLE);
         });
+
+        // Edit picture button listener
+        // TODO: FIX THE EDIT PICTURE BUTTON
+        //editPictureButton.setOnClickListener(v -> showEditPictureDialog());
 
         // Confirm button listener
         confirmButton.setOnClickListener(v -> {
@@ -127,9 +143,20 @@ public class ProfileActivity extends AppCompatActivity {
 
             // Update the UI for buttons and editability
             setFieldsEditable(false);
-            editButton.setVisibility(Button.VISIBLE);
+            editProfileButton.setVisibility(Button.VISIBLE);
             confirmButton.setVisibility(Button.GONE);
             cancelButton.setVisibility(Button.GONE);
+
+            // Save changes to Firestore
+            profilesRef.document(userId).set(profile)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
+                        updateUIWithProfile(); // Refresh UI
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("ProfileActivity", "Failed to update profile: " + e.getMessage());
+                        Toast.makeText(this, "Failed to save changes. Please try again.", Toast.LENGTH_SHORT).show();
+                    });
         });
 
 
@@ -139,11 +166,104 @@ public class ProfileActivity extends AppCompatActivity {
             updateUIWithProfile();
 
             setFieldsEditable(false);
-            editButton.setVisibility(Button.VISIBLE);
+            editProfileButton.setVisibility(Button.VISIBLE);
             confirmButton.setVisibility(Button.GONE);
             cancelButton.setVisibility(Button.GONE);
         });
     }
+
+    private void updateProfilePicture(Uri imageUri) {
+        String imagePath = imageUri.toString();
+        profile.setProfilePicturePath(imagePath);
+        profilesRef.document(userId).update("profilePicturePath", imagePath)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Profile picture updated!", Toast.LENGTH_SHORT).show();
+                    Log.d("ProfileActivity", "Profile picture updated in Firestore.");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ProfileActivity", "Failed to update profile picture: " + e.getMessage());
+                    Toast.makeText(this, "Failed to save changes. Please try again.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK && data != null) {
+            Uri selectedImageUri = data.getData();
+
+            // Update the ImageView in the dialog
+            ImageView selectedImageView = (ImageView) findViewById(R.id.selected_image_view).getTag(R.id.selected_image_view);
+            selectedImageView.setImageURI(selectedImageUri);
+            selectedImageView.setTag(selectedImageUri); // Store URI in the tag for confirmation
+        }
+    }
+
+
+    private void openImagePicker(ImageView selectedImageView) {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
+
+        // Save the selected ImageView for later use in onActivityResult
+        selectedImageView.setTag(R.id.selected_image_view, selectedImageView);
+    }
+
+
+    private void showEditPictureDialog() {
+        // Create and configure the dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_edit_picture, null);
+        builder.setView(dialogView);
+
+        // Dialog UI elements
+        ImageView selectedImageView = dialogView.findViewById(R.id.selected_image_view);
+        Button uploadButton = dialogView.findViewById(R.id.upload_button);
+        Button confirmButton = dialogView.findViewById(R.id.confirm_button);
+        Button cancelButton = dialogView.findViewById(R.id.cancel_button);
+
+        AlertDialog dialog = builder.create();
+
+        // Upload button logic
+        uploadButton.setOnClickListener(view -> openImagePicker(selectedImageView));
+
+        // Confirm button logic
+        confirmButton.setOnClickListener(v -> {
+            // Validate inputs
+            if (!validateInputs()) return;
+
+            // Update profile object
+            profile.setName(nameEditText.getText().toString().trim(), getApplicationContext());
+            profile.setEmail(emailEditText.getText().toString().trim());
+            profile.setPhone(phoneEditText.getText().toString().trim());
+
+            // Save changes to Firestore
+            profilesRef.document(userId).set(profile)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
+                        updateUIWithProfile(); // Refresh UI
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("ProfileActivity", "Failed to update profile: " + e.getMessage());
+                        Toast.makeText(this, "Failed to save changes. Please try again.", Toast.LENGTH_SHORT).show();
+                    });
+
+            // Reset UI state
+            setFieldsEditable(false);
+            editProfileButton.setVisibility(Button.VISIBLE);
+            confirmButton.setVisibility(Button.GONE);
+            cancelButton.setVisibility(Button.GONE);
+        });
+
+
+        // Cancel button logic
+        cancelButton.setOnClickListener(view -> dialog.dismiss());
+
+        dialog.show();
+    }
+
 
     // Method to validate user inputs
     private boolean validateInputs() {
