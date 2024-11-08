@@ -97,9 +97,19 @@ public class EventDetails extends AppCompatActivity {
                             if (isSignedUp){
                                 showRegistrationDialog();
                             }
-                            showRegistrationDialog();
-
-
+                            else {
+                                new AlertDialog.Builder(this)
+                                        .setTitle("Sign-Up Required")
+                                        .setMessage("In order to join an event, we need to collect some information about you.")
+                                        .setPositiveButton("Proceed", (dialog, which) -> {
+                                            Intent signUpIntent = new Intent(EventDetails.this, SignUpActivity.class);
+                                            startActivity(signUpIntent);
+                                        })
+                                        .setNegativeButton("Cancel", (dialog, which) -> {
+                                            dialog.dismiss();
+                                        })
+                                        .show();
+                            }
 
                         });
                     }
