@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.databinding.FragmentManageMyEventsBinding;
-import com.example.slacks_lottoevent.data.Facility;
+import com.example.slacks_lottoevent.model.Facility;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;

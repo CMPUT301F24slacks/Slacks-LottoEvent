@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.data;
+package com.example.slacks_lottoevent.model;
 
 import java.util.ArrayList;
 

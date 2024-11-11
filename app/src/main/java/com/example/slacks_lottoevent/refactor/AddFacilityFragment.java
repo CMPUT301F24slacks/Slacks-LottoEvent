@@ -15,7 +15,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.example.slacks_lottoevent.R;
-import com.example.slacks_lottoevent.data.Facility;
+import com.example.slacks_lottoevent.model.Facility;
 
 public class AddFacilityFragment extends DialogFragment {
     public Facility facility;
