@@ -1,10 +1,9 @@
-package com.example.slacks_lottoevent.refactor;
+package com.example.slacks_lottoevent;
 
 
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import com.example.slacks_lottoevent.R;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
 /**

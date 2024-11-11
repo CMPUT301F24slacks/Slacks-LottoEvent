@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.refactor;
+package com.example.slacks_lottoevent;
 
 import android.content.Context;
 import android.graphics.Bitmap;

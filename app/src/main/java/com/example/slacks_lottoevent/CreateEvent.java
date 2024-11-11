@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.refactor;
+package com.example.slacks_lottoevent;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
 import com.google.firebase.firestore.CollectionReference;

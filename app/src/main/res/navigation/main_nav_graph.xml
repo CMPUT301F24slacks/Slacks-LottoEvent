@@ -42,7 +42,7 @@
     </fragment>
     <fragment
         android:id="@+id/ManageMyEventsFragment"
-        android:name="com.example.slacks_lottoevent.refactor.ManageMyEventsFragment"
+        android:name="com.example.slacks_lottoevent.ManageMyEventsFragment"
         android:label="Manage My Events Fragment"
         tools:layout="@layout/fragment_manage_my_events">
 

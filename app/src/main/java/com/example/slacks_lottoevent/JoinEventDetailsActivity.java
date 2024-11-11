@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -16,13 +17,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-<<<<<<<< HEAD:app/src/main/java/com/example/slacks_lottoevent/refactor/EventDetails.java
+import com.example.slacks_lottoevent.Entrant;
+import com.example.slacks_lottoevent.Event;
+import com.example.slacks_lottoevent.EventsHomeActivity;
 import com.example.slacks_lottoevent.R;
-import com.example.slacks_lottoevent.databinding.ActivityEventDetailsBinding;
-========
+import com.example.slacks_lottoevent.SignUpActivity;
+
 
 import com.example.slacks_lottoevent.databinding.ActivityJoinEventDetailsBinding;
->>>>>>>> origin/main:app/src/main/java/com/example/slacks_lottoevent/JoinEventDetailsActivity.java
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -32,10 +34,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import android.provider.Settings;
 import android.widget.Toast;
 
-<<<<<<<< HEAD:app/src/main/java/com/example/slacks_lottoevent/refactor/EventDetails.java
-========
 import java.util.List;
->>>>>>>> origin/main:app/src/main/java/com/example/slacks_lottoevent/JoinEventDetailsActivity.java
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**

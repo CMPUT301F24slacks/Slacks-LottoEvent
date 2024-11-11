@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:fitsSystemWindows="true"
-    tools:context=".refactor.EventsHomeActivity">
+    tools:context=".EventsHomeActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:clickable="true"

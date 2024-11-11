@@ -4,8 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.slacks_lottoevent.database.EventDB;
-import com.example.slacks_lottoevent.refactor.Event;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.example.slacks_lottoevent.Event;
 
 import java.util.List;
 

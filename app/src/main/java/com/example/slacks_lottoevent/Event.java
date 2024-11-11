@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.refactor;
+package com.example.slacks_lottoevent;
 
 import java.util.ArrayList;
 

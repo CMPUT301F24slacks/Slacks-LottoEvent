@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.example.slacks_lottoevent.model.Facility;
+
 /**
  * AddFacilityFragment is a DialogFragment that allows the user to create or edit a Facility.
  */

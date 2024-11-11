@@ -9,19 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.slacks_lottoevent.databinding.FragmentMyEventsBinding;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * This class is a fragment that displays the list of events the user has signed up for.
