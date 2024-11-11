@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.slacks_lottoevent.HomeFragment;
+import com.example.slacks_lottoevent.fragment.HomeFragment;
 import com.example.slacks_lottoevent.fragment.EventsFragment;
 import com.example.slacks_lottoevent.fragment.FacilityFragment;
 

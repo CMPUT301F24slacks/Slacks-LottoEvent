@@ -14,6 +14,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import com.example.slacks_lottoevent.controller.QRScannerActivity;
 import com.example.slacks_lottoevent.databinding.ActivityEventsHomeBinding;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
@@ -85,7 +86,7 @@ public class EventsHomeActivity extends AppCompatActivity {
         binding.qrCodeScannerFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EventsHomeActivity.this,EventQrScanner.class);
+                Intent intent = new Intent(EventsHomeActivity.this, QRScannerActivity.class);
                 startActivity(intent);
             }
         });

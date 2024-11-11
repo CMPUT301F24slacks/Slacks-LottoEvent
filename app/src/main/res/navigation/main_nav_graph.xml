@@ -29,10 +29,22 @@
         android:label="Profile Fragment"
         tools:layout="@layout/fragment_profile">
     </fragment>
+    <fragment
+        android:id="@+id/eventsFragment"
+        android:name="com.example.slacks_lottoevent.fragment.EventsFragment"
+        android:label="Events Fragment"
+        tools:layout="@layout/fragment_event">
+    </fragment>
+    <fragment
+        android:id="@+id/faciliyFragment"
+        android:name="com.example.slacks_lottoevent.fragment.FacilityFragment"
+        android:label="Create Event Fragment"
+        tools:layout="@layout/fragment_facility">
+    </fragment>
 
     <fragment
         android:id="@+id/MyEventsFragment"
-        android:name="com.example.slacks_lottoevent.refactor.MyEventsFragment"
+        android:name="com.example.slacks_lottoevent.MyEventsFragment"
         android:label="My Events Fragment"
         tools:layout="@layout/fragment_my_events">
 

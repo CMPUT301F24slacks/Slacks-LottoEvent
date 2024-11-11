@@ -1,5 +1,6 @@
 package com.example.slacks_lottoevent.controller;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.slacks_lottoevent.EventsHomeActivity;
 import com.example.slacks_lottoevent.R;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -63,8 +65,8 @@ public class MainActivity extends BaseActivity {
 
         // Set a click listener for the FAB
         fab.setOnClickListener(view -> {
-            Log.d("MainActivity", "FAB clicked");
-            // Handle FAB click (e.g., open a QR scanner or create event dialog)
+            Intent intent = new Intent(MainActivity.this, QRScannerActivity.class);
+            startActivity(intent);
         });
     }
 }

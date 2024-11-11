@@ -1,10 +1,11 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.controller;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.Manifest;
 import android.provider.Settings;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -14,10 +15,10 @@ import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.view.PreviewView;
 
-
+import com.example.slacks_lottoevent.FullscreenQrScanner;
+import com.example.slacks_lottoevent.R;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.google.firebase.firestore.CollectionReference;
@@ -44,7 +45,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * This class is responsible for scanning the QR code of the event.
  */
-public class EventQrScanner extends AppCompatActivity {
+public class QRScannerActivity extends BaseActivity {
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private PreviewView cameraPreview;
@@ -57,11 +58,16 @@ public class EventQrScanner extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
-
         eventsRef = db.collection("events");
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_qr_scanner);
+        getLayoutInflater().inflate(R.layout.activity_qr_scanner, findViewById(R.id.content_frame), true);
+
+        // Set up the app bar for back navigation
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Show back button
+            getSupportActionBar().setTitle("QR Scanner"); // Set a custom title if needed
+        }
+
         cameraPreview = findViewById(R.id.cameraPreview);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             // Request the camera permission
@@ -99,7 +105,7 @@ public class EventQrScanner extends AppCompatActivity {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null && result.getContents() != null) {
             String qrCodeValue = result.getContents();
-            Intent intent = new Intent(EventQrScanner.this, com.example.slacks_lottoevent.refactor.JoinEventDetailsActivity.class);
+            Intent intent = new Intent(QRScannerActivity.this, com.example.slacks_lottoevent.refactor.JoinEventDetailsActivity.class);
             String userId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
             intent.putExtra("userId", userId);
             intent.putExtra("qrCodeValue", qrCodeValue);
@@ -149,6 +155,16 @@ public class EventQrScanner extends AppCompatActivity {
             // lifecycle Owner is this activity, using the back camera and the use case is the preview cameraPreview of the scanner which is bound to the lifecycle.
             cameraProvider.bindToLifecycle(this, cameraSelector, preview);
         } catch (Exception e) {}
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // Handle back button click
+            onBackPressed(); // Go back to the previous activity
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
