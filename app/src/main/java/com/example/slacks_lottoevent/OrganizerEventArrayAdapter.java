@@ -98,7 +98,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         TextView eventAddress = convertView.findViewById(R.id.event_address);
         TextView eventDescription = convertView.findViewById(R.id.event_description);
         eventName.setText(event.getName());
-        eventDate.setText(event.getDate());
+        eventDate.setText(event.getEventDate());
         eventTime.setText(event.getTime());
 
         String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -215,7 +215,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
                         for (String entrant : selectedEntrants) {
                             eventRef.update("selected", FieldValue.arrayUnion(entrant),
                                             "selectedNotificationsList", FieldValue.arrayUnion(entrant))
-                                    .addOnSuccessListener(aVoid -> {
+                                    .addOnSuccessListener(Void -> {
                                         Log.d("Firestore", "Entrant added successfully: " + entrant);
                                     })
                                     .addOnFailureListener(e -> {
