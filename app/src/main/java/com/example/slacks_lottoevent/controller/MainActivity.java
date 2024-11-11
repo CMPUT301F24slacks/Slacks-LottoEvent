@@ -45,10 +45,10 @@ public class MainActivity extends BaseActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_home) {
-                navController.navigate(R.id.MyEventsFragment);
+                navController.navigate(R.id.homeFragment);
                 return true;
             } else if (itemId == R.id.nav_manage) {
-                navController.navigate(R.id.ManageMyEventsFragment);
+                navController.navigate(R.id.manageFragment);
                 return true;
             } else if (itemId == R.id.nav_invites) {
                 navController.navigate(R.id.invitesFragment);
