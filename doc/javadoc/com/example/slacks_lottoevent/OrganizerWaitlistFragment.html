@@ -84,7 +84,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">OrganizerWaitlistFragment</span>
 <span class="extends-implements">extends androidx.fragment.app.Fragment</span></div>
 <div class="block">A simple <code>Fragment</code> subclass.
- Use the <a href="#newInstance(java.lang.String,java.lang.String)"><code>newInstance(java.lang.String, java.lang.String)</code></a> factory method to
+ Use the <a href="#newInstance(com.example.slacks_lottoevent.Event)"><code>newInstance(com.example.slacks_lottoevent.Event)</code></a> factory method to
  create an instance of this fragment.</div>
 </section>
 <section class="summary">
@@ -116,7 +116,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">OrganizerWaitlistFragment</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Default constructor</div>
+</div>
 </div>
 </section>
 </li>
@@ -132,20 +134,23 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="OrganizerWaitlistFragment.html" title="class in com.example.slacks_lottoevent">OrganizerWaitlistFragment</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newInstance(java.lang.String,java.lang.String)" class="member-name-link">newInstance</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;param1,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;param2)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newInstance(com.example.slacks_lottoevent.Event)" class="member-name-link">newInstance</a><wbr>(<a href="Event.html" title="class in com.example.slacks_lottoevent">Event</a>&nbsp;event)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Use this factory method to create a new instance of
  this fragment using the provided parameters.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreate(android.os.Bundle)" class="member-name-link">onCreate</a><wbr>(android.os.Bundle&nbsp;savedInstanceState)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">onCreate method</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>android.view.View</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)" class="member-name-link">onCreateView</a><wbr>(android.view.LayoutInflater&nbsp;inflater,
  android.view.ViewGroup&nbsp;container,
  android.os.Bundle&nbsp;savedInstanceState)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">onCreateView method</div>
+</div>
 </div>
 </div>
 </div>
@@ -170,6 +175,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>OrganizerWaitlistFragment</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">OrganizerWaitlistFragment</span>()</div>
+<div class="block">Default constructor</div>
 </section>
 </li>
 </ul>
@@ -181,16 +187,15 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="newInstance(java.lang.String,java.lang.String)">
+<section class="detail" id="newInstance(com.example.slacks_lottoevent.Event)">
 <h3>newInstance</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="OrganizerWaitlistFragment.html" title="class in com.example.slacks_lottoevent">OrganizerWaitlistFragment</a></span>&nbsp;<span class="element-name">newInstance</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;param1,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;param2)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="OrganizerWaitlistFragment.html" title="class in com.example.slacks_lottoevent">OrganizerWaitlistFragment</a></span>&nbsp;<span class="element-name">newInstance</span><wbr><span class="parameters">(<a href="Event.html" title="class in com.example.slacks_lottoevent">Event</a>&nbsp;event)</span></div>
 <div class="block">Use this factory method to create a new instance of
- this fragment using the provided parameters.</div>
+ this fragment using the provided parameters.
+
+     //     * @param param1 Parameter 1.
+     //     * @param param2 Parameter 2.</div>
 <dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>param1</code> - Parameter 1.</dd>
-<dd><code>param2</code> - Parameter 2.</dd>
 <dt>Returns:</dt>
 <dd>A new instance of fragment OrganizerFirstFragment.</dd>
 </dl>
@@ -200,9 +205,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onCreate(android.os.Bundle)">
 <h3>onCreate</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onCreate</span><wbr><span class="parameters">(android.os.Bundle&nbsp;savedInstanceState)</span></div>
+<div class="block">onCreate method</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onCreate</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.Fragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>savedInstanceState</code> - </dd>
 </dl>
 </section>
 </li>
@@ -212,9 +220,15 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">android.view.View</span>&nbsp;<span class="element-name">onCreateView</span><wbr><span class="parameters">(android.view.LayoutInflater&nbsp;inflater,
  android.view.ViewGroup&nbsp;container,
  android.os.Bundle&nbsp;savedInstanceState)</span></div>
+<div class="block">onCreateView method</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onCreateView</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.Fragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>inflater</code> - </dd>
+<dd><code>container</code> - </dd>
+<dd><code>savedInstanceState</code> - </dd>
+<dt>Returns:</dt>
 </dl>
 </section>
 </li>

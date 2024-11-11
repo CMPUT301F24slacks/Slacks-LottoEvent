@@ -15,7 +15,11 @@
 <script type="text/javascript" src="script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="all-classes-index-page">
-<script type="text/javascript">var pathtoroot = "./";
+<script type="text/javascript">var evenRowColor = "even-row-color";
+var oddRowColor = "odd-row-color";
+var tableTab = "table-tab";
+var activeTableTab = "active-table-tab";
+var pathtoroot = "./";
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -50,13 +54,14 @@ loadScripts(document, 'script');</script>
 <h1 title="All Classes and Interfaces" class="title">All Classes and Interfaces</h1>
 </div>
 <div id="all-classes-table">
-<div class="caption"><span>Classes</span></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="all-classes-table-tab0" role="tab" aria-selected="true" aria-controls="all-classes-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="all-classes-table-tab1" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab1', 2)" class="table-tab">Interfaces</button><button id="all-classes-table-tab2" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab2', 2)" class="table-tab">Classes</button></div>
+<div id="all-classes-table.tabpanel" role="tabpanel" aria-labelledby="all-classes-table-tab0">
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ActivityCreateEventBinding.html" title="class in com.example.slacks_lottoevent.databinding">ActivityCreateEventBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ActivityEventDetailsBinding.html" title="class in com.example.slacks_lottoevent.databinding">ActivityEventDetailsBinding</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ActivityEntrantEventDetailsBinding.html" title="class in com.example.slacks_lottoevent.databinding">ActivityEntrantEventDetailsBinding</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ActivityEventQrScannerBinding.html" title="class in com.example.slacks_lottoevent.databinding">ActivityEventQrScannerBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
@@ -64,38 +69,56 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ActivityFullscreenQrScannerBinding.html" title="class in com.example.slacks_lottoevent.databinding">ActivityFullscreenQrScannerBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ActivityMainBinding.html" title="class in com.example.slacks_lottoevent.databinding">ActivityMainBinding</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ActivityJoinEventDetailsBinding.html" title="class in com.example.slacks_lottoevent.databinding">ActivityJoinEventDetailsBinding</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/AddFacilityFragment.html" title="class in com.example.slacks_lottoevent">AddFacilityFragment</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ActivityMainBinding.html" title="class in com.example.slacks_lottoevent.databinding">ActivityMainBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ActivityOrganizerEventDetailsBinding.html" title="class in com.example.slacks_lottoevent.databinding">ActivityOrganizerEventDetailsBinding</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ActivityProfileBinding.html" title="class in com.example.slacks_lottoevent.databinding">ActivityProfileBinding</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/AddFacilityFragment.html" title="class in com.example.slacks_lottoevent">AddFacilityFragment</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">AddFacilityFragment is a DialogFragment that allows the user to create or edit a Facility.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/example/slacks_lottoevent/Callback.html" title="interface in com.example.slacks_lottoevent">Callback</a>&lt;<a href="com/example/slacks_lottoevent/Callback.html" title="type parameter in Callback">T</a>&gt;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="block">Callback interface for asynchronous tasks.</div>
+</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ContentEventBinding.html" title="class in com.example.slacks_lottoevent.databinding">ContentEventBinding</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ContentEventsHomeBinding.html" title="class in com.example.slacks_lottoevent.databinding">ContentEventsHomeBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ContentMainBinding.html" title="class in com.example.slacks_lottoevent.databinding">ContentMainBinding</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ContentOrganizerEventsBinding.html" title="class in com.example.slacks_lottoevent.databinding">ContentOrganizerEventsBinding</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ContentNotificationsUserBinding.html" title="class in com.example.slacks_lottoevent.databinding">ContentNotificationsUserBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/CreateEvent.html" title="class in com.example.slacks_lottoevent">CreateEvent</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ContentOrganizerEventsBinding.html" title="class in com.example.slacks_lottoevent.databinding">ContentOrganizerEventsBinding</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/CreateEvent.html" title="class in com.example.slacks_lottoevent">CreateEvent</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">This class is responsible for creating an event and adding it to the database.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/CustomTabBinding.html" title="class in com.example.slacks_lottoevent.databinding">CustomTabBinding</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/CustomTabBinding.html" title="class in com.example.slacks_lottoevent.databinding">CustomTabBinding</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/DialogBoxBinding.html" title="class in com.example.slacks_lottoevent.databinding">DialogBoxBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/DialogBoxBinding.html" title="class in com.example.slacks_lottoevent.databinding">DialogBoxBinding</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/DialogEditPictureBinding.html" title="class in com.example.slacks_lottoevent.databinding">DialogEditPictureBinding</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/DialogRegistrationBinding.html" title="class in com.example.slacks_lottoevent.databinding">DialogRegistrationBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/Entrant.html" title="class in com.example.slacks_lottoevent">Entrant</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Entrant class represents an entrant in the app.</div>
+<div class="block">The <code>Entrant</code> class represents a participant in the app.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/EntrantList.html" title="class in com.example.slacks_lottoevent">EntrantList</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/EntrantEventDetailsActivity.html" title="class in com.example.slacks_lottoevent">EntrantEventDetailsActivity</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">EntrantList is a class that holds a list of Entrant objects.</div>
+<div class="block">EntrantEventDetailsActivity is the activity that displays the details of an event for an entrant.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/EntrantListsArrayAdapter.html" title="class in com.example.slacks_lottoevent">EntrantListsArrayAdapter</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Custom ArrayAdapter to display a list of entrants in a ListView</div>
+</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/Event.html" title="class in com.example.slacks_lottoevent">Event</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Event class that holds all the information for an event</div>
@@ -104,11 +127,13 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">EventArrayAdapter is a custom ArrayAdapter that is used to display the individual events in event lists.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/EventDetails.html" title="class in com.example.slacks_lottoevent">EventDetails</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/EventList.html" title="class in com.example.slacks_lottoevent">EventList</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/EventList.html" title="class in com.example.slacks_lottoevent">EventList</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">EventList class is a list of events.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/EventNotificationsArrayAdapter.html" title="class in com.example.slacks_lottoevent">EventNotificationsArrayAdapter</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Custom ArrayAdapter for displaying event notifications in a ListView.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/EventQrScanner.html" title="class in com.example.slacks_lottoevent">EventQrScanner</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
@@ -122,37 +147,37 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Facility represents a location where an event can be held.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/FirstFragment.html" title="class in com.example.slacks_lottoevent">FirstFragment</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentAddFacilityBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentAddFacilityBinding</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentAddFacilityBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentAddFacilityBinding</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentFirstBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentFirstBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentFirstBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentFirstBinding</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentManageMyEventsBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentManageMyEventsBinding</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentManageMyEventsBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentManageMyEventsBinding</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentMyEventsBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentMyEventsBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentMyEventsBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentMyEventsBinding</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentOrganizerCancelledBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentOrganizerCancelledBinding</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentOrganizerCancelledBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentOrganizerCancelledBinding</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentOrganizerEnrolledBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentOrganizerEnrolledBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentOrganizerEnrolledBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentOrganizerEnrolledBinding</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentOrganizerInvitedBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentOrganizerInvitedBinding</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentOrganizerInvitedBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentOrganizerInvitedBinding</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentOrganizerWaitlistBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentOrganizerWaitlistBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentOrganizerWaitlistBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentOrganizerWaitlistBinding</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentSecondBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentSecondBinding</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/FragmentSecondBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentSecondBinding</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/FullscreenQrScanner.html" title="class in com.example.slacks_lottoevent">FullscreenQrScanner</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/FullscreenQrScanner.html" title="class in com.example.slacks_lottoevent">FullscreenQrScanner</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">FullscreenQrScanner is a custom Activity that extends CaptureActivity from the ZXing library.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/JoinEventDetailsActivity.html" title="class in com.example.slacks_lottoevent">JoinEventDetailsActivity</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">JoinEventDetailsActivity is the activity for the Join Event Details screen.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ListItemBinding.html" title="class in com.example.slacks_lottoevent.databinding">ListItemBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/MainActivity.html" title="class in com.example.slacks_lottoevent">MainActivity</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Relevant Documentation and Resources:
- https://developer.android.com/reference/android/content/SharedPreferences
- https://stackoverflow.com/questions/48740056/splash-screen-using-handler</div>
+<div class="block">MainActivity is the main activity for the app.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/ManageMyEventsFragment.html" title="class in com.example.slacks_lottoevent">ManageMyEventsFragment</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
@@ -162,14 +187,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">This class is a fragment that displays the list of events the user has signed up for.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/NotificationsUserBinding.html" title="class in com.example.slacks_lottoevent.databinding">NotificationsUserBinding</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/NotificationsOrganizerBinding.html" title="class in com.example.slacks_lottoevent.databinding">NotificationsOrganizerBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/Organizer.html" title="class in com.example.slacks_lottoevent">Organizer</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/NotificationsUserBinding.html" title="class in com.example.slacks_lottoevent.databinding">NotificationsUserBinding</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/Organizer.html" title="class in com.example.slacks_lottoevent">Organizer</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Organizer class is a class that represents the organizer of the event.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/Organizer_MainActivity.html" title="class in com.example.slacks_lottoevent">Organizer_MainActivity</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/OrganizerCancelledFragment.html" title="class in com.example.slacks_lottoevent">OrganizerCancelledFragment</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A simple <code>Fragment</code> subclass.</div>
@@ -178,45 +203,59 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A simple <code>Fragment</code> subclass.</div>
 </div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/OrganizerEventArrayAdapter.html" title="class in com.example.slacks_lottoevent">OrganizerEventArrayAdapter</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Custom ArrayAdapter for displaying events in the OrganizerEventsActivity</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/OrganizerEventDetailsActivity.html" title="class in com.example.slacks_lottoevent">OrganizerEventDetailsActivity</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">EntrantEventDetailsActivity is the activity that displays the details of an event for an entrant.</div>
+</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/OrganizerInvitedFragment.html" title="class in com.example.slacks_lottoevent">OrganizerInvitedFragment</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A simple <code>Fragment</code> subclass.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/OrganizerMainActivityBinding.html" title="class in com.example.slacks_lottoevent.databinding">OrganizerMainActivityBinding</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/OrganizerNotifications.html" title="class in com.example.slacks_lottoevent">OrganizerNotifications</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">OrganizerNotifications.java
+ This class is used to display the notifications for the organizer.</div>
+</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/OrganizerWaitlistFragment.html" title="class in com.example.slacks_lottoevent">OrganizerWaitlistFragment</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A simple <code>Fragment</code> subclass.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/OrganzierEventArrayAdapter.html" title="class in com.example.slacks_lottoevent">OrganzierEventArrayAdapter</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/placeholder/PlaceholderContent.html" title="class in com.example.slacks_lottoevent.placeholder">PlaceholderContent</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Custom ArrayAdapter for displaying events in the OrganizerEventsActivity</div>
-</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/placeholder/PlaceholderContent.html" title="class in com.example.slacks_lottoevent.placeholder">PlaceholderContent</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Helper class for providing sample content for user interfaces created by
  Android template wizards.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/placeholder/PlaceholderContent.PlaceholderItem.html" title="class in com.example.slacks_lottoevent.placeholder">PlaceholderContent.PlaceholderItem</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/placeholder/PlaceholderContent.PlaceholderItem.html" title="class in com.example.slacks_lottoevent.placeholder">PlaceholderContent.PlaceholderItem</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A placeholder item representing a piece of content.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/Profile.html" title="class in com.example.slacks_lottoevent">Profile</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/Profile.html" title="class in com.example.slacks_lottoevent">Profile</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Represents a user profile with basic information.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/ProfileActivity.html" title="class in com.example.slacks_lottoevent">ProfileActivity</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/SecondFragment.html" title="class in com.example.slacks_lottoevent">SecondFragment</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/SignUpActivity.html" title="class in com.example.slacks_lottoevent">SignUpActivity</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/SignUpActivity.html" title="class in com.example.slacks_lottoevent">SignUpActivity</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">SignUpActivity is the Activity that allows the user to sign up for the.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/SignUpActivityBinding.html" title="class in com.example.slacks_lottoevent.databinding">SignUpActivityBinding</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/SplashActivityBinding.html" title="class in com.example.slacks_lottoevent.databinding">SplashActivityBinding</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/SignUpActivityBinding.html" title="class in com.example.slacks_lottoevent.databinding">SignUpActivityBinding</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ToolbarLayoutBinding.html" title="class in com.example.slacks_lottoevent.databinding">ToolbarLayoutBinding</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/SplashActivityBinding.html" title="class in com.example.slacks_lottoevent.databinding">SplashActivityBinding</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/User_Notifications.html" title="class in com.example.slacks_lottoevent">User_Notifications</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/databinding/ToolbarLayoutBinding.html" title="class in com.example.slacks_lottoevent.databinding">ToolbarLayoutBinding</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/UserEventNotifications.html" title="class in com.example.slacks_lottoevent">UserEventNotifications</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/slacks_lottoevent/UserNotifications.html" title="class in com.example.slacks_lottoevent">UserNotifications</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">UserNotifications is an activity that displays the user's event notifications.</div>
+</div>
+</div>
 </div>
 </div>
 </main>

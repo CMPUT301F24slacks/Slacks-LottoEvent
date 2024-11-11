@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class ManageMyEventsFragment extends Fragment implements AddFacilityFragment.AddFacilityDialogListener{
 
-    private OrganzierEventArrayAdapter organzierEventArrayAdapter;
+    private OrganizerEventArrayAdapter organizerEventArrayAdapter;
     private ListView myEventsListView;
     private FragmentManageMyEventsBinding binding;
     private TextView facilityCreated;
@@ -49,6 +49,12 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
     private CollectionReference organizersRef;
     String deviceId;
 
+    /**
+     * This method is called when the user creates a new facility.
+     * It adds the facility to the Firestore database.
+     *
+     * @param facility The facility object to be added
+     */
     @Override
     public void addFacility(Facility facility) {
         // Retrieve the facility name and set it to display on the screen
@@ -101,6 +107,10 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
     }
 
+    /**
+     * This method is called when the user updates an existing facility.
+     * It updates the facility in the Firestore database.
+     */
     @Override
     public void updateFacility() {
         String facilityName = existingFacility.getFacilityName();
@@ -134,6 +144,10 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                 .addOnFailureListener(e -> Log.w("updateFacility", "Error updating facility", e));
     }
 
+    /**
+     * This method is called when the user deletes an existing facility.
+     * It deletes the facility from the Firestore database.
+     */
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
@@ -143,6 +157,10 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         return binding.getRoot();
     }
 
+    /**
+     * This method is called when the user deletes an existing facility.
+     * It deletes the facility from the Firestore database.
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         eventList = new ArrayList<>(); // Initialize the event list
@@ -152,13 +170,13 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         organizersRef = db.collection("organizers");
 
         myEventsListView = binding.myEventsListView;
-        organzierEventArrayAdapter = new OrganzierEventArrayAdapter(getContext(), eventList);
-        myEventsListView.setAdapter(organzierEventArrayAdapter);
+        organizerEventArrayAdapter = new OrganizerEventArrayAdapter(getContext(), eventList);
+        myEventsListView.setAdapter(organizerEventArrayAdapter);
 
         createFacilitiesButton = view.findViewById(R.id.create_facility_button);
         facilityCreated = view.findViewById(R.id.facility_created);
 
-        deviceId= Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+        deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
 
 /// Listen for real-time updates to the organizer's document
@@ -192,7 +210,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                                             if (!newEvents.equals(eventList)) {
                                                 eventList.clear();
                                                 eventList.addAll(newEvents);
-                                                organzierEventArrayAdapter.notifyDataSetChanged();
+                                                organizerEventArrayAdapter.notifyDataSetChanged();
                                             }
                                         }
                                     }
@@ -207,12 +225,12 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                 } else {
                     // Handle the case where no events are found for this organizer
                     eventList.clear();
-                    organzierEventArrayAdapter.notifyDataSetChanged();
+                    organizerEventArrayAdapter.notifyDataSetChanged();
                 }
             } else {
                 Log.w("Firestore", "Organizer document does not exist or eventList missing.");
                 eventList.clear();
-                organzierEventArrayAdapter.notifyDataSetChanged();
+                organizerEventArrayAdapter.notifyDataSetChanged();
             }
         });
 
@@ -245,7 +263,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                                                 if (!newEvents.equals(eventList)) {
                                                     eventList.clear();
                                                     eventList.addAll(newEvents);
-                                                    organzierEventArrayAdapter.notifyDataSetChanged();
+                                                    organizerEventArrayAdapter.notifyDataSetChanged();
                                                 }
                                             }
                                         }
@@ -261,13 +279,13 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                         // Handle case when eventList is null or empty
                         Log.w("Firestore", "No events found for this organizer.");
                         eventList.clear();
-                        organzierEventArrayAdapter.notifyDataSetChanged();
+                        organizerEventArrayAdapter.notifyDataSetChanged();
                     }
                 } else {
                     // Handle case when organizer document doesn't exist or eventList is missing
                     Log.w("Firestore", "Organizer document does not exist or eventList missing.");
                     eventList.clear();
-                    organzierEventArrayAdapter.notifyDataSetChanged();
+                    organizerEventArrayAdapter.notifyDataSetChanged();
                 }
             } else {
                 Log.w("Firestore", "Organizer query failed.", task.getException());
@@ -329,8 +347,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
             }
         });
 
-
-        // CHANGE HERE BEFORE PUSHING
         if (existingFacility == null) {
             createFacilitiesButton.setVisibility(View.GONE);
         } else {

@@ -85,6 +85,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">EntrantListsArrayAdapter</span>
 <span class="extends-implements">extends android.widget.ArrayAdapter&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span></div>
+<div class="block">Custom ArrayAdapter to display a list of entrants in a ListView</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -107,7 +108,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(android.content.Context,java.util.List)" class="member-name-link">EntrantListsArrayAdapter</a><wbr>(android.content.Context&nbsp;context,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;items)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructor for the custom ArrayAdapter</div>
+</div>
 </div>
 </section>
 </li>
@@ -126,7 +129,9 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getView(int,android.view.View,android.view.ViewGroup)" class="member-name-link">getView</a><wbr>(int&nbsp;position,
  android.view.View&nbsp;convertView,
  android.view.ViewGroup&nbsp;parent)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get a View that displays the data at the specified position in the data set</div>
+</div>
 </div>
 </div>
 </div>
@@ -158,6 +163,12 @@ loadScripts(document, 'script');</script>
 <h3>EntrantListsArrayAdapter</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EntrantListsArrayAdapter</span><wbr><span class="parameters">(android.content.Context&nbsp;context,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;items)</span></div>
+<div class="block">Constructor for the custom ArrayAdapter</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - The current context</dd>
+<dd><code>items</code> - The list of items to display</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -174,11 +185,18 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">android.view.View</span>&nbsp;<span class="element-name">getView</span><wbr><span class="parameters">(int&nbsp;position,
  android.view.View&nbsp;convertView,
  android.view.ViewGroup&nbsp;parent)</span></div>
+<div class="block">Get a View that displays the data at the specified position in the data set</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>getView</code>&nbsp;in interface&nbsp;<code>android.widget.Adapter</code></dd>
 <dt>Overrides:</dt>
 <dd><code>getView</code>&nbsp;in class&nbsp;<code>android.widget.ArrayAdapter&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>position</code> - The position of the item within the adapter's data set</dd>
+<dd><code>convertView</code> - The old view to reuse, if possible</dd>
+<dd><code>parent</code> - The parent that this view will eventually be attached to</dd>
+<dt>Returns:</dt>
+<dd>A View corresponding to the data at the specified position</dd>
 </dl>
 </section>
 </li>

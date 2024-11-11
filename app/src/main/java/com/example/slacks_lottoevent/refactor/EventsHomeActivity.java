@@ -1,6 +1,8 @@
 package com.example.slacks_lottoevent.refactor;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +29,12 @@ public class EventsHomeActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private MaterialToolbar toolbar;
 
+    /**
+     * onCreate method for the EventsHomeActivity.
+     * This method initializes the activity and sets up the toolbar.
+     *
+     * @param savedInstanceState The saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +118,7 @@ public class EventsHomeActivity extends AppCompatActivity {
 
     /*
      * Inflate the menu; this adds items to the action bar if it is present.
+     * @param menu The menu to inflate
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -120,6 +129,7 @@ public class EventsHomeActivity extends AppCompatActivity {
 
     /*
      * Handle action bar item clicks here.
+     * @param item The menu item that was clicked
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -128,10 +138,29 @@ public class EventsHomeActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.profile) {
-            return true;
+            // if the user is not signed up, redirect to the sign up page
+            SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+            if (!sharedPreferences.getBoolean("isSignedUp", false)) {
+                new AlertDialog.Builder(this)
+                        .setTitle("Sign-Up Required")
+                        .setMessage("In order to join an event, we need to collect some information about you.")
+                        .setPositiveButton("Proceed", (dialog, which) -> {
+                            Intent signUpIntent = new Intent(this, SignUpActivity.class);
+                            startActivity(signUpIntent);
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .show();
+                return true;
+            } else {
+                Intent intent = new Intent(EventsHomeActivity.this, ProfileActivity.class);
+                startActivity(intent);
+                return true;
+            }
         }
         if (id == R.id.notifications) {
-            Intent intent = new Intent(EventsHomeActivity.this, User_Notifications.class);
+            Intent intent = new Intent(EventsHomeActivity.this, UserNotifications.class);
             startActivity(intent);
             return true;
         }

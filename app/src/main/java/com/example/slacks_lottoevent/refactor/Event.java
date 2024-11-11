@@ -2,10 +2,12 @@ package com.example.slacks_lottoevent.refactor;
 
 import java.util.ArrayList;
 
+import java.io.Serializable;
+
 /**
  * Event class that holds all the information for an event
  */
-public class Event {
+public class Event implements Serializable {
 
     private String name;
     private String date;
@@ -29,7 +31,7 @@ public class Event {
     private ArrayList<String> selectedNotificationsList;
     private ArrayList<String> joinedNotificationsList;
     private ArrayList<String> cancelledNotificationsList;
-
+    private String location;
     public Event(){
 
     }
@@ -51,7 +53,7 @@ public class Event {
      * @param cancelledNotifications
      * @param qrHash
      */
-    public Event(String name, String date, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventID, Boolean geoLocation, String qrHash, Boolean waitlistNotifications, Boolean selectedNotifications, Boolean cancelledNotifications) {
+    public Event(String name, String date, String location, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventID, Boolean geoLocation, String qrHash, Boolean waitlistNotifications, Boolean selectedNotifications, Boolean cancelledNotifications) {
         this.name = name;
         this.date = date;
         this.time = time;
@@ -59,7 +61,7 @@ public class Event {
         this.description = description;
         this.eventSlots = eventSlots;
         this.waitListCapacity = waitListCapacity;
-
+        this.location = location;
 
         this.waitlisted = new ArrayList<>();
         this.finalists = new ArrayList<>();
@@ -81,7 +83,12 @@ public class Event {
         this.selectedNotifications = selectedNotifications;
     }
 
-
+    public String getLocation(){
+        return location;
+    }
+    public void setLocation(String location){
+        this.location = location;
+    }
     public String getName() {
         return name;
     }
@@ -232,4 +239,24 @@ public class Event {
 
     public void addCancelledNotification(String notification) {this.cancelledNotificationsList.add(notification);}
 
+    /**
+     * Checks if the event is full
+     * @return true if the event is full, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Event event = (Event) obj;
+        return eventID.equals(event.eventID); // Assuming eventId uniquely identifies an Event
+    }
+
+    /**
+     * Hashcode for the event
+     * @return hashcode
+     */
+    @Override
+    public int hashCode() {
+        return eventID.hashCode();
+    }
 }

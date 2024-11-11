@@ -55,15 +55,122 @@ loadScripts(document, 'script');</script>
 <h2 title="Package">Package&nbsp;<a href="com/example/slacks_lottoevent/package-summary.html">com.example.slacks_lottoevent</a></h2>
 <ul class="block-list">
 <li>
-<section class="serialized-class-details" id="com.example.slacks_lottoevent.refactor.EventArrayAdapter">
-<h3>Class&nbsp;<a href="com/example/slacks_lottoevent/EventArrayAdapter.html" title="class in com.example.slacks_lottoevent">com.example.slacks_lottoevent.refactor.EventArrayAdapter</a></h3>
+<section class="serialized-class-details" id="com.example.slacks_lottoevent.Event">
+<h3>Class&nbsp;<a href="com/example/slacks_lottoevent/Event.html" title="class in com.example.slacks_lottoevent">com.example.slacks_lottoevent.Event</a></h3>
+<div class="type-signature">class Event extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a> implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
+<ul class="block-list">
+<li>
+<section class="detail">
+<h4>Serialized Fields</h4>
+<ul class="block-list">
+<li class="block-list">
+<h5>cancelled</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; cancelled</pre>
+</li>
+<li class="block-list">
+<h5>cancelledNotifications</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a> cancelledNotifications</pre>
+</li>
+<li class="block-list">
+<h5>cancelledNotificationsList</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; cancelledNotificationsList</pre>
+</li>
+<li class="block-list">
+<h5>date</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> date</pre>
+</li>
+<li class="block-list">
+<h5>description</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> description</pre>
+</li>
+<li class="block-list">
+<h5>eventID</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> eventID</pre>
+</li>
+<li class="block-list">
+<h5>eventSlots</h5>
+<pre>int eventSlots</pre>
+</li>
+<li class="block-list">
+<h5>finalists</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; finalists</pre>
+</li>
+<li class="block-list">
+<h5>geoLocation</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a> geoLocation</pre>
+</li>
+<li class="block-list">
+<h5>joinedNotificationsList</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; joinedNotificationsList</pre>
+</li>
+<li class="block-list">
+<h5>location</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> location</pre>
+</li>
+<li class="block-list">
+<h5>name</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> name</pre>
+</li>
+<li class="block-list">
+<h5>price</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> price</pre>
+</li>
+<li class="block-list">
+<h5>qrCodeData</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> qrCodeData</pre>
+</li>
+<li class="block-list">
+<h5>qrHash</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> qrHash</pre>
+</li>
+<li class="block-list">
+<h5>selected</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; selected</pre>
+</li>
+<li class="block-list">
+<h5>selectedNotifications</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a> selectedNotifications</pre>
+</li>
+<li class="block-list">
+<h5>selectedNotificationsList</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; selectedNotificationsList</pre>
+</li>
+<li class="block-list">
+<h5>time</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> time</pre>
+</li>
+<li class="block-list">
+<h5>waitListCapacity</h5>
+<pre>int waitListCapacity</pre>
+</li>
+<li class="block-list">
+<h5>waitlisted</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; waitlisted</pre>
+</li>
+<li class="block-list">
+<h5>waitlistedNotificationsList</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; waitlistedNotificationsList</pre>
+</li>
+<li class="block-list">
+<h5>waitlistNotifications</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a> waitlistNotifications</pre>
+</li>
+</ul>
+</section>
+</li>
+</ul>
+</section>
+</li>
+<li>
+<section class="serialized-class-details" id="com.example.slacks_lottoevent.EventArrayAdapter">
+<h3>Class&nbsp;<a href="com/example/slacks_lottoevent/EventArrayAdapter.html" title="class in com.example.slacks_lottoevent">com.example.slacks_lottoevent.EventArrayAdapter</a></h3>
 <div class="type-signature">class EventArrayAdapter extends android.widget.ArrayAdapter&lt;<a href="com/example/slacks_lottoevent/Event.html" title="class in com.example.slacks_lottoevent">Event</a>&gt; implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
 </section>
 </li>
 <li>
-<section class="serialized-class-details" id="com.example.slacks_lottoevent.refactor.OrganzierEventArrayAdapter">
-<h3>Class&nbsp;<a href="com/example/slacks_lottoevent/OrganzierEventArrayAdapter.html" title="class in com.example.slacks_lottoevent">com.example.slacks_lottoevent.refactor.OrganzierEventArrayAdapter</a></h3>
-<div class="type-signature">class OrganzierEventArrayAdapter extends android.widget.ArrayAdapter&lt;<a href="com/example/slacks_lottoevent/Event.html" title="class in com.example.slacks_lottoevent">Event</a>&gt; implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
+<section class="serialized-class-details" id="com.example.slacks_lottoevent.OrganizerEventArrayAdapter">
+<h3>Class&nbsp;<a href="com/example/slacks_lottoevent/OrganizerEventArrayAdapter.html" title="class in com.example.slacks_lottoevent">com.example.slacks_lottoevent.OrganizerEventArrayAdapter</a></h3>
+<div class="type-signature">class OrganizerEventArrayAdapter extends android.widget.ArrayAdapter&lt;<a href="com/example/slacks_lottoevent/Event.html" title="class in com.example.slacks_lottoevent">Event</a>&gt; implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
 <ul class="block-list">
 <li>
 <section class="detail">

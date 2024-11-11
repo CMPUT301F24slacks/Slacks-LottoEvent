@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.2"
+agp = "8.6.0"
 appcompatV7 = "28.0.0"
 core = "3.4.1"
 journeyappsZxingAndroidEmbedded = "4.1.0"
@@ -17,6 +17,9 @@ firebaseCrashlyticsBuildtools = "3.0.2"
 zxingAndroidEmbedded = "4.3.0"
 zxingAndroidEmbeddedVersion = "3.4.0"
 preference = "1.2.0"
+coreVersion = "1.6.1"
+fragmentTesting = "1.8.5"
+activity = "1.9.3"
 
 [libraries]
 appcompat-v7 = { module = "com.android.support:appcompat-v7", version.ref = "appcompatV7" }
@@ -29,7 +32,6 @@ material = { group = "com.google.android.material", name = "material", version.r
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
-navigation-dynamic-features-fragment = { module = "androidx.navigation:navigation-dynamic-features-fragment", version.ref = "navigationUi" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
@@ -37,6 +39,9 @@ zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", ve
 zxing-android-embedded-v340 = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbeddedVersion" }
 zxing-android-embedded-v410 = { module = "com.journeyapps:zxing-android-embedded", version.ref = "journeyappsZxingAndroidEmbedded" }
 preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
+test-core = { group = "androidx.test", name = "core", version.ref = "coreVersion" }
+fragment-testing = { group = "androidx.fragment", name = "fragment-testing", version.ref = "fragmentTesting" }
+activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

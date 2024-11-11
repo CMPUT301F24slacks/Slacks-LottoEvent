@@ -1,9 +1,10 @@
-package com.example.slacks_lottoevent.refactor;
+package com.example.slacks_lottoevent;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.Manifest;
+import android.provider.Settings;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -16,7 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.view.PreviewView;
 
-import com.example.slacks_lottoevent.R;
+
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.google.firebase.firestore.CollectionReference;
@@ -49,6 +50,10 @@ public class EventQrScanner extends AppCompatActivity {
     private PreviewView cameraPreview;
     private static final int CAMERA_REQUEST_CODE = 100;
 
+    /**
+     * This method is responsible for creating the activity.
+     * @param savedInstanceState The saved instance state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
@@ -82,12 +87,21 @@ public class EventQrScanner extends AppCompatActivity {
             integrator.initiateScan();
         });
     }
+
+    /**
+     * This method is responsible for handling the camera permission request result.
+     * @param requestCode The request code.
+     * @param resultCode The permissions requested.
+     * @param data The results of the permission requests.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null && result.getContents() != null) {
             String qrCodeValue = result.getContents();
-            Intent intent = new Intent(EventQrScanner.this, EventDetails.class);
+            Intent intent = new Intent(EventQrScanner.this, JoinEventDetailsActivity.class);
+            String userId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            intent.putExtra("userId", userId);
             intent.putExtra("qrCodeValue", qrCodeValue);
             startActivity(intent);
 

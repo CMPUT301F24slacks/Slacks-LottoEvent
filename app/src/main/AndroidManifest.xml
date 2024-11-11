@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
 
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,6 +20,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
@@ -23,6 +28,13 @@
         tools:targetApi="31">
         <activity
             android:name=".controller.SplashActivity"
+            android:name=".OrganizerEventDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EntrantEventDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent">
             <intent-filter>
@@ -42,21 +54,29 @@
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity android:name=".refactor.SignUpActivity"/>
         <activity android:name=".refactor.EventDetails"/>
+        <activity android:name=".JoinEventDetailsActivity" />
         <activity
             android:name=".refactor.EventQrScanner"
             android:exported="true"
-            android:theme="@style/Theme.SlacksLottoEvent">
-        </activity>
+            android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
             android:name=".refactor.FullscreenQrScanner"
             android:exported="true"
-            android:theme="@style/Theme.SlacksLottoEvent"/>
+            android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
             android:name=".refactor.CreateEvent"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
             android:name=".refactor.User_Notifications"
+            android:exported="true"
+            android:theme="@style/Theme.SlacksLottoEvent" />
+        <activity
+            android:name=".OrganizerNotifications"
+            android:exported="true"
+            android:theme="@style/Theme.SlacksLottoEvent" />
+        <activity
+            android:name=".ProfileActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
 
