@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.model;
 
 import java.util.ArrayList;
 
@@ -9,6 +9,7 @@ import java.util.ArrayList;
  */
 public class Entrant {
 
+    private String deviceId;
     private ArrayList<String> waitlistedEvents;
     private ArrayList<String> finalistEvents;
     private ArrayList<String> invitedEvents;

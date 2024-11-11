@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.example.slacks_lottoevent.Event;
+import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.OrganizerEventDetailsActivity;
 import com.example.slacks_lottoevent.R;
 import com.google.firebase.firestore.CollectionReference;

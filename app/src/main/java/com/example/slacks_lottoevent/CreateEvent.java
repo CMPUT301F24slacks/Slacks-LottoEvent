@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
+import com.example.slacks_lottoevent.model.Event;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;

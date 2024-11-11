@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.example.slacks_lottoevent.model.Event;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 

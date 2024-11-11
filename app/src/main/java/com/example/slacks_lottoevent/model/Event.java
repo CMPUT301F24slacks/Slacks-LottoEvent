@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.model;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,6 @@ import java.io.Serializable;
  * Event class that holds all the information for an event
  */
 public class Event implements Serializable {
-
     private String name;
     private String date;
     private String time;
@@ -24,14 +23,13 @@ public class Event implements Serializable {
     private String qrHash;
     private String eventID;
     private Boolean geoLocation;
-    private Boolean waitlistNotifications;
-    private Boolean selectedNotifications;
-    private Boolean cancelledNotifications;
     private ArrayList<String> waitlistedNotificationsList;
     private ArrayList<String> selectedNotificationsList;
     private ArrayList<String> joinedNotificationsList;
     private ArrayList<String> cancelledNotificationsList;
     private String location;
+    private String deviceId;
+
     public Event(){
 
     }
@@ -77,10 +75,6 @@ public class Event implements Serializable {
         this.eventID = eventID;
         this.qrHash = qrHash;
         this.geoLocation = geoLocation;
-
-        this.waitlistNotifications = waitlistNotifications;
-        this.cancelledNotifications = cancelledNotifications;
-        this.selectedNotifications = selectedNotifications;
     }
 
     public String getLocation(){
@@ -201,27 +195,7 @@ public class Event implements Serializable {
 
     public void addSelected(String entrant) {this.selected.add(entrant);}
 
-    public Boolean getWaitlistNotifications() {
-        return waitlistNotifications;
-    }
 
-    public void setWaitlistNotifications(Boolean waitlistNotifications) {
-        this.waitlistNotifications = waitlistNotifications;
-    }
-
-    public Boolean getSelectedNotifications() {
-        return selectedNotifications;
-    }
-
-    public void setSelectedNotifications(Boolean selectedNotifications) {
-        this.selectedNotifications = selectedNotifications;
-    }
-
-    public Boolean getCancelledNotifications() {
-        return cancelledNotifications;
-    }
-
-    public void setCancelledNotifications(Boolean cancelled_notifications) { this.cancelledNotifications = cancelled_notifications; }
 
     public ArrayList<String> getSelectedNotificationsList(){return selectedNotificationsList; }
 

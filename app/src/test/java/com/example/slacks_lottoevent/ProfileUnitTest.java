@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.example.slacks_lottoevent.model.Profile;
+
 /**
  * Unit tests for the Profile class.
  */

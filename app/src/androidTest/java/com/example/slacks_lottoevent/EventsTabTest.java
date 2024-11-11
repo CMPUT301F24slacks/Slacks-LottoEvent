@@ -32,7 +32,7 @@ public class EventsTabTest {
         // Simulate clicking on "My Events" tab
         onView(withText("My Events")).perform(click());
 
-        // Check that MyEventsFragment is displayed and the QR Code scanner button is visible
+        // Check that HomeFragment is displayed and the QR Code scanner button is visible
         onView(withId(R.id.qr_code_scanner_FAB)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)));
         onView(withId(R.id.create_event_FAB)).check(matches(withEffectiveVisibility(Visibility.GONE)));
     }

@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.slacks_lottoevent.databinding.FragmentManageMyEventsBinding;
+import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.model.Facility;
 import com.example.slacks_lottoevent.refactor.OrganizerEventArrayAdapter;
 import com.google.firebase.firestore.CollectionReference;
@@ -79,12 +80,11 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilitiesRef.add(facilityData)
                 .addOnSuccessListener(documentReference -> {
                     Log.d("addFacility", "Facility added with ID: " + documentReference.getId());
-                    existingFacility.setFacilityId(documentReference.getId()); // Set document ID here
 
                     // Now add the facility data to the organizer after the facility ID is set
                     Map<String, Object> organizerData = new HashMap<>();
                     organizerData.put("userId", facility.getOrganizerId());
-                    organizerData.put("facilityId", existingFacility.getFacilityId());
+                    organizerData.put("facilityId", existingFacility.getDeviceId());
                     organizerData.put("events", null); // Assuming EventList can be serialized
 
                     organizersRef.document(facility.getOrganizerId()) // Sets userId as the document ID
@@ -122,7 +122,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         }
 
         // Retrieve the document ID for the existing facility
-        String documentId = existingFacility.getFacilityId();
+        String documentId = existingFacility.getDeviceId();
         if (documentId == null || documentId.isEmpty()) {
             Log.w("updateFacility", "No document ID provided for update");
             return;
@@ -319,7 +319,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
                                     // Populate existingFacility with data from Firestore
                                     existingFacility = facilitySnapshot.toObject(Facility.class);
-                                    existingFacility.setFacilityId(facilitySnapshot.getId());
                                     existingFacility.setFacilityName(facilityName);
                                 } else {
                                     facilityCreated.setVisibility(View.GONE);

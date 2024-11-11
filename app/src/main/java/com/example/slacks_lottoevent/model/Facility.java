@@ -11,7 +11,6 @@ public class Facility {
     private String province;
     private String country;
     private String postalCode;
-    private String facilityId;
     private String organizerId;
     private String deviceId;
 
@@ -99,14 +98,6 @@ public class Facility {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
-    }
-
-    public String getFacilityId() {
-        return facilityId;
-    }
-
-    public void setFacilityId(String facilityId) {
-        this.facilityId = facilityId;
     }
 
     public String getOrganizerId() {

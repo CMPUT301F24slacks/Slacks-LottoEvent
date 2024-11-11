@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,6 +20,8 @@ public class Profile {
     private String profilePicturePath; // Path to the profile picture image
     private boolean usingDefaultPicture;
     private boolean adminNotifications;
+    private boolean isAdmin;
+    private String deviceId;
 
     /**
      * Default constructor for Firestore serialization.

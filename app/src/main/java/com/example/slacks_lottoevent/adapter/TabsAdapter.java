@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
+import com.example.slacks_lottoevent.HomeFragment;
 import com.example.slacks_lottoevent.fragment.EventsFragment;
 import com.example.slacks_lottoevent.fragment.FacilityFragment;
 
@@ -18,7 +20,7 @@ public class TabsAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new EventsFragment();
+                return new HomeFragment();
             case 1:
                 return new FacilityFragment();
             default:
