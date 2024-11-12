@@ -1,45 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.FacilityFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#121212"
+    android:padding="16dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
-    <!-- Button Container -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:background="@color/background"
-        android:padding="16dp">
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Facility"
+            android:textSize="24sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Facility Name -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Facility Name"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="8dp" />
+        <EditText
+            android:id="@+id/facility_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter facility name"
+            android:inputType="text"
+            android:background="@drawable/custom_edit_text"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#B3B3B3"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Street Address 1 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Street Address 1"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="8dp" />
+        <EditText
+            android:id="@+id/street_address_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter street address"
+            android:inputType="text"
+            android:background="@drawable/custom_edit_text"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#B3B3B3"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Street Address 2 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Street Address 2"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="8dp" />
+        <EditText
+            android:id="@+id/street_address_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter apartment, suite, etc."
+            android:inputType="text"
+            android:background="@drawable/custom_edit_text"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#B3B3B3"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- City and Province (Horizontal Layout) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="City"
+                    android:textSize="16sp"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="8dp" />
+                <EditText
+                    android:id="@+id/city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter city"
+                    android:inputType="text"
+                    android:background="@drawable/custom_edit_text"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#B3B3B3"
+                    android:padding="12dp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Province"
+                    android:textSize="16sp"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="8dp" />
+                <EditText
+                    android:id="@+id/province"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter province"
+                    android:inputType="text"
+                    android:background="@drawable/custom_edit_text"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#B3B3B3"
+                    android:padding="12dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Country -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Country"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="8dp" />
+        <EditText
+            android:id="@+id/country"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter country"
+            android:inputType="text"
+            android:background="@drawable/custom_edit_text"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#B3B3B3"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Postal Code -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Postal Code"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="8dp" />
+        <EditText
+            android:id="@+id/postal_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter postal code"
+            android:inputType="text"
+            android:background="@drawable/custom_edit_text"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#B3B3B3"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
 
         <!-- Create Facility Button -->
         <Button
             android:id="@+id/create_facility_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/text_buttons"
-            android:text="Create Facility"
+            android:backgroundTint="#9C27B0"
+            android:text="+ Create Facility"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            app:icon="@drawable/baseline_add_24" />
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
 
         <!-- Edit Facility Button -->
         <Button
             android:id="@+id/edit_facility_button"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:backgroundTint="@color/text_buttons"
             android:text="Edit Facility"
             android:textColor="#FFFFFF"
             android:visibility="gone"
             app:icon="@drawable/baseline_mode_edit_24" />
     </LinearLayout>
-
-</FrameLayout>
+</ScrollView>

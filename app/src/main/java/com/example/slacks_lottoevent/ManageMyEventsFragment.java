@@ -74,7 +74,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilityData.put("province", facility.getProvince());
         facilityData.put("country", facility.getCountry());
         facilityData.put("postalCode", facility.getPostalCode());
-        facilityData.put("organizerID", facility.getOrganizerId());
         facilityData.put("deviceID", facility.getDeviceId());
 
         facilitiesRef.add(facilityData)
@@ -83,20 +82,9 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
                     // Now add the facility data to the organizer after the facility ID is set
                     Map<String, Object> organizerData = new HashMap<>();
-                    organizerData.put("userId", facility.getOrganizerId());
                     organizerData.put("facilityId", existingFacility.getDeviceId());
                     organizerData.put("events", null); // Assuming EventList can be serialized
 
-                    organizersRef.document(facility.getOrganizerId()) // Sets userId as the document ID
-                            .set(organizerData)
-                            .addOnSuccessListener(aVoid -> {
-                                Log.d("addFacility", "Organizer updated with facility ID.");
-                                // Successfully added organizer with facility ID
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.w("addFacility", "Error adding organizer", e);
-                                // Handle the error
-                            });
                 })
                 .addOnFailureListener(e -> Log.w("addFacility", "Error adding facility", e));
 

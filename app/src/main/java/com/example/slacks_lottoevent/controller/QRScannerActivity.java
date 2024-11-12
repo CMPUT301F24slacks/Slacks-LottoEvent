@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.Preview;
@@ -59,6 +60,7 @@ public class QRScannerActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.activity_qr_scanner, findViewById(R.id.content_frame), true);
 

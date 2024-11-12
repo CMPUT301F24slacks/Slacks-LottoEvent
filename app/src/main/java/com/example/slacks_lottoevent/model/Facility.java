@@ -11,7 +11,6 @@ public class Facility {
     private String province;
     private String country;
     private String postalCode;
-    private String organizerId;
     private String deviceId;
 
     /**
@@ -29,7 +28,6 @@ public class Facility {
      * @param province The province where the facility is located
      * @param country The country where the facility is located
      * @param postalCode The postal code of the facility
-     * @param organizerId The ID of the organizer who owns the facility
      * @param deviceId The ID of the device that created the facility
      */
     public Facility(String facilityName, String streetAddress1, String streetAddress2, String city, String province, String country, String postalCode, String organizerId, String deviceId){
@@ -40,7 +38,6 @@ public class Facility {
         this.province = province;
         this.country = country;
         this.postalCode = postalCode;
-        this.organizerId = organizerId;
         this.deviceId = deviceId;
     }
 
@@ -98,10 +95,6 @@ public class Facility {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
-    }
-
-    public String getOrganizerId() {
-        return organizerId;
     }
 
     public String getDeviceId() {
