@@ -282,6 +282,11 @@ public class Event implements Serializable {
             this.waitlisted.subList(0, numOfSelectedEntrants).clear();
         }
 
+        // Remove the selected entrants from the waitlisted list
+        for (int i = 0; i < numOfSelectedEntrants; i++) {
+            this.waitlisted.remove(0);  // Remove the first `numOfSelectedEntrants` entrants
+        }
+
 
     }
 }
