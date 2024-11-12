@@ -91,7 +91,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 if (profile == null) {
                     // Create a default profile if none exists
-                    profile = new Profile("User", "", "", this);
+                    profile = new Profile("User", "", "", userId, this);
                     profilesRef.document(userId).set(profile);
                 }
 
@@ -99,7 +99,7 @@ public class ProfileActivity extends AppCompatActivity {
                 updateUIWithProfile();
             } else {
                 // Handle Firestore error (optional)
-                profile = new Profile("User", "", "", this);
+                profile = new Profile("User", "", "", userId, this);
                 profilesRef.document(userId).set(profile);
                 updateUIWithProfile();
             }

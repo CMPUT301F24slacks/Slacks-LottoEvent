@@ -17,6 +17,7 @@ public class Profile {
     private String name;
     private String email;
     private String phone;
+    private String deviceId;
     private String profilePicturePath; // Path to the profile picture image
     private boolean usingDefaultPicture;
     private boolean adminNotifications;
@@ -36,10 +37,11 @@ public class Profile {
      * @param email The email address of the user.
      * @param context The application context for file access.
      */
-    public Profile(String name, String phone, String email, Context context) {
+    public Profile(String name, String phone, String email, String deviceId, Context context) {
         this.name = name;
         this.phone = phone;
         this.email = email;
+        this.deviceId = deviceId;
 
         // Skip profile picture generation if Context is null (for testing)
         if (context != null) {
@@ -83,6 +85,8 @@ public class Profile {
     public String getPhone() {
         return phone;
     }
+
+    public String getDeviceId() {return deviceId;}
 
     public boolean getAdminNotifications() {
         return adminNotifications;

@@ -335,7 +335,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         });
 
         if (existingFacility == null) {
-            createFacilitiesButton.setVisibility(View.GONE);
+            createFacilitiesButton.setVisibility(View.VISIBLE);
         } else {
             createFacilitiesButton.setVisibility(View.VISIBLE);
         }
