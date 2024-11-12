@@ -181,7 +181,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="161dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
             android:orientation="horizontal"
@@ -193,15 +193,25 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="#7B24EB"
-                android:text="Edit Event"
+                android:text="Edit Event Poster"
                 android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/lotterySystemButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:text="Lottery System"
+                android:backgroundTint="#7B24EB"
+                android:textColor="#FFFFFF"/>
 
             <Button
                 android:id="@+id/entrantListButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="16dp"
+                android:layout_weight="1"
                 android:backgroundTint="#7B24EB"
                 android:text="List of Entrants"
                 android:textColor="#FFFFFF" />

@@ -213,17 +213,25 @@ public class Event implements Serializable {
 
     public void addSelectedNotification(String notification) { this.selectedNotificationsList.add(notification); }
 
+    public void setSelectedNotificationsList(ArrayList<String> entrants) { this.selectedNotificationsList = entrants;}
+
     public ArrayList<String> getWaitlistedNotificationsList(){return waitlistedNotificationsList; }
 
     public void addWaitlistedNotification(String notification) { this.waitlistedNotificationsList.add(notification); }
+
+    public void setWaitlistedNotificationsList(ArrayList<String> entrants) { this.waitlistedNotificationsList = entrants;}
 
     public ArrayList<String> getJoinedNotificationsList(){return joinedNotificationsList; }
 
     public void addJoinedNotification(String notification) { this.joinedNotificationsList.add(notification);}
 
+    public void setJoinedNotificationsList(ArrayList<String> entrants) { this.joinedNotificationsList = entrants;}
+
     public ArrayList<String> getCancelledNotificationsList(){return cancelledNotificationsList; }
 
     public void addCancelledNotification(String notification) {this.cancelledNotificationsList.add(notification);}
+
+    public void setCancelledNotificationsList(ArrayList<String> entrants) { this.cancelledNotificationsList = entrants;}
 
     public String getDeviceId(){
         return deviceId;
