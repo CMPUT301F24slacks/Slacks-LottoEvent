@@ -21,7 +21,6 @@ import java.util.ArrayList;
 public class OrganizerWaitlistFragment extends Fragment {
 
     private ListView listViewEntrantsWaitlisted;
-    private ListView listViewEntrantsCancelled;
     private Event event;
     private FirebaseFirestore db;
 
@@ -65,22 +64,17 @@ public class OrganizerWaitlistFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_organizer_waitlist, container, false);
 
         listViewEntrantsWaitlisted = view.findViewById(R.id.listViewEntrantsWaitlisted);
-        listViewEntrantsCancelled = view.findViewById(R.id.listViewEntrantsCancelled);
 
         // Initialize lists and adapters
         ArrayList<String> waitlistedNames = new ArrayList<>();
-        ArrayList<String> cancelledNames = new ArrayList<>();
 
         EntrantListsArrayAdapter waitlistAdapter = new EntrantListsArrayAdapter(getContext(), waitlistedNames);
-        EntrantListsArrayAdapter cancelledAdapter = new EntrantListsArrayAdapter(getContext(), cancelledNames);
 
         listViewEntrantsWaitlisted.setAdapter(waitlistAdapter);
-        listViewEntrantsCancelled.setAdapter(cancelledAdapter);
 
         // Fetch data for waitlisted entrants
         if (event != null) {
             fetchEntrants(event.getWaitlisted(), waitlistedNames, waitlistAdapter, "Waitlisted");
-            fetchEntrants(event.getCancelled(), cancelledNames, cancelledAdapter, "Cancelled");
         }
 
         return view;
