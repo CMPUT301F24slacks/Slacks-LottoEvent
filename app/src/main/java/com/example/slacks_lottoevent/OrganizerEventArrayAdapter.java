@@ -214,13 +214,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
 //                        Inputting entrantId in event so organizer knows who to send notifications for getting selected and who is selected
                         for (String entrant : selectedEntrants) {
                             eventRef.update("selected", FieldValue.arrayUnion(entrant),
-                                            "selectedNotificationsList", FieldValue.arrayUnion(entrant))
-                                    .addOnSuccessListener(Void -> {
-                                        Log.d("Firestore", "Entrant added successfully: " + entrant);
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Log.e("Firestore", "Error adding entrant: " + entrant, e);
-                                    });
+                                            "selectedNotificationsList", FieldValue.arrayUnion(entrant));
 
                             entrantsRef = db.collection("entrants").document(entrant);
                             entrantsRef.get().addOnSuccessListener(entrantDoc -> {

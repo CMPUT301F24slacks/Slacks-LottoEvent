@@ -3,6 +3,8 @@ package com.example.slacks_lottoevent;
 import java.util.ArrayList;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Event class that holds all the information for an event
@@ -181,11 +183,15 @@ public class Event implements Serializable {
 
     public void addWaitlisted(String entrant) { this.waitlisted.add(entrant); }
 
+    public void setWaitlisted(ArrayList<String> entrants) { this.waitlisted = entrants;}
+
     public ArrayList<String> getFinalists() {
         return finalists;
     }
 
     public void addFinalist(String entrant) {this.finalists.add(entrant);}
+
+    public void setFinalists(ArrayList<String> entrants) { this.finalists = entrants;}
 
     public ArrayList<String> getCancelled() {
         return cancelled;
@@ -193,11 +199,15 @@ public class Event implements Serializable {
 
     public void addCancelled(String entrant) {this.cancelled.add(entrant);}
 
+    public void setCancelled(ArrayList<String> entrants) { this.cancelled = entrants;}
+
     public ArrayList<String> getSelected() {
         return selected;
     }
 
     public void addSelected(String entrant) {this.selected.add(entrant);}
+
+    public void setSelected(ArrayList<String> entrants) { this.selected = entrants;}
 
     public ArrayList<String> getSelectedNotificationsList(){return selectedNotificationsList; }
 
@@ -249,5 +259,21 @@ public class Event implements Serializable {
     @Override
     public int hashCode() {
         return eventID.hashCode();
+    }
+
+
+    /**
+     * Lottery System for the event
+     */
+    public void lotterySystem(){
+        Integer numOfSelectedEntrants = waitlisted.size() >= eventSlots ? eventSlots : waitlisted.size();
+
+        if (this.waitlisted != null && !this.waitlisted.isEmpty()){
+            Collections.shuffle(this.waitlisted);
+            this.selected = new ArrayList<>(this.waitlisted.subList(0, numOfSelectedEntrants));
+            this.waitlisted.subList(0, numOfSelectedEntrants).clear();
+        }
+
+
     }
 }
