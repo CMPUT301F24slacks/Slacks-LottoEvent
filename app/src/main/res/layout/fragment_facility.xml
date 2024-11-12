@@ -20,7 +20,7 @@
         android:background="@color/background"
         android:padding="16dp">
 
-        <!-- Create Event Button -->
+        <!-- Create Facility Button -->
         <Button
             android:id="@+id/create_facility_button"
             android:layout_width="match_parent"
@@ -29,6 +29,17 @@
             android:text="Create Facility"
             android:textColor="#FFFFFF"
             app:icon="@drawable/baseline_add_24" />
+
+        <!-- Edit Facility Button -->
+        <Button
+            android:id="@+id/edit_facility_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/text_buttons"
+            android:text="Edit Facility"
+            android:textColor="#FFFFFF"
+            android:visibility="gone"
+            app:icon="@drawable/baseline_mode_edit_24" />
     </LinearLayout>
 
 </FrameLayout>

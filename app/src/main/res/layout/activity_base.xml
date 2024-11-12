@@ -12,6 +12,7 @@
         android:layout_height="?attr/actionBarSize"
         app:title="Event Hub"
         android:background="#121212"
+        app:navigationIconTint="@android:color/white"
         app:titleTextColor="@android:color/white" />
 
     <!-- Main Content Area -->

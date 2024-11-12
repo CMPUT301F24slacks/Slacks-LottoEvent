@@ -35,4 +35,11 @@ public class FacilityDB {
     public Task<Boolean> facilityExists(String deviceId) {
         return collection.document(deviceId).get().continueWith(task -> task.getResult().exists());
     }
+
+    /**
+     * Returns a facility with the given device ID key from the database.
+     */
+    public Task<Facility> getFacility(String deviceId) {
+        return collection.document(deviceId).get().continueWith(task -> task.getResult().toObject(Facility.class));
+    }
 }
