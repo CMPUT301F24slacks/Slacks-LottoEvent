@@ -70,6 +70,10 @@
             android:name=".ProfileActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
+        <activity
+            android:name=".AdminActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SlacksLottoEvent" />
     </application>
 
 </manifest>

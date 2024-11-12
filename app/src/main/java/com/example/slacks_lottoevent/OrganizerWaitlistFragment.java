@@ -16,25 +16,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link OrganizerWaitlistFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A simple {@link Fragment} subclass to manage and display entrants.
  */
 public class OrganizerWaitlistFragment extends Fragment {
 
     private ListView listViewEntrantsWaitlisted;
+    private ListView listViewEntrantsCancelled;
     private Event event;
-    private static final String ARG_EVENT = "current_event";
     private FirebaseFirestore db;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String ARG_EVENT = "current_event";
 
     /**
      * Default constructor
@@ -42,14 +33,10 @@ public class OrganizerWaitlistFragment extends Fragment {
     public OrganizerWaitlistFragment() {}
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     //     * @param param1 Parameter 1.
-     //     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrganizerFirstFragment.
+     * Factory method to create a new instance of this fragment using the provided parameters.
+     * @param event The current event.
+     * @return A new instance of OrganizerWaitlistFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static OrganizerWaitlistFragment newInstance(Event event) {
         OrganizerWaitlistFragment fragment = new OrganizerWaitlistFragment();
         Bundle args = new Bundle();
@@ -60,7 +47,6 @@ public class OrganizerWaitlistFragment extends Fragment {
 
     /**
      * onCreate method
-     * @param savedInstanceState
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,43 +59,63 @@ public class OrganizerWaitlistFragment extends Fragment {
 
     /**
      * onCreateView method
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_organizer_waitlist, container, false);
+
         listViewEntrantsWaitlisted = view.findViewById(R.id.listViewEntrantsWaitlisted);
+        listViewEntrantsCancelled = view.findViewById(R.id.listViewEntrantsCancelled);
 
-        ArrayList<String> entrantNames = new ArrayList<>(); // List to hold retrieved names
-        EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), entrantNames);
-        listViewEntrantsWaitlisted.setAdapter(adapter); // Set the adapter once
+        // Initialize lists and adapters
+        ArrayList<String> waitlistedNames = new ArrayList<>();
+        ArrayList<String> cancelledNames = new ArrayList<>();
 
+        EntrantListsArrayAdapter waitlistAdapter = new EntrantListsArrayAdapter(getContext(), waitlistedNames);
+        EntrantListsArrayAdapter cancelledAdapter = new EntrantListsArrayAdapter(getContext(), cancelledNames);
+
+        listViewEntrantsWaitlisted.setAdapter(waitlistAdapter);
+        listViewEntrantsCancelled.setAdapter(cancelledAdapter);
+
+        // Fetch data for waitlisted entrants
         if (event != null) {
-            ArrayList<String> deviceIds = event.getWaitlisted();
+            fetchEntrants(event.getWaitlisted(), waitlistedNames, waitlistAdapter, "Waitlisted");
+            fetchEntrants(event.getCancelled(), cancelledNames, cancelledAdapter, "Cancelled");
+        }
 
-            for (String deviceId : deviceIds) {
-                // Query Firestore for each profile by device ID
-                db.collection("profiles").document(deviceId).get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document != null && document.exists()) {
-                            String name = document.getString("name"); // Adjust to match your document structure
+        return view;
+    }
+
+    /**
+     * Fetch entrant data from Firestore for a list of device IDs and update the corresponding list and adapter.
+     * @param deviceIds The list of device IDs to fetch.
+     * @param entrantNames The list to populate with names.
+     * @param adapter The adapter to notify of data changes.
+     * @param logTag A tag for logging the operation (e.g., "Waitlisted", "Cancelled").
+     */
+    private void fetchEntrants(ArrayList<String> deviceIds, ArrayList<String> entrantNames, EntrantListsArrayAdapter adapter, String logTag) {
+        for (String deviceId : deviceIds) {
+            db.collection("profiles").document(deviceId).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null && document.exists()) {
+                        String name = document.getString("name"); // Adjust field as per Firestore structure
+                        if (name != null) {
                             entrantNames.add(name);
-                            requireActivity().runOnUiThread(() -> adapter.notifyDataSetChanged());
+                            Log.d("Firestore", logTag + " Entrant: " + name);
+                        } else {
+                            Log.d("Firestore", logTag + " Entrant has no name for deviceId: " + deviceId);
                         }
                     } else {
-                        Log.d("Firestore", "Error getting document: ", task.getException());
+                        Log.d("Firestore", logTag + " No document found for deviceId: " + deviceId);
                     }
-                });
-                adapter.notifyDataSetChanged();
-            }
-            adapter.notifyDataSetChanged();
+                } else {
+                    Log.e("Firestore", logTag + " Error fetching document for deviceId: " + deviceId, task.getException());
+                }
+
+                // Notify adapter of data change on the main thread
+                requireActivity().runOnUiThread(adapter::notifyDataSetChanged);
+            });
         }
-        adapter.notifyDataSetChanged();
-        return view;
     }
 }
