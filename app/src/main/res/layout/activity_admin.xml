@@ -7,8 +7,23 @@
     android:background="@color/black">
 
     <!-- Back Button at the top-left -->
+
+    <ImageButton
+        android:id="@+id/oval_rectangle_input"
+        android:layout_width="404dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="92dp"
+        android:background="@drawable/rectangle_shape"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.01"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tab_Layout_Admin"
+        app:srcCompat="@drawable/rectangle_background" />
+
     <ImageView
-        android:id="@+id/back_button"
+        android:id="@+id/back_button2"
         android:layout_width="48dp"
         android:layout_height="24dp"
         android:layout_marginTop="20dp"
@@ -19,34 +34,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Title TextView at the top -->
 
     <!-- TabLayout below the title -->
-
-    <TextView
-        android:id="@+id/Notifications_Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/inter_bold"
-        android:paddingBottom="8dp"
-        android:text="List of Entrants"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/imageView_geolocation"
-        app:layout_constraintHorizontal_bias="0.738"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_Layout"
+        android:id="@+id/tab_Layout_Admin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#27272A"
         app:tabIndicatorColor="@color/white"
         app:tabSelectedTextColor="#EC7CEE"
-        app:layout_constraintTop_toBottomOf="@id/Notifications_Title"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tabGravity="fill"
@@ -54,42 +51,53 @@
 
         <!-- Tabs for each category -->
         <com.google.android.material.tabs.TabItem
-            android:text="Waitlist"
+            android:text="Events"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <com.google.android.material.tabs.TabItem
-            android:text="Invited"
+            android:text="Images"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <com.google.android.material.tabs.TabItem
-            android:text="Cancelled"
+            android:text="Facilities"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <com.google.android.material.tabs.TabItem
-            android:text="Enrolled"
+            android:text="Profiles"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </com.google.android.material.tabs.TabLayout>
 
     <!-- FrameLayout to hold the selected fragment content -->
+
     <FrameLayout
-        android:id="@+id/FrameLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/FrameLayoutAdmin"
+        android:layout_width="420dp"
+        android:layout_height="615dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tab_Layout"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.555"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/oval_rectangle_input"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
-        android:id="@+id/imageView_geolocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="44dp"
-        app:layout_constraintBottom_toBottomOf="@+id/Notifications_Title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.592"
-        app:srcCompat="@android:drawable/ic_dialog_map" />
+        android:id="@+id/search_Icon"
+        android:layout_width="46dp"
+        android:layout_height="35dp"
+        app:layout_constraintBottom_toBottomOf="@+id/oval_rectangle_input"
+        app:layout_constraintStart_toStartOf="@+id/oval_rectangle_input"
+        app:layout_constraintTop_toTopOf="@+id/oval_rectangle_input"
+        app:srcCompat="?android:attr/actionModeWebSearchDrawable" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="347dp"
+        android:layout_height="35dp"
+        android:hint="search by username or event name"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="@+id/oval_rectangle_input"
+        app:layout_constraintEnd_toEndOf="@+id/oval_rectangle_input"
+        app:layout_constraintStart_toEndOf="@+id/search_Icon"
+        app:layout_constraintTop_toTopOf="@+id/oval_rectangle_input" />
 </androidx.constraintlayout.widget.ConstraintLayout>
