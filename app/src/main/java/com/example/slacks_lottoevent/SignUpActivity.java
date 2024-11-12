@@ -157,7 +157,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         @SuppressLint("HardwareIds") String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         Profile userInfo = new Profile(name,phone,email, getApplicationContext());
-
+        System.out.println(usersRef);
         usersRef.document(deviceId).set(userInfo)
                 .addOnSuccessListener(nothing -> {
                     System.out.println("Added to DB");

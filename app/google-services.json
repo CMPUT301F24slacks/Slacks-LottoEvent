@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "627829814820",
+    "firebase_url": "https://slacks-lottoevent-default-rtdb.firebaseio.com",
     "project_id": "slacks-lottoevent",
     "storage_bucket": "slacks-lottoevent.appspot.com"
   },
