@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "1077410698949",
-    "project_id": "secure-paratext-441420-h0",
-    "storage_bucket": "secure-paratext-441420-h0.firebasestorage.app"
+    "project_number": "627829814820",
+    "firebase_url": "https://slacks-lottoevent-default-rtdb.firebaseio.com",
+    "project_id": "slacks-lottoevent",
+    "storage_bucket": "slacks-lottoevent.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1077410698949:android:d75127e4d940a560b3c2ac",
+        "mobilesdk_app_id": "1:627829814820:android:25beea9c855aaaba5e0ab1",
         "android_client_info": {
           "package_name": "com.example.slacks_lottoevent"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBoo9JygADeK1G3ryXWkR3vepcvpipaUMQ"
+          "current_key": "AIzaSyD5AJZbZvQP4pUUJ_zZDHe3q53qryYz1dU"
         }
       ],
       "services": {
