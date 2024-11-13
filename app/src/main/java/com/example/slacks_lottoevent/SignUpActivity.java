@@ -156,7 +156,7 @@ public class SignUpActivity extends AppCompatActivity {
         String phone = phoneInput.getText().toString().trim();
 
         @SuppressLint("HardwareIds") String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        Profile userInfo = new Profile(name,phone,email, getApplicationContext());
+        Profile userInfo = new Profile(name,phone,email, deviceId, getApplicationContext());
         System.out.println(usersRef);
         usersRef.document(deviceId).set(userInfo)
                 .addOnSuccessListener(nothing -> {
