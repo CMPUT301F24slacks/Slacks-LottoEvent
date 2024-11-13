@@ -6,18 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.slacks_lottoevent.databinding.ActivityEntrantEventDetailsBinding;
 import com.example.slacks_lottoevent.databinding.ActivityOrganizerEventDetailsBinding;
+import com.example.slacks_lottoevent.model.Event;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +24,10 @@ import java.util.List;
  * The entrant can leave the event from this activity.
  */
 public class OrganizerEventDetailsActivity extends AppCompatActivity {
+    FirebaseFirestore db;
+    String qrCodeValue;
+    @SuppressLint("HardwareIds")
+    String deviceId;
     private ActivityOrganizerEventDetailsBinding binding;
     private DocumentSnapshot document;
     private String location;
@@ -35,12 +37,10 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     private Boolean usesGeolocation;
     private String description;
     private Event event;
-    FirebaseFirestore db;
-    String qrCodeValue;
-    @SuppressLint("HardwareIds") String deviceId;
 
     /**
      * onCreate method for EntrantEventDetailsActivity
+     *
      * @param savedInstanceState the saved instance state
      */
     @Override
@@ -52,51 +52,54 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+          .addOnCompleteListener(task -> {
+              if (task.isSuccessful() && !task.getResult().isEmpty()) {
 
+                  document = task.getResult().getDocuments().get(0);
 
-                        document = task.getResult().getDocuments().get(0);
+                  event = document.toObject(Event.class);
 
-                        event = document.toObject(Event.class);
+                  date = document.getString("date");
+                  time = document.getString("time");
+                  eventName = document.getString("name");
+                  location = document.getString("location");
+                  description = document.getString("description");
 
+                  List<Object> finalists = (List<Object>) document.get("finalists");
+                  binding.eventTitle.setText(eventName);
+                  binding.eventDate.setText(date);
+                  Long capacity = (Long) document.get("eventSlots");
+                  Long waitListCapacity = (Long) document.get("waitListCapacity");
+                  assert capacity != null;
+                  String capacityAsString = capacity.toString();
 
-                        date = document.getString("date");
-                        time = document.getString("time");
-                        eventName = document.getString("name");
-                        location = document.getString("location");
-                        description = document.getString("description");
+                  binding.eventLocation.setText(location);
+                  String waitlistCapacity = "Waitlist Capacity " + capacityAsString;
+                  binding.eventWaitlistCapacity.setText(waitlistCapacity);
+                  binding.eventDescription.setText(description);
 
-                        List<Object> finalists = (List<Object>) document.get("finalists");
-                        binding.eventTitle.setText(eventName);
-                        binding.eventDate.setText(date);
-                        Long capacity = (Long) document.get("eventSlots");
-                        Long waitListCapacity = (Long) document.get("waitListCapacity");
-                        assert capacity != null;
-                        String capacityAsString = capacity.toString();
+                  Long spotsRemaining = capacity - finalists.size();
+                  String spotsRemainingText =
+                          "Only " + spotsRemaining + " spots available";
+                  binding.spotsAvailable.setText(spotsRemainingText);
+                  usesGeolocation = (Boolean) document.get("geoLocation");
 
-                        binding.eventLocation.setText(location);
-                        String waitlistCapacity = "Waitlist Capacity " + capacityAsString;
-                        binding.eventWaitlistCapacity.setText(waitlistCapacity);
-                        binding.eventDescription.setText(description);
+                  event.setFinalists((ArrayList<String>) document.get("finalists"));
+                  event.setWaitlisted((ArrayList<String>) document.get("waitlisted"));
+                  event.setSelected((ArrayList<String>) document.get("selected"));
+                  event.setCancelled((ArrayList<String>) document.get("cancelled"));
 
-                        Long spotsRemaining = capacity - finalists.size();
-                        String spotsRemainingText = "Only " + spotsRemaining.toString() + " spots available";
-                        binding.spotsAvailable.setText(spotsRemainingText);
-                        usesGeolocation = (Boolean) document.get("geoLocation");
+                  event.setWaitlistedNotificationsList(
+                          (ArrayList<String>) document.get("waitlistedNotificationsList"));
+                  event.setWaitlistedNotificationsList(
+                          (ArrayList<String>) document.get("joinedNotificationsList"));
+                  event.setWaitlistedNotificationsList(
+                          (ArrayList<String>) document.get("cancelledNotificationsList"));
+                  event.setWaitlistedNotificationsList(
+                          (ArrayList<String>) document.get("selectedNotificationsList"));
 
-                        event.setFinalists((ArrayList<String>) document.get("finalists"));
-                        event.setWaitlisted((ArrayList<String>) document.get("waitlisted"));
-                        event.setSelected((ArrayList<String>) document.get("selected"));
-                        event.setCancelled((ArrayList<String>) document.get("cancelled"));
-
-                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("waitlistedNotificationsList"));
-                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("joinedNotificationsList"));
-                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("cancelledNotificationsList"));
-                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("selectedNotificationsList"));
-
-                    }
-                });
+              }
+          });
         // add a listener to the event details back button, go to the last item in the back stack
         binding.eventDetailsBackButton.setOnClickListener(v -> {
             onBackPressed();
@@ -120,8 +123,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         .setMessage("Entrants were selected for the event.")
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
-            }
-            else {
+            } else {
                 // Show a pop-up dialog if the button is clicked again
                 new AlertDialog.Builder(this)
                         .setTitle("Cannot Sample Again")
@@ -130,7 +132,6 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         .show();
             }
         });
-
 
         binding.entrantListButton.setVisibility(View.VISIBLE);
         binding.entrantListButton.setOnClickListener(view -> {
@@ -143,47 +144,52 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     }
 
     private void updateSelectedEntrants(Event event) {
-        db.collection("events").whereEqualTo("eventID", event.getEventID()).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                DocumentReference eventRef = db.collection("events").document(document.getId());
+        db.collection("events").whereEqualTo("eventID", event.getEventID()).get()
+          .addOnCompleteListener(task -> {
+              if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                  DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                  DocumentReference eventRef = db.collection("events").document(document.getId());
 
-                for (String entrant : event.getSelected()) {
-                    eventRef.update("selected", FieldValue.arrayUnion(entrant),
-                            "selectedNotificationsList", FieldValue.arrayUnion(entrant));
-                }
+                  for (String entrant : event.getSelected()) {
+                      eventRef.update("selected", FieldValue.arrayUnion(entrant),
+                                      "selectedNotificationsList", FieldValue.arrayUnion(entrant));
+                  }
 
-                eventRef.update("waitlisted", event.getWaitlisted());
+                  eventRef.update("waitlisted", event.getWaitlisted());
 
-                eventRef.update("entrantsChosen", event.getEntrantsChosen());
-            }
-        });
+                  eventRef.update("entrantsChosen", event.getEntrantsChosen());
+              }
+          });
     }
 
-    private void updateInvitedEntrants(Event event){
-        for(String entrant: event.getSelected()) {
+    private void updateInvitedEntrants(Event event) {
+        for (String entrant : event.getSelected()) {
             DocumentReference entrantsRef = db.collection("entrants").document(entrant);
             entrantsRef.get().addOnSuccessListener(entrantDoc -> {
                 if (entrantDoc.exists()) {
                     // Assuming `notifications` is an array field in the entrant document
                     entrantsRef.update("invitedEvents", FieldValue.arrayUnion(event.getEventID()),
-                                    "invites", FieldValue.arrayUnion(event.getEventID()))
-                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "Event added for entrant"))
-                            .addOnFailureListener(e -> Log.e("Firestore", "Error updating invitedEvents for entrant"));
+                                       "invites", FieldValue.arrayUnion(event.getEventID()))
+                               .addOnSuccessListener(
+                                       aVoid -> Log.d("Firestore", "Event added for entrant"))
+                               .addOnFailureListener(e -> Log.e("Firestore",
+                                                                "Error updating invitedEvents for entrant"));
                 }
             });
         }
     }
 
-    private void updateUninvitedEntrants(Event event){
-        for(String entrant: event.getWaitlisted()) {
+    private void updateUninvitedEntrants(Event event) {
+        for (String entrant : event.getWaitlisted()) {
             DocumentReference entrantsRef = db.collection("entrants").document(entrant);
             entrantsRef.get().addOnSuccessListener(entrantDoc -> {
                 if (entrantDoc.exists()) {
                     // Assuming `notifications` is an array field in the entrant document
                     entrantsRef.update("uninvitedEvents", FieldValue.arrayUnion(event.getEventID()))
-                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "Notification added for entrant"))
-                            .addOnFailureListener(e -> Log.e("Firestore", "Error updating uninvitedEvents for entrant"));
+                               .addOnSuccessListener(aVoid -> Log.d("Firestore",
+                                                                    "Notification added for entrant"))
+                               .addOnFailureListener(e -> Log.e("Firestore",
+                                                                "Error updating uninvitedEvents for entrant"));
                 }
 
             });

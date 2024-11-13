@@ -5,10 +5,11 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class EventDB {
-    private static EventDB instance;
     private static final FirebaseConnection db = FirebaseConnection.getInstance();
     private static final String COLLECTION_NAME = "events";
-    private static final CollectionReference collection = db.getDatabase().collection(COLLECTION_NAME);
+    private static final CollectionReference collection = db.getDatabase()
+                                                            .collection(COLLECTION_NAME);
+    private static EventDB instance;
 
     private EventDB() {
         // Private constructor to prevent instantiation
@@ -23,6 +24,7 @@ public class EventDB {
 
     /**
      * Returns all the events in the database asynchronously.
+     *
      * @return Task<QuerySnapshot> object representing the asynchronous operation.
      */
     public Task<QuerySnapshot> getEvents() {

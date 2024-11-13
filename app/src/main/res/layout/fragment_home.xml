@@ -5,10 +5,25 @@
     android:layout_height="match_parent"
     tools:context=".fragment.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- TextView centered and hidden by default -->
     <TextView
+        android:id="@+id/instructions_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Please scan an event QR code to get started"
+        android:textColor="@android:color/black"
+        android:textSize="16dp"
+        android:visibility="gone" />
+
+    <!-- ListView for events -->
+    <ListView
+        android:id="@+id/events_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:dividerHeight="36dp"
+        android:padding="36dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp" />
 
 </FrameLayout>

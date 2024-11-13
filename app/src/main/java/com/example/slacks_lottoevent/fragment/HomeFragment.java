@@ -1,14 +1,18 @@
 package com.example.slacks_lottoevent.fragment;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.slacks_lottoevent.R;
+import com.example.slacks_lottoevent.model.User;
+import com.example.slacks_lottoevent.viewmodel.EntrantViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,33 +21,21 @@ import com.example.slacks_lottoevent.R;
  */
 public class HomeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final EntrantViewModel entrantViewModel = new EntrantViewModel();
+    private User user;
+    private String deviceId;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // Ui elements
+    private TextView instructions;
+    private ListView eventsList;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,10 +43,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -62,5 +50,36 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Initialize UI elements
+        instructions = view.findViewById(R.id.instructions_textview);
+        eventsList = view.findViewById(R.id.events_listview);
+
+        user = User.getInstance(getContext());
+        deviceId = user.getDeviceId();
+
+        entrantViewModel.entrantExists(deviceId).observe(getViewLifecycleOwner(), exists -> {
+            if (exists != null && exists) {
+                // The entrant exists
+                Log.d("HomeFragment", "Entrant exists.");
+                entrantViewModel.setEntrant(deviceId);
+
+                // UI updates
+                instructions.setVisibility(View.GONE);
+
+            } else {
+                // The entrant does not exist or an error occurred
+                Log.d("HomeFragment", "Entrant does not exist.");
+
+                // UI updates
+                instructions.setVisibility(View.VISIBLE);
+                eventsList.setVisibility(View.GONE);
+            }
+        });
     }
 }
