@@ -210,7 +210,8 @@ public class AddFacilityFragment extends DialogFragment {
             public void afterTextChanged(Editable s) {}
         });
 
-        // Add OnItemClickListener to capture selected item from dropdown
+        // Add OnItemClickListener for the dropdown in order to verify when the user presses confirm that they have selected a
+        // valid location from the dropdown.
         autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
             String selectedItem = (String) parent.getItemAtPosition(position);
             validSelections.put(autoCompleteTextView, selectedItem); // Store the selected item
@@ -226,6 +227,7 @@ public class AddFacilityFragment extends DialogFragment {
     private boolean isUserSelectedFromDropdown(AutoCompleteTextView autoCompleteTextView){
         String currentText = autoCompleteTextView.getText().toString().trim();
         String validSelection = validSelections.get(autoCompleteTextView);
+        // if the user doesn't select something from the dropdown validSelection will be null and thus return false.
         return validSelection != null && validSelection.equals(currentText);
     }
 
