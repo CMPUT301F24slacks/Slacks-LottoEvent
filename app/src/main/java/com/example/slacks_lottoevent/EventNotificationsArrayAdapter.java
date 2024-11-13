@@ -1,5 +1,6 @@
 package com.example.slacks_lottoevent;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,11 +70,16 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
             eventTime.setText(event.getTime());
             eventLocation.setText(event.getLocation());
 
-            // Set up Accept button
-            acceptButton.setOnClickListener(v -> handleAcceptEvent(event));
-
-            // Set up Decline button
-            declineButton.setOnClickListener(v -> handleDeclineEvent(event));
+            acceptButton.setOnClickListener(v -> {
+                handleAcceptEvent(event);
+                showConfirmationDialog(v.getContext(), "You have now joined the event.");
+                removeEvent(position);
+            });
+            declineButton.setOnClickListener(v -> {
+                handleDeclineEvent(event);
+                showConfirmationDialog(v.getContext(), "You have now declined the event.");
+                removeEvent(position);
+            });
         }
 
         return convertView;
@@ -86,12 +92,17 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
     private void handleAcceptEvent(UserEventNotifications event) {
         String eventId = event.getEventId();
 
-        // Update Firestore: Move event from "invitedEvents" to "finalistEvents"
         db.collection("entrants").document(deviceId).update(
                         "invitedEvents", FieldValue.arrayRemove(eventId),
                         "finalistEvents", FieldValue.arrayUnion(eventId)
                 ).addOnSuccessListener(aVoid -> Log.d("Firestore", "Event accepted: " + eventId))
                 .addOnFailureListener(e -> Log.e("Firestore", "Error accepting event: " + eventId, e));
+
+        db.collection("events").document(eventId).update(
+                "selected", FieldValue.arrayRemove(deviceId),
+                "selectedNotificationsList", FieldValue.arrayRemove(deviceId),
+                "finalists", FieldValue.arrayUnion(deviceId),
+                "joinedNotificationsList", FieldValue.arrayUnion(deviceId));
     }
 
     /**
@@ -101,15 +112,39 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
     private void handleDeclineEvent(UserEventNotifications event) {
         String eventId = event.getEventId();
 
-        // Update Firestore: Remove event from "invitedEvents" and remove device ID from the event's "invited" list
         db.collection("entrants").document(deviceId).update(
-                "invitedEvents", FieldValue.arrayRemove(eventId)
-        ).addOnSuccessListener(aVoid -> {
-            // Also remove this device from the event's "invited" list
+                "invitedEvents", FieldValue.arrayRemove(eventId)).addOnSuccessListener(aVoid -> {
+
             db.collection("events").document(eventId).update(
-                            "invited", FieldValue.arrayRemove(deviceId)
+                            "selected", FieldValue.arrayRemove(deviceId),
+                    "selectedNotificationsList", FieldValue.arrayRemove(deviceId),
+                    "cancelled", FieldValue.arrayUnion(deviceId),
+                    "cancelledNotificationsList", FieldValue.arrayUnion(deviceId)
                     ).addOnSuccessListener(aVoid1 -> Log.d("Firestore", "Event declined: " + eventId))
                     .addOnFailureListener(e -> Log.e("Firestore", "Error updating event invite list: " + eventId, e));
         }).addOnFailureListener(e -> Log.e("Firestore", "Error declining event: " + eventId, e));
     }
+
+    /**
+     * Shows confirmation regarding if the user decline or accepted the event.
+     * @param message that will appear whether or not user decline or accepted message
+     */
+    private void showConfirmationDialog(Context context, String message) {
+        new AlertDialog.Builder(context)
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    /**
+     * Method to remove the event and refresh the list.
+     * @param position of that event in the list.
+     */
+    private void removeEvent(int position) {
+        // Remove item from the data source
+        remove(getItem(position));
+        // Notify the adapter of data change
+        notifyDataSetChanged();
+    }
+
 }
