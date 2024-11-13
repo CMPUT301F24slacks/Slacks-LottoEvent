@@ -101,7 +101,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         TextView eventAddress = convertView.findViewById(R.id.event_address);
         TextView eventDescription = convertView.findViewById(R.id.event_description);
         eventName.setText(event.getName());
-        eventDate.setText(event.getDate());
+        eventDate.setText(event.getEventDate());
         eventTime.setText(event.getTime());
 
         String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -217,13 +217,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
 //                        Inputting entrantId in event so organizer knows who to send notifications for getting selected and who is selected
                         for (String entrant : selectedEntrants) {
                             eventRef.update("selected", FieldValue.arrayUnion(entrant),
-                                            "selectedNotificationsList", FieldValue.arrayUnion(entrant))
-                                    .addOnSuccessListener(aVoid -> {
-                                        Log.d("Firestore", "Entrant added successfully: " + entrant);
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Log.e("Firestore", "Error adding entrant: " + entrant, e);
-                                    });
+                                            "selectedNotificationsList", FieldValue.arrayUnion(entrant));
 
                             entrantsRef = db.collection("entrants").document(entrant);
                             entrantsRef.get().addOnSuccessListener(entrantDoc -> {

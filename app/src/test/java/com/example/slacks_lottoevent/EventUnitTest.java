@@ -11,6 +11,9 @@ import com.example.slacks_lottoevent.model.Event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * EventUnitTest is a JUnit test class that tests the Event class.
  */
@@ -22,7 +25,7 @@ public class EventUnitTest {
      */
     @BeforeEach
     public void setUp() {
-        event = new Event("HackEd", "2024-11-22", "3339 607 St NW Edmonton AB Canada T5J 0X6", "9:00", "29.99", "Hackathon hosted by UAlberta students", 200, 500, "0001", "091fac3e-983a-44c0-b7b8-fcf720958082", true, "20b0a9a34c950844a2e0edd7aa5604691dc1ec738a412e9ad436ed19b00acd98", true, false, true);
+        event = new Event("HackEd", "2024-01-01", "3339 607 St NW Edmonton AB Canada T5J 0X6", "9:00", "29.99", "Hackathon hosted by UAlberta students", 200, 500, "0001", "091fac3e-983a-44c0-b7b8-fcf720958082", true, "20b0a9a34c950844a2e0edd7aa5604691dc1ec738a412e9ad436ed19b00acd98", "3b48474333", "2024-08-08");
     }
 
     /**
@@ -35,16 +38,25 @@ public class EventUnitTest {
     }
 
     /**
-     * testEventConstructor tests the Event constructor.
+     * Tests that the event date can be set and retrieved correctly.
      */
     @Test
-    public void testSetDate() {
-        event.setDate("2024-01-01");
-        assertEquals("2024-01-01", event.getDate(), "Date should be updated correctly.");
+    public void testSetEventDate() {
+        event.setEventDate("2024-01-01");
+        assertEquals("2024-01-01", event.getEventDate(), "Date should be updated correctly.");
     }
 
     /**
-     * testEventConstructor tests the Event constructor.
+     * Tests that the event signupDeadline can be set and retrieved correctly.
+     */
+    @Test
+    public void testSetSignUpDeadline() {
+        event.setSignupDeadline("2024-08-08");
+        assertEquals("2024-08-08", event.getSignupDeadline(), "Date should be updated correctly.");
+    }
+
+    /**
+     * Tests that the event time can be set and retrieved correctly.
      */
     @Test
     public void testSetLocation() {
@@ -130,33 +142,6 @@ public class EventUnitTest {
     public void testSetQRHash() {
         event.setQRHash("03b0a9a34c950844a2e0edd7aa5604691dc1ec738a412e9ad436ed19b00usv98");
         assertEquals("03b0a9a34c950844a2e0edd7aa5604691dc1ec738a412e9ad436ed19b00usv98", event.getQRHash(), "QR Hash should be updated correctly.");
-    }
-
-    /**
-     * Tests that the waitlist notifications flag can be set and retrieved correctly.
-     */
-    @Test
-    public void testSetWaitlistNotifications() {
-        event.setWaitlistNotifications(false);
-        assertFalse(event.getWaitlistNotifications(), "Waitlist notifications should be updated correctly.");
-    }
-
-    /**
-     * Tests that the selected notifications flag can be set and retrieved correctly.
-     */
-    @Test
-    public void testSetSelectedNotifications() {
-        event.setSelectedNotifications(true);
-        assertTrue(event.getSelectedNotifications(), "Selected notifications should be updated correctly.");
-    }
-
-    /**
-     * Tests that the cancelled notifications flag can be set and retrieved correctly.
-     */
-    @Test
-    public void testSetCancelledNotifications() {
-        event.setCancelledNotifications(false);
-        assertFalse(event.getCancelledNotifications(), "Cancelled notifications should be updated correctly.");
     }
 
     /**
@@ -297,14 +282,14 @@ public class EventUnitTest {
     }
 
     /**
-     * Tests that the event name can be retrieved correctly.
+     * Tests that the event name can be created with no fields.
      */
     @Test
     public void testEmptyConstructor() {
         Event emptyEvent = new Event();
         assertNotNull(emptyEvent);
         assertNull(emptyEvent.getName());
-        assertNull(emptyEvent.getDate());
+        assertNull(emptyEvent.getEventDate());
         assertNull(emptyEvent.getLocation());
         assertNull(emptyEvent.getTime());
         assertNull(emptyEvent.getPrice());
@@ -315,8 +300,33 @@ public class EventUnitTest {
         assertNull(emptyEvent.getQRHash());
         assertNull(emptyEvent.getEventID());
         assertNull(emptyEvent.getgeoLocation());
-        assertNull(emptyEvent.getWaitlistNotifications());
-        assertNull(emptyEvent.getSelectedNotifications());
-        assertNull(emptyEvent.getCancelledNotifications());
+        assertNull(emptyEvent.getDeviceId());
+        assertNull(emptyEvent.getSignupDeadline());
+
+    }
+
+    /**
+     * Tests that the event lottery system correctly selects and updates the right lists
+     */
+    @Test
+    public void testLotterySystem() {
+        // Initialize event with a predefined waitlist and slots
+        Event event = new Event();
+        event.setEventSlots(3); // Assume the event has 3 slots
+        event.setWaitlisted(new ArrayList<>(Arrays.asList("user1", "user2", "user3", "user4", "user5")));
+
+        // Run lottery system
+        event.lotterySystem();
+
+        // Assertions to check the result
+        assertEquals(3, event.getSelected().size(), "There should be exactly 3 selected entrants.");
+        assertEquals(2, event.getWaitlisted().size(), "The waitlist should have 2 remaining entrants.");
+        assertFalse(event.getSelected().isEmpty(), "The selected list should not be empty.");
+        assertFalse(event.getWaitlisted().isEmpty(), "The waitlisted list should not be empty.");
+
+        // Ensure that no selected entrants are in the waitlisted list
+        for (String entrant : event.getSelected()) {
+            assertFalse(event.getWaitlisted().contains(entrant), "Selected entrants should not be in the waitlisted list.");
+        }
     }
 }
