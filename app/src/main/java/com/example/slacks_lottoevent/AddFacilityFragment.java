@@ -5,22 +5,48 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.Editable;
+import android.text.TextWatcher;
+
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
-/**
- * AddFacilityFragment is a DialogFragment that allows the user to create or edit a Facility.
- */
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/*
+*
+* AddFacilityFragment is a DialogFragment that allows the user to create or edit a Facility.
+*
+* Relevant Documentation:
+* https://developers.google.com/maps/documentation/places/android-sdk/autocomplete-tutorial
+*
+* */
 public class AddFacilityFragment extends DialogFragment {
+
     public Facility facility;
     private Boolean isEdit;
-
+    private PlacesClient placesClient;
+    private AutocompleteSessionToken sessionToken;
+    private AddFacilityDialogListener listener;
+    private Map<AutoCompleteTextView, String> validSelections = new HashMap<>();
+    private boolean userSelectedFromDropdown = false;
     /**
      * AddFacilityDialogListener is an interface that must be implemented by the parent Fragment or Activity
      * to handle the user's input when adding or editing a Facility.
@@ -29,24 +55,13 @@ public class AddFacilityFragment extends DialogFragment {
         void addFacility(Facility facility);
         void updateFacility();
     }
-    private AddFacilityDialogListener listener;
-
     /**
-     * onAttach is called when the fragment is associated with an activity.
-     * @param context Context object
+     * Constructor for AddFacilityFragment
+     * Default constructor for creating a new Facility
      */
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        Fragment parentFragment = getParentFragment();
-        if (parentFragment instanceof AddFacilityDialogListener) {
-            listener = (AddFacilityDialogListener) parentFragment; // Set listener from ParentFragment
-        } else if (context instanceof AddFacilityDialogListener) {
-            listener = (AddFacilityDialogListener) context; // Fallback to Activity if ParentFragment is not the listener
-        } else {
-            throw new ClassCastException("Parent fragment or activity must implement AddFacilityDialogListener");
-        }
+    public AddFacilityFragment() {
+        this.facility = new Facility("FacilityName", "StreetAddress1", "StreetAddress2", "City", "Province", "Country", "PostalCode", "OrganizerId", "DeviceId");
+        this.isEdit = false;
     }
 
     /**
@@ -54,20 +69,25 @@ public class AddFacilityFragment extends DialogFragment {
      * @param facility The Facility object to edit
      * @param isEdit Boolean flag to determine if the dialog is for editing an existing Facility
      */
-    public AddFacilityFragment(Facility facility, Boolean isEdit){
+    public AddFacilityFragment(Facility facility, Boolean isEdit) {
         this.facility = facility;
         this.isEdit = isEdit;
     }
-
     /**
-     * Constructor for AddFacilityFragment
-     * Default constructor for creating a new Facility
+     * onAttach is called when the fragment is associated with an activity.
+     * @param context Context object
      */
-    public AddFacilityFragment(){
-        this.facility = new Facility("FacilityName", "StreetAddress1", "StreetAddress2", "City", "Province", "Country", "PostalCode", "OrganizerId", "DeviceId");
-        this.isEdit = false;
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (getParentFragment() instanceof AddFacilityDialogListener) {
+            listener = (AddFacilityDialogListener) getParentFragment();
+        } else if (context instanceof AddFacilityDialogListener) {
+            listener = (AddFacilityDialogListener) context;
+        } else {
+            throw new ClassCastException("Parent fragment or activity must implement AddFacilityDialogListener");
+        }
     }
-
     /**
      * onCreateDialog creates the AlertDialog for the AddFacilityFragment
      * @param savedInstanceState Bundle object containing the saved state
@@ -76,16 +96,25 @@ public class AddFacilityFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_add_facility, null);
-        EditText editFacilityName = view.findViewById(R.id.facility_name_input);
-        EditText editStreetAddress1 = view.findViewById(R.id.street_address_1);
-        EditText editStreetAddress2 = view.findViewById(R.id.street_address_2);
-        EditText editCity = view.findViewById(R.id.city);
-        EditText editProvince = view.findViewById(R.id.province);
-        EditText editCountry = view.findViewById(R.id.country);
-        EditText editPostalCode = view.findViewById(R.id.postal_code);
+        View view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_add_facility, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        if (!Places.isInitialized()) {
+            Places.initialize(requireContext(), BuildConfig.MAPS_API_KEY);
+        }
+        placesClient = Places.createClient(requireContext());
+        sessionToken = AutocompleteSessionToken.newInstance();
+
+
+        EditText editFacilityName = view.findViewById(R.id.facility_name_input);
+        AutoCompleteTextView editStreetAddress1 = view.findViewById(R.id.street_address_1);
+        AutoCompleteTextView editStreetAddress2 = view.findViewById(R.id.street_address_2);
+        AutoCompleteTextView editCity = view.findViewById(R.id.city);
+        AutoCompleteTextView editProvince = view.findViewById(R.id.province);
+        AutoCompleteTextView editCountry = view.findViewById(R.id.country);
+        AutoCompleteTextView editPostalCode = view.findViewById(R.id.postal_code);
+
+
         if (isEdit && facility != null) {
             editFacilityName.setText(facility.getFacilityName());
             editStreetAddress1.setText(facility.getStreetAddress1());
@@ -96,72 +125,158 @@ public class AddFacilityFragment extends DialogFragment {
             editPostalCode.setText(facility.getPostalCode());
         }
 
+        setupAutocomplete(editStreetAddress1);
+        setupAutocomplete(editStreetAddress2);
+        setupAutocomplete(editCity);
+
+        setupProvinceAutocomplete(editProvince);
+
+        setupAutocomplete(editCountry);
+        setupAutocomplete(editPostalCode);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(view)
-                .setTitle("Create/Edit Facility")
+                .setTitle(isEdit ? "Edit Facility" : "Create Facility")
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Confirm", null);
 
         AlertDialog dialog = builder.create();
-
-        // Override the positive button click listener to perform validation
         dialog.setOnShowListener(dlg -> {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
                 String facilityName = editFacilityName.getText().toString().trim();
                 String streetAddress1 = editStreetAddress1.getText().toString().trim();
-                String streetAddress2 = editStreetAddress2.getText().toString().trim();
                 String city = editCity.getText().toString().trim();
                 String province = editProvince.getText().toString().trim();
                 String country = editCountry.getText().toString().trim();
                 String postalCode = editPostalCode.getText().toString().trim();
-
-
                 if (facilityName.isEmpty()) {
                     editFacilityName.setError("Facility Name is required");
                     return;
                 }
-                if (streetAddress1.isEmpty()) {
-                    editStreetAddress1.setError("Street Address 1 is required");
+                if (streetAddress1.isEmpty() || !isUserSelectedFromDropdown(editStreetAddress1)) {
+                    editStreetAddress1.setError("Street Address 1 is required. Please choose an option from the dropdown suggestions.");
                     return;
                 }
-                if (city.isEmpty()) {
+                if (city.isEmpty() || !isUserSelectedFromDropdown(editCity)) {
                     editCity.setError("City is required");
                     return;
                 }
-                if (province.isEmpty()) {
+                if (province.isEmpty() || !isUserSelectedFromDropdown(editStreetAddress1)) {
                     editProvince.setError("Province is required");
                     return;
                 }
-                if (country.isEmpty()) {
+                if (country.isEmpty() || !isUserSelectedFromDropdown(editStreetAddress1)) {
                     editCountry.setError("Country is required");
                     return;
                 }
-                if (postalCode.isEmpty()) {
+                if (postalCode.isEmpty() || !isUserSelectedFromDropdown(editStreetAddress1)) {
                     editPostalCode.setError("Postal Code is required");
                     return;
                 }
-
 
                 String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
                 if (isEdit) {
                     facility.setFacilityName(facilityName);
                     facility.setStreetAddress1(streetAddress1);
-                    facility.setStreetAddress2(streetAddress2);
+                    facility.setStreetAddress2(editStreetAddress2.getText().toString().trim());
                     facility.setCity(city);
                     facility.setProvince(province);
                     facility.setCountry(country);
                     facility.setPostalCode(postalCode);
                     listener.updateFacility();
                 } else {
-                    if (listener != null) {
-                        listener.addFacility(new Facility(facilityName, streetAddress1, streetAddress2, city, province, country, postalCode, deviceId, deviceId));
-                    }
+                    listener.addFacility(new Facility(facilityName, streetAddress1, editStreetAddress2.getText().toString().trim(),
+                            city, province, country, postalCode, deviceId, deviceId));
                 }
 
-                dialog.dismiss(); // Close dialog if validation passes
+                dialog.dismiss();
             });
         });
 
         return dialog;
+    }
+
+
+    private void setupAutocomplete(AutoCompleteTextView autoCompleteTextView) {
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() >= 3) {
+                    FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                            .setSessionToken(sessionToken)
+                            .setQuery(s.toString())
+                            .build();
+
+                    placesClient.findAutocompletePredictions(request).addOnSuccessListener(response -> {
+                        List<String> suggestions = new ArrayList<>();
+                        for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+                            suggestions.add(prediction.getFullText(null).toString());
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                                android.R.layout.simple_dropdown_item_1line, suggestions);
+                        autoCompleteTextView.setAdapter(adapter);
+                        autoCompleteTextView.showDropDown();
+                    }).addOnFailureListener(e -> e.printStackTrace());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+    private void setupProvinceAutocomplete(AutoCompleteTextView autoCompleteTextView) {
+
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            private boolean userSelectedFromDropdown = false;
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (!userSelectedFromDropdown){
+                    validSelections.remove(autoCompleteTextView);
+                }
+
+                if (s.length() >= 2) { // Adjust minimum characters as needed
+                    FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                            .setSessionToken(sessionToken)
+                            .setQuery(s.toString())
+                            .setTypesFilter(Arrays.asList("administrative_area_level_1"))
+                            .build();
+
+                    placesClient.findAutocompletePredictions(request).addOnSuccessListener(response -> {
+                        List<String> suggestions = new ArrayList<>();
+                        for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+                            suggestions.add(prediction.getFullText(null).toString());
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                                android.R.layout.simple_dropdown_item_1line, suggestions);
+                        autoCompleteTextView.setAdapter(adapter);
+                        autoCompleteTextView.showDropDown();
+                    }).addOnFailureListener(e -> e.printStackTrace());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                userSelectedFromDropdown = false;
+            }
+        });
+        autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
+           String selectedValue = (String) parent.getItemAtPosition(position);
+           validSelections.put(autoCompleteTextView,selectedValue);
+            userSelectedFromDropdown = true;
+        });
+    }
+    private boolean isUserSelectedFromDropdown(AutoCompleteTextView autoCompleteTextView){
+        String currentText = autoCompleteTextView.getText().toString().trim();
+        String validSelection = validSelections.get(autoCompleteTextView);
+        return validSelection != null && validSelection.equals(currentText);
     }
 
 }

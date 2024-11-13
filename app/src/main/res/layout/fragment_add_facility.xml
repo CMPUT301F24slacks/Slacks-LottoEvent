@@ -8,7 +8,7 @@
 
     <EditText
         android:id="@+id/facility_name_input"
-        android:layout_width="294dp"
+        android:layout_width="380dp"
         android:layout_height="45dp"
         android:layout_marginTop="100dp"
         android:hint="Name"
@@ -16,87 +16,93 @@
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
 
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/street_address_1"
-        android:layout_width="294dp"
-        android:layout_height="45dp"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:hint="Street Address 1"
         android:padding="12dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/facility_name_input" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/street_address_2"
-        android:layout_width="294dp"
-        android:layout_height="45dp"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:hint="Street Address 2"
         android:padding="12dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/street_address_1" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/city"
-        android:layout_width="294dp"
+        android:layout_width="380dp"
         android:layout_height="45dp"
         android:layout_marginTop="24dp"
         android:hint="City"
         android:padding="12dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/street_address_2" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/province"
-        android:layout_width="294dp"
+        android:layout_width="380dp"
         android:layout_height="45dp"
         android:layout_marginTop="24dp"
         android:hint="Province"
         android:padding="12dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/city" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/country"
-        android:layout_width="294dp"
+        android:layout_width="380dp"
         android:layout_height="45dp"
         android:layout_marginTop="24dp"
         android:hint="Country"
         android:padding="12dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/province" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/postal_code"
-        android:layout_width="294dp"
+        android:layout_width="380dp"
         android:layout_height="45dp"
-        android:layout_marginTop="24dp"
         android:hint="Postal Code"
         android:padding="12dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/country" />
+        tools:layout_editor_absoluteY="515dp" />
 
     <Button
         android:id="@+id/confirm_button"
