@@ -23,21 +23,12 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // https://stackoverflow.com/a/78092051
-        // https://stackoverflow.com/a/36623703
-        val mapsApiKey: String by lazy {
-            // Read only value set by using lazy initialization, only set when we try to access it.
-            System.getenv("MAPS_API_KEY") ?: run {
-                // Using the elvis operator to check if the value on the left is null and if so we execute the code specified in the "run"
-                val propertiesFile = rootProject.file("local.properties")
-                if (propertiesFile.exists()) {
-                    val properties = Properties()
-                    properties.load(propertiesFile.inputStream())
-                    properties.getProperty("MAPS_API_KEY") ?: ""
-                } else {
-                    ""
-                }
-            }
-        }
+
+        val properties = Properties()
+        properties.load(rootProject.file("local.properties").inputStream())
+        val mapsApiKey: String = properties.getProperty("MAPS_API_KEY") ?: ""
+
+        buildConfigField("String", "MAPS_API_KEY", "\"$mapsApiKey\"")
     }
 
     buildTypes {
