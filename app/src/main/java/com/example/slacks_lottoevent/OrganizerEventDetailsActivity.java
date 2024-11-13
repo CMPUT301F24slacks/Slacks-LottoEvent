@@ -37,7 +37,6 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     private Event event;
     FirebaseFirestore db;
     String qrCodeValue;
-    private DocumentReference entrantsRef;
     @SuppressLint("HardwareIds") String deviceId;
 
     /**
@@ -110,14 +109,26 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
         binding.lotterySystemButton.setVisibility(View.VISIBLE);
         binding.lotterySystemButton.setOnClickListener(view -> {
-            event.lotterySystem();
+            if (binding.lotterySystemButton.isEnabled() && !event.getEntrantsChosen()) {
+                event.lotterySystem();
+                updateSelectedEntrants(event);
+                updateInvitedEntrants(event);
+                updateUninvitedEntrants(event);
 
-            updateSelectedEntrants(event);
-
-            updateInvitedEntrants(event);
-
-            updateUninvitedEntrants(event);
-
+                new AlertDialog.Builder(this)
+                        .setTitle("Entrants Selected")
+                        .setMessage("Entrants were selected for the event.")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+            }
+            else {
+                // Show a pop-up dialog if the button is clicked again
+                new AlertDialog.Builder(this)
+                        .setTitle("Cannot Sample Again")
+                        .setMessage("Cannot sample entrants again.")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+            }
         });
 
 
@@ -132,7 +143,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     }
 
     private void updateSelectedEntrants(Event event) {
-        db.collection("events").whereEqualTo("eventID", qrCodeValue).get().addOnCompleteListener(task -> {
+        db.collection("events").whereEqualTo("eventID", event.getEventID()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && !task.getResult().isEmpty()) {
                 DocumentSnapshot document = task.getResult().getDocuments().get(0);
                 DocumentReference eventRef = db.collection("events").document(document.getId());
@@ -141,13 +152,17 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                     eventRef.update("selected", FieldValue.arrayUnion(entrant),
                             "selectedNotificationsList", FieldValue.arrayUnion(entrant));
                 }
+
+                eventRef.update("waitlisted", event.getWaitlisted());
+
+                eventRef.update("entrantsChosen", event.getEntrantsChosen());
             }
         });
     }
 
     private void updateInvitedEntrants(Event event){
         for(String entrant: event.getSelected()) {
-            entrantsRef = db.collection("entrants").document(entrant);
+            DocumentReference entrantsRef = db.collection("entrants").document(entrant);
             entrantsRef.get().addOnSuccessListener(entrantDoc -> {
                 if (entrantDoc.exists()) {
                     // Assuming `notifications` is an array field in the entrant document
@@ -162,7 +177,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
     private void updateUninvitedEntrants(Event event){
         for(String entrant: event.getWaitlisted()) {
-            entrantsRef = db.collection("entrants").document(entrant);
+            DocumentReference entrantsRef = db.collection("entrants").document(entrant);
             entrantsRef.get().addOnSuccessListener(entrantDoc -> {
                 if (entrantDoc.exists()) {
                     // Assuming `notifications` is an array field in the entrant document

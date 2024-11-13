@@ -33,6 +33,7 @@ public class Event implements Serializable {
     private String location;
     private String deviceId;
     private String signupDeadline;
+    private Boolean entrantsChosen;
     public Event(){
     }
 
@@ -80,6 +81,8 @@ public class Event implements Serializable {
 
         this.deviceId = deviceId;
         this.signupDeadline = signupDeadline;
+
+        this.entrantsChosen = false;
 
     }
 
@@ -247,6 +250,10 @@ public class Event implements Serializable {
 
     public void setSignupDeadline(String signupDeadline) {this.signupDeadline = signupDeadline;}
 
+    public void setEntrantsChosen(Boolean answer){this.entrantsChosen = answer;}
+
+    public Boolean getEntrantsChosen(){return this.entrantsChosen;}
+
 
     /**
      * Checks if the event is full
@@ -274,19 +281,17 @@ public class Event implements Serializable {
      * Lottery System for the event
      */
     public void lotterySystem(){
-        Integer numOfSelectedEntrants = waitlisted.size() >= eventSlots ? eventSlots : waitlisted.size();
+        Integer numOfSelectedEntrants = this.waitlisted.size() >= this.eventSlots ? this.eventSlots : this.waitlisted.size();
 
-        if (this.waitlisted != null && !this.waitlisted.isEmpty()){
+        if (!this.waitlisted.isEmpty()){
             Collections.shuffle(this.waitlisted);
             this.selected = new ArrayList<>(this.waitlisted.subList(0, numOfSelectedEntrants));
-            this.waitlisted.subList(0, numOfSelectedEntrants).clear();
+
+            for(Integer i = 0; i < numOfSelectedEntrants; i++){
+                this.waitlisted.remove(0);
+            }
         }
 
-        // Remove the selected entrants from the waitlisted list
-        for (int i = 0; i < numOfSelectedEntrants; i++) {
-            this.waitlisted.remove(0);  // Remove the first `numOfSelectedEntrants` entrants
-        }
-
-
+        this.entrantsChosen = true;
     }
 }
