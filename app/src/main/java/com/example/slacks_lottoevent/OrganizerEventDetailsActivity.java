@@ -12,9 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.databinding.ActivityEntrantEventDetailsBinding;
 import com.example.slacks_lottoevent.databinding.ActivityOrganizerEventDetailsBinding;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +34,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     private String time;
     private Boolean usesGeolocation;
     private String description;
+    private Event event;
     FirebaseFirestore db;
     String qrCodeValue;
     @SuppressLint("HardwareIds") String deviceId;
@@ -50,7 +55,12 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
 
+
                         document = task.getResult().getDocuments().get(0);
+
+                        event = document.toObject(Event.class);
+
+
                         date = document.getString("date");
                         time = document.getString("time");
                         eventName = document.getString("name");
@@ -74,6 +84,17 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         String spotsRemainingText = "Only " + spotsRemaining.toString() + " spots available";
                         binding.spotsAvailable.setText(spotsRemainingText);
                         usesGeolocation = (Boolean) document.get("geoLocation");
+
+                        event.setFinalists((ArrayList<String>) document.get("finalists"));
+                        event.setWaitlisted((ArrayList<String>) document.get("waitlisted"));
+                        event.setSelected((ArrayList<String>) document.get("selected"));
+                        event.setCancelled((ArrayList<String>) document.get("cancelled"));
+
+                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("waitlistedNotificationsList"));
+                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("joinedNotificationsList"));
+                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("cancelledNotificationsList"));
+                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("selectedNotificationsList"));
+
                     }
                 });
         // add a listener to the event details back button, go to the last item in the back stack
@@ -86,14 +107,87 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 //        binding.editEventButton.setOnClickListener(view -> {
 //        });
 
+        binding.lotterySystemButton.setVisibility(View.VISIBLE);
+        binding.lotterySystemButton.setOnClickListener(view -> {
+            if (binding.lotterySystemButton.isEnabled() && !event.getEntrantsChosen()) {
+                event.lotterySystem();
+                updateSelectedEntrants(event);
+                updateInvitedEntrants(event);
+                updateUninvitedEntrants(event);
+
+                new AlertDialog.Builder(this)
+                        .setTitle("Entrants Selected")
+                        .setMessage("Entrants were selected for the event.")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+            }
+            else {
+                // Show a pop-up dialog if the button is clicked again
+                new AlertDialog.Builder(this)
+                        .setTitle("Cannot Sample Again")
+                        .setMessage("Cannot sample entrants again.")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+            }
+        });
+
+
         binding.entrantListButton.setVisibility(View.VISIBLE);
         binding.entrantListButton.setOnClickListener(view -> {
-            // get the event object corresponding to the qr code
+            // get the event object corresponding to the qr code - huh is this not the wrong value?
             Intent intent = new Intent(this, OrganizerNotifications.class);
             intent.putExtra("eventID", qrCodeValue);
             startActivity(intent);
         });
 
+    }
+
+    private void updateSelectedEntrants(Event event) {
+        db.collection("events").whereEqualTo("eventID", event.getEventID()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                DocumentReference eventRef = db.collection("events").document(document.getId());
+
+                for (String entrant : event.getSelected()) {
+                    eventRef.update("selected", FieldValue.arrayUnion(entrant),
+                            "selectedNotificationsList", FieldValue.arrayUnion(entrant));
+                }
+
+                eventRef.update("waitlisted", event.getWaitlisted());
+
+                eventRef.update("entrantsChosen", event.getEntrantsChosen());
+            }
+        });
+    }
+
+    private void updateInvitedEntrants(Event event){
+        for(String entrant: event.getSelected()) {
+            DocumentReference entrantsRef = db.collection("entrants").document(entrant);
+            entrantsRef.get().addOnSuccessListener(entrantDoc -> {
+                if (entrantDoc.exists()) {
+                    // Assuming `notifications` is an array field in the entrant document
+                    entrantsRef.update("invitedEvents", FieldValue.arrayUnion(event.getEventID()),
+                                    "invites", FieldValue.arrayUnion(event.getEventID()))
+                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "Event added for entrant"))
+                            .addOnFailureListener(e -> Log.e("Firestore", "Error updating invitedEvents for entrant"));
+                }
+            });
+        }
+    }
+
+    private void updateUninvitedEntrants(Event event){
+        for(String entrant: event.getWaitlisted()) {
+            DocumentReference entrantsRef = db.collection("entrants").document(entrant);
+            entrantsRef.get().addOnSuccessListener(entrantDoc -> {
+                if (entrantDoc.exists()) {
+                    // Assuming `notifications` is an array field in the entrant document
+                    entrantsRef.update("uninvitedEvents", FieldValue.arrayUnion(event.getEventID()))
+                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "Notification added for entrant"))
+                            .addOnFailureListener(e -> Log.e("Firestore", "Error updating uninvitedEvents for entrant"));
+                }
+
+            });
+        }
     }
 
 }

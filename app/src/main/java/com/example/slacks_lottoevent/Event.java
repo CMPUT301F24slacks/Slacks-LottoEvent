@@ -3,6 +3,8 @@ package com.example.slacks_lottoevent;
 import java.util.ArrayList;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Event class that holds all the information for an event
@@ -10,7 +12,7 @@ import java.io.Serializable;
 public class Event implements Serializable {
 
     private String name;
-    private String date;
+    private String eventDate;
     private String time;
     private String description;
     private String price;
@@ -24,22 +26,22 @@ public class Event implements Serializable {
     private String qrHash;
     private String eventID;
     private Boolean geoLocation;
-    private Boolean waitlistNotifications;
-    private Boolean selectedNotifications;
-    private Boolean cancelledNotifications;
     private ArrayList<String> waitlistedNotificationsList;
     private ArrayList<String> selectedNotificationsList;
     private ArrayList<String> joinedNotificationsList;
     private ArrayList<String> cancelledNotificationsList;
     private String location;
+    private String deviceId;
+    private String signupDeadline;
+    private Boolean entrantsChosen;
     public Event(){
-
     }
 
     /**
      * Constructor for Event
      * @param name
-     * @param date
+     * @param eventDate
+     * @param location
      * @param time
      * @param price
      * @param description
@@ -48,14 +50,13 @@ public class Event implements Serializable {
      * @param qrData
      * @param eventID
      * @param geoLocation
-     * @param waitlistNotifications
-     * @param selectedNotifications
-     * @param cancelledNotifications
      * @param qrHash
+     * @param signupDeadline
+     *
      */
-    public Event(String name, String date, String location, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventID, Boolean geoLocation, String qrHash, Boolean waitlistNotifications, Boolean selectedNotifications, Boolean cancelledNotifications) {
+    public Event(String name, String eventDate, String location, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventID, Boolean geoLocation, String qrHash, String deviceId, String signupDeadline) {
         this.name = name;
-        this.date = date;
+        this.eventDate = eventDate;
         this.time = time;
         this.price = price;
         this.description = description;
@@ -78,17 +79,21 @@ public class Event implements Serializable {
         this.qrHash = qrHash;
         this.geoLocation = geoLocation;
 
-        this.waitlistNotifications = waitlistNotifications;
-        this.cancelledNotifications = cancelledNotifications;
-        this.selectedNotifications = selectedNotifications;
+        this.deviceId = deviceId;
+        this.signupDeadline = signupDeadline;
+
+        this.entrantsChosen = false;
+
     }
 
     public String getLocation(){
         return location;
     }
+
     public void setLocation(String location){
         this.location = location;
     }
+
     public String getName() {
         return name;
     }
@@ -97,12 +102,12 @@ public class Event implements Serializable {
         this.name = name;
     }
 
-    public String getDate() {
-        return date;
+    public String getEventDate() {
+        return eventDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setEventDate(String date) {
+        this.eventDate = eventDate;
     }
 
     public String getTime() {
@@ -133,9 +138,7 @@ public class Event implements Serializable {
         return waitListCapacity;
     }
 
-    public void setWaitListCapacity(int waitListCapacity) {
-        this.waitListCapacity = waitListCapacity;
-    }
+    public void setWaitListCapacity(int waitListCapacity) { this.waitListCapacity = waitListCapacity;}
 
     public int getEventSlots() {
         return eventSlots;
@@ -183,11 +186,15 @@ public class Event implements Serializable {
 
     public void addWaitlisted(String entrant) { this.waitlisted.add(entrant); }
 
+    public void setWaitlisted(ArrayList<String> entrants) { this.waitlisted = entrants;}
+
     public ArrayList<String> getFinalists() {
         return finalists;
     }
 
     public void addFinalist(String entrant) {this.finalists.add(entrant);}
+
+    public void setFinalists(ArrayList<String> entrants) { this.finalists = entrants;}
 
     public ArrayList<String> getCancelled() {
         return cancelled;
@@ -195,49 +202,58 @@ public class Event implements Serializable {
 
     public void addCancelled(String entrant) {this.cancelled.add(entrant);}
 
+    public void setCancelled(ArrayList<String> entrants) { this.cancelled = entrants;}
+
     public ArrayList<String> getSelected() {
         return selected;
     }
 
     public void addSelected(String entrant) {this.selected.add(entrant);}
 
-    public Boolean getWaitlistNotifications() {
-        return waitlistNotifications;
-    }
-
-    public void setWaitlistNotifications(Boolean waitlistNotifications) {
-        this.waitlistNotifications = waitlistNotifications;
-    }
-
-    public Boolean getSelectedNotifications() {
-        return selectedNotifications;
-    }
-
-    public void setSelectedNotifications(Boolean selectedNotifications) {
-        this.selectedNotifications = selectedNotifications;
-    }
-
-    public Boolean getCancelledNotifications() {
-        return cancelledNotifications;
-    }
-
-    public void setCancelledNotifications(Boolean cancelled_notifications) { this.cancelledNotifications = cancelled_notifications; }
+    public void setSelected(ArrayList<String> entrants) { this.selected = entrants;}
 
     public ArrayList<String> getSelectedNotificationsList(){return selectedNotificationsList; }
 
     public void addSelectedNotification(String notification) { this.selectedNotificationsList.add(notification); }
 
+    public void setSelectedNotificationsList(ArrayList<String> entrants) { this.selectedNotificationsList = entrants;}
+
     public ArrayList<String> getWaitlistedNotificationsList(){return waitlistedNotificationsList; }
 
     public void addWaitlistedNotification(String notification) { this.waitlistedNotificationsList.add(notification); }
+
+    public void setWaitlistedNotificationsList(ArrayList<String> entrants) { this.waitlistedNotificationsList = entrants;}
 
     public ArrayList<String> getJoinedNotificationsList(){return joinedNotificationsList; }
 
     public void addJoinedNotification(String notification) { this.joinedNotificationsList.add(notification);}
 
+    public void setJoinedNotificationsList(ArrayList<String> entrants) { this.joinedNotificationsList = entrants;}
+
     public ArrayList<String> getCancelledNotificationsList(){return cancelledNotificationsList; }
 
     public void addCancelledNotification(String notification) {this.cancelledNotificationsList.add(notification);}
+
+    public void setCancelledNotificationsList(ArrayList<String> entrants) { this.cancelledNotificationsList = entrants;}
+
+    public String getDeviceId(){
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId){
+        this.deviceId = deviceId;
+    }
+
+    public String getSignupDeadline() {
+        return signupDeadline;
+    }
+
+    public void setSignupDeadline(String signupDeadline) {this.signupDeadline = signupDeadline;}
+
+    public void setEntrantsChosen(Boolean answer){this.entrantsChosen = answer;}
+
+    public Boolean getEntrantsChosen(){return this.entrantsChosen;}
+
 
     /**
      * Checks if the event is full
@@ -258,5 +274,24 @@ public class Event implements Serializable {
     @Override
     public int hashCode() {
         return eventID.hashCode();
+    }
+
+
+    /**
+     * Lottery System for the event
+     */
+    public void lotterySystem(){
+        Integer numOfSelectedEntrants = this.waitlisted.size() >= this.eventSlots ? this.eventSlots : this.waitlisted.size();
+
+        if (!this.waitlisted.isEmpty()){
+            Collections.shuffle(this.waitlisted);
+            this.selected = new ArrayList<>(this.waitlisted.subList(0, numOfSelectedEntrants));
+
+            for(Integer i = 0; i < numOfSelectedEntrants; i++){
+                this.waitlisted.remove(0);
+            }
+        }
+
+        this.entrantsChosen = true;
     }
 }
