@@ -29,3 +29,5 @@ jobs:
           sed "s|MAPS_API_KEY|$MAPS_API_KEY|g;" local.default.properties > local.properties
     - name: Build with Gradle
       run: ./gradlew build
+    - name: Check MAPS_API_KEY
+      run: cat local.default.properties
