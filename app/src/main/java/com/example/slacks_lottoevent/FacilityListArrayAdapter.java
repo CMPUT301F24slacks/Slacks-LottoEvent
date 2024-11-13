@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
+import com.example.slacks_lottoevent.model.Facility;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -102,7 +103,7 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
      */
     private void deleteProfileFromDatabase(Facility facility, int position) {
         // Assume the profile's document ID is the same as the email
-        db.collection("facilities").document(facility.getFacilityId())
+        db.collection("facilities").document(facility.getDeviceId())
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     // Remove profile from the list and notify the adapter

@@ -22,7 +22,6 @@ public class Profile {
     private boolean usingDefaultPicture;
     private boolean adminNotifications;
     private boolean isAdmin;
-    private String deviceId;
 
     /**
      * Default constructor for Firestore serialization.

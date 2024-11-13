@@ -1,13 +1,13 @@
 package com.example.slacks_lottoevent.fragment;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.model.User;
@@ -26,6 +26,13 @@ public class FacilityFragment extends Fragment {
     // UI elements
     private Button create_button;
     private Button edit_button;
+    private EditText name;
+    private EditText street_address1;
+    private EditText street_address2;
+    private EditText city;
+    private EditText province;
+    private EditText country;
+    private EditText postal_code;
 
     public FacilityFragment() {
         // Required empty public constructor
@@ -55,7 +62,13 @@ public class FacilityFragment extends Fragment {
         // UI elements
         create_button = view.findViewById(R.id.create_facility_button);
         edit_button = view.findViewById(R.id.edit_facility_button);
-
+        name = view.findViewById(R.id.facility_name);
+        street_address1 = view.findViewById(R.id.street_address_1);
+        street_address2 = view.findViewById(R.id.street_address_2);
+        city = view.findViewById(R.id.city);
+        province = view.findViewById(R.id.province);
+        country = view.findViewById(R.id.country);
+        postal_code = view.findViewById(R.id.postal_code);
 
         if (facilityViewModel.getFacility().getValue() == null) {
             // Facility object is not set

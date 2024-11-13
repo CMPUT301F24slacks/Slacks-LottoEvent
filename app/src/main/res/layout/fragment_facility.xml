@@ -29,6 +29,7 @@
             android:textSize="16sp"
             android:textColor="#FFFFFF"
             android:layout_marginBottom="8dp" />
+
         <EditText
             android:id="@+id/facility_name"
             android:layout_width="match_parent"
@@ -49,6 +50,7 @@
             android:textSize="16sp"
             android:textColor="#FFFFFF"
             android:layout_marginBottom="8dp" />
+
         <EditText
             android:id="@+id/street_address_1"
             android:layout_width="match_parent"
@@ -69,6 +71,7 @@
             android:textSize="16sp"
             android:textColor="#FFFFFF"
             android:layout_marginBottom="8dp" />
+
         <EditText
             android:id="@+id/street_address_2"
             android:layout_width="match_parent"
@@ -101,6 +104,7 @@
                     android:textSize="16sp"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="8dp" />
+
                 <EditText
                     android:id="@+id/city"
                     android:layout_width="match_parent"
@@ -130,6 +134,7 @@
                     android:textSize="16sp"
                     android:textColor="#FFFFFF"
                     android:layout_marginBottom="8dp" />
+
                 <EditText
                     android:id="@+id/province"
                     android:layout_width="match_parent"
@@ -151,6 +156,7 @@
             android:textSize="16sp"
             android:textColor="#FFFFFF"
             android:layout_marginBottom="8dp" />
+
         <EditText
             android:id="@+id/country"
             android:layout_width="match_parent"
@@ -171,6 +177,7 @@
             android:textSize="16sp"
             android:textColor="#FFFFFF"
             android:layout_marginBottom="8dp" />
+
         <EditText
             android:id="@+id/postal_code"
             android:layout_width="match_parent"
