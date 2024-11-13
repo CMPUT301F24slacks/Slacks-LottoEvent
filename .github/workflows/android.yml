@@ -26,6 +26,6 @@ jobs:
       env:           
         APIRESTKEY: ${{ secrets.MAPS_API_KEY }}
       run: |
-          sed "s|MAPS_API_KEY|$MAPS_API_KEY|g;" local.defaults.properties > local.properties
+          sed "s|MAPS_API_KEY|$MAPS_API_KEY|g;" local.default.properties > local.properties
     - name: Build with Gradle
       run: ./gradlew build
