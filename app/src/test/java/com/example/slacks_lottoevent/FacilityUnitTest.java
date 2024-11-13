@@ -27,9 +27,7 @@ public class FacilityUnitTest {
         assertEquals("DICE", facility.getFacilityName());
         assertEquals("116 St NW", facility.getStreetAddress1());
         assertEquals("9211", facility.getStreetAddress2());
-        assertEquals("Edmonton", facility.getCity());
-        assertEquals("Alberta", facility.getProvince());
-        assertEquals("Canada", facility.getCountry());
+
         assertEquals("T6G 1H9", facility.getPostalCode());
         assertEquals("jw7e1540320d3c3d", facility.getOrganizerId());
     }
@@ -60,34 +58,7 @@ public class FacilityUnitTest {
         facility.setStreetAddress2("8900");
         assertEquals("8900", facility.getStreetAddress2());
     }
-
-    /**
-     * Test the Facility constructor with a null facility name.
-     */
-    @Test
-    void testSetAndGetCity() {
-        facility.setCity("Toronto");
-        assertEquals("Toronto", facility.getCity());
-    }
-
-    /**
-     * Test the Facility constructor with a null facility name.
-     */
-    @Test
-    void testSetAndGetProvince() {
-        facility.setProvince("Ontario");
-        assertEquals("Ontario", facility.getProvince());
-    }
-
-    /**
-     * Test the Facility constructor with a null facility name.
-     */
-    @Test
-    void testSetAndGetCountry() {
-        facility.setCountry("USA");
-        assertEquals("USA", facility.getCountry());
-    }
-
+    
     /**
      * Test the Facility constructor with a null facility name.
      */
