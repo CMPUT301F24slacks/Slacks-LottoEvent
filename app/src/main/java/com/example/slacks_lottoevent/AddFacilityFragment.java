@@ -178,7 +178,9 @@ public class AddFacilityFragment extends DialogFragment {
     *
     * @param autoCompleteTextView The AutoCompleteTextView to attach autocomplete suggestions to.
     * Relevant Documentation
-     * https://developers.google.com/maps/documentation/places/android-sdk/autocomplete#maps_places_autocomplete_support_fragment-java
+    * https://developers.google.com/maps/documentation/places/android-sdk/autocomplete#maps_places_autocomplete_support_fragment-java
+    * https://developer.android.com/reference/android/widget/AutoCompleteTextView
+    * https://developer.android.com/reference/android/text/TextWatcher
     * */
     private void setupAutocomplete(AutoCompleteTextView autoCompleteTextView) {
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
@@ -239,6 +241,8 @@ public class AddFacilityFragment extends DialogFragment {
      * @param autoCompleteTextView The AutoCompleteTextView to attach autocomplete suggestions to.
      * Relevant Documentation
      * https://developers.google.com/maps/documentation/places/android-sdk/autocomplete#maps_places_autocomplete_support_fragment-java
+     * https://developer.android.com/reference/android/widget/AutoCompleteTextView
+     * https://developer.android.com/reference/android/text/TextWatcher
      * */
 
     private void setupAutocompleteForPostalCode(AutoCompleteTextView autoCompleteTextView) {
