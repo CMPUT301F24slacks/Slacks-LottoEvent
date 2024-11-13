@@ -26,6 +26,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,7 +124,7 @@ public class AddFacilityFragment extends DialogFragment {
         setupAutocomplete(editStreetAddress1);
         setupAutocomplete(editStreetAddress2);
 
-        setupAutocomplete(editPostalCode);
+        setupAutocompleteForPostalCode(editPostalCode);
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -208,7 +209,14 @@ public class AddFacilityFragment extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {}
         });
+
+        // Add OnItemClickListener to capture selected item from dropdown
+        autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedItem = (String) parent.getItemAtPosition(position);
+            validSelections.put(autoCompleteTextView, selectedItem); // Store the selected item
+        });
     }
+
     /**
      * Checks if the current text in the specified AutoCompleteTextView matches a valid selection from the dropdown suggestions.
      * This method compares the current text with a stored valid selection. Ensures the input is a valid option from the dropdown.
@@ -219,6 +227,48 @@ public class AddFacilityFragment extends DialogFragment {
         String currentText = autoCompleteTextView.getText().toString().trim();
         String validSelection = validSelections.get(autoCompleteTextView);
         return validSelection != null && validSelection.equals(currentText);
+    }
+
+    /**
+     * Sets up Google Places Autocomplete functionality for the AutoCompleteTextView's
+     * This method adds a text change listener that triggers autocomplete suggestons when the user types.
+     * Uses the google places API to fetch the postal code suggestions based on the current input.
+     *
+     * @param autoCompleteTextView The AutoCompleteTextView to attach autocomplete suggestions to.
+     * Relevant Documentation
+     * https://developers.google.com/maps/documentation/places/android-sdk/autocomplete#maps_places_autocomplete_support_fragment-java
+     * */
+
+    private void setupAutocompleteForPostalCode(AutoCompleteTextView autoCompleteTextView) {
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() >= 3) {
+                    FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                            .setSessionToken(sessionToken)
+                            .setQuery(s.toString())
+                            .setTypesFilter(Collections.singletonList("postal_code")) // Restrict to postal codes
+                            .build();
+
+                    placesClient.findAutocompletePredictions(request).addOnSuccessListener(response -> {
+                        List<String> suggestions = new ArrayList<>();
+                        for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+                            suggestions.add(prediction.getFullText(null).toString());
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                                android.R.layout.simple_dropdown_item_1line, suggestions);
+                        autoCompleteTextView.setAdapter(adapter);
+                        autoCompleteTextView.showDropDown();
+                    }).addOnFailureListener(e -> e.printStackTrace());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
     }
 
 }
