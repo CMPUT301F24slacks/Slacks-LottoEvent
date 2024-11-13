@@ -25,8 +25,7 @@ jobs:
     - name: Get local.properties from secrets
       run: echo "${{secrets.LOCAL_PROPERTIES }}" > $GITHUB_WORKSPACE/local.properties
     - name: Check MAPS_API_KEY
-      run: cat local.default.properties
+      run: cat local.properties
     - name: Build with Gradle
       run: ./gradlew build
-    - name: Check MAPS_API_KEY
-      run: cat local.default.properties
+   
