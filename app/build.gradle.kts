@@ -5,8 +5,11 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
-
+secrets {
+    defaultPropertiesFileName = "local.default.properties"
+}
 
 android {
     namespace = "com.example.slacks_lottoevent"
