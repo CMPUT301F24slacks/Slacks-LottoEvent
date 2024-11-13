@@ -24,6 +24,3 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
-    - name: Build
-      env:
-          MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
