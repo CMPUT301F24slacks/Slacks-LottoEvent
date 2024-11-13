@@ -170,7 +170,15 @@ public class AddFacilityFragment extends DialogFragment {
         return dialog;
     }
 
-
+    /**
+    * Sets up Google Places Autocomplete functionality for the AutoCompleteTextView's
+    * This method adds a text change listener that triggers autocomplete suggestons when the user types.
+    * Uses the google places API to fetch the location suggestions based on the current input.
+    *
+    * @param autoCompleteTextView The AutoCompleteTextView to attach autocomplete suggestions to.
+    * Relevant Documentation
+     * https://developers.google.com/maps/documentation/places/android-sdk/autocomplete#maps_places_autocomplete_support_fragment-java
+    * */
     private void setupAutocomplete(AutoCompleteTextView autoCompleteTextView) {
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -201,11 +209,12 @@ public class AddFacilityFragment extends DialogFragment {
             public void afterTextChanged(Editable s) {}
         });
     }
-    /*
-    *
-    *
-    *
-    * */
+    /**
+     * Checks if the current text in the specified AutoCompleteTextView matches a valid selection from the dropdown suggestions.
+     * This method compares the current text with a stored valid selection. Ensures the input is a valid option from the dropdown.
+     *
+     * @param autoCompleteTextView The AutoCompleteTextView to check for a valid selection.
+     * */
     private boolean isUserSelectedFromDropdown(AutoCompleteTextView autoCompleteTextView){
         String currentText = autoCompleteTextView.getText().toString().trim();
         String validSelection = validSelections.get(autoCompleteTextView);
