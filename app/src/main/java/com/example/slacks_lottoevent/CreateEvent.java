@@ -354,11 +354,7 @@ public class CreateEvent extends AppCompatActivity {
                     .addOnCompleteListener(task -> {
                         if(task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                            location.set(document.getString("streetAddress1") + " "
-                                    + document.getString("city") + ", "
-                                    + document.getString("province") + " "
-                                    + document.getString("postalCode"));
-                            System.out.println("location" + location.get());
+                            location.set(document.getString("streetAddress1"));
                             Event eventData =  new Event(name, eventDate, location.get(), time, price, details, eventSlots, Integer.parseInt(finalWaitingListCapacity), qrData, eventId, geoLoc, qrHash, deviceID, signupDeadline);
                             eventsRef.document(eventId).set(eventData)
                                     .addOnSuccessListener(nothing -> {
