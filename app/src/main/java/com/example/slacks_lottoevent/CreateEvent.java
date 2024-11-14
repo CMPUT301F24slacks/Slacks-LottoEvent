@@ -1,26 +1,28 @@
 package com.example.slacks_lottoevent;
 
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
 
+import android.widget.ImageView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
-import com.example.slacks_lottoevent.model.Event;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.security.MessageDigest;
@@ -28,6 +30,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -43,7 +46,6 @@ public class CreateEvent extends AppCompatActivity {
 
     /**
      * This method initializes the CreateEvent activity.
-     *
      * @param savedInstanceState the saved instance state
      */
     @Override
@@ -57,11 +59,11 @@ public class CreateEvent extends AppCompatActivity {
         eventsRef = db.collection("events");
         organizersRef = db.collection("organizers");
 
+
 //        Check in real time if event date is validated
         binding.eventDate.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -74,15 +76,12 @@ public class CreateEvent extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         binding.signupDeadline.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count,
-                                          int after) {
-            }
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int count, int after) {
@@ -102,8 +101,7 @@ public class CreateEvent extends AppCompatActivity {
 //        Check in real time if eventTime is validated
         binding.eventTime.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -116,15 +114,13 @@ public class CreateEvent extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
 //        Check in real time if event price is validated
         binding.eventPrice.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -135,17 +131,14 @@ public class CreateEvent extends AppCompatActivity {
                     binding.eventPrice.setError(null);
                 }
             }
-
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
 //        Check in realtime if event slot is a number
         binding.eventSlots.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -158,15 +151,13 @@ public class CreateEvent extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
 //        check in real time if waitList capacity is a number
         binding.waitListCapacity.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -178,19 +169,17 @@ public class CreateEvent extends AppCompatActivity {
                     binding.waitListCapacity.setError(null);
                 } else if (!s.toString().matches("\\d+")) {
                     binding.waitListCapacity.setError("Waitlist capacity must be a number");
-                } else if (!TextUtils.isEmpty(eventSlot) &&
-                           Integer.parseInt(s.toString()) < Integer.parseInt(eventSlot)) {
-                    binding.waitListCapacity.setError(
-                            "Waitlist capacity must be greater than the event slots");
+                } else if (!TextUtils.isEmpty(eventSlot) && Integer.parseInt(s.toString()) < Integer.parseInt(eventSlot)) {
+                    binding.waitListCapacity.setError("Waitlist capacity must be greater than the event slots");
                 } else {
                     binding.waitListCapacity.setError(null);
                 }
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
+
 
 //        Cancel Button
         Button cancel = findViewById(R.id.cancelBtn);
@@ -208,7 +197,6 @@ public class CreateEvent extends AppCompatActivity {
 
     /**
      * This method validates the inputs for creating an event.
-     *
      * @return true if all inputs are valid, false otherwise
      */
     private boolean validateInputs() {
@@ -264,7 +252,6 @@ public class CreateEvent extends AppCompatActivity {
 
     /**
      * This method checks if the time is in the correct format.
-     *
      * @param time the time to be checked
      * @return true if the time is in the correct format, false otherwise
      */
@@ -283,7 +270,6 @@ public class CreateEvent extends AppCompatActivity {
 
     /**
      * This method checks if the date is in the correct format.
-     *
      * @param date the date to be checked
      * @return true if the date is in the correct format, false otherwise
      */
@@ -301,7 +287,6 @@ public class CreateEvent extends AppCompatActivity {
 
     /**
      * This method checks if the signupDeadline is after the eventdate.
-     *
      * @return true if the signUpDeadline is before the eventDate
      */
 
@@ -328,7 +313,8 @@ public class CreateEvent extends AppCompatActivity {
                 binding.signupDeadline.setError(null);
                 return true;
             }
-        } catch (ParseException e) {
+        }
+        catch (ParseException e) {
             e.printStackTrace();
             return false;
         }
@@ -343,7 +329,7 @@ public class CreateEvent extends AppCompatActivity {
         String time = binding.eventTime.getText().toString().trim();
         String price = binding.eventPrice.getText().toString().trim();
         String details = binding.eventDetails.getText().toString().trim();
-        Boolean geoLoc = !binding.checkBoxGeo.isChecked();
+        Boolean geoLoc = binding.checkBoxGeo.isChecked() ? false: true;
         String signupDeadline = binding.signupDeadline.getText().toString().trim();
 
         Integer eventSlots = Integer.valueOf(binding.eventSlots.getText().toString().trim());
@@ -361,58 +347,45 @@ public class CreateEvent extends AppCompatActivity {
             BitMatrix bitMatrix = writer.encode(eventId, BarcodeFormat.QR_CODE, 300, 300);
             String qrData = serializeBitMatrix(bitMatrix);
             String qrHash = generateHash(qrData);
-            String deviceID = Settings.Secure.getString(getContentResolver(),
-                                                        Settings.Secure.ANDROID_ID);
+            String deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
             String finalWaitingListCapacity = waitingListCapacity;
             db.collection("facilities").whereEqualTo("deviceID", deviceID)
-              .get()
-              .addOnCompleteListener(task -> {
-                  if (task.isSuccessful()) {
-                      DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                      location.set(document.getString("streetAddress1") + " "
-                                   + document.getString("city") + ", "
-                                   + document.getString("province") + " "
-                                   + document.getString("postalCode"));
-                      System.out.println("location" + location.get());
-                      Event eventData = new Event(name, eventDate, location.get(), time, price,
-                                                  details, eventSlots,
-                                                  Integer.parseInt(finalWaitingListCapacity),
-                                                  qrData, eventId, geoLoc, qrHash, deviceID,
-                                                  signupDeadline);
-                      eventsRef.document(eventId).set(eventData)
-                               .addOnSuccessListener(nothing -> {
-                                   Toast.makeText(CreateEvent.this, "Event created successfully",
-                                                  Toast.LENGTH_SHORT).show();
-                               })
-                               .addOnFailureListener(nothing -> {
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if(task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                            location.set(document.getString("streetAddress1"));
+                            Event eventData =  new Event(name, eventDate, location.get(), time, price, details, eventSlots, Integer.parseInt(finalWaitingListCapacity), qrData, eventId, geoLoc, qrHash, deviceID, signupDeadline);
+                            eventsRef.document(eventId).set(eventData)
+                                    .addOnSuccessListener(nothing -> {
+                                        Toast.makeText(CreateEvent.this, "Event created successfully", Toast.LENGTH_SHORT).show();
+                                    })
+                                    .addOnFailureListener(nothing -> {
 
-                                   Toast.makeText(CreateEvent.this, "Failed to create event",
-                                                  Toast.LENGTH_SHORT).show();
-                               });
-                  }
-              });
+                                        Toast.makeText(CreateEvent.this, "Failed to create event", Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+                    });
         } catch (WriterException e) {
             throw new RuntimeException(e);
         }
 
-        String organizerId = Settings.Secure.getString(getContentResolver(),
-                                                       Settings.Secure.ANDROID_ID);
+        String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         DocumentReference organizerRef = organizersRef.document(organizerId);
         organizerRef.update("events", FieldValue.arrayUnion(eventId))
-                    .addOnSuccessListener(aVoid -> {
-                        // Event ID successfully added to the organizer's events array
-                        Log.d("Firestore", "Event added to organizer's events list.");
-                    })
-                    .addOnFailureListener(e -> {
-                        // Failed to add event ID
-                        Log.w("Firestore", "Error adding event to organizer's events list", e);
-                    });
+                .addOnSuccessListener(aVoid -> {
+                    // Event ID successfully added to the organizer's events array
+                    Log.d("Firestore", "Event added to organizer's events list.");
+                })
+                .addOnFailureListener(e -> {
+                    // Failed to add event ID
+                    Log.w("Firestore", "Error adding event to organizer's events list", e);
+                });
 
     }
 
     /**
      * This method generates a hash for the QR code.
-     *
      * @param data the string data to be hashed
      * @return the string hash of the data
      */
@@ -434,7 +407,6 @@ public class CreateEvent extends AppCompatActivity {
 
     /**
      * This method serializes the BitMatrix to a string.
-     *
      * @param bitMatrix the BitMatrix to be serialized
      * @return the string representation of the BitMatrix
      */

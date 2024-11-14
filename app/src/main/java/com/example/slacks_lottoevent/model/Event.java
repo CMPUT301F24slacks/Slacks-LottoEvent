@@ -105,11 +105,11 @@ public class Event implements Serializable {
     }
 
     public String getEventDate() {
-        return eventDate;
+        return this.eventDate;
     }
 
     public void setEventDate(String date) {
-        this.eventDate = eventDate;
+        this.eventDate = date;
     }
 
     public String getTime() {

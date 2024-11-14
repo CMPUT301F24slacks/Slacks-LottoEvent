@@ -72,7 +72,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
 
                         document = task.getResult().getDocuments().get(0);
-                        date = document.getString("date");
+                        date = document.getString("eventDate");
                         time = document.getString("time");
                         eventName = document.getString("name");
                         location = document.getString("location");

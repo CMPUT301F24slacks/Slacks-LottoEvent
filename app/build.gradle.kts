@@ -4,6 +4,10 @@ import org.gradle.external.javadoc.StandardJavadocDocletOptions
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+}
+secrets {
+    defaultPropertiesFileName = "local.default.properties"
 }
 
 android {
@@ -18,6 +22,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // https://stackoverflow.com/a/78092051
+
+        val properties = Properties()
+        properties.load(rootProject.file("local.properties").inputStream())
+        val mapsApiKey: String = properties.getProperty("MAPS_API_KEY") ?: ""
+
+        buildConfigField("String", "MAPS_API_KEY", properties.getProperty("MAPS_API_KEY"))
     }
 
     buildTypes {
@@ -29,12 +40,15 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -59,7 +73,7 @@ androidComponents {
     }
 }
 
-tasks.withType<Test>{
+tasks.withType<Test> {
     useJUnitPlatform()
 }
 
@@ -70,7 +84,6 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
-    implementation(libs.navigation.dynamic.features.fragment)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.database)
     implementation(libs.firebase.crashlytics.buildtools)
@@ -101,7 +114,5 @@ dependencies {
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
     implementation("androidx.multidex:multidex:2.0.1")
-
-    
-
+    implementation("com.google.android.libraries.places:places:4.1.0")
 }
