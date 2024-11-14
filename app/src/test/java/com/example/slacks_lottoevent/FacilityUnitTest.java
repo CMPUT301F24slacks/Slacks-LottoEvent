@@ -16,7 +16,7 @@ public class FacilityUnitTest {
      */
     @BeforeEach
     void setUp(){
-        facility = new Facility("DICE", "116 St NW", "9211", "Edmonton", "Alberta", "Canada", "T6G 1H9", "jw7e1540320d3c3d", "jw7e1540320d3c3d" );
+        facility = new Facility("DICE", "116 St NW", "9211", "T6G 1H9", "jw7e1540320d3c3d", "jw7e1540320d3c3d" );
     }
 
     /**
@@ -58,7 +58,7 @@ public class FacilityUnitTest {
         facility.setStreetAddress2("8900");
         assertEquals("8900", facility.getStreetAddress2());
     }
-    
+
     /**
      * Test the Facility constructor with a null facility name.
      */
