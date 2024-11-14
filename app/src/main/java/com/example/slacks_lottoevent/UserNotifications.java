@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -54,6 +55,9 @@ public class UserNotifications extends AppCompatActivity {
 
         // Fetch and populate invited events
         fetchInvitedEvents();
+
+        Button back_btn = findViewById(R.id.back_btn);
+        back_btn.setOnClickListener(v -> onBackPressed());
     }
 
     /**

@@ -99,7 +99,11 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         TextView eventDescription = convertView.findViewById(R.id.event_description);
         eventName.setText(event.getName());
         eventDate.setText(event.getEventDate());
+        Log.d("EventDetails", "eventDate" + event.getEventDate());
         eventTime.setText(event.getTime());
+//        eventAddress.setText(event.getLocation());
+
+//        TODO: Can delete the below code once we know that the event location and facility are lined up.
 
         String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -180,77 +184,5 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
             }
         }
         return bitMatrix;
-    }
-
-    /**
-     * Selects entrants for a lottery
-     *
-     * @param eventID The ID of the event
-     */
-    private void selectEntrantsForLottery(String eventID){
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
-
-        eventsRef.document(eventID).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                DocumentSnapshot eventDoc = task.getResult();
-
-                if (eventDoc.exists()) {
-                    // Retrieve the waitlist field
-                    ArrayList<String> waitlist = (ArrayList<String>) eventDoc.get("waitlisted");
-                    Long eventSlotsLong = (Long) eventDoc.get("eventSlots");
-                    Integer eventSlots = eventSlotsLong != null ? eventSlotsLong.intValue() : 0; // Handle null case if needed
-                    Integer numOfSelectedEntrants = waitlist.size() >= eventSlots ? eventSlots : waitlist.size();
-
-                    if (waitlist != null && !waitlist.isEmpty()) {
-                        // Shuffle the waitlist to get a random order
-                        Collections.shuffle(waitlist);
-                        List<String> selectedEntrants = waitlist.subList(0, numOfSelectedEntrants);
-                        List<String> unselectedEntrants = waitlist.subList(numOfSelectedEntrants, waitlist.size());
-
-                        // Reference to the specific event document
-                        DocumentReference eventRef = eventsRef.document(eventID);
-
-//                        Inputting entrantId in event so organizer knows who to send notifications for getting selected and who is selected
-                        for (String entrant : selectedEntrants) {
-                            eventRef.update("selected", FieldValue.arrayUnion(entrant),
-                                            "selectedNotificationsList", FieldValue.arrayUnion(entrant));
-
-                            entrantsRef = db.collection("entrants").document(entrant);
-                            entrantsRef.get().addOnSuccessListener(entrantDoc -> {
-                                if (entrantDoc.exists()) {
-                                    // Assuming `notifications` is an array field in the entrant document
-                                    entrantsRef.update("invitedEventsNotis", FieldValue.arrayUnion(eventID))
-                                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "Notification added for entrant: " + entrant))
-                                            .addOnFailureListener(e -> Log.e("Firestore", "Error updating notification for entrant: " + entrant, e));
-                                }
-                            }).addOnFailureListener(e -> {
-                                Log.e("Firestore", "Failed to retrieve entrant document: " + entrant, e);
-                            });
-                        }
-
-//                        Inputting eventID into the unselected entrants so they know they aren't picked for that event (uninvited) - checking if it is not null
-                        if (unselectedEntrants!= null && !unselectedEntrants.isEmpty()) {
-                            for (String entrant : unselectedEntrants) {
-                                entrantsRef = db.collection("entrants").document(entrant);
-                                entrantsRef.get().addOnSuccessListener(entrantDoc -> {
-                                    if (entrantDoc.exists()) {
-                                        // Assuming `notifications` is an array field in the entrant document
-                                        entrantsRef.update("uninvitedEventsNotis", FieldValue.arrayUnion(eventID),
-                                                        "uninvitedEvents", FieldValue.arrayUnion(eventID))
-                                                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Notification added for entrant: " + entrant))
-                                                .addOnFailureListener(e -> Log.e("Firestore", "Error updating notification for entrant: " + entrant, e));
-                                    }
-                                }).addOnFailureListener(e -> {
-                                    Log.e("Firestore", "Failed to retrieve entrant document: " + entrant, e);
-                                });
-                            }
-                        }
-                    }
-                }
-            } else {
-                Log.e("LotteryEntrant", "Failed to retrieve event document", task.getException());
-            }
-        });
     }
 }
