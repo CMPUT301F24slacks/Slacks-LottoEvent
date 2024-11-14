@@ -11,11 +11,10 @@
     <ImageView
         android:id="@+id/RectangularBackground"
         android:layout_width="361dp"
-        android:layout_height="206dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="4dp"
         android:background="#313135"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/rectangle_shape" />
@@ -38,48 +37,49 @@
         android:id="@+id/user_notification_calendar"
         android:layout_width="24dp"
         android:layout_height="22dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toStartOf="@+id/user_notification_event_date"
-        app:layout_constraintHorizontal_bias="0.428"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="@id/RectangularBackground"
         app:layout_constraintTop_toBottomOf="@+id/user_notification_event_name"
         app:srcCompat="@drawable/baseline_calendar_today_20" />
 
     <TextView
         android:id="@+id/user_notification_event_date"
-        android:layout_width="93dp"
+        android:layout_width="150dp"
         android:layout_height="24dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="216dp"
+        android:layout_marginEnd="156dp"
         android:inputType="date"
         android:text="2024-01-21"
         android:textColor="#B3B3B3"
         android:textSize="16dp"
-        app:layout_constraintEnd_toEndOf="@id/RectangularBackground"
+        app:layout_constraintEnd_toEndOf="@+id/RectangularBackground"
         app:layout_constraintTop_toBottomOf="@+id/user_notification_event_name" />
 
     <TextView
         android:id="@+id/user_notification_event_time"
-        android:layout_width="93dp"
+        android:layout_width="150dp"
         android:layout_height="24dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="216dp"
+        android:layout_marginEnd="156dp"
         android:text="Event Time"
         android:textColor="#B3B3B3"
         android:textSize="16dp"
-        app:layout_constraintEnd_toEndOf="@id/RectangularBackground"
+        app:layout_constraintEnd_toEndOf="@+id/RectangularBackground"
         app:layout_constraintTop_toBottomOf="@+id/user_notification_event_date" />
 
     <TextView
         android:id="@+id/user_notification_event_location"
-        android:layout_width="161dp"
+        android:layout_width="245dp"
         android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="148dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="60dp"
         android:text="Event Location"
         android:textColor="#B3B3B3"
         android:textSize="16dp"
-        app:layout_constraintEnd_toEndOf="@id/RectangularBackground"
+        app:layout_constraintEnd_toEndOf="@+id/RectangularBackground"
         app:layout_constraintTop_toBottomOf="@+id/user_notification_event_time" />
 
     <ImageView
@@ -109,22 +109,22 @@
     <Button
         android:id="@+id/Decline_Invitation"
         android:layout_width="110dp"
-        android:layout_height="39dp"
-        android:layout_marginTop="156dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="180dp"
         android:backgroundTint="#B3B3B3"
         android:text="Decline"
         android:textColor="#F4F4F5"
         app:layout_constraintEnd_toStartOf="@+id/Accept_Invitation"
-        app:layout_constraintHorizontal_bias="0.898"
+        app:layout_constraintHorizontal_bias="0.968"
         app:layout_constraintStart_toStartOf="@id/RectangularBackground"
         app:layout_constraintTop_toTopOf="@id/RectangularBackground" />
 
     <Button
         android:id="@+id/Accept_Invitation"
         android:layout_width="110dp"
-        android:layout_height="39dp"
-        android:layout_marginTop="156dp"
-        android:layout_marginEnd="16dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="180dp"
+        android:layout_marginEnd="12dp"
         android:backgroundTint="#7B24EB"
         android:text="Accept"
         android:textColor="#F4F4F5"

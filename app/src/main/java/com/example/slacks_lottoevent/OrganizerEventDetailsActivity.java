@@ -165,9 +165,9 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
             DocumentReference entrantsRef = db.collection("entrants").document(entrant);
             entrantsRef.get().addOnSuccessListener(entrantDoc -> {
                 if (entrantDoc.exists()) {
-                    // Assuming `notifications` is an array field in the entrant document
                     entrantsRef.update("invitedEvents", FieldValue.arrayUnion(event.getEventID()),
-                                    "invites", FieldValue.arrayUnion(event.getEventID()))
+                                    "invites", FieldValue.arrayUnion(event.getEventID()),
+                                    "waitlistedEvents", FieldValue.arrayRemove(event.getEventID()))
                             .addOnSuccessListener(aVoid -> Log.d("Firestore", "Event added for entrant"))
                             .addOnFailureListener(e -> Log.e("Firestore", "Error updating invitedEvents for entrant"));
                 }
