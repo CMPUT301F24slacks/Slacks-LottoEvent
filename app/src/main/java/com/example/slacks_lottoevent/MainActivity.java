@@ -9,7 +9,10 @@ import android.os.Handler;
 //testing purposes
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.multidex.BuildConfig;
 
+
+import com.google.android.libraries.places.api.Places;
 import java.util.Map;
 import java.util.Objects;
 
@@ -52,5 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
             finish(); // Closing MainActivity to prevent going back to it.
         },2000);
+        if (!Places.isInitialized()){
+            Places.initialize(getApplicationContext(),com.example.slacks_lottoevent.BuildConfig.MAPS_API_KEY);
+
+        }
     }
 }
