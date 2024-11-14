@@ -8,6 +8,7 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.R;
+import com.google.android.libraries.places.api.Places;
 
 /**
  * SplashActivity displays the app logo for a few seconds when the app is launched.
@@ -25,6 +26,11 @@ public class SplashActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("isSignedUp", false);
             editor.apply();
+        }
+
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(),
+                              com.example.slacks_lottoevent.BuildConfig.MAPS_API_KEY);
         }
 
         // Delay the transition to MainActivity by 2 seconds

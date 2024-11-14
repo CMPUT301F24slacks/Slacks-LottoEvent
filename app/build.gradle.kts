@@ -1,5 +1,4 @@
-import org.gradle.api.tasks.javadoc.Javadoc
-import org.gradle.external.javadoc.StandardJavadocDocletOptions
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -20,7 +19,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // https://stackoverflow.com/a/78092051
 
@@ -57,17 +55,24 @@ androidComponents {
         tasks.register("generate${variant.name.capitalize()}Javadoc", Javadoc::class) {
             description = "Generate ${variant.name} Javadoc"
 
-            val javaCompileTask = tasks.named("compile${variant.name.capitalize()}JavaWithJavac", JavaCompile::class.java)
+            val javaCompileTask = tasks.named(
+                "compile${variant.name.capitalize()}JavaWithJavac",
+                JavaCompile::class.java
+            )
             source = javaCompileTask.get().source
             setDestinationDir(file("$rootDir/doc/javadoc"))
 
             isFailOnError = false
 
             doFirst {
-                val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+                val androidJar =
+                    "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
 
                 classpath = files(variant.compileClasspath) + files(androidJar)
-                (options as StandardJavadocDocletOptions).addStringOption("-show-members", "package")
+                (options as StandardJavadocDocletOptions).addStringOption(
+                    "-show-members",
+                    "package"
+                )
             }
         }
     }
