@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.model.User;
@@ -21,7 +22,7 @@ import com.example.slacks_lottoevent.viewmodel.EntrantViewModel;
  */
 public class HomeFragment extends Fragment {
 
-    private static final EntrantViewModel entrantViewModel = new EntrantViewModel();
+    private EntrantViewModel entrantViewModel;
     private User user;
     private String deviceId;
 
@@ -34,10 +35,7 @@ public class HomeFragment extends Fragment {
     }
 
     public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new HomeFragment();
     }
 
     @Override
@@ -56,6 +54,9 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Retrieve the ViewModel scoped to the Activity
+        entrantViewModel = new ViewModelProvider(requireActivity()).get(EntrantViewModel.class);
+
         // Initialize UI elements
         instructions = view.findViewById(R.id.instructions_textview);
         eventsList = view.findViewById(R.id.events_listview);
@@ -63,23 +64,20 @@ public class HomeFragment extends Fragment {
         user = User.getInstance(getContext());
         deviceId = user.getDeviceId();
 
-        entrantViewModel.entrantExists(deviceId).observe(getViewLifecycleOwner(), exists -> {
-            if (exists != null && exists) {
-                // The entrant exists
-                Log.d("HomeFragment", "Entrant exists.");
-                entrantViewModel.setEntrant(deviceId);
+        // Checks if the entrant in entrantViewModel exists
+        if (entrantViewModel.getCurrentEntrant() == null) {
+            // The entrant does not exist
+            Log.d("HomeFragment", "Entrant does not exist.");
 
-                // UI updates
-                instructions.setVisibility(View.GONE);
+            // UI updates
+            instructions.setVisibility(View.VISIBLE);
+            eventsList.setVisibility(View.GONE);
+        } else {
+            // The entrant exists
+            Log.d("HomeFragment", "Entrant exists.");
 
-            } else {
-                // The entrant does not exist or an error occurred
-                Log.d("HomeFragment", "Entrant does not exist.");
-
-                // UI updates
-                instructions.setVisibility(View.VISIBLE);
-                eventsList.setVisibility(View.GONE);
-            }
-        });
+            // UI updates
+            instructions.setVisibility(View.GONE);
+        }
     }
 }

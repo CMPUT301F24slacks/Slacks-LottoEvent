@@ -25,15 +25,11 @@
         android:theme="@style/Theme.SlacksLottoEvent"
         tools:targetApi="31">
         <activity
-            android:name=".controller.CreateFacilityActivity"
-            android:exported="false" />
-        <activity
             android:name=".controller.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

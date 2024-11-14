@@ -14,15 +14,10 @@ public class EntrantViewModel extends ViewModel {
     public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     public final MutableLiveData<String> error = new MutableLiveData<>();
     public final MutableLiveData<Boolean> result = new MutableLiveData<>(false);
-
     private final EntrantDB entrantDB;
 
     public EntrantViewModel() {
         entrantDB = EntrantDB.getInstance();
-    }
-
-    public void setEntrant(Entrant entrant) {
-        this.entrant.setValue(entrant);
     }
 
     /**
@@ -49,17 +44,24 @@ public class EntrantViewModel extends ViewModel {
     }
 
     /**
+     * Returns the current entrant LiveData object.
+     */
+    public LiveData<Entrant> getCurrentEntrant() {
+        return entrant;
+    }
+
+    /**
      * Retrieves the entrant object with the given device ID from the database and sets it as the current entrant.
      *
      * @param deviceId Device ID of the entrant to retrieve.
      */
-    public void setEntrant(String deviceId) {
+    public void setCurrentEntrant(String deviceId) {
         isLoading.setValue(true);
         entrantDB.getEntrant(deviceId)
                  .addOnSuccessListener(documentSnapshot -> {
                      if (documentSnapshot.exists()) {
                          Entrant entrant = documentSnapshot.toObject(Entrant.class);
-                         setEntrant(entrant);
+                         this.entrant.setValue(entrant);
                      } else {
                          error.setValue("Entrant not found");
                      }

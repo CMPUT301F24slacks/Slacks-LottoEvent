@@ -1,21 +1,25 @@
 package com.example.slacks_lottoevent.controller;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.slacks_lottoevent.EventsHomeActivity;
 import com.example.slacks_lottoevent.R;
-import com.google.android.material.bottomappbar.BottomAppBar;
+import com.example.slacks_lottoevent.model.User;
+import com.example.slacks_lottoevent.viewmodel.EntrantViewModel;
+import com.example.slacks_lottoevent.viewmodel.EventViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends BaseActivity {
+    private EntrantViewModel entrantViewModel;
+    private EventViewModel eventViewModel;
+    private User user;
+    private String deviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,15 +28,30 @@ public class MainActivity extends BaseActivity {
         // Inflate activity_main layout into content_frame of activity_base
         getLayoutInflater().inflate(R.layout.activity_main, findViewById(R.id.content_frame), true);
 
-        // Initialize shared preferences for user info
-        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
-        if (!sharedPreferences.contains("isSignedUp")) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("isSignedUp", false);
-            editor.apply();
-        }
+        user = User.getInstance(this);
+        deviceId = user.getDeviceId();
 
-        BottomAppBar bottomAppBar = findViewById(R.id.bottom_app_bar);
+        // Initialize ViewModels
+        entrantViewModel = new ViewModelProvider(this).get(EntrantViewModel.class);
+        eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+
+        entrantViewModel.entrantExists(deviceId).observe(this, exists -> {
+            if (exists != null && exists) {
+                entrantViewModel.setCurrentEntrant(deviceId);
+            }
+        });
+
+        entrantViewModel.getCurrentEntrant().observe(this, currentEntrant -> {
+            if (currentEntrant != null) {
+                eventViewModel.getEvents(currentEntrant.getWaitlistedEvents())
+                              .observe(this, events -> {
+                                  if (events != null && !events.isEmpty()) {
+                                      eventViewModel.setWaitlistedEvents(events);
+                                  }
+                              });
+            }
+        });
+
         FloatingActionButton fab = findViewById(R.id.fab);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -62,11 +81,11 @@ public class MainActivity extends BaseActivity {
             return false;
         });
 
-
         // Set a click listener for the FAB
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, QRScannerActivity.class);
             startActivity(intent);
         });
     }
+
 }

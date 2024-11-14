@@ -1,10 +1,9 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<resources>
+    <!-- Base application theme -->
     <style name="Base.Theme.SlacksLottoEvent" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <item name="colorOnPrimary">@android:color/white</item>
+        <!-- Main app theme -->
     </style>
 
+    <!-- Main app theme -->
     <style name="Theme.SlacksLottoEvent" parent="Base.Theme.SlacksLottoEvent" />
 </resources>

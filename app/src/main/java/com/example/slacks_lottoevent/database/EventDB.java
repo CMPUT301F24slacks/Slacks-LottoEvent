@@ -1,8 +1,12 @@
 package com.example.slacks_lottoevent.database;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class EventDB {
     private static final FirebaseConnection db = FirebaseConnection.getInstance();
@@ -23,12 +27,18 @@ public class EventDB {
     }
 
     /**
-     * Returns all the events in the database asynchronously.
+     * Retrieves all events whose document IDs are in the given ArrayList.
      *
-     * @return Task<QuerySnapshot> object representing the asynchronous operation.
+     * @param eventIds ArrayList of event IDs to retrieve events for.
      */
-    public Task<QuerySnapshot> getEvents() {
-        return collection.get();
+    public Task<QuerySnapshot> getEvents(ArrayList<String> eventIds) {
+        if (eventIds == null || eventIds.isEmpty()) {
+            // Return an empty Task if the input list is null or empty
+            return Tasks.forResult(null);
+        }
+
+        // Use Firestore's `whereIn` method with `FieldPath.documentId()`
+        return collection.whereIn(FieldPath.documentId(), eventIds).get();
     }
 
 }

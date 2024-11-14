@@ -1,6 +1,7 @@
 package com.example.slacks_lottoevent.controller;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -17,6 +18,16 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
 
+        // Initialize shared preferences for user info
+        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo",
+                                                                   MODE_PRIVATE);
+        if (!sharedPreferences.contains("isSignedUp")) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isSignedUp", false);
+            editor.apply();
+        }
+
+        // Delay the transition to MainActivity by 2 seconds
         new Handler().postDelayed(() -> {
             Intent intent = new Intent(SplashActivity.this, MainActivity.class);
             startActivity(intent);

@@ -1,11 +1,15 @@
 package com.example.slacks_lottoevent.viewmodel;
 
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.slacks_lottoevent.database.EventDB;
 import com.example.slacks_lottoevent.model.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventViewModel extends ViewModel {
@@ -15,11 +19,39 @@ public class EventViewModel extends ViewModel {
     public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     public final MutableLiveData<String> error = new MutableLiveData<>();
     private final EventDB eventDB;
-    private final String deviceId;
 
-    public EventViewModel(String deviceId) {
+    public EventViewModel() {
         eventDB = EventDB.getInstance();
-        this.deviceId = deviceId;
+    }
+
+    /**
+     * Retrieves all events whose document IDs are in the given ArrayList.
+     *
+     * @param eventIds ArrayList of event IDs to retrieve events for.
+     */
+    public LiveData<List<Event>> getEvents(ArrayList<String> eventIds) {
+        isLoading.setValue(true);
+        MutableLiveData<List<Event>> tempEvents = new MutableLiveData<>();
+        eventDB.getEvents(eventIds)
+               .addOnSuccessListener(queryDocumentSnapshots -> {
+                   List<Event> eventList = queryDocumentSnapshots.toObjects(Event.class);
+                   tempEvents.setValue(eventList);
+                   isLoading.setValue(false);
+                   Log.d("EventViewModel", "Retrieved " + eventList.size() + " events");
+               })
+               .addOnFailureListener(e -> {
+                   error.setValue(e.getMessage());
+                   isLoading.setValue(false);
+                   Log.e("EventViewModel", "Failed to retrieve events: " + e.getMessage());
+               });
+        return tempEvents;
+    }
+
+    /**
+     * Sets waitlisted events LiveData to the given list of events.
+     */
+    public void setWaitlistedEvents(List<Event> eventList) {
+        waitlistedEvents.setValue(eventList);
     }
 
 }
