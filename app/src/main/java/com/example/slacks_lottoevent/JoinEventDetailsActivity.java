@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -16,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 
 import com.example.slacks_lottoevent.databinding.ActivityJoinEventDetailsBinding;
@@ -210,6 +214,8 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     addEntrantToNotis(chosenForLottery, notChosenForLottery);
                     navigateToEventsHome();
                     dialog.dismiss();
+                    sendNotifications();
+
                 }
             }).addOnFailureListener(e -> {
                 // Handle any errors in fetching the entrant document
@@ -220,6 +226,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                 addEntrantToNotis(chosenForLottery, notChosenForLottery);
                 navigateToEventsHome();
                 dialog.dismiss();
+                sendNotifications();
             });
         });
 
@@ -300,7 +307,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      * @param chosenForLottery The boolean value for chosen for lottery
      * @param notChosenForLottery The boolean value for not chosen for lottery
      */
-    private void addEntrantToNotis(AtomicBoolean chosenForLottery, AtomicBoolean notChosenForLottery){
+    private void addEntrantToNotis(AtomicBoolean chosenForLottery, AtomicBoolean notChosenForLottery) {
         // Query the Firestore for the event based on the QR code value
         db.collection("events").whereEqualTo("eventID", qrCodeValue)
                 .get()
@@ -312,8 +319,14 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
 //                       IF that entrant wants notifications then we add that entrant too the notifications for selected and or cancelled depending on what they want
                         event.addWaitlistedNotification(deviceId);
-                        if (chosenForLottery.get()) { event.addSelectedNotification(deviceId); System.out.println("SelectedNotis List updated successfully.");}
-                        if (notChosenForLottery.get()) { event.addCancelledNotification(deviceId); System.out.println("CancelledNotis List updated successfully."); }
+                        if (chosenForLottery.get()) {
+                            event.addSelectedNotification(deviceId);
+                            System.out.println("SelectedNotis List updated successfully.");
+                        }
+                        if (notChosenForLottery.get()) {
+                            event.addCancelledNotification(deviceId);
+                            System.out.println("CancelledNotis List updated successfully.");
+                        }
 
 
 //                        We update the lists that may have been changed
@@ -338,5 +351,26 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     // Handle failure in retrieving the event document
                     Toast.makeText(this, "Error fetching event document: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void sendNotifications(){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "Waitlist Notifications")
+                .setContentTitle("Event Name")
+                .setContentText("Event Description")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+//                TODO: Call intent?
+                .setAutoCancel(true);
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        managerCompat.notify(1, builder.build());
     }
 }

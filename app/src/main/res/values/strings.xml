@@ -10,6 +10,9 @@
     <string name="look_at_my_events">Look At My Events</string>
     <string name="manage_my_events">Manage My Events</string>
     <string name="manage_my_facility">Manage My Facility</string>
+    <string name="channel_name">Default Notifications</string>
+    <string name="channel_description">This is the channel for all notifications a user gets from this app</string>
+    <string name="channel_id">default_channel</string>
 
 
     <string name="lorem_ipsum">
