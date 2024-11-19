@@ -3,9 +3,12 @@ package com.example.slacks_lottoevent;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -205,6 +208,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         addEventToEntrant();
                         navigateToEventsHome();
                         dialog.dismiss();
+                        sendNotifications();
                     }
                 } else {
                     // Entrant does not exist, create a new one and add them
@@ -215,6 +219,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     navigateToEventsHome();
                     dialog.dismiss();
                     sendNotifications();
+
 
                 }
             }).addOnFailureListener(e -> {
@@ -227,6 +232,8 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                 navigateToEventsHome();
                 dialog.dismiss();
                 sendNotifications();
+
+
             });
         });
 
@@ -354,23 +361,47 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     }
 
     private void sendNotifications(){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "Waitlist Notifications")
-                .setContentTitle("Event Name")
-                .setContentText("Event Description")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//                TODO: Call intent?
-                .setAutoCancel(true);
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+//        String channelID =getString(R.string.channel_id);
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelID)
+//                .setContentTitle("Event Name")
+//                .setContentText("Event Description")
+//                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+////                TODO: Call intent?
+//                .setAutoCancel(true);
+//        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+//        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        managerCompat.notify(1, builder.build());
+        String channelId = getString(R.string.channel_id); // Ensure this matches the one in `createNotificationChannel()`
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.baseline_notifications_active_24) // Replace with your icon
+                .setContentTitle("Event Registration")
+                .setContentText("You have successfully registered for the event!")
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+            // Check for notification permissions (required for Android 13+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                Log.w("NotificationDebug", "Permission for POST_NOTIFICATIONS not granted.");
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
+                return;
+            }
+            Log.d("NotificationDebug", "POST_NOTIFICATIONS permission granted.");
         }
-        managerCompat.notify(1, builder.build());
+
+
+        notificationManager.notify(1, builder.build()); // Send the notification
+        Log.d("Notification Send!", "The notifications have been sent, you should be able to see them");
+
     }
 }
