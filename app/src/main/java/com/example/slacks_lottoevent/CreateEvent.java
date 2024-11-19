@@ -107,7 +107,7 @@ public class CreateEvent extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // Real-time validation for Time format
                 if (!isValidTimeFormat(s.toString().trim())) {
-                    binding.eventTime.setError("Time must be in hh:mm format");
+                    binding.eventTime.setError("Time must be in hh:mm-hh:mm format");
                 } else {
                     binding.eventTime.setError(null);
                 }
@@ -206,6 +206,7 @@ public class CreateEvent extends AppCompatActivity {
         String price = binding.eventPrice.getText().toString().trim();
         String details = binding.eventDetails.getText().toString().trim();
         String eventSlot = binding.eventSlots.getText().toString().trim();
+        String signUpDeadline = binding.signupDeadline.getText().toString().trim();
 
 //        Event Name validation
         if (TextUtils.isEmpty(name)) {
@@ -217,6 +218,13 @@ public class CreateEvent extends AppCompatActivity {
         if (TextUtils.isEmpty(date)) {
             binding.eventDate.setError("Event date is required");
             binding.eventDate.requestFocus();
+            return false;
+        }
+
+//        Event Sign up deadline validation
+        if (TextUtils.isEmpty(signUpDeadline)) {
+            binding.signupDeadline.setError("Signup deadline is required");
+            binding.signupDeadline.requestFocus();
             return false;
         }
 
