@@ -220,6 +220,7 @@ public class CreateEvent extends AppCompatActivity {
                             Intent data = result.getData();
                             if (data != null && data.getData() != null) {
                                 Uri selectedImageUri = data.getData();
+                                // Note: DO THIS WHEN CREATING AN EVENT so you get access to the event id
 //                                storageRef.putFile(selectedImageUri)
 //                                        .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
 //                                                .addOnSuccessListener(uri -> {
@@ -243,7 +244,6 @@ public class CreateEvent extends AppCompatActivity {
         binding.eventUploaderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("hi", "here");
                 selectImage();
             }
         });
