@@ -28,7 +28,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.auth.User;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.WriterException;
@@ -41,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -53,7 +57,8 @@ public class CreateEvent extends AppCompatActivity {
     private ActivityCreateEventBinding binding;
     private CollectionReference organizersRef;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
-
+    FirebaseStorage storage;
+    StorageReference storageRef;
     /**
      * This method initializes the CreateEvent activity.
      * @param savedInstanceState the saved instance state
@@ -68,6 +73,8 @@ public class CreateEvent extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
         organizersRef = db.collection("organizers");
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference().child("images/" + UUID.randomUUID().toString());
 
 
 //        Check in real time if event date is validated
@@ -213,6 +220,18 @@ public class CreateEvent extends AppCompatActivity {
                             Intent data = result.getData();
                             if (data != null && data.getData() != null) {
                                 Uri selectedImageUri = data.getData();
+//                                storageRef.putFile(selectedImageUri)
+//                                        .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
+//                                                .addOnSuccessListener(uri -> {
+//                                                    // Store the URL in Firestore
+//                                                    Map<String, Object> fbData = new HashMap<>();
+//                                                    fbData.put("imageUrl", uri.toString());
+//                                                    db.collection("eventPosters").document("test") // TO DO: Replace with event id
+//                                                            .set(fbData, SetOptions.merge());
+//                                                }))
+//                                        .addOnFailureListener(e -> {
+//                                            // Handle unsuccessful uploads
+//                                        });
 
                                 binding.eventPoster.setImageURI(selectedImageUri); // Display the image
                                 binding.eventUploaderButton.setVisibility(View.GONE); // Hide the button
