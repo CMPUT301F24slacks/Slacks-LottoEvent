@@ -31,6 +31,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     private String location;
     private String date;
     private String eventName;
+    private String signupDate;
     private String time;
     private Boolean usesGeolocation;
     private String description;
@@ -61,7 +62,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         event = document.toObject(Event.class);
 
 
-                        date = document.getString("date");
+                        date = document.getString("eventDate");
+                        signupDate = document.getString("signupDeadline");
                         time = document.getString("time");
                         eventName = document.getString("name");
                         location = document.getString("location");
@@ -74,6 +76,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         Long waitListCapacity = (Long) document.get("waitListCapacity");
                         assert capacity != null;
                         String capacityAsString = capacity.toString();
+                        binding.signupDate.setText("Join the waitlist by " + signupDate);
 
                         binding.eventLocation.setText(location);
                         String waitlistCapacity = "Waitlist Capacity " + capacityAsString;
@@ -103,7 +106,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         });
 
         binding.editEventButton.setVisibility(View.VISIBLE);
-        // TODO: Implement the edit event button
+        // TODO: Implement the edit event button - GET RID OF THIS!!!
 //        binding.editEventButton.setOnClickListener(view -> {
 //        });
 
@@ -120,6 +123,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         .setMessage("Entrants were selected for the event.")
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
+
+//                TODO: Send notifications from here
             }
             else {
                 // Show a pop-up dialog if the button is clicked again
