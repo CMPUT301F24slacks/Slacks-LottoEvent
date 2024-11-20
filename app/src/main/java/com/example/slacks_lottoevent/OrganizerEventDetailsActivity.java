@@ -3,13 +3,16 @@ package com.example.slacks_lottoevent;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.slacks_lottoevent.databinding.ActivityEntrantEventDetailsBinding;
 import com.example.slacks_lottoevent.databinding.ActivityOrganizerEventDetailsBinding;
 import com.google.firebase.firestore.DocumentReference;
@@ -35,6 +38,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     private Boolean usesGeolocation;
     private String description;
     private Event event;
+    private String eventPosterURL;
     FirebaseFirestore db;
     String qrCodeValue;
     @SuppressLint("HardwareIds") String deviceId;
@@ -66,8 +70,17 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         eventName = document.getString("name");
                         location = document.getString("location");
                         description = document.getString("description");
+                        eventPosterURL = document.getString("eventPosterURL");
 
                         List<Object> finalists = (List<Object>) document.get("finalists");
+
+                        if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
+                            Glide.with(this) // 'this' refers to the activity context
+                                    .load(eventPosterURL)
+                                    .into(binding.eventImage);
+                        } else {
+                            Log.e("EventDetails", "Event poster URL is empty or null");
+                        }
                         binding.eventTitle.setText(eventName);
                         binding.eventDate.setText(date);
                         Long capacity = (Long) document.get("eventSlots");
