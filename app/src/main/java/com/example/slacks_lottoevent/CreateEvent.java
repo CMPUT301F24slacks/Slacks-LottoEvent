@@ -11,27 +11,27 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.WriterException;
@@ -59,6 +59,7 @@ public class CreateEvent extends AppCompatActivity {
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     FirebaseStorage storage;
     StorageReference storageRef;
+    Uri selectedImageUri;
     /**
      * This method initializes the CreateEvent activity.
      * @param savedInstanceState the saved instance state
@@ -73,8 +74,6 @@ public class CreateEvent extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
         organizersRef = db.collection("organizers");
-        storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReference().child("images/" + UUID.randomUUID().toString());
 
 
 //        Check in real time if event date is validated
@@ -219,21 +218,7 @@ public class CreateEvent extends AppCompatActivity {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             Intent data = result.getData();
                             if (data != null && data.getData() != null) {
-                                Uri selectedImageUri = data.getData();
-                                // Note: DO THIS WHEN CREATING AN EVENT so you get access to the event id
-//                                storageRef.putFile(selectedImageUri)
-//                                        .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
-//                                                .addOnSuccessListener(uri -> {
-//                                                    // Store the URL in Firestore
-//                                                    Map<String, Object> fbData = new HashMap<>();
-//                                                    fbData.put("imageUrl", uri.toString());
-//                                                    db.collection("eventPosters").document("test") // TO DO: Replace with event id
-//                                                            .set(fbData, SetOptions.merge());
-//                                                }))
-//                                        .addOnFailureListener(e -> {
-//                                            // Handle unsuccessful uploads
-//                                        });
-
+                                selectedImageUri = data.getData();
                                 binding.eventPoster.setImageURI(selectedImageUri); // Display the image
                                 binding.eventUploaderButton.setVisibility(View.GONE); // Hide the button
                             }
@@ -390,7 +375,7 @@ public class CreateEvent extends AppCompatActivity {
         String time = binding.eventTime.getText().toString().trim();
         String price = binding.eventPrice.getText().toString().trim();
         String details = binding.eventDetails.getText().toString().trim();
-        Boolean geoLoc = binding.checkBoxGeo.isChecked() ? false: true;
+        Boolean geoLoc = binding.checkBoxGeo.isChecked() ? false : true;
         String signupDeadline = binding.signupDeadline.getText().toString().trim();
 
         Integer eventSlots = Integer.valueOf(binding.eventSlots.getText().toString().trim());
@@ -403,7 +388,6 @@ public class CreateEvent extends AppCompatActivity {
         String eventId = UUID.randomUUID().toString();
 
 
-
         QRCodeWriter writer = new QRCodeWriter();
         try {
             AtomicReference<String> location = new AtomicReference<>("");
@@ -412,40 +396,83 @@ public class CreateEvent extends AppCompatActivity {
             String qrHash = generateHash(qrData);
             String deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
             String finalWaitingListCapacity = waitingListCapacity;
-            db.collection("facilities").whereEqualTo("deviceID", deviceID)
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if(task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                            location.set(document.getString("streetAddress1"));
-                            Event eventData =  new Event(name, eventDate, location.get(), time, price, details, eventSlots, Integer.parseInt(finalWaitingListCapacity), qrData, eventId, geoLoc, qrHash, deviceID, signupDeadline);
-                            eventsRef.document(eventId).set(eventData)
-                                    .addOnSuccessListener(nothing -> {
-                                        Toast.makeText(CreateEvent.this, "Event created successfully", Toast.LENGTH_SHORT).show();
-                                    })
-                                    .addOnFailureListener(nothing -> {
 
-                                        Toast.makeText(CreateEvent.this, "Failed to create event", Toast.LENGTH_SHORT).show();
-                                    });
-                        }
+            uploadImageToCloud(new Callback<String>() {
+                @Override
+                public void onComplete(String eventPosterURL) {
+                    if (eventPosterURL == null) {
+                        Toast.makeText(CreateEvent.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // Proceed after successfully uploading the image
+                    db.collection("facilities").whereEqualTo("deviceID", deviceID)
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                                    location.set(document.getString("streetAddress1"));
+
+                                    // Create the event with the retrieved URL
+                                    Event eventData = new Event(name, eventDate, location.get(), time, price, details, eventSlots,
+                                            Integer.parseInt(finalWaitingListCapacity), qrData, eventId, geoLoc, qrHash, deviceID,
+                                            signupDeadline, eventPosterURL);
+
+                                    eventsRef.document(eventId).set(eventData)
+                                            .addOnSuccessListener(nothing -> {
+                                                Toast.makeText(CreateEvent.this, "Event created successfully", Toast.LENGTH_SHORT).show();
+                                            })
+                                            .addOnFailureListener(nothing -> {
+                                                Toast.makeText(CreateEvent.this, "Failed to create event", Toast.LENGTH_SHORT).show();
+                                            });
+                                }
+                            });
+                }
+            });
+
+            String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            DocumentReference organizerRef = organizersRef.document(organizerId);
+            organizerRef.update("events", FieldValue.arrayUnion(eventId))
+                    .addOnSuccessListener(aVoid -> {
+                        // Event ID successfully added to the organizer's events array
+                        Log.d("Firestore", "Event added to organizer's events list.");
+                    })
+                    .addOnFailureListener(e -> {
+                        // Failed to add event ID
+                        Log.w("Firestore", "Error adding event to organizer's events list", e);
                     });
-        } catch (WriterException e) {
+
+        }catch (WriterException e) {
             throw new RuntimeException(e);
         }
-
-        String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        DocumentReference organizerRef = organizersRef.document(organizerId);
-        organizerRef.update("events", FieldValue.arrayUnion(eventId))
-                .addOnSuccessListener(aVoid -> {
-                    // Event ID successfully added to the organizer's events array
-                    Log.d("Firestore", "Event added to organizer's events list.");
-                })
-                .addOnFailureListener(e -> {
-                    // Failed to add event ID
-                    Log.w("Firestore", "Error adding event to organizer's events list", e);
-                });
-
     }
+
+private void uploadImageToCloud(Callback<String> callback) {
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
+    Date now = new Date();
+    String fileName = formatter.format(now);
+    StorageReference storageRef = FirebaseStorage.getInstance().getReference("event_posters/" + fileName);
+
+    storageRef.putFile(selectedImageUri)
+            .addOnSuccessListener(taskSnapshot -> {
+                Log.d("Storage", "Successfully uploaded");
+
+                // Retrieve the download URL
+                storageRef.getDownloadUrl()
+                        .addOnSuccessListener(uri -> {
+                            String eventPosterURL = uri.toString();
+                            callback.onComplete(eventPosterURL); // Pass the URL to the callback
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("Error", "Failed to get download URL", e);
+                            callback.onComplete(null); // Return null to indicate failure
+                        });
+            })
+            .addOnFailureListener(e -> {
+                Log.d("Storage", "Failed to upload");
+                callback.onComplete(null); // Return null to indicate failure
+            });
+}
 
 
     /**
