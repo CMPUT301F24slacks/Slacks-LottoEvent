@@ -227,14 +227,16 @@ public class CreateEvent extends AppCompatActivity {
             return false;
         }
 //        Event Date validation
-        if (date == "Select Date") {
+        if (date.equals("Select Date")) {
             binding.eventDate.setError("Event date is required");
+            Toast.makeText(CreateEvent.this, "Event Date must be selected", Toast.LENGTH_SHORT).show();
             binding.eventDate.requestFocus();
             return false;
         }
 
-        if (signUpDeadline == "Select Date") {
+        if (signUpDeadline.equals("Select Date")) {
             binding.signupDeadline.setError("Sign up deadline is required");
+            Toast.makeText(CreateEvent.this, "Sign up Deadline must be selected", Toast.LENGTH_SHORT).show();
             binding.signupDeadline.requestFocus();
             return false;
         }

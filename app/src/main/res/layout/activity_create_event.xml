@@ -95,7 +95,7 @@
             android:id="@+id/time"
             android:layout_width="58dp"
             android:layout_height="23dp"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="63dp"
             android:layout_marginTop="24dp"
             android:text="Time"
             android:textColor="@android:color/white"
@@ -105,12 +105,15 @@
             app:layout_constraintTop_toBottomOf="@+id/event_name"
             tools:ignore="MissingConstraints" />
 
+
+        <!--        Description-->
+
         <EditText
             android:id="@+id/eventTime"
-            android:layout_width="99dp"
-            android:layout_height="44dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="28dp"
+            android:layout_width="100dp"
+            android:layout_height="43dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="48dp"
             android:background="@drawable/rounded_borders"
             android:ems="10"
             android:inputType="none"
@@ -125,7 +128,7 @@
             android:id="@+id/pricetxt"
             android:layout_width="104dp"
             android:layout_height="25dp"
-            android:layout_marginStart="45dp"
+            android:layout_marginStart="50dp"
             android:layout_marginTop="24dp"
             android:text="Ticket Price"
             android:textColor="@android:color/white"
@@ -137,8 +140,8 @@
 
         <EditText
             android:id="@+id/event_price"
-            android:layout_width="99dp"
-            android:layout_height="44dp"
+            android:layout_width="63dp"
+            android:layout_height="43dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="24dp"
             android:background="@drawable/rounded_borders"
@@ -151,9 +154,6 @@
             app:layout_constraintTop_toBottomOf="@+id/time"
             tools:ignore="MissingConstraints" />
 
-
-
-<!--        Description-->
         <TextView
             android:id="@+id/desc"
             android:layout_width="128dp"
@@ -331,8 +331,8 @@
             android:id="@+id/event_Date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="13dp"
             android:text="Select Date"
             app:layout_constraintEnd_toStartOf="@+id/eventTime"
             app:layout_constraintHorizontal_bias="0.105"
