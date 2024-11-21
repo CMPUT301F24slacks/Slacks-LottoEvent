@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.location.LocationRequest;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -27,6 +29,9 @@ import androidx.core.content.ContextCompat;
 
 
 import com.example.slacks_lottoevent.databinding.ActivityJoinEventDetailsBinding;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -36,6 +41,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import android.provider.Settings;
 import android.widget.Toast;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -214,6 +220,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         addEntrantToWaitlist();
                         addEntrantToNotis(chosenForLottery, notChosenForLottery);
                         addEventToEntrant();
+                        getJoinLocation(usesGeolocation);
                         navigateToEventsHome();
                         dialog.dismiss();
                     }
@@ -223,6 +230,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     createNewEntrant(userId);
                     addEntrantToWaitlist();
                     addEntrantToNotis(chosenForLottery, notChosenForLottery);
+                    getJoinLocation(usesGeolocation);
                     navigateToEventsHome();
                     dialog.dismiss();
                 }
@@ -233,6 +241,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                 createNewEntrant(userId);
                 addEntrantToWaitlist();
                 addEntrantToNotis(chosenForLottery, notChosenForLottery);
+                getJoinLocation(usesGeolocation);
                 navigateToEventsHome();
                 dialog.dismiss();
             });
@@ -242,21 +251,66 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         dialog.show();
 
     }
-    private void storeJoinLocation(Boolean usesGeolocation){
+    /**
+     *
+     *
+     *
+     * Relevant Documentation
+     * https://developer.android.com/develop/sensors-and-location/location/retrieve-current
+     *
+     * */
+    private void getJoinLocation(Boolean usesGeolocation){
         if (usesGeolocation){
-            
+            System.out.println("event does use join location line 263");
+            FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+            if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                        .addOnSuccessListener(currentLocation ->{
+                           if (currentLocation != null){
+                               System.out.println("Getting location line 268");
+                               double longitude = currentLocation.getLongitude();
+                               double latitude = currentLocation.getLatitude();
+                               System.out.println(latitude + longitude);
+                               storeJoinLocation(latitude,longitude);
+                           }
+
+                        });
+            }
         }
 
 
     }
+    private void storeJoinLocation(Double latitude,Double longitude){
+        System.out.println("qrcode val"+ qrCodeValue);
+        db.collection("events").whereEqualTo("eventID",qrCodeValue)
+                .get()
+                .addOnSuccessListener(task -> {
+                    DocumentSnapshot eventDocumentSnapshot = task.getDocuments().get(0);
+                    DocumentReference eventRef = eventDocumentSnapshot.getReference();
+                    HashMap<String, double[]> joinLocation = new HashMap<>();
+                    joinLocation.put(deviceId,new double[]{latitude,longitude});
+                    System.out.println("joinLocations " + joinLocation);
+                    eventRef.update("joinLocations", FieldValue.arrayUnion(joinLocation));
+                    System.out.println("Updated join locations!");
+
+
+                })
+                .addOnFailureListener(task -> {
+                    System.err.println("Error fetching event document in storeJoinLocation: " + task);
+                });
+    }
+
+
+
+
+
+
     /**
      * createNewEntrant method for the JoinEventDetailsActivity.
      * This method creates a new entrant in the Firestore database.
      *
      * @param userId The unique user ID
      */
-
-
 
     private void createNewEntrant(String userId) {
         Entrant newEntrant = new Entrant();
