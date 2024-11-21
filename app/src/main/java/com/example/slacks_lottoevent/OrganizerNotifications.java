@@ -26,9 +26,9 @@ import java.util.Collection;
  */
 public class OrganizerNotifications extends AppCompatActivity {
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference eventRef;
-    private Event event;
+//    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+//    private CollectionReference eventRef;
+//    private Event event;
     private FrameLayout frameLayout;
     private TabLayout tabLayout;
 
@@ -47,28 +47,28 @@ public class OrganizerNotifications extends AppCompatActivity {
         String eventID = intent.getStringExtra("eventID");
         // Get the current event's id from the intent
         // query the database for the event
-        db = FirebaseFirestore.getInstance();
-        eventRef = db.collection("events");
-        eventRef.document(eventID).get().addOnCompleteListener(eventTask -> {
-            if (eventTask.isSuccessful() && eventTask.getResult() != null) {
-                DocumentSnapshot eventDoc = eventTask.getResult();
-
-                if (eventDoc.exists()) {
-                    event = eventDoc.toObject(Event.class);
-                } else {
-                    // Go back to the last thing in the stack
-                    onBackPressed();
-                }
-            } else {
-                // Go back to the last thing in the stack
-                onBackPressed();
-            }
-        });
+//        db = FirebaseFirestore.getInstance();
+//        eventRef = db.collection("events");
+//        eventRef.document(eventID).get().addOnCompleteListener(eventTask -> {
+//            if (eventTask.isSuccessful() && eventTask.getResult() != null) {
+//                DocumentSnapshot eventDoc = eventTask.getResult();
+//
+//                if (eventDoc.exists()) {
+//                    event = eventDoc.toObject(Event.class);
+//                } else {
+//                    // Go back to the last thing in the stack
+//                    onBackPressed();
+//                }
+//            } else {
+//                // Go back to the last thing in the stack
+//                onBackPressed();
+//            }
+//        });
 
         frameLayout = (FrameLayout) findViewById(R.id.FrameLayout);
         tabLayout = (TabLayout) findViewById(R.id.tab_Layout);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, OrganizerWaitlistFragment.newInstance(event))
+        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, OrganizerWaitlistFragment.newInstance(eventID))
                 .addToBackStack(null)
                 .commit();
 
@@ -78,16 +78,16 @@ public class OrganizerNotifications extends AppCompatActivity {
                 Fragment selected_fragment = null;
                 switch (tab.getPosition()){
                     case 0:
-                        selected_fragment = OrganizerWaitlistFragment.newInstance(event);
+                        selected_fragment = OrganizerWaitlistFragment.newInstance(eventID);
                         break;
                     case 1:
-                        selected_fragment = OrganizerInvitedFragment.newInstance(event);;
+                        selected_fragment = OrganizerInvitedFragment.newInstance(eventID);;
                         break;
                     case 2:
-                        selected_fragment = OrganizerCancelledFragment.newInstance(event);;
+                        selected_fragment = OrganizerCancelledFragment.newInstance(eventID);;
                         break;
                     case 3:
-                        selected_fragment = OrganizerEnrolledFragment.newInstance(event);;
+                        selected_fragment = OrganizerEnrolledFragment.newInstance(eventID);;
                         break;
                 }
                 if (selected_fragment != null) {

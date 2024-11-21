@@ -14,7 +14,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,97 +22,87 @@ import java.util.Arrays;
  */
 public class OrganizerCancelledFragment extends Fragment {
 
-    private ListView listViewEntrantsCancelled;
-    private Event event;
-    private static final String ARG_EVENT = "current_event";
+    private ListView ListViewEntrantsCancelled;
+    private String eventId;
+    private static final String ARG_EVENT_ID = "eventID";
     private FirebaseFirestore db;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    /**
+     * Default constructor
+     */
     public OrganizerCancelledFragment() {}
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     //     * @param param1 Parameter 1.
-     //     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrganizerFirstFragment.
+     * Factory method to create a new instance of this fragment using the provided parameters.
+     * @param eventId The current event's ID.
+     * @return A new instance of OrganizerCancelledFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static OrganizerCancelledFragment newInstance(Event event) {
+    public static OrganizerCancelledFragment newInstance(String eventId) {
         OrganizerCancelledFragment fragment = new OrganizerCancelledFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_EVENT, event);
+        args.putString(ARG_EVENT_ID, eventId); // Pass the event ID as a String
         fragment.setArguments(args);
         return fragment;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     //     * @param param1 Parameter 1.
-     //     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrganizerFirstFragment.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
+
+        // Retrieve the event ID from the fragment's arguments
         if (getArguments() != null) {
-            event = (Event) getArguments().getSerializable(ARG_EVENT);
+            eventId = getArguments().getString(ARG_EVENT_ID);
         }
     }
 
-    /**
-     * This method is called when the fragment is created.
-     * It will query Firestore for the names of the entrants that have cancelled.
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_organizer_cancelled, container, false);
-        listViewEntrantsCancelled = view.findViewById(R.id.listViewEntrantsCancelled);
+        ListViewEntrantsCancelled = view.findViewById(R.id.listViewEntrantsCancelled);
 
-        ArrayList<String> entrantNames = new ArrayList<>(); // List to hold retrieved names
+        ArrayList<String> entrantNames = new ArrayList<>();
         EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), entrantNames);
-        listViewEntrantsCancelled.setAdapter(adapter); // Set the adapter once
+        ListViewEntrantsCancelled.setAdapter(adapter);
 
-        //test event ID 0c781495-f91e-4648-9bb0-c390f558db10, This is the event!ve
+        // Use the event ID to fetch data from Firestore
+        db.collection("events").document(eventId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DocumentSnapshot eventDoc = task.getResult();
 
-        if (event != null) {
-            ArrayList<String> deviceIds = event.getCancelled();
+                if (eventDoc.exists()) {
+                    ArrayList<String> deviceIds = (ArrayList<String>) eventDoc.get("cancelled");
 
-            for (String deviceId : deviceIds) {
-                // Query Firestore for each profile by device ID
-                db.collection("profiles").document(deviceId).get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document != null && document.exists()) {
-                            String name = document.getString("name"); // Adjust to match your document structure
-                            entrantNames.add(name);
+                    if (deviceIds != null && !deviceIds.isEmpty()) {
+                        for (String deviceId : deviceIds) {
+                            db.collection("profiles").document(deviceId).get().addOnCompleteListener(profileTask -> {
+                                if (profileTask.isSuccessful() && profileTask.getResult() != null) {
+                                    DocumentSnapshot profileDoc = profileTask.getResult();
 
-                            // Notify the adapter that the data has changed
-                            adapter.notifyDataSetChanged();                        }
+                                    if (profileDoc.exists()) {
+                                        String name = profileDoc.getString("name");
+                                        entrantNames.add(name);
+                                        adapter.notifyDataSetChanged();
+                                    } else {
+                                        Log.d("Firestore", "Profile document does not exist for device ID: " + deviceId);
+                                    }
+                                } else {
+                                    Log.e("Firestore", "Error fetching profile data for device ID: " + deviceId, profileTask.getException());
+                                }
+                            });
+                        }
                     } else {
-                        Log.d("Firestore", "Error getting document: ", task.getException());
+                        Log.d("Firestore", "No device IDs found in the selectedNotificationsList.");
                     }
-                });
+                } else {
+                    Log.d("Firestore", "Event document does not exist for ID: " + eventId);
+                }
+            } else {
+                Log.e("Firestore", "Error fetching event data for ID: " + eventId, task.getException());
             }
-        }
+        });
+
         return view;
     }
-
 }
