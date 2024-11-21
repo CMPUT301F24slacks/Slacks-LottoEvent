@@ -99,28 +99,49 @@ public class OrganizerInvitedFragment extends Fragment {
         EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), entrantNames);
         listViewEntrantsInvited.setAdapter(adapter); // Set the adapter once
 
-        //test event ID 0c781495-f91e-4648-9bb0-c390f558db10, This is the event!ve
+        // Event ID for testing
+        String eventId = event.getEventID();
 
-        if (event != null) {
-            ArrayList<String> deviceIds = event.getSelected();
+        db.collection("events").document(eventId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DocumentSnapshot eventDoc = task.getResult();
 
-            for (String deviceId : deviceIds) {
-                // Query Firestore for each profile by device ID
-                db.collection("profiles").document(deviceId).get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document != null && document.exists()) {
-                            String name = document.getString("name"); // Adjust to match your document structure
-                            entrantNames.add(name);
+                if (eventDoc.exists()) {
+                    // Retrieve the list of device IDs from Firestore
+                    ArrayList<String> deviceIds = (ArrayList<String>) eventDoc.get("selectedNotificationsList");
 
-                            // Notify the adapter that the data has changed
-                            adapter.notifyDataSetChanged();                        }
+                    if (deviceIds != null && !deviceIds.isEmpty()) {
+                        // Loop through device IDs and fetch profile names
+                        for (String deviceId : deviceIds) {
+                            db.collection("profiles").document(deviceId).get().addOnCompleteListener(profileTask -> {
+                                if (profileTask.isSuccessful() && profileTask.getResult() != null) {
+                                    DocumentSnapshot profileDoc = profileTask.getResult();
+
+                                    if (profileDoc.exists()) {
+                                        String name = profileDoc.getString("name"); // Adjust key as per your structure
+                                        entrantNames.add(name);
+
+                                        // Notify the adapter that the data has changed
+                                        adapter.notifyDataSetChanged();
+                                    } else {
+                                        Log.d("Firestore", "Profile document does not exist for device ID: " + deviceId);
+                                    }
+                                } else {
+                                    Log.e("Firestore", "Error fetching profile data for device ID: " + deviceId, profileTask.getException());
+                                }
+                            });
+                        }
                     } else {
-                        Log.d("Firestore", "Error getting document: ", task.getException());
+                        Log.d("Firestore", "No device IDs found in the selectedNotificationsList.");
                     }
-                });
+                } else {
+                    Log.d("Firestore", "Event document does not exist for ID: " + eventId);
+                }
+            } else {
+                Log.e("Firestore", "Error fetching event data for ID: " + eventId, task.getException());
             }
-        }
+        });
+
         return view;
     }
 
