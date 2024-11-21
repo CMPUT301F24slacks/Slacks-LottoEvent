@@ -74,11 +74,13 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
                 handleAcceptEvent(event);
                 showConfirmationDialog(v.getContext(), "You have now joined the event.");
                 removeEvent(position);
+//                TODO: notification here
             });
             declineButton.setOnClickListener(v -> {
                 handleDeclineEvent(event);
                 showConfirmationDialog(v.getContext(), "You have now declined the event.");
                 removeEvent(position);
+//                TODO: notifcation here
             });
         }
 
@@ -90,8 +92,8 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
      * @param event The event to accept.
      */
     private void handleAcceptEvent(UserEventNotifications event) {
+        //        Removes from selected array and puts into the finalists array
         String eventId = event.getEventId();
-
         db.collection("entrants").document(deviceId).update(
                         "invitedEvents", FieldValue.arrayRemove(eventId),
                         "finalistEvents", FieldValue.arrayUnion(eventId)
@@ -110,6 +112,7 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
      * @param event The event to decline.
      */
     private void handleDeclineEvent(UserEventNotifications event) {
+//        Removes from selected array and puts into the cancelled array
         String eventId = event.getEventId();
 
         db.collection("entrants").document(deviceId).update(
