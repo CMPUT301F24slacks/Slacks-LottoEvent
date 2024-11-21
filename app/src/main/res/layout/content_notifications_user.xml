@@ -47,10 +47,10 @@
 
     <TextView
         android:id="@+id/user_notification_event_date"
-        android:layout_width="150dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="156dp"
+        android:layout_marginEnd="224dp"
         android:inputType="date"
         android:text="2024-01-21"
         android:textColor="#B3B3B3"
@@ -60,10 +60,10 @@
 
     <TextView
         android:id="@+id/user_notification_event_time"
-        android:layout_width="150dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="156dp"
+        android:layout_marginEnd="224dp"
         android:text="Event Time"
         android:textColor="#B3B3B3"
         android:textSize="16dp"
@@ -72,10 +72,10 @@
 
     <TextView
         android:id="@+id/user_notification_event_location"
-        android:layout_width="245dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="60dp"
+        android:layout_marginEnd="200dp"
         android:text="Event Location"
         android:textColor="#B3B3B3"
         android:textSize="16dp"
@@ -89,7 +89,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toStartOf="@+id/user_notification_event_time"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.047"
         app:layout_constraintStart_toStartOf="@id/RectangularBackground"
         app:layout_constraintTop_toBottomOf="@+id/user_notification_calendar"
         app:srcCompat="@drawable/baseline_access_time_20" />
@@ -99,9 +99,9 @@
         android:layout_width="24dp"
         android:layout_height="22dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toStartOf="@+id/user_notification_event_location"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="@id/RectangularBackground"
         app:layout_constraintTop_toBottomOf="@+id/user_notification_clock"
         app:srcCompat="@drawable/baseline_location_pin_20" />
