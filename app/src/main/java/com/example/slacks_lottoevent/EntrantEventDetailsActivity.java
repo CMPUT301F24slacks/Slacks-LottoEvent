@@ -26,6 +26,7 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
     private DocumentSnapshot document;
     private String location;
     private String date;
+    private String signupDate;
     private String eventName;
     private String time;
     private Boolean usesGeolocation;
@@ -51,15 +52,17 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
 
                         document = task.getResult().getDocuments().get(0);
-                        date = document.getString("date");
+                        date = document.getString("eventDate");
                         time = document.getString("time");
                         eventName = document.getString("name");
                         location = document.getString("location");
                         description = document.getString("description");
+                        signupDate = document.getString("signupDeadline");
 
                         List<Object> finalists = (List<Object>) document.get("finalists");
                         binding.eventTitle.setText(eventName);
-                        binding.eventDate.setText(date);
+                        binding.eventDate.setText("Event Date: " + date);
+                        binding.eventsignupDeadline.setText("Signup Deadline: "+ signupDate);
                         Long capacity = (Long) document.get("eventSlots");
                         Long waitListCapacity = (Long) document.get("waitListCapacity");
                         assert capacity != null;

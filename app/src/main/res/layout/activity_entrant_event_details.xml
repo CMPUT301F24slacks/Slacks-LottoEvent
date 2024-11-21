@@ -75,7 +75,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="2024-06-15"
+                    android:text="Event Date: 2024-06-15"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="Date Icon"
+                    android:src="@drawable/baseline_calendar_today_20"
+                    app:tint="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/eventsignupDeadline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Signup Deadline: 2024-06-15"
                     android:textColor="#FFFFFF" />
             </LinearLayout>
 
@@ -101,6 +124,7 @@
                     android:text="14:00 - 15:00"
                     android:textColor="#FFFFFF" />
             </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
