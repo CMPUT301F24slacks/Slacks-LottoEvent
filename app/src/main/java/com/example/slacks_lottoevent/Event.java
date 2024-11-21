@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -30,6 +31,7 @@ public class Event implements Serializable {
     private ArrayList<String> selectedNotificationsList;
     private ArrayList<String> joinedNotificationsList;
     private ArrayList<String> cancelledNotificationsList;
+    private ArrayList<HashMap<String,double[]>> joinLocations;
     private String location;
     private String deviceId;
     private String signupDeadline;
@@ -53,7 +55,6 @@ public class Event implements Serializable {
      * @param geoLocation
      * @param qrHash
      * @param signupDeadline
-     *
      */
     public Event(String name, String eventDate, String location, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventID, Boolean geoLocation, String qrHash, String deviceId, String signupDeadline, String eventPosterURL) {
         this.name = name;
@@ -74,7 +75,9 @@ public class Event implements Serializable {
         this.selectedNotificationsList = new ArrayList<>();
         this.cancelledNotificationsList = new ArrayList<>();
         this.joinedNotificationsList = new ArrayList<>();
-
+        if (geoLocation) {
+            this.joinLocations = new ArrayList<>();
+        }
         this.qrCodeData = qrData;
         this.eventID = eventID;
         this.qrHash = qrHash;
@@ -302,5 +305,13 @@ public class Event implements Serializable {
         }
 
         this.entrantsChosen = true;
+    }
+
+    public ArrayList<HashMap<String, double[]>> getJoinLocations() {
+        return joinLocations;
+    }
+
+    public void setJoinLocations(ArrayList<HashMap<String, double[]>> joinLocations) {
+        this.joinLocations = joinLocations;
     }
 }
