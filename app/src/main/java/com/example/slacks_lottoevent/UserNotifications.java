@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -53,63 +54,17 @@ public class UserNotifications extends AppCompatActivity {
         listView.setAdapter(adapter);
 
         // Fetch and populate invited events
-        fetchFacilityIdAndInvitedEvents();
-    }
+        fetchInvitedEvents();
 
-    /**
-     * Fetch the facility ID associated with the current user, then fetch invited events.
-     */
-    private void fetchFacilityIdAndInvitedEvents() {
-        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-//        Toast.makeText(this, "Device ID: " + deviceId, Toast.LENGTH_LONG).show();
-
-        organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                DocumentSnapshot organizerDoc = task.getResult();
-
-                if (organizerDoc.exists() && organizerDoc.contains("facilityId")) {
-                    String facilityId = organizerDoc.getString("facilityId");
-                    fetchFacilityLocationAndInvitedEvents(deviceId, facilityId);
-                } else {
-                    Log.d("Firestore", "No facilityID found for this device ID.");
-                }
-            } else {
-                Log.e("Firestore", "Error fetching organizer data: ", task.getException());
-            }
-        });
-    }
-
-    /**
-     * Fetch the location (city and country) of the facility and invited events.
-     * @param deviceId the device ID of the current user
-     * @param facilityId the facility ID associated with the current user
-     */
-    private void fetchFacilityLocationAndInvitedEvents(String deviceId, String facilityId) {
-        facilitiesRef.document(facilityId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                DocumentSnapshot facilityDoc = task.getResult();
-
-                if (facilityDoc.exists() && facilityDoc.contains("city") && facilityDoc.contains("country")) {
-                    String city = facilityDoc.getString("city");
-                    String country = facilityDoc.getString("country");
-                    String location = city + ", " + country;
-
-                    fetchInvitedEvents(deviceId, location);
-                } else {
-                    Log.d("Firestore", "No location data found for facility ID: " + facilityId);
-                }
-            } else {
-                Log.e("Firestore", "Error fetching facility data: ", task.getException());
-            }
-        });
+        Button back_btn = findViewById(R.id.back_btn);
+        back_btn.setOnClickListener(v -> onBackPressed());
     }
 
     /**
      * Fetch the invited events for the current user and facility location.
-     * @param deviceId the device ID of the current user
-     * @param location the location of the facility associated with the current user
      */
-    private void fetchInvitedEvents(String deviceId, String location) {
+    private void fetchInvitedEvents() {
+        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         entrantRef.document(deviceId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 DocumentSnapshot entrantDoc = task.getResult();
@@ -118,7 +73,7 @@ public class UserNotifications extends AppCompatActivity {
                     List<String> eventIds = (List<String>) entrantDoc.get("invitedEvents");
 
                     if (eventIds != null && !eventIds.isEmpty()) {
-                        fetchEventDetails(eventIds, location);
+                        fetchEventDetails(eventIds);
                     } else {
                         Log.d("Firestore", "No invited events found.");
                     }
@@ -134,9 +89,8 @@ public class UserNotifications extends AppCompatActivity {
     /**
      * Fetch the event details from the events collection.
      * @param eventIds the list of event IDs to fetch details for
-     * @param location the location of the facility associated with the current user
      */
-    private void fetchEventDetails(List<String> eventIds, String location) {
+    private void fetchEventDetails(List<String> eventIds) {
         for (String eventId : eventIds) {
             if (eventId == null || eventId.isEmpty()) {
                 Log.e("Firestore", "Invalid eventId: " + eventId);
@@ -148,10 +102,10 @@ public class UserNotifications extends AppCompatActivity {
                     DocumentSnapshot eventDoc = task.getResult();
 
                     if (eventDoc.exists()) {
-                        // Create Event object from Firestore data
                         String name = eventDoc.getString("name");
-                        String date = eventDoc.getString("date");
+                        String date = eventDoc.getString("eventDate");
                         String time = eventDoc.getString("time");
+                        String location = eventDoc.getString("location");
 
                         UserEventNotifications event = new UserEventNotifications(name, date, time, location, eventId);
                         eventList.add(event);
@@ -170,15 +124,6 @@ public class UserNotifications extends AppCompatActivity {
 
 }
 
-
-//        take from the entrant.invited array, then for loop through that and make the object of accepting/declining
-//        with fields using getters on that specific id of that event already in the firestore, then
-//        make if its accepted, we add that to our finalist events in our entrant class, and if declined
-//        we remove ourselves from the entrant.invited array whilst removing ourselves from the events.invited
-//        array, and then updating the count (if there is one) of how many people are invited.
-
-//        for the organizer lists of cancelled joined and etc, take it from the event associated when clicked using intent
-//        then replace that dummy data with the real one, also fix leylas implementation
 
 
 

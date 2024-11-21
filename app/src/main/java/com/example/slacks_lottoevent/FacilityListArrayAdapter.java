@@ -78,9 +78,7 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         // Build the message with profile details
-        String message = "Name: " + facility.getFacilityName() + "\n" +
-                "City: " + facility.getCity() + "\n" +
-                "Province: " + facility.getProvince();
+        String message = "Name: " + facility.getFacilityName() + "\n";
 
         builder.setTitle("Facility Details")
                 .setMessage(message)

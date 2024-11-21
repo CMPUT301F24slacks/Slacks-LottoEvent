@@ -29,7 +29,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -69,12 +71,31 @@ public class CreateEvent extends AppCompatActivity {
                 if (!isValidDate(s.toString().trim())) {
                     binding.eventDate.setError("Date must be in MM/DD/YY format");
                 } else {
-                    binding.eventDate.setError(null); // Clear error if valid
+                    binding.eventDate.setError(null);
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
+        });
+
+        binding.signupDeadline.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int count, int after) {
+                if (!isValidDate(s.toString().trim())) {
+                    binding.eventDate.setError("Date must be in MM/DD/YY format");
+                } else {
+                    binding.signupDeadline.setError(null); // Clear error if valid
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
         });
 
 //        Check in real time if eventTime is validated
@@ -110,7 +131,6 @@ public class CreateEvent extends AppCompatActivity {
                     binding.eventPrice.setError(null);
                 }
             }
-
             @Override
             public void afterTextChanged(Editable s) {}
         });
@@ -168,7 +188,7 @@ public class CreateEvent extends AppCompatActivity {
 //        Create Button - Assume that they have a facility created  - if no organizer profile, then we can have a pop up that says they need to create a facility first
         Button create = findViewById(R.id.createBtn);
         create.setOnClickListener(v -> {
-            if (validateInputs()) {
+            if (validateInputs() && validateDates()) {
                 createEvent();
                 finish();
             }
@@ -266,18 +286,51 @@ public class CreateEvent extends AppCompatActivity {
     }
 
     /**
+     * This method checks if the signupDeadline is after the eventdate.
+     * @return true if the signUpDeadline is before the eventDate
+     */
+
+    private Boolean validateDates() {
+        // Get the text from the input fields
+        String eventDateStr = binding.eventDate.getText().toString().trim();
+        String signupDeadlineStr = binding.signupDeadline.getText().toString().trim();
+
+        // Ensure both dates are valid before continuing
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
+        try {
+            Date eventDate = dateFormat.parse(eventDateStr);
+            Date signupDeadline = dateFormat.parse(signupDeadlineStr);
+
+            // Check if eventDate is after signupDeadline
+            if (eventDate != null && signupDeadline != null && eventDate.before(signupDeadline)) {
+                // If eventDate is before signupDeadline, set an error
+                binding.eventDate.setError("Event date must be after the signup deadline");
+                binding.signupDeadline.setError("Signup Deadline must be before the eventDate");
+                return false;
+            } else {
+                // Clear any existing error if the dates are valid
+                binding.eventDate.setError(null);
+                binding.signupDeadline.setError(null);
+                return true;
+            }
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * This method creates an event and adds it to the database.
      */
     private void createEvent() {
         String name = binding.eventName.getText().toString().trim();
-        String date = binding.eventDate.getText().toString().trim();
+        String eventDate = binding.eventDate.getText().toString().trim();
         String time = binding.eventTime.getText().toString().trim();
         String price = binding.eventPrice.getText().toString().trim();
         String details = binding.eventDetails.getText().toString().trim();
         Boolean geoLoc = binding.checkBoxGeo.isChecked() ? false: true;
-        Boolean waitListNotis = binding.waitingList.isChecked()? true: false;
-        Boolean cancelledNotis = binding.cancelled.isChecked() ? true: false;
-        Boolean selectedNotis = binding.selected.isChecked() ? true: false;
+        String signupDeadline = binding.signupDeadline.getText().toString().trim();
 
         Integer eventSlots = Integer.valueOf(binding.eventSlots.getText().toString().trim());
         String waitingListCapacity = binding.waitListCapacity.getText().toString().trim();
@@ -301,12 +354,8 @@ public class CreateEvent extends AppCompatActivity {
                     .addOnCompleteListener(task -> {
                         if(task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                            location.set(document.getString("streetAddress1") + " "
-                                    + document.getString("city") + ", "
-                                    + document.getString("province") + " "
-                                    + document.getString("postalCode"));
-                            System.out.println("location" + location.get());
-                            Event eventData =  new Event(name, date, location.get(), time, price, details, eventSlots, Integer.parseInt(finalWaitingListCapacity), qrData, eventId, geoLoc, qrHash, waitListNotis, selectedNotis, cancelledNotis);
+                            location.set(document.getString("streetAddress1"));
+                            Event eventData =  new Event(name, eventDate, location.get(), time, price, details, eventSlots, Integer.parseInt(finalWaitingListCapacity), qrData, eventId, geoLoc, qrHash, deviceID, signupDeadline);
                             eventsRef.document(eventId).set(eventData)
                                     .addOnSuccessListener(nothing -> {
                                         Toast.makeText(CreateEvent.this, "Event created successfully", Toast.LENGTH_SHORT).show();

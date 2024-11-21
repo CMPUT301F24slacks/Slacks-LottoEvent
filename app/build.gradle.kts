@@ -1,9 +1,14 @@
 import org.gradle.api.tasks.javadoc.Javadoc
 import org.gradle.external.javadoc.StandardJavadocDocletOptions
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+}
+secrets {
+    defaultPropertiesFileName = "local.default.properties"
 }
 
 android {
@@ -16,8 +21,14 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // https://stackoverflow.com/a/78092051
+
+        val properties = Properties()
+        properties.load(rootProject.file("local.properties").inputStream())
+        val mapsApiKey: String = properties.getProperty("MAPS_API_KEY") ?: ""
+
+        buildConfigField("String", "MAPS_API_KEY", properties.getProperty("MAPS_API_KEY"))
     }
 
     buildTypes {
@@ -29,12 +40,15 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -51,7 +65,6 @@ androidComponents {
 
             doFirst {
                 val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-
                 classpath = files(variant.compileClasspath) + files(androidJar)
                 (options as StandardJavadocDocletOptions).addStringOption("-show-members", "package")
             }
@@ -59,7 +72,7 @@ androidComponents {
     }
 }
 
-tasks.withType<Test>{
+tasks.withType<Test> {
     useJUnitPlatform()
 }
 
@@ -89,11 +102,12 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("androidx.camera:camera-core:1.3.4")
     implementation("androidx.camera:camera-camera2:1.3.4")
-    implementation("androidx.camera:camera-lifecycle:1.2.0")
+    implementation("androidx.camera:camera-lifecycle:1.4.0")
     implementation("androidx.camera:camera-view:1.2.0")
     implementation(libs.zxing.android.embedded.v410)
     implementation(libs.core)
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
     implementation("androidx.multidex:multidex:2.0.1")
+    implementation("com.google.android.libraries.places:places:4.1.0")
 }

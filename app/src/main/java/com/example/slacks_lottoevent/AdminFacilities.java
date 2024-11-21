@@ -65,11 +65,9 @@ public class AdminFacilities extends Fragment {
                         for (DocumentSnapshot document : task.getResult()) {
                             // Create Profile object from Firestore data
                             String name = document.getString("name");
-                            String city = document.getString("city");
-                            String province = document.getString("province");
                             String facilityId = document.getId();
                             String organizerId = document.getString("organizerID");
-                            Facility facility = new Facility(name, " ", " ", city, province, " ", " ", organizerId, facilityId); // Adjust constructor if needed
+                            Facility facility = new Facility(name," "," "," ",organizerId,facilityId); // Adjust constructor if needed
 
                             facilitiesList.add(facility); // Add to the list
                         }
