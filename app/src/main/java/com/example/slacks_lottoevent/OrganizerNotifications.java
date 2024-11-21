@@ -2,6 +2,7 @@ package com.example.slacks_lottoevent;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -67,6 +68,15 @@ public class OrganizerNotifications extends AppCompatActivity {
 
         frameLayout = (FrameLayout) findViewById(R.id.FrameLayout);
         tabLayout = (TabLayout) findViewById(R.id.tab_Layout);
+        ImageView mapBtn = findViewById(R.id.imageView_geolocation);
+        mapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Add
+            }
+        });
+
+
 
         getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, OrganizerWaitlistFragment.newInstance(event))
                 .addToBackStack(null)
@@ -97,6 +107,7 @@ public class OrganizerNotifications extends AppCompatActivity {
                             .commit();
                 }
             }
+
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+    <ImageView
+        android:id="@+id/back_button"
+        android:layout_width="48dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:contentDescription="Back"
+        android:src="@drawable/arrow_left_solid"
+        app:tint="#7B24EB"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <TextView
+        android:id="@+id/header_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="List of Entrants"
+        android:textSize="24sp"
+        android:textColor="@android:color/white"
+        android:fontFamily="@font/inter_bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/distance_tab_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#27272A"
+        app:tabIndicatorColor="@color/white"
+        app:tabSelectedTextColor="#EC7CEE"
+        android:layout_marginTop="16dp"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:layout_constraintTop_toBottomOf="@id/header_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_5km"
+            android:text="< 5 km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_10km"
+            android:text="5-10 km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_20km"
+            android:text="10-20 km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_20plus"
+            android:text="> 20 km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.tabs.TabLayout>
+
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/distance_tab_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
