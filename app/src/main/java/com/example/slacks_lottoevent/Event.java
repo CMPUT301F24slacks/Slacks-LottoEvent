@@ -22,6 +22,8 @@ public class Event implements Serializable {
     private ArrayList<String> finalists;
     private ArrayList<String> cancelled;
     private ArrayList<String> selected;
+    private ArrayList<String> reselected;
+
     private String qrCodeData;
     private String qrHash;
     private String eventID;
@@ -30,6 +32,8 @@ public class Event implements Serializable {
     private ArrayList<String> selectedNotificationsList;
     private ArrayList<String> joinedNotificationsList;
     private ArrayList<String> cancelledNotificationsList;
+
+
     private String location;
     private String deviceId;
     private String signupDeadline;
@@ -68,6 +72,7 @@ public class Event implements Serializable {
         this.finalists = new ArrayList<>();
         this.cancelled = new ArrayList<>();
         this.selected = new ArrayList<>();
+        this.reselected = new ArrayList<>();
 
         this.waitlistedNotificationsList = new ArrayList<>();
         this.selectedNotificationsList = new ArrayList<>();
@@ -211,6 +216,10 @@ public class Event implements Serializable {
     public void addSelected(String entrant) {this.selected.add(entrant);}
 
     public void setSelected(ArrayList<String> entrants) { this.selected = entrants;}
+
+    public void addReselected(String entrant) {this.reselected.add(entrant);}
+
+    public void setReselected(ArrayList<String> entrants) { this.reselected = entrants;}
 
     public ArrayList<String> getSelectedNotificationsList(){return selectedNotificationsList; }
 
