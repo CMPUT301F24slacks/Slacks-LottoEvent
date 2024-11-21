@@ -147,7 +147,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
 
-//                TODO: Send notifications from here
+//                TODO: Send notifications for here
             }
             else {
                 // Show a pop-up dialog if the button is clicked again
