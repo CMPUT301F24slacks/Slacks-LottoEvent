@@ -1,5 +1,6 @@
 package com.example.slacks_lottoevent;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,6 +30,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -59,44 +61,54 @@ public class CreateEvent extends AppCompatActivity {
         eventsRef = db.collection("events");
         organizersRef = db.collection("organizers");
 
+        binding.eventDate.setOnClickListener(v -> {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
 
-//        Check in real time if event date is validated
-        binding.eventDate.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            // Show DatePickerDialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                    (view, year1, monthOfYear, dayOfMonth) -> {
+                        String pickedDate = (monthOfYear + 1) + "/" + dayOfMonth + "/" + year1;
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Real-time validation for Date format
-                if (!isValidDate(s.toString().trim())) {
-                    binding.eventDate.setError("Date must be in MM/DD/YY format");
-                } else {
-                    binding.eventDate.setError(null);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
+                        // Validate the picked date
+                        if (!isDateInFuture(pickedDate)) {
+                            binding.eventDate.setError("Date must be in the future.");
+                            Toast.makeText(CreateEvent.this, "Date Must be In the future", Toast.LENGTH_SHORT).show();
+                        } else {
+                            binding.eventDate.setError(null);
+                            binding.eventDate.setText(pickedDate); // Set the date on the button
+                        }
+                    },
+                    year, month, day);
+            datePickerDialog.show();
         });
 
-        binding.signupDeadline.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
+        binding.signupDeadline.setOnClickListener(v -> {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int count, int after) {
-                if (!isValidDate(s.toString().trim())) {
-                    binding.eventDate.setError("Date must be in MM/DD/YY format");
-                } else {
-                    binding.signupDeadline.setError(null); // Clear error if valid
-                }
-            }
+            // Show DatePickerDialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                    (view, year1, monthOfYear, dayOfMonth) -> {
+                        String pickedDate = (monthOfYear + 1) + "/" + dayOfMonth + "/" + year1;
 
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+                        // Validate the picked date
+                        if (!isDateInFuture(pickedDate)) {
+                            binding.signupDeadline.setError("Date must be in the future.");
+                            Toast.makeText(CreateEvent.this, "Date Must be In the future", Toast.LENGTH_SHORT).show();
+                        } else {
+                            binding.signupDeadline.setError(null);
+                            binding.signupDeadline.setText(pickedDate); // Set the date on the button
+                        }
+                    },
+                    year, month, day);
+            datePickerDialog.show();
         });
+
 
 //        Check in real time if eventTime is validated
         binding.eventTime.addTextChangedListener(new TextWatcher() {
@@ -206,6 +218,7 @@ public class CreateEvent extends AppCompatActivity {
         String price = binding.eventPrice.getText().toString().trim();
         String details = binding.eventDetails.getText().toString().trim();
         String eventSlot = binding.eventSlots.getText().toString().trim();
+        String signUpDeadline = binding.signupDeadline.getText().toString().trim();
 
 //        Event Name validation
         if (TextUtils.isEmpty(name)) {
@@ -214,9 +227,17 @@ public class CreateEvent extends AppCompatActivity {
             return false;
         }
 //        Event Date validation
-        if (TextUtils.isEmpty(date)) {
+        if (date.equals("Select Date")) {
             binding.eventDate.setError("Event date is required");
+            Toast.makeText(CreateEvent.this, "Event Date must be selected", Toast.LENGTH_SHORT).show();
             binding.eventDate.requestFocus();
+            return false;
+        }
+
+        if (signUpDeadline.equals("Select Date")) {
+            binding.signupDeadline.setError("Sign up deadline is required");
+            Toast.makeText(CreateEvent.this, "Sign up Deadline must be selected", Toast.LENGTH_SHORT).show();
+            binding.signupDeadline.requestFocus();
             return false;
         }
 
@@ -269,21 +290,53 @@ public class CreateEvent extends AppCompatActivity {
     }
 
     /**
-     * This method checks if the date is in the correct format.
+     * This method checks if the date is in the correct format and in the future.
      * @param date the date to be checked
-     * @return true if the date is in the correct format, false otherwise
+     * @return true if the date is in the correct format and in the future false otherwise
      */
-    private boolean isValidDate(String date) {
+    private boolean isDateFormatValid(String date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         dateFormat.setLenient(false); // Ensures strict date parsing
 
         try {
             dateFormat.parse(date); // Parse the date
-            return true; // Parsing succeeded, date is valid
+            return true; // Parsing succeeded, format is valid
         } catch (ParseException e) {
-            return false; // Parsing failed, date is invalid
+            return false; // Parsing failed, format is invalid
         }
     }
+
+    /**
+     * This method checks if the date is in future.
+     * @param date the date to be checked
+     * @return true if the date is in the future false otherwise
+     */
+    private boolean isDateInFuture(String date) {
+        if (!isDateFormatValid(date)) {
+            return false; // Invalid format, cannot check if in the future
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        dateFormat.setLenient(false);
+
+        try {
+            Date parsedDate = dateFormat.parse(date); // Parse the date
+
+            // Get the current date with time set to the start of the day
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR_OF_DAY, 0);
+            today.set(Calendar.MINUTE, 0);
+            today.set(Calendar.SECOND, 0);
+            today.set(Calendar.MILLISECOND, 0);
+
+            // Check if the parsed date is in the future
+            return parsedDate.after(today.getTime());
+        } catch (ParseException e) {
+            return false; // Should not happen as format is already validated
+        }
+    }
+
+
 
     /**
      * This method checks if the signupDeadline is after the eventdate.
@@ -306,6 +359,9 @@ public class CreateEvent extends AppCompatActivity {
                 // If eventDate is before signupDeadline, set an error
                 binding.eventDate.setError("Event date must be after the signup deadline");
                 binding.signupDeadline.setError("Signup Deadline must be before the eventDate");
+                Toast.makeText(CreateEvent.this, "Signup deadline must be before the eventDate, event date must be after signup date.", Toast.LENGTH_SHORT).show();
+
+
                 return false;
             } else {
                 // Clear any existing error if the dates are valid
@@ -336,7 +392,7 @@ public class CreateEvent extends AppCompatActivity {
         String waitingListCapacity = binding.waitListCapacity.getText().toString().trim();
 
         if (TextUtils.isEmpty(waitingListCapacity) || Integer.parseInt(waitingListCapacity) == 0) {
-            waitingListCapacity = "-1";
+            waitingListCapacity = "0";
         }
 
         String eventId = UUID.randomUUID().toString();

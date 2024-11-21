@@ -1,17 +1,10 @@
 package com.example.slacks_lottoevent;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
-import android.location.LocationRequest;
-import android.net.Uri;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -22,16 +15,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 
 import com.example.slacks_lottoevent.databinding.ActivityJoinEventDetailsBinding;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -41,7 +28,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import android.provider.Settings;
 import android.widget.Toast;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -49,7 +35,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * JoinEventDetailsActivity is the activity for the Join Event Details screen.
  */
 public class JoinEventDetailsActivity extends AppCompatActivity {
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private ActivityJoinEventDetailsBinding binding;
     private DocumentSnapshot document;
     private String location;
@@ -58,7 +43,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     private String time;
     private Boolean usesGeolocation;
     private String description;
-    private SharedPreferences sharedPreferences;
     FirebaseFirestore db;
     String qrCodeValue;
     @SuppressLint("HardwareIds") String deviceId;
@@ -87,19 +71,50 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         eventName = document.getString("name");
                         location = document.getString("location");
                         description = document.getString("description");
+                        signupDeadline = document.getString("signupDeadline");
+                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                        Date signup = null;
+                        try {
+                            signup = sdf.parse(signupDeadline);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        Date currentDate = new Date();
+                        try {
+                            // Format the current date to "MM/dd/yyyy" and parse it back into a Date object to remove time
+                            currentDate = sdf.parse(sdf.format(currentDate));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            throw new RuntimeException("Error truncating current date", e);
+                        }
 
-                        List<Object> finalists = (List<Object>) document.get("finalists");
-                        binding.eventTitle.setText(eventName);
-                        binding.eventDate.setText(date);
+
+                        List<Object> waitlisted = (List<Object>) document.get("waitlisted");
                         Long capacity = (Long) document.get("eventSlots");
                         Long waitListCapacity = (Long) document.get("waitListCapacity");
+                        String waitlistCapacityAsString = "";
                         assert capacity != null;
                         String capacityAsString = capacity.toString();
 
+//                        Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
+                        if (waitListCapacity <= 0){
+                            binding.waitlistCapacitySection.setVisibility(View.GONE);
+                            binding.spotsAvailableSection.setVisibility(View.GONE);
+                        }
+                        else{
+                            spotsRemaining = waitListCapacity - waitlisted.size();
+                            spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
+                            binding.spotsAvailable.setText(spotsRemainingText);
+                        }
+
+                        binding.eventTitle.setText(eventName);
+                        binding.eventDate.setText("Event Date: " + date);
+                        binding.signupDate.setText("Sign up deadline: " + signupDeadline);
                         binding.eventLocation.setText(location);
                         String waitlistCapacity = "Waitlist Capacity " + capacityAsString;
                         binding.eventWaitlistCapacity.setText(waitlistCapacity);
                         binding.eventDescription.setText(description);
+                        binding.waitlistCapacity.setText("Waitlist Capacity: " + waitlistCapacityAsString);
 
                         Long spotsRemaining = capacity - finalists.size();
                         String spotsRemainingText = "Only " + spotsRemaining.toString() + " spots available";
@@ -111,13 +126,22 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                             // Capacity is full show we want to show the waitlist badge
                             binding.joinButton.setVisibility(View.GONE);
                             binding.waitlistFullBadge.setVisibility(View.VISIBLE);
-                        } else {
+                        }
+                        else {
                             binding.joinButton.setVisibility(View.VISIBLE);
                             binding.waitlistFullBadge.setVisibility(View.GONE);
                         }
+
+                        if (currentDate.after(signup)) {
+                            binding.joinButton.setVisibility(View.GONE);
+                            binding.signupPassed.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.joinButton.setVisibility(View.VISIBLE);
+                            binding.signupPassed.setVisibility(View.GONE);
+                        }
                         // The reason to add the onClickListener in here is because we don't want the join button to do anything unless this event actually exists in the firebase
                         binding.joinButton.setOnClickListener(view -> {
-                            sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+                            SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
                             boolean isSignedUp = sharedPreferences.getBoolean("isSignedUp", false);
                             if (isSignedUp){
                                if(usesGeolocation){

@@ -18,7 +18,10 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,12 +34,18 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     private String location;
     private String date;
     private String eventName;
+    private String signupDate;
     private String time;
     private Boolean usesGeolocation;
     private String description;
     private Event event;
     FirebaseFirestore db;
     String qrCodeValue;
+    Long spotsRemaining;
+    String spotsRemainingText;
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    Date currentDate = new Date();
+    Date signup = null;
     @SuppressLint("HardwareIds") String deviceId;
 
     /**
@@ -55,34 +64,51 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
 
-
                         document = task.getResult().getDocuments().get(0);
-
                         event = document.toObject(Event.class);
-
-
-                        date = document.getString("date");
+                        date = document.getString("eventDate");
+                        signupDate = document.getString("signupDeadline");
                         time = document.getString("time");
                         eventName = document.getString("name");
                         location = document.getString("location");
                         description = document.getString("description");
+                        try {
+                            signup = sdf.parse(signupDate);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        try {
+                            // Format the current date to "MM/dd/yyyy" and parse it back into a Date object to remove time
+                            currentDate = sdf.parse(sdf.format(currentDate));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            throw new RuntimeException("Error truncating current date", e);
+                        }
 
-                        List<Object> finalists = (List<Object>) document.get("finalists");
-                        binding.eventTitle.setText(eventName);
-                        binding.eventDate.setText(date);
+                        List<Object> waitlisted = (List<Object>) document.get("waitlisted");
                         Long capacity = (Long) document.get("eventSlots");
                         Long waitListCapacity = (Long) document.get("waitListCapacity");
                         assert capacity != null;
                         String capacityAsString = capacity.toString();
 
-                        binding.eventLocation.setText(location);
-                        String waitlistCapacity = "Waitlist Capacity " + capacityAsString;
-                        binding.eventWaitlistCapacity.setText(waitlistCapacity);
-                        binding.eventDescription.setText(description);
+                        //Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
+                        if (waitListCapacity <= 0){
+                            binding.eventWaitlistCapacitySection.setVisibility(View.GONE);
+                            binding.spotsAvailableSection.setVisibility(View.GONE);
+                        }
+                        else{
+                            spotsRemaining = waitListCapacity - waitlisted.size();
+                            spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
+                            binding.spotsAvailable.setText(spotsRemainingText);
+                        }
 
-                        Long spotsRemaining = capacity - finalists.size();
-                        String spotsRemainingText = "Only " + spotsRemaining.toString() + " spots available";
-                        binding.spotsAvailable.setText(spotsRemainingText);
+                        binding.eventTitle.setText(eventName);
+                        binding.eventDate.setText("Event Date: " + date);
+                        binding.signupDate.setText("Signup Deadline: " + signupDate);
+                        binding.eventWaitlistCapacity.setText("Waitlist Capacity: " +  waitListCapacity.toString());
+                        binding.eventLocation.setText(location);
+                        binding.eventSlotsCapacity.setText("Event Slots: " + capacityAsString);
+                        binding.eventDescription.setText(description);
                         usesGeolocation = (Boolean) document.get("geoLocation");
 
                         event.setFinalists((ArrayList<String>) document.get("finalists"));
@@ -103,13 +129,13 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         });
 
         binding.editEventButton.setVisibility(View.VISIBLE);
-        // TODO: Implement the edit event button
+        // TODO: Implement the edit event button - GET RID OF THIS!!!
 //        binding.editEventButton.setOnClickListener(view -> {
 //        });
 
         binding.lotterySystemButton.setVisibility(View.VISIBLE);
         binding.lotterySystemButton.setOnClickListener(view -> {
-            if (binding.lotterySystemButton.isEnabled() && !event.getEntrantsChosen()) {
+            if (binding.lotterySystemButton.isEnabled() && !event.getEntrantsChosen() && currentDate.after(signup)) {
                 event.lotterySystem();
                 updateSelectedEntrants(event);
                 updateInvitedEntrants(event);
@@ -120,6 +146,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         .setMessage("Entrants were selected for the event.")
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
+
+//                TODO: Send notifications for here
             }
             else {
                 // Show a pop-up dialog if the button is clicked again
