@@ -2,6 +2,7 @@ package com.example.slacks_lottoevent;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -65,6 +66,8 @@ public class OrganizerNotifications extends AppCompatActivity {
             }
         });
 
+        Button reSelect = findViewById(R.id.reselectButton);
+        reSelect.setVisibility(View.VISIBLE);
         frameLayout = (FrameLayout) findViewById(R.id.FrameLayout);
         tabLayout = (TabLayout) findViewById(R.id.tab_Layout);
 
@@ -79,15 +82,19 @@ public class OrganizerNotifications extends AppCompatActivity {
                 switch (tab.getPosition()){
                     case 0:
                         selected_fragment = OrganizerWaitlistFragment.newInstance(event);
+                        reSelect.setVisibility(View.VISIBLE);
                         break;
                     case 1:
-                        selected_fragment = OrganizerInvitedFragment.newInstance(event);;
+                        selected_fragment = OrganizerInvitedFragment.newInstance(event);
+                        reSelect.setVisibility(View.GONE);
                         break;
                     case 2:
-                        selected_fragment = OrganizerCancelledFragment.newInstance(event);;
+                        selected_fragment = OrganizerCancelledFragment.newInstance(event);
+                        reSelect.setVisibility(View.GONE);
                         break;
                     case 3:
-                        selected_fragment = OrganizerEnrolledFragment.newInstance(event);;
+                        selected_fragment = OrganizerEnrolledFragment.newInstance(event);
+                        reSelect.setVisibility(View.GONE);
                         break;
                 }
                 if (selected_fragment != null) {
@@ -121,6 +128,11 @@ public class OrganizerNotifications extends AppCompatActivity {
         back.setOnClickListener(v -> {
             onBackPressed();
         });
+
+//        Reselect function here:
+//        Edge cases:
+//        1. only after it was initially chosen
+//        2. Reselect from waitlist
 
     }
 }

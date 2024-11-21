@@ -221,6 +221,10 @@ public class Event implements Serializable {
 
     public void setReselected(ArrayList<String> entrants) { this.reselected = entrants;}
 
+    public ArrayList<String> getReselected() {
+        return reselected;
+    }
+
     public ArrayList<String> getSelectedNotificationsList(){return selectedNotificationsList; }
 
     public void addSelectedNotification(String notification) { this.selectedNotificationsList.add(notification); }
@@ -296,10 +300,14 @@ public class Event implements Serializable {
             Collections.shuffle(this.waitlisted);
             this.selected = new ArrayList<>(this.waitlisted.subList(0, numOfSelectedEntrants));
 
-            for(Integer i = 0; i < numOfSelectedEntrants; i++){
-                this.waitlisted.remove(0);
-            }
+//            Removes from both the waitlist and reselected if they get picked - TODO: Can remove?
+            this.waitlisted.removeAll(this.selected);
+            this.reselected.removeAll(this.selected);
+
+            this.waitlisted.removeAll(this.reselected);
+
         }
+
 
         this.entrantsChosen = true;
     }

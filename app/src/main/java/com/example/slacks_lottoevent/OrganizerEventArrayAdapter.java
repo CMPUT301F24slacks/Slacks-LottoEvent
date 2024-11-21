@@ -99,7 +99,6 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         TextView eventDescription = convertView.findViewById(R.id.event_description);
         eventName.setText(event.getName());
         eventDate.setText(event.getEventDate());
-        Log.d("EventDetails", "eventDate" + event.getEventDate());
         eventTime.setText(event.getTime());
 //        eventAddress.setText(event.getLocation());
 

@@ -115,6 +115,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         event.setWaitlisted((ArrayList<String>) document.get("waitlisted"));
                         event.setSelected((ArrayList<String>) document.get("selected"));
                         event.setCancelled((ArrayList<String>) document.get("cancelled"));
+                        event.setReselected((ArrayList<String>) document.get("reselected"));
 
                         event.setWaitlistedNotificationsList((ArrayList<String>) document.get("waitlistedNotificationsList"));
                         event.setWaitlistedNotificationsList((ArrayList<String>) document.get("joinedNotificationsList"));
@@ -178,10 +179,11 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
                 for (String entrant : event.getSelected()) {
                     eventRef.update("selected", FieldValue.arrayUnion(entrant),
-                            "selectedNotificationsList", FieldValue.arrayUnion(entrant));
+                            "selectedNotificationsList", FieldValue.arrayUnion(entrant)); //TODO: when doing notifications get rid of this line
                 }
 
-                eventRef.update("waitlisted", event.getWaitlisted());
+                eventRef.update("waitlisted", event.getReselected()); // Changing waitlist to now be the people who want to be re-selected, so they stay on the waitlist
+
 
                 eventRef.update("entrantsChosen", event.getEntrantsChosen());
             }
@@ -194,7 +196,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
             entrantsRef.get().addOnSuccessListener(entrantDoc -> {
                 if (entrantDoc.exists()) {
                     entrantsRef.update("invitedEvents", FieldValue.arrayUnion(event.getEventID()),
-                                    "invites", FieldValue.arrayUnion(event.getEventID()),
+                                    "invites", FieldValue.arrayUnion(event.getEventID()), //TODO: Get rid of the invites field
                                     "waitlistedEvents", FieldValue.arrayRemove(event.getEventID()))
                             .addOnSuccessListener(aVoid -> Log.d("Firestore", "Event added for entrant"))
                             .addOnFailureListener(e -> Log.e("Firestore", "Error updating invitedEvents for entrant"));
@@ -203,6 +205,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         }
     }
 
+//    Updating everyone who did not get selected and who do not want too be reselected
     private void updateUninvitedEntrants(Event event){
         for(String entrant: event.getWaitlisted()) {
             DocumentReference entrantsRef = db.collection("entrants").document(entrant);
@@ -212,10 +215,14 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                     entrantsRef.update("uninvitedEvents", FieldValue.arrayUnion(event.getEventID()))
                             .addOnSuccessListener(aVoid -> Log.d("Firestore", "Notification added for entrant"))
                             .addOnFailureListener(e -> Log.e("Firestore", "Error updating uninvitedEvents for entrant"));
+
+//                    TODO: Sent notification if DID NOT get selected and did not want to get reselected
+
                 }
 
             });
         }
+        event.setWaitlisted(event.getReselected()); // setting waitlist too be the reselected after previous waitlist is updated
     }
 
 }
