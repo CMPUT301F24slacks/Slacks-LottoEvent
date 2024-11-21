@@ -291,11 +291,15 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     }
     /**
      *
+     * Retrieves the current location of the device at the time this method is called.
+     * Uses the Google Fused Location Provider API to get the current location if the user has enabled geolocation/given
+     * the required location permission. Otherwise asks them to enable the geolocation permission. Once the location
+     * has been fetched calls the
      *
      *
-     * Relevant Documentation
-     * https://developer.android.com/develop/sensors-and-location/location/retrieve-current
-     *
+     * Relevant Documentation:
+     * https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderClient
+     * @param usesGeolocation a argument that indicates whether or not the event the user is joining uses geolocation.
      * */
     private void getJoinLocation(Boolean usesGeolocation){
         if (usesGeolocation){
@@ -311,13 +315,22 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                                System.out.println(latitude + longitude);
                                storeJoinLocation(latitude,longitude);
                            }
-
                         });
+
+            }
+            else {
+                requestGeolocationPermission();
             }
         }
-
-
     }
+    /**
+     * Updates the Firestore database with the join location of a device/user for a specific event.
+     * This function takes the latitude and longitude as parameters, creates a hashmap
+     *  of the device ID to the provided location, and appends this hashmap to the
+     * "joinLocations" array field of the event document.
+     * @param latitude  The latitude of the device's location.
+     * @param longitude The longitude of the device's location.
+     * */
     private void storeJoinLocation(Double latitude,Double longitude){
         System.out.println("qrcode val"+ qrCodeValue);
         db.collection("events").whereEqualTo("eventID",qrCodeValue)
