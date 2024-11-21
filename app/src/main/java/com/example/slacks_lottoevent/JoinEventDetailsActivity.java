@@ -1,10 +1,15 @@
 package com.example.slacks_lottoevent;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -15,7 +20,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 
 import com.example.slacks_lottoevent.databinding.ActivityJoinEventDetailsBinding;
@@ -35,6 +43,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * JoinEventDetailsActivity is the activity for the Join Event Details screen.
  */
 public class JoinEventDetailsActivity extends AppCompatActivity {
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private ActivityJoinEventDetailsBinding binding;
     private DocumentSnapshot document;
     private String location;
@@ -43,6 +52,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     private String time;
     private Boolean usesGeolocation;
     private String description;
+    private SharedPreferences sharedPreferences;
     FirebaseFirestore db;
     String qrCodeValue;
     @SuppressLint("HardwareIds") String deviceId;
@@ -101,10 +111,15 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         }
                         // The reason to add the onClickListener in here is because we don't want the join button to do anything unless this event actually exists in the firebase
                         binding.joinButton.setOnClickListener(view -> {
-                            SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+                            sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
                             boolean isSignedUp = sharedPreferences.getBoolean("isSignedUp", false);
                             if (isSignedUp){
-                                showRegistrationDialog();
+                               if(usesGeolocation){
+                                   checkAndRequestGeolocation();
+                               }
+                               else {
+                                   showRegistrationDialog();
+                               }
                             }
                             else {
                                 new AlertDialog.Builder(this)
@@ -227,13 +242,22 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         dialog.show();
 
     }
+    private void storeJoinLocation(Boolean usesGeolocation){
+        if (usesGeolocation){
+            
+        }
 
+
+    }
     /**
      * createNewEntrant method for the JoinEventDetailsActivity.
      * This method creates a new entrant in the Firestore database.
      *
      * @param userId The unique user ID
      */
+
+
+
     private void createNewEntrant(String userId) {
         Entrant newEntrant = new Entrant();
         newEntrant.addWaitlistedEvents(qrCodeValue); // Add the event to the waitlist
@@ -339,4 +363,82 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error fetching event document: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+    /**
+     * Function that checks if the users have enabled location permissions for the app and depending on if they do
+     * redirects to the registration dialog and if they don't redirects them to the enable geolocation dialog. .
+     *
+     * */
+    private void checkAndRequestGeolocation(){
+        if (hasGeolocationEnabled()){
+            showRegistrationDialog();
+        }
+        else {
+            showEnableGeolocationAlertDialog();
+        }
+    }
+    /**
+     * Creates a Dialog box that explains to the user why they need geolocation for this event and gives them
+     * a button to enable it.
+     * */
+    private void showEnableGeolocationAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_enable_geolocation, null);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        Button cancelBtn = dialogView.findViewById(R.id.cancel_button);
+        Button confirmBtn = dialogView.findViewById(R.id.confirm_button);
+
+        cancelBtn.setOnClickListener(view -> dialog.dismiss());
+        confirmBtn.setOnClickListener(view ->{
+            requestGeolocationPermission();
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+    /**
+     * Fynction that returns a boolean value on whether or not the user has enabled geolocation permissions.
+     * */
+    private boolean hasGeolocationEnabled(){
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+    /**
+     *  This function checks whether the geolocation permission (ACCESS_FINE_LOCATION) has been granted.
+     *  If the permission has not been granted it uses the shouldShowRequestPermissionRationale before requesting the geolocation
+     *  permission to determine if we need to provide rationale and redirect the user to the device settings. If the user has denied the permission multiply times
+     *  android disables the permission pop up so this method creates a dialog box that redirects the user to the apps settings page where they can
+     *  manually enable the location permission.
+     * */
+    private void requestGeolocationPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // The shouldShowRequestPermissionRationale is used to determine whether or not the app needs to add additional reationale
+                // Before requesting the users permissions again. If the user clicks dont allow too many times the pop up asking for permission won't appear.
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        LOCATION_PERMISSION_REQUEST_CODE
+                );
+            } else {
+                new AlertDialog.Builder(this)
+                        .setTitle("Permission Required")
+                        .setMessage("Geolocation is required to join this event. Please enable it in the app settings.")
+                        .setPositiveButton("Open Settings", (dialog, which) -> {
+
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            // https://stackoverflow.com/questions/19517417/opening-android-settings-programmatically
+                            Uri uri = Uri.fromParts("package", getPackageName(), null);
+                            // Setting the URI to be for our apps setting page.
+                            intent.setData(uri);
+                            startActivity(intent); // launching the settings for the app. Here users will have to manually add permissions if they denied too many times
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                        .show();
+            }
+        }
+
+    }
+
 }
