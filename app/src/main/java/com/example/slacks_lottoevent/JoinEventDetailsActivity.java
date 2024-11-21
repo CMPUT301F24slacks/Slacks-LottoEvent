@@ -49,6 +49,8 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     private String description;
     FirebaseFirestore db;
     String qrCodeValue;
+    Long spotsRemaining;
+    String spotsRemainingText;
     @SuppressLint("HardwareIds") String deviceId;
     @Override
 
@@ -92,32 +94,38 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                             throw new RuntimeException("Error truncating current date", e);
                         }
 
-                        Log.d("SignupDeadline", signupDeadline);
-                        Log.d("CurrentDate", sdf.format(currentDate));
 
-
-                        List<Object> waitlist = (List<Object>) document.get("waitlisted");
-                        binding.eventTitle.setText(eventName);
-                        binding.eventDate.setText(date);
+                        List<Object> waitlisted = (List<Object>) document.get("waitlisted");
                         Long capacity = (Long) document.get("eventSlots");
                         Long waitListCapacity = (Long) document.get("waitListCapacity");
+                        String waitlistCapacityAsString = "";
                         assert capacity != null;
                         String capacityAsString = capacity.toString();
 
+//                        Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
+                        if (waitListCapacity <= 0){
+                            binding.waitlistCapacitySection.setVisibility(View.GONE);
+                            binding.spotsAvailableSection.setVisibility(View.GONE);
+                        }
+                        else{
+                            spotsRemaining = waitListCapacity - waitlisted.size();
+                            spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
+                            binding.spotsAvailable.setText(spotsRemainingText);
+                        }
+
+                        binding.eventTitle.setText(eventName);
+                        binding.eventDate.setText("Event Date: " + date);
+                        binding.signupDate.setText("Sign up deadline: " + signupDeadline);
                         binding.eventLocation.setText(location);
-                        String eventSlots = "Event Slots: " + capacityAsString;
-                        binding.eventSlots.setText(eventSlots);
+                        binding.eventSlots.setText("Event Slots: " + capacityAsString);
                         binding.eventDescription.setText(description);
-                        binding.waitlistCapacity.setText("Waitlist Capacity: " + waitListCapacity.toString());
+                        binding.waitlistCapacity.setText("Waitlist Capacity: " + waitlistCapacityAsString);
 
 
-                        Long spotsRemaining = waitListCapacity - waitlist.size();
-                        String spotsRemainingText = "Only " + spotsRemaining.toString() + " spots available";
-                        binding.spotsAvailable.setText(spotsRemainingText);
                         usesGeolocation = (Boolean) document.get("geoLocation");
 
 
-                        if (capacity.equals((long) waitlist.size())) {
+                        if (capacity.equals((long) waitlisted.size())) {
                             // Capacity is full show we want to show the waitlist badge
                             binding.joinButton.setVisibility(View.GONE);
                             binding.waitlistFullBadge.setVisibility(View.VISIBLE);
@@ -128,14 +136,11 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         }
 
                         if (currentDate.after(signup)) {
-                            Log.d("SignupPassed", "this is working!!");
                             binding.joinButton.setVisibility(View.GONE);
                             binding.signupPassed.setVisibility(View.VISIBLE);
                         } else {
-                            Log.d("SignupNotPassed", "this is NOT working :(");
                             binding.joinButton.setVisibility(View.VISIBLE);
                             binding.signupPassed.setVisibility(View.GONE);
-
                         }
 
                         // The reason to add the onClickListener in here is because we don't want the join button to do anything unless this event actually exists in the firebase

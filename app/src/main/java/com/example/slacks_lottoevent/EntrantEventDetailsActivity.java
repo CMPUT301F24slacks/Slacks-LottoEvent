@@ -33,6 +33,8 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
     private String description;
     FirebaseFirestore db;
     String qrCodeValue;
+    Long spotsRemaining;
+    String spotsRemainingText;
     @SuppressLint("HardwareIds") String deviceId;
 
     /**
@@ -59,23 +61,32 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                         description = document.getString("description");
                         signupDate = document.getString("signupDeadline");
 
-                        List<Object> finalists = (List<Object>) document.get("finalists");
-                        binding.eventTitle.setText(eventName);
-                        binding.eventDate.setText("Event Date: " + date);
-                        binding.eventsignupDeadline.setText("Signup Deadline: "+ signupDate);
+
+                        List<Object> waitlisted = (List<Object>) document.get("waitlisted");
+
                         Long capacity = (Long) document.get("eventSlots");
                         Long waitListCapacity = (Long) document.get("waitListCapacity");
                         assert capacity != null;
                         String capacityAsString = capacity.toString();
 
-                        binding.eventLocation.setText(location);
-                        String waitlistCapacity = "Waitlist Capacity " + capacityAsString;
-                        binding.eventWaitlistCapacity.setText(waitlistCapacity);
-                        binding.eventDescription.setText(description);
+                        //Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
+                        if (waitListCapacity <= 0){
+                            binding.waitlistCapacitySection.setVisibility(View.GONE);
+                            binding.spotsAvailableSection.setVisibility(View.GONE);
+                        }
+                        else{
+                            spotsRemaining = waitListCapacity - waitlisted.size();
+                            spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
+                            binding.spotsAvailable.setText(spotsRemainingText);
+                        }
 
-                        Long spotsRemaining = capacity - finalists.size();
-                        String spotsRemainingText = "Only " + spotsRemaining.toString() + " spots available";
-                        binding.spotsAvailable.setText(spotsRemainingText);
+                        binding.eventTitle.setText(eventName);
+                        binding.eventDate.setText("Event Date: " + date);
+                        binding.eventsignupDeadline.setText("Signup Deadline: "+ signupDate);
+                        binding.eventLocation.setText(location);
+                        binding.eventWaitlistCapacity.setText("Event Slots: " + capacityAsString);
+                        binding.eventDescription.setText(description);
+                        binding.waitlistCapacity.setText("Waitlist Capacity: " + waitListCapacity.toString());
                         usesGeolocation = (Boolean) document.get("geoLocation");
 
 
