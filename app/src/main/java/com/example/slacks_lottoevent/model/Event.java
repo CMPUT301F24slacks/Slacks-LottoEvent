@@ -1,8 +1,11 @@
-package com.example.slacks_lottoevent.model;
+package com.example.slacks_lottoevent;
+
+import java.util.ArrayList;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Event class that holds all the information for an event
@@ -28,17 +31,16 @@ public class Event implements Serializable {
     private ArrayList<String> selectedNotificationsList;
     private ArrayList<String> joinedNotificationsList;
     private ArrayList<String> cancelledNotificationsList;
+    private ArrayList<HashMap<String,List<Double>>> joinLocations;
     private String location;
     private String deviceId;
     private String signupDeadline;
     private Boolean entrantsChosen;
-
-    public Event() {
+    public Event(){
     }
 
     /**
      * Constructor for Event
-     *
      * @param name
      * @param eventDate
      * @param location
@@ -53,10 +55,7 @@ public class Event implements Serializable {
      * @param qrHash
      * @param signupDeadline
      */
-    public Event(String name, String eventDate, String location, String time, String price,
-                 String description, int eventSlots, int waitListCapacity, String qrData,
-                 String eventID, Boolean geoLocation, String qrHash, String deviceId,
-                 String signupDeadline) {
+    public Event(String name, String eventDate, String location, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventID, Boolean geoLocation, String qrHash, String deviceId, String signupDeadline) {
         this.name = name;
         this.eventDate = eventDate;
         this.time = time;
@@ -75,7 +74,9 @@ public class Event implements Serializable {
         this.selectedNotificationsList = new ArrayList<>();
         this.cancelledNotificationsList = new ArrayList<>();
         this.joinedNotificationsList = new ArrayList<>();
-
+        if (geoLocation) {
+            this.joinLocations = new ArrayList<>();
+        }
         this.qrCodeData = qrData;
         this.eventID = eventID;
         this.qrHash = qrHash;
@@ -88,11 +89,11 @@ public class Event implements Serializable {
 
     }
 
-    public String getLocation() {
+    public String getLocation(){
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(String location){
         this.location = location;
     }
 
@@ -140,9 +141,7 @@ public class Event implements Serializable {
         return waitListCapacity;
     }
 
-    public void setWaitListCapacity(int waitListCapacity) {
-        this.waitListCapacity = waitListCapacity;
-    }
+    public void setWaitListCapacity(int waitListCapacity) { this.waitListCapacity = waitListCapacity;}
 
     public int getEventSlots() {
         return eventSlots;
@@ -188,103 +187,63 @@ public class Event implements Serializable {
         return waitlisted;
     }
 
-    public void setWaitlisted(ArrayList<String> entrants) {
-        this.waitlisted = entrants;
-    }
+    public void addWaitlisted(String entrant) { this.waitlisted.add(entrant); }
 
-    public void addWaitlisted(String entrant) {
-        this.waitlisted.add(entrant);
-    }
+    public void setWaitlisted(ArrayList<String> entrants) { this.waitlisted = entrants;}
 
     public ArrayList<String> getFinalists() {
         return finalists;
     }
 
-    public void setFinalists(ArrayList<String> entrants) {
-        this.finalists = entrants;
-    }
+    public void addFinalist(String entrant) {this.finalists.add(entrant);}
 
-    public void addFinalist(String entrant) {
-        this.finalists.add(entrant);
-    }
+    public void setFinalists(ArrayList<String> entrants) { this.finalists = entrants;}
 
     public ArrayList<String> getCancelled() {
         return cancelled;
     }
 
-    public void setCancelled(ArrayList<String> entrants) {
-        this.cancelled = entrants;
-    }
+    public void addCancelled(String entrant) {this.cancelled.add(entrant);}
 
-    public void addCancelled(String entrant) {
-        this.cancelled.add(entrant);
-    }
+    public void setCancelled(ArrayList<String> entrants) { this.cancelled = entrants;}
 
     public ArrayList<String> getSelected() {
         return selected;
     }
 
-    public void setSelected(ArrayList<String> entrants) {
-        this.selected = entrants;
-    }
+    public void addSelected(String entrant) {this.selected.add(entrant);}
 
-    public void addSelected(String entrant) {
-        this.selected.add(entrant);
-    }
+    public void setSelected(ArrayList<String> entrants) { this.selected = entrants;}
 
-    public ArrayList<String> getSelectedNotificationsList() {
-        return selectedNotificationsList;
-    }
+    public ArrayList<String> getSelectedNotificationsList(){return selectedNotificationsList; }
 
-    public void setSelectedNotificationsList(ArrayList<String> entrants) {
-        this.selectedNotificationsList = entrants;
-    }
+    public void addSelectedNotification(String notification) { this.selectedNotificationsList.add(notification); }
 
-    public void addSelectedNotification(String notification) {
-        this.selectedNotificationsList.add(notification);
-    }
+    public void setSelectedNotificationsList(ArrayList<String> entrants) { this.selectedNotificationsList = entrants;}
 
-    public ArrayList<String> getWaitlistedNotificationsList() {
-        return waitlistedNotificationsList;
-    }
+    public ArrayList<String> getWaitlistedNotificationsList(){return waitlistedNotificationsList; }
 
-    public void setWaitlistedNotificationsList(ArrayList<String> entrants) {
-        this.waitlistedNotificationsList = entrants;
-    }
+    public void addWaitlistedNotification(String notification) { this.waitlistedNotificationsList.add(notification); }
 
-    public void addWaitlistedNotification(String notification) {
-        this.waitlistedNotificationsList.add(notification);
-    }
+    public void setWaitlistedNotificationsList(ArrayList<String> entrants) { this.waitlistedNotificationsList = entrants;}
 
-    public ArrayList<String> getJoinedNotificationsList() {
-        return joinedNotificationsList;
-    }
+    public ArrayList<String> getJoinedNotificationsList(){return joinedNotificationsList; }
 
-    public void setJoinedNotificationsList(ArrayList<String> entrants) {
-        this.joinedNotificationsList = entrants;
-    }
+    public void addJoinedNotification(String notification) { this.joinedNotificationsList.add(notification);}
 
-    public void addJoinedNotification(String notification) {
-        this.joinedNotificationsList.add(notification);
-    }
+    public void setJoinedNotificationsList(ArrayList<String> entrants) { this.joinedNotificationsList = entrants;}
 
-    public ArrayList<String> getCancelledNotificationsList() {
-        return cancelledNotificationsList;
-    }
+    public ArrayList<String> getCancelledNotificationsList(){return cancelledNotificationsList; }
 
-    public void setCancelledNotificationsList(ArrayList<String> entrants) {
-        this.cancelledNotificationsList = entrants;
-    }
+    public void addCancelledNotification(String notification) {this.cancelledNotificationsList.add(notification);}
 
-    public void addCancelledNotification(String notification) {
-        this.cancelledNotificationsList.add(notification);
-    }
+    public void setCancelledNotificationsList(ArrayList<String> entrants) { this.cancelledNotificationsList = entrants;}
 
-    public String getDeviceId() {
+    public String getDeviceId(){
         return deviceId;
     }
 
-    public void setDeviceId(String deviceId) {
+    public void setDeviceId(String deviceId){
         this.deviceId = deviceId;
     }
 
@@ -292,21 +251,15 @@ public class Event implements Serializable {
         return signupDeadline;
     }
 
-    public void setSignupDeadline(String signupDeadline) {
-        this.signupDeadline = signupDeadline;
-    }
+    public void setSignupDeadline(String signupDeadline) {this.signupDeadline = signupDeadline;}
 
-    public Boolean getEntrantsChosen() {
-        return this.entrantsChosen;
-    }
+    public void setEntrantsChosen(Boolean answer){this.entrantsChosen = answer;}
 
-    public void setEntrantsChosen(Boolean answer) {
-        this.entrantsChosen = answer;
-    }
+    public Boolean getEntrantsChosen(){return this.entrantsChosen;}
+
 
     /**
      * Checks if the event is full
-     *
      * @return true if the event is full, false otherwise
      */
     @Override
@@ -319,7 +272,6 @@ public class Event implements Serializable {
 
     /**
      * Hashcode for the event
-     *
      * @return hashcode
      */
     @Override
@@ -327,22 +279,30 @@ public class Event implements Serializable {
         return eventID.hashCode();
     }
 
+
     /**
      * Lottery System for the event
      */
-    public void lotterySystem() {
-        Integer numOfSelectedEntrants = this.waitlisted.size() >=
-                                        this.eventSlots ? this.eventSlots : this.waitlisted.size();
+    public void lotterySystem(){
+        Integer numOfSelectedEntrants = this.waitlisted.size() >= this.eventSlots ? this.eventSlots : this.waitlisted.size();
 
-        if (!this.waitlisted.isEmpty()) {
+        if (!this.waitlisted.isEmpty()){
             Collections.shuffle(this.waitlisted);
             this.selected = new ArrayList<>(this.waitlisted.subList(0, numOfSelectedEntrants));
 
-            for (Integer i = 0; i < numOfSelectedEntrants; i++) {
+            for(Integer i = 0; i < numOfSelectedEntrants; i++){
                 this.waitlisted.remove(0);
             }
         }
 
         this.entrantsChosen = true;
+    }
+
+    public ArrayList<HashMap<String, List<Double>>> getJoinLocations() {
+        return joinLocations;
+    }
+
+    public void setJoinLocations(ArrayList<HashMap<String, List<Double>>> joinLocations) {
+        this.joinLocations = joinLocations;
     }
 }
