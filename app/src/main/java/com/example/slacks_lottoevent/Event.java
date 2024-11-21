@@ -31,7 +31,7 @@ public class Event implements Serializable {
     private ArrayList<String> selectedNotificationsList;
     private ArrayList<String> joinedNotificationsList;
     private ArrayList<String> cancelledNotificationsList;
-    private ArrayList<HashMap<String,double[]>> joinLocations;
+    private ArrayList<HashMap<String,List<Double>>> joinLocations;
     private String location;
     private String deviceId;
     private String signupDeadline;
@@ -298,11 +298,11 @@ public class Event implements Serializable {
         this.entrantsChosen = true;
     }
 
-    public ArrayList<HashMap<String, double[]>> getJoinLocations() {
+    public ArrayList<HashMap<String, List<Double>>> getJoinLocations() {
         return joinLocations;
     }
 
-    public void setJoinLocations(ArrayList<HashMap<String, double[]>> joinLocations) {
+    public void setJoinLocations(ArrayList<HashMap<String, List<Double>>> joinLocations) {
         this.joinLocations = joinLocations;
     }
 }
