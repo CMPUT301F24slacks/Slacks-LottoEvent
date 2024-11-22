@@ -20,11 +20,11 @@
             android:id="@+id/event_uploader_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="100dp"
-            android:src="@drawable/event_uploader_button"
+            android:layout_marginTop="25dp"
             android:background="@null"
             android:clickable="true"
             android:focusable="true"
+            android:src="@drawable/event_uploader_button"
             app:layout_constraintTop_toTopOf="parent" />
 
 

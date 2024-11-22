@@ -1,6 +1,7 @@
 package com.example.slacks_lottoevent;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,15 +13,22 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.slacks_lottoevent.databinding.ActivityEntrantEventDetailsBinding;
 import com.example.slacks_lottoevent.databinding.ActivityOrganizerEventDetailsBinding;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -31,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * EntrantEventDetailsActivity is the activity that displays the details of an event for an entrant.
@@ -49,6 +58,10 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     private Event event;
     private String eventPosterURL;
     private String qrData;
+    private String eventID;
+    private CollectionReference eventsRef;
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+    Uri selectedImageUri;
     FirebaseFirestore db;
     String qrCodeValue;
     Long spotsRemaining;
@@ -69,8 +82,6 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
 
-
-
         db = FirebaseFirestore.getInstance();
         db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
                 .addOnCompleteListener(task -> {
@@ -86,6 +97,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         description = document.getString("description");
                         eventPosterURL = document.getString("eventPosterURL");
                         qrData = document.getString("qrdata");
+                        eventID = document.getString("eventID");
                         try {
                             signup = sdf.parse(signupDate);
                         } catch (ParseException e) {
@@ -148,15 +160,36 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
                     }
                 });
+        eventsRef = db.collection("events");
         // add a listener to the event details back button, go to the last item in the back stack
         binding.eventDetailsBackButton.setOnClickListener(v -> {
             onBackPressed();
         });
 
         binding.editEventButton.setVisibility(View.VISIBLE);
-        // TODO: Implement the edit event button - GET RID OF THIS!!!
-//        binding.editEventButton.setOnClickListener(view -> {
-//        });
+
+        binding.editEventButton.setOnClickListener(view -> {
+            selectImage();
+        });
+
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent data = result.getData();
+                            if (data != null && data.getData() != null) {
+                                selectedImageUri = data.getData();
+                            }
+                            if (selectedImageUri != null){
+                                editImage(selectedImageUri);
+                            }
+                        }
+                    }
+
+
+                });
 
         binding.lotterySystemButton.setVisibility(View.VISIBLE);
         binding.lotterySystemButton.setOnClickListener(view -> {
@@ -197,6 +230,89 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
             showQRCodePopup(qrData);
         });
 
+    }
+
+    
+    private void editImage(Uri newImageUri) {
+        // Step 1: Delete the old image from Google Cloud Storage
+        deleteOldImage(eventPosterURL, () -> {
+            // Step 2: Upload the new image
+            uploadNewImage(newImageUri, newImageUrl -> {
+                // Step 3: Update Firestore with the new image URL
+                updateFirestoreWithNewImage(newImageUrl, success -> {
+                    if (success) {
+                        refreshUI(newImageUrl); // Update the UI
+                    } else {
+                        Toast.makeText(this, "Failed to update Firestore", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        });
+    }
+
+    private void refreshUI(String newImageUrl) {
+        Glide.with(this).load(newImageUrl).into(binding.eventImage); // Update your ImageView
+        Toast.makeText(this, "Image updated successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateFirestoreWithNewImage(String newImageUrl, Callback<Boolean> callback) {
+        eventsRef.document(eventID).update("eventPosterURL", newImageUrl)
+                .addOnSuccessListener(aVoid -> {
+                    callback.onComplete(true); // Notify success
+                })
+                .addOnFailureListener(e -> {
+                    callback.onComplete(false); // Notify failure
+                });
+    }
+
+
+    private void uploadNewImage(Uri newImageUri, Callback<String> callback) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
+        Date now = new Date();
+        String fileName = formatter.format(now);
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("event_posters/" + fileName);
+
+        storageRef.putFile(newImageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    Log.d("Storage", "Successfully uploaded");
+
+                    // Retrieve the download URL
+                    storageRef.getDownloadUrl()
+                            .addOnSuccessListener(uri -> {
+                                String eventPosterURL = uri.toString();
+                                callback.onComplete(eventPosterURL); // Pass the URL to the callback
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("Error", "Failed to get download URL", e);
+                                callback.onComplete(null); // Return null to indicate failure
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.d("Storage", "Failed to upload");
+                    callback.onComplete(null); // Return null to indicate failure
+                });
+    }
+
+    private void deleteOldImage(String oldImageUrl, Runnable onSuccess) {
+        if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(oldImageUrl);
+            storageReference.delete()
+                    .addOnSuccessListener(aVoid -> onSuccess.run())
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Failed to delete old image", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            onSuccess.run(); // No old image to delete, continue
+        }
+    }
+
+
+
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        imagePickerLauncher.launch(intent);
     }
 
     private void showQRCodePopup(String qrData) {

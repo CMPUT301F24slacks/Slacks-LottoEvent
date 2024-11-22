@@ -307,11 +307,11 @@ public class Event implements Serializable {
         this.entrantsChosen = true;
     }
 
-    public ArrayList<HashMap<String, double[]>> getJoinLocations() {
-        return joinLocations;
-    }
-
-    public void setJoinLocations(ArrayList<HashMap<String, double[]>> joinLocations) {
-        this.joinLocations = joinLocations;
-    }
+//    public ArrayList<HashMap<String, double[]>> getJoinLocations() {
+//        return joinLocations;
+//    }
+//
+//    public void setJoinLocations(ArrayList<HashMap<String, double[]>> joinLocations) {
+//        this.joinLocations = joinLocations;
+//    }
 }

@@ -293,9 +293,6 @@ public class CreateEvent extends AppCompatActivity {
         });
 
 
-
-
-
     }
     private void selectImage() {
         Intent intent = new Intent();
