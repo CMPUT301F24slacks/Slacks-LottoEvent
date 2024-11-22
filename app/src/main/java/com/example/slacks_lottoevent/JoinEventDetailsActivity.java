@@ -215,7 +215,8 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
         AtomicBoolean chosenForLottery = new AtomicBoolean(false);
         AtomicBoolean notChosenForLottery = new AtomicBoolean(false);
-        boolean isDeclined = declineCheckbox.isChecked();
+        Boolean isDeclined = declineCheckbox.isChecked();
+        System.out.println("isReselected: " + isDeclined);
 
 
         bellChosen.setOnClickListener(v -> {
