@@ -3,9 +3,11 @@ package com.example.slacks_lottoevent;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -19,6 +21,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.lang.reflect.Field;
 import java.text.ParseException;
@@ -43,6 +48,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     private String description;
     private Event event;
     private String eventPosterURL;
+    private String qrData;
     FirebaseFirestore db;
     String qrCodeValue;
     Long spotsRemaining;
@@ -63,6 +69,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
 
+
+
         db = FirebaseFirestore.getInstance();
         db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
                 .addOnCompleteListener(task -> {
@@ -77,6 +85,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         location = document.getString("location");
                         description = document.getString("description");
                         eventPosterURL = document.getString("eventPosterURL");
+                        qrData = document.getString("qrdata");
                         try {
                             signup = sdf.parse(signupDate);
                         } catch (ParseException e) {
@@ -184,6 +193,54 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        binding.showQrCodeButton.setOnClickListener(view -> {
+            showQRCodePopup(qrData);
+        });
+
+    }
+
+    private void showQRCodePopup(String qrData) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View popupView = inflater.inflate(R.layout.dialog_qr_code, null);
+
+        ImageView qrCode = popupView.findViewById(R.id.qr_code_image);
+        if (qrData != null && !qrData.isEmpty()) {
+            try {
+                BitMatrix bitMatrix = deserializeBitMatrix(qrData); // Convert back to BitMatrix
+                BarcodeEncoder encoder = new BarcodeEncoder();
+                Bitmap bitmap = encoder.createBitmap(bitMatrix); // Create Bitmap from BitMatrix
+                qrCode.setImageBitmap(bitmap); // Set the QR code image
+            } catch (WriterException e) {
+                Log.e("QRCodeError", "Error converting QR code string to BitMatrix");
+            }
+        } else {
+            qrCode.setImageBitmap(null); // Clear the image if QR data is null or empty
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(popupView)
+                .setPositiveButton("Close", (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
+
+    }
+
+
+    private BitMatrix deserializeBitMatrix(String data) throws WriterException {
+        String[] lines = data.split("\n");
+        int width = lines[0].length();
+        int height = lines.length;
+        BitMatrix bitMatrix = new BitMatrix(width, height);
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                // Set pixel based on whether the character is '1' (black) or '0' (white)
+                if (lines[y].charAt(x) == '1') {
+                    bitMatrix.set(x, y); // Set pixel to black
+                }
+            }
+        }
+        return bitMatrix;
     }
 
     private void updateSelectedEntrants(Event event) {

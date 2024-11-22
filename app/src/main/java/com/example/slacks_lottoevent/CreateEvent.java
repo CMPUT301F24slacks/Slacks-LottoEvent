@@ -1,9 +1,12 @@
 package com.example.slacks_lottoevent;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,6 +23,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,6 +59,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * This class is responsible for creating an event and adding it to the database.
  */
 public class CreateEvent extends AppCompatActivity {
+    private static final int PERMISSION_REQUEST_CODE = 101;
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private ActivityCreateEventBinding binding;
@@ -236,14 +242,58 @@ public class CreateEvent extends AppCompatActivity {
                             }
                         }
                     }
-                }
-        );
+                });
+
+//        binding.eventUploaderButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                selectImage();
+//            }
+//        });
+
         binding.eventUploaderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    // Check for READ_MEDIA_IMAGES permission
+                    if (ContextCompat.checkSelfPermission(
+                            CreateEvent.this,
+                            Manifest.permission.READ_MEDIA_IMAGES)
+                            != PackageManager.PERMISSION_GRANTED) {
+
+                        // Request READ_MEDIA_IMAGES permission
+                        ActivityCompat.requestPermissions(
+                                CreateEvent.this,
+                                new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                                PERMISSION_REQUEST_CODE
+                        );
+                    } else {
+                        // Permission already granted
+                        selectImage();
+                    }
+                } else {
+                    // Check for READ_EXTERNAL_STORAGE permission for older Android versions
+                    if (ContextCompat.checkSelfPermission(
+                            CreateEvent.this,
+                            Manifest.permission.READ_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
+
+                        // Request READ_EXTERNAL_STORAGE permission
+                        ActivityCompat.requestPermissions(
+                                CreateEvent.this,
+                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                PERMISSION_REQUEST_CODE
+                        );
+                    } else {
+                        // Permission already granted
+                        selectImage();
+                    }
+                }
             }
         });
+
+
+
 
 
     }
@@ -253,6 +303,23 @@ public class CreateEvent extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         imagePickerLauncher.launch(intent);
     }
+
+    // Handle the result of permission request
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                selectImage();
+            } else {
+                // Permission denied
+                Toast.makeText(this, "Permission denied. Please enable it in settings.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+
     /**
      * This method validates the inputs for creating an event.
      * @return true if all inputs are valid, false otherwise
