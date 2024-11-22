@@ -267,7 +267,7 @@ public class OrganizerNotifications extends AppCompatActivity {
 
                 for (String entrant : event.getWaitlisted()) {
                     eventRef.update("waitlisted", FieldValue.arrayRemove(entrant),
-                            "waitlistedNotifications", FieldValue.arrayRemove(entrant)); //TODO: when doing notifications get rid of this line
+                            "waitlistedNotificationsList", FieldValue.arrayRemove(entrant)); //TODO: when doing notifications get rid of this line
                 }
                 event.fullEvent(); // clearing waitlist now
                 eventRef.update("waitlisted", event.getWaitlisted());
