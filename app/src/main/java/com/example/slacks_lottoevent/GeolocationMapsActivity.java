@@ -3,6 +3,7 @@ package com.example.slacks_lottoevent;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -14,14 +15,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -35,6 +39,9 @@ import java.util.Map;
  * https://developers.google.com/maps/documentation/android-sdk/map (Setting Up the Map in onCreate)
  * */
 public class GeolocationMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+    public interface OnDataFetchCompleteListener {
+        void onDataFetchComplete();
+    }
 
     private GoogleMap googleMap;
     private TabLayout tabLayout;
@@ -51,9 +58,20 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
         Intent intent = getIntent();
         eventID = intent.getStringExtra("eventID");
         db = FirebaseFirestore.getInstance();
+
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        fetchAddressAndWaitlistLocations(() ->{
+            mapFragment.getMapAsync(googleMap ->{
+                this.googleMap = googleMap;
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(eventLocation,15));
+                updateMapRadius(5);
+            });
+
+
+        });
+
 
     }
 
@@ -64,16 +82,16 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()){
                     case 0:
-                        // less than 5km radius case
+                        updateMapRadius(5);
                         break;
                     case 1:
-                        // 5-10km radius case
+                        updateMapRadius(10);
                         break;
                     case 2:
-                        // 10-20km radius case.
+                        updateMapRadius(20);
                         break;
                     case 3:
-                        // greater than 20km radius case
+                       updateMapRadius(50);
 
 
 
@@ -107,13 +125,36 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
         googleMap.addCircle(new CircleOptions()
                 .center(eventLocation)
                 .radius(radiusInKm * 1000)
-                .strokeColor()
-
-
+                .strokeColor(0xFF7B24EB)
+                .strokeWidth(2)
         );
+        for (Map<String, List<Double>> location : joinLocations) {
+            for (Map.Entry<String, List<Double>> entry : location.entrySet()) {
+                List<Double> coords = entry.getValue();
+                LatLng position = new LatLng(coords.get(0), coords.get(1));
+
+                double distance = calculateDistanceBetweenTwoLatLng(eventLocation, position);
+                if (distance <= radiusInKm) {
+                    googleMap.addMarker(new MarkerOptions().position(position)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
+                    );
+                }
+            }
+        }
+        googleMap.addMarker(new MarkerOptions()
+                .position(eventLocation)
+                .title("Event Location")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+        googleMap.setOnMarkerClickListener(marker ->{
+            LatLng position = marker.getPosition();
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,15));
+            return true;
+        });
+
+
 
     }
-    private void fetchAddressAndWaitlistLocations(){
+    private void fetchAddressAndWaitlistLocations(OnDataFetchCompleteListener listener){
         db.collection("events").whereEqualTo("eventID",eventID)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -121,6 +162,7 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
                        DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                         joinLocations = (ArrayList<Map<String, List<Double>>>) documentSnapshot.get("joinLocations");
                         setEventLocationInLatLng(String.valueOf(documentSnapshot.get("location")));
+                        listener.onDataFetchComplete();
                    }
                 });
 
@@ -156,8 +198,19 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
      * */
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(eventLocation,12)); // Default of 10km zoom level.
+
         updateMapRadius(10);
+    }
+    /**
+     *
+     * Relevant Documentation
+     * https://stackoverflow.com/questions/6981916/how-to-calculate-distance-between-two-locations-using-their-longitude-and-latitu
+     * https://developer.android.com/reference/android/location/Location.html#distanceBetween(double,%20double,%20double,%20double,%20float[])
+     * */
+    private double calculateDistanceBetweenTwoLatLng(LatLng latLng1,LatLng latLng2){
+        float[] results = new float[1];
+        Location.distanceBetween(latLng1.latitude,latLng1.longitude,latLng2.latitude,latLng2.longitude,results);
+        return (double) results[0] / 1000.0; // Convert to km since we need to compare with radius but cast to double for extra precision
     }
 
 }
