@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
@@ -23,8 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="List of Entrants"
-        android:textSize="24sp"
+        android:text="Locations Of Waitlisted Entrants"
+        android:textSize="18sp"
         android:textColor="@android:color/white"
         android:fontFamily="@font/inter_bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -45,7 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent">
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_5km"
-            android:text="< 5 km"
+            android:text="@string/lt_5_km"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -63,12 +62,12 @@
             android:layout_height="wrap_content" />
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_20plus"
-            android:text="> 20 km"
+            android:text="@string/_20_km"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </com.google.android.material.tabs.TabLayout>
 
-
+<!--    https://developers.google.com/android/reference/com/google/android/gms/maps/SupportMapFragment-->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"

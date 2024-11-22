@@ -72,7 +72,9 @@ public class OrganizerNotifications extends AppCompatActivity {
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Add
+                Intent geolocationMapsActivityIntent = new Intent(getApplicationContext(), GeolocationMapsActivity.class);
+                geolocationMapsActivityIntent.putExtra("eventID",eventID);
+                startActivity(geolocationMapsActivityIntent);
             }
         });
 
