@@ -69,6 +69,10 @@ public class OrganizerNotifications extends AppCompatActivity {
         frameLayout = (FrameLayout) findViewById(R.id.FrameLayout);
         tabLayout = (TabLayout) findViewById(R.id.tab_Layout);
         ImageView mapBtn = findViewById(R.id.imageView_geolocation);
+
+        if (event.getgeoLocation()){
+            mapBtn.setVisibility(View.GONE);
+        }
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
