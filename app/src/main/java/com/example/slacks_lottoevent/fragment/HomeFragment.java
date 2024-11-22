@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.view.fragment;
+package com.example.slacks_lottoevent.fragment;
 
 import android.os.Bundle;
 import android.util.Log;

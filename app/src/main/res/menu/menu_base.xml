@@ -2,7 +2,7 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.slacks_lottoevent.view.BaseActivity">
+    tools:context="com.example.slacks_lottoevent.controller.BaseActivity">
     <item
         android:id="@+id/action_notifications"
         android:icon="@drawable/baseline_notifications_24"

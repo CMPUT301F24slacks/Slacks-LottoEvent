@@ -2,8 +2,6 @@ package com.example.slacks_lottoevent;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.example.slacks_lottoevent.model.Facility;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,6 +29,7 @@ public class FacilityUnitTest {
         assertEquals("9211", facility.getStreetAddress2());
 
         assertEquals("T6G 1H9", facility.getPostalCode());
+        assertEquals("jw7e1540320d3c3d", facility.getOrganizerId());
     }
 
     /**
@@ -67,6 +66,23 @@ public class FacilityUnitTest {
     void testSetAndGetPostalCode() {
         facility.setPostalCode("M5V 3L9");
         assertEquals("M5V 3L9", facility.getPostalCode());
+    }
+
+    /**
+     * Test the Facility constructor with a null facility name.
+     */
+    @Test
+    void testSetAndGetFacilityId() {
+        facility.setFacilityId("PnALTPQ1wbG9CtqVAPDo");
+        assertEquals("PnALTPQ1wbG9CtqVAPDo", facility.getFacilityId());
+    }
+
+    /**
+     * Test the Facility constructor with a null facility name.
+     */
+    @Test
+    void testGetOrganizerId() {
+        assertEquals("jw7e1540320d3c3d", facility.getOrganizerId());
     }
 
 }

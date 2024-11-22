@@ -7,37 +7,37 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.slacks_lottoevent.view.fragment.HomeFragment"
+        android:name="com.example.slacks_lottoevent.fragment.HomeFragment"
         android:label="Home Fragment"
         tools:layout="@layout/fragment_home">
     </fragment>
     <fragment
         android:id="@+id/manageFragment"
-        android:name="com.example.slacks_lottoevent.view.fragment.ManageFragment"
+        android:name="com.example.slacks_lottoevent.fragment.ManageFragment"
         android:label="Manage Fragment"
         tools:layout="@layout/fragment_manage">
     </fragment>
     <fragment
         android:id="@+id/invitesFragment"
-        android:name="com.example.slacks_lottoevent.view.fragment.InvitesFragment"
+        android:name="com.example.slacks_lottoevent.fragment.InvitesFragment"
         android:label="Invites Fragment"
         tools:layout="@layout/fragment_invites">
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.slacks_lottoevent.view.fragment.ProfileFragment"
+        android:name="com.example.slacks_lottoevent.fragment.ProfileFragment"
         android:label="Profile Fragment"
         tools:layout="@layout/fragment_profile">
     </fragment>
     <fragment
         android:id="@+id/eventsFragment"
-        android:name="com.example.slacks_lottoevent.view.fragment.EventsFragment"
+        android:name="com.example.slacks_lottoevent.fragment.EventsFragment"
         android:label="Events Fragment"
         tools:layout="@layout/fragment_event">
     </fragment>
     <fragment
         android:id="@+id/faciliyFragment"
-        android:name="com.example.slacks_lottoevent.view.fragment.FacilityFragment"
+        android:name="com.example.slacks_lottoevent.fragment.FacilityFragment"
         android:label="Create Event Fragment"
         tools:layout="@layout/fragment_facility">
     </fragment>
