@@ -307,8 +307,32 @@ public class Event implements Serializable {
             this.waitlisted.removeAll(this.reselected);
 
         }
-
-
         this.entrantsChosen = true;
+    }
+
+    public void reSelecting(){
+//        Need to check if the slots are not filled up
+
+
+        if (!(this.eventSlots == this.finalists.size())){
+//            current selected list cannot fill the the finalists or the selected size is 0 (meaning declined or cancelled) and the finalists still need more people
+            if(this.selected.size() < (this.eventSlots - this.finalists.size()) || (this.selected.size() == 0 && this.finalists.size() < this.eventSlots)){
+                Integer potentialNum = this.eventSlots-this.finalists.size()-this.selected.size();
+                Integer numOfSelectedEntrants = this.waitlisted.size() > potentialNum && (potentialNum > 0) ? potentialNum : this.waitlisted.size();
+
+                if (!this.waitlisted.isEmpty()) {
+                    Collections.shuffle(this.waitlisted);
+                    this.selected = new ArrayList<>(this.waitlisted.subList(0, numOfSelectedEntrants)); // This will remove all entrants who haven't responded "Cancelling them"
+                    this.waitlisted.removeAll(this.selected);
+                }
+            }
+
+
+        }
+    }
+
+    public void fullEvent(){
+        this.waitlisted.clear();
+        this.waitlistedNotificationsList.clear();
     }
 }

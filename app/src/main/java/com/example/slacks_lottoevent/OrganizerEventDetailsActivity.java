@@ -136,6 +136,44 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
         binding.lotterySystemButton.setVisibility(View.VISIBLE);
         binding.lotterySystemButton.setOnClickListener(view -> {
+            if (event == null) {
+                // Show a message that the event data is not available yet
+                new AlertDialog.Builder(this)
+                        .setTitle("Error")
+                        .setMessage("Event data is not loaded yet. Please try again later.")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+                return;
+            }
+
+            if (event.getWaitlisted().size() == 0){
+                new AlertDialog.Builder(this)
+                        .setTitle("Cannot Select")
+                        .setMessage("There is no one in the waitlist.")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+                return;
+
+            }
+
+            if (!currentDate.after(signup)){
+                new AlertDialog.Builder(this)
+                        .setTitle("Cannot Select")
+                        .setMessage("Cannot select entrants until after the signup date")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+
+            }
+
+            if (event.getEntrantsChosen()){
+                new AlertDialog.Builder(this)
+                        .setTitle("Cannot Sample Again")
+                        .setMessage("Cannot sample entrants again. You can reselect them in the List of Entrants tab.")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+                binding.lotterySystemButton.setVisibility(View.GONE);
+            }
+
             if (binding.lotterySystemButton.isEnabled() && !event.getEntrantsChosen() && currentDate.after(signup)) {
                 event.lotterySystem();
                 updateSelectedEntrants(event);
@@ -149,14 +187,6 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         .show();
 
 //                TODO: Send notifications for here
-            }
-            else {
-                // Show a pop-up dialog if the button is clicked again
-                new AlertDialog.Builder(this)
-                        .setTitle("Cannot Sample Again")
-                        .setMessage("Cannot sample entrants again.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
             }
         });
 
@@ -182,9 +212,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                             "selectedNotificationsList", FieldValue.arrayUnion(entrant)); //TODO: when doing notifications get rid of this line
                 }
 
-                eventRef.update("waitlisted", event.getReselected()); // Changing waitlist to now be the people who want to be re-selected, so they stay on the waitlist
-
-
+                eventRef.update("waitlisted", event.getReselected()); // DB update
+                eventRef.update("reselected", event.getReselected());
                 eventRef.update("entrantsChosen", event.getEntrantsChosen());
             }
         });
@@ -196,7 +225,6 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
             entrantsRef.get().addOnSuccessListener(entrantDoc -> {
                 if (entrantDoc.exists()) {
                     entrantsRef.update("invitedEvents", FieldValue.arrayUnion(event.getEventID()),
-                                    "invites", FieldValue.arrayUnion(event.getEventID()), //TODO: Get rid of the invites field
                                     "waitlistedEvents", FieldValue.arrayRemove(event.getEventID()))
                             .addOnSuccessListener(aVoid -> Log.d("Firestore", "Event added for entrant"))
                             .addOnFailureListener(e -> Log.e("Firestore", "Error updating invitedEvents for entrant"));
@@ -212,17 +240,19 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
             entrantsRef.get().addOnSuccessListener(entrantDoc -> {
                 if (entrantDoc.exists()) {
                     // Assuming `notifications` is an array field in the entrant document
-                    entrantsRef.update("uninvitedEvents", FieldValue.arrayUnion(event.getEventID()))
+                    entrantsRef.update("uninvitedEvents", FieldValue.arrayUnion(event.getEventID()),
+                                    "waitlistedEvents", FieldValue.arrayRemove(event.getEventID()))
                             .addOnSuccessListener(aVoid -> Log.d("Firestore", "Notification added for entrant"))
                             .addOnFailureListener(e -> Log.e("Firestore", "Error updating uninvitedEvents for entrant"));
 
-//                    TODO: Sent notification if DID NOT get selected and did not want to get reselected
+//                    TODO: Sent notification if DID NOT get selected and did not want to get reselected for the first time
 
                 }
 
             });
         }
-        event.setWaitlisted(event.getReselected()); // setting waitlist too be the reselected after previous waitlist is updated
+        event.setWaitlisted(event.getReselected()); // local update - unecessary tho?
+
     }
 
 }

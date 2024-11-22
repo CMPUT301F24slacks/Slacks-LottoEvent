@@ -104,7 +104,7 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
                 "selected", FieldValue.arrayRemove(deviceId),
                 "selectedNotificationsList", FieldValue.arrayRemove(deviceId),
                 "finalists", FieldValue.arrayUnion(deviceId),
-                "joinedNotificationsList", FieldValue.arrayUnion(deviceId));
+                "joinedNotificationsList", FieldValue.arrayUnion(deviceId)); //TODO: DONT handle this here
     }
 
     /**
@@ -122,7 +122,7 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
                             "selected", FieldValue.arrayRemove(deviceId),
                     "selectedNotificationsList", FieldValue.arrayRemove(deviceId),
                     "cancelled", FieldValue.arrayUnion(deviceId),
-                    "cancelledNotificationsList", FieldValue.arrayUnion(deviceId)
+                    "cancelledNotificationsList", FieldValue.arrayUnion(deviceId) //Don't handle this hear
                     ).addOnSuccessListener(aVoid1 -> Log.d("Firestore", "Event declined: " + eventId))
                     .addOnFailureListener(e -> Log.e("Firestore", "Error updating event invite list: " + eventId, e));
         }).addOnFailureListener(e -> Log.e("Firestore", "Error declining event: " + eventId, e));
