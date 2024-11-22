@@ -27,8 +27,9 @@ android {
         val properties = Properties()
         properties.load(rootProject.file("local.properties").inputStream())
         val mapsApiKey: String = properties.getProperty("MAPS_API_KEY") ?: ""
-
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
         buildConfigField("String", "MAPS_API_KEY", properties.getProperty("MAPS_API_KEY"))
+
     }
 
     buildTypes {
@@ -114,4 +115,5 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 
+    implementation("com.google.android.gms:play-services-maps:19.0.0")
 }
