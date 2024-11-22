@@ -40,12 +40,7 @@ public class MainActivity extends BaseActivity {
 
         entrantViewModel.getCurrentEntrant().observe(this, currentEntrant -> {
             if (currentEntrant != null) {
-                eventViewModel.getEvents(currentEntrant.getWaitlistedEvents())
-                              .observe(this, events -> {
-                                  if (events != null && !events.isEmpty()) {
-                                      eventViewModel.setWaitlistedEvents(events);
-                                  }
-                              });
+                eventViewModel.setWaitlistedEvents(currentEntrant.getWaitlistedEvents());
             }
         });
 

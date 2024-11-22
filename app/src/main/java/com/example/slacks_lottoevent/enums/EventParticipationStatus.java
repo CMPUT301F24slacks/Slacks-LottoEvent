@@ -4,5 +4,6 @@ public enum EventParticipationStatus {
     WAITLISTED,
     INVITED,
     UNSELECTED,
-    ATTENDING
+    ATTENDING,
+    HOSTING
 }

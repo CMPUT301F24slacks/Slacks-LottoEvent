@@ -6,14 +6,21 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.slacks_lottoevent.R;
+import com.example.slacks_lottoevent.model.User;
+import com.example.slacks_lottoevent.viewmodel.EntrantViewModel;
+import com.example.slacks_lottoevent.viewmodel.EventViewModel;
 import com.google.android.libraries.places.api.Places;
 
 /**
  * SplashActivity displays the app logo for a few seconds when the app is launched.
  */
 public class SplashActivity extends AppCompatActivity {
+    private User user;
+    private String deviceId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +34,22 @@ public class SplashActivity extends AppCompatActivity {
             editor.putBoolean("isSignedUp", false);
             editor.apply();
         }
+
+        user = User.getInstance(this);
+        deviceId = user.getDeviceId();
+
+        EntrantViewModel entrantViewModel = new ViewModelProvider(this).get(EntrantViewModel.class);
+        EventViewModel eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+
+        // Observe the current entrant
+        entrantViewModel.observeEntrant(deviceId);
+
+        entrantViewModel.getCurrentEntrant().observe(this, currentEntrant -> {
+            if (currentEntrant != null) {
+                eventViewModel.setWaitlistedEvents(currentEntrant.getWaitlistedEvents());
+            }
+        });
+
 
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(),

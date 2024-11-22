@@ -3,6 +3,7 @@ package com.example.slacks_lottoevent.viewmodel.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,11 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
     public EventArrayAdapter(@NonNull Context context, ArrayList eventList, EventParticipationStatus status) {
         super(context, 0, eventList);
         this.eventParticipationStatus = status;
+    }
+
+    public EventArrayAdapter(@NonNull Context context, ArrayList eventList) {
+        super(context, 0, eventList);
+        this.eventParticipationStatus = EventParticipationStatus.HOSTING;
     }
 
     /**
@@ -75,7 +81,15 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         eventName.setText(event.getName());
         eventDate.setText(event.getEventDate());
         eventTime.setText(event.getTime());
-        eventAddress.setText(event.getLocation());
+        // Set the address with a newline after removing the first comma
+        if (event.getLocation() != null && event.getLocation().contains(",")) {
+            String[] addressParts = event.getLocation().split(",", 2);
+            eventAddress.setText(addressParts[0] + "\n" + addressParts[1].trim());
+        } else {
+            // If no comma is found, display the address as it is
+            eventAddress.setText(event.getLocation());
+        }
+
         eventDescription.setText(event.getDescription());
 
         // Set the status of the event based on the user's participation status
@@ -92,7 +106,15 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
             case WAITLISTED:
                 statusWaitlisted.setVisibility(View.VISIBLE);
                 break;
+            case HOSTING:
+                // Do nothing for HOSTING status
+                break;
+            default:
+                // Optional: Handle unexpected statuses (e.g., log or set a default visibility)
+                Log.w("EventAdapter", "Unhandled status: " + eventParticipationStatus);
+                break;
         }
+
 
         // Set an OnClickListener for the event button
         eventButton.setOnClickListener(v -> {

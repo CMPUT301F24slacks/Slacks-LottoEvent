@@ -48,11 +48,25 @@ public class EventViewModel extends ViewModel {
         return tempEvents;
     }
 
+
     /**
-     * Sets waitlisted events LiveData to the given list of events.
+     * Sets waitlisted events LiveData to the events corresponding to the list of event IDs.
      */
-    public void setWaitlistedEvents(List<Event> eventList) {
-        waitlistedEvents.setValue(eventList);
+    public void setWaitlistedEvents(ArrayList<String> eventIds) {
+        isLoading.setValue(true);
+        eventDB.getEvents(eventIds)
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Event> eventList = queryDocumentSnapshots.toObjects(Event.class);
+                    waitlistedEvents.setValue(eventList);
+                    isLoading.setValue(false);
+                    Log.d("EventViewModel", "Retrieved " + eventList.size() + " waitlisted events");
+                })
+                .addOnFailureListener(e -> {
+                    error.setValue(e.getMessage());
+                    isLoading.setValue(false);
+                    Log.e("EventViewModel", "Failed to retrieve waitlisted events: " + e.getMessage());
+                });
+
     }
 
     /**
@@ -74,6 +88,13 @@ public class EventViewModel extends ViewModel {
      */
     public void setAttendingEvents(List<Event> eventList) {
         attendingEvents.setValue(eventList);
+    }
+
+    /**
+     * Return LiveData of waitlisted events.
+     */
+    public LiveData<List<Event>> getWaitlistedEvents() {
+        return waitlistedEvents;
     }
 
 }

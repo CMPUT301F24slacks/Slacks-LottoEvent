@@ -12,8 +12,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.slacks_lottoevent.R;
+import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.model.User;
 import com.example.slacks_lottoevent.viewmodel.EntrantViewModel;
+import com.example.slacks_lottoevent.viewmodel.EventViewModel;
+import com.example.slacks_lottoevent.viewmodel.adapter.EventArrayAdapter;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,12 +28,16 @@ import com.example.slacks_lottoevent.viewmodel.EntrantViewModel;
 public class HomeFragment extends Fragment {
 
     private EntrantViewModel entrantViewModel;
+    private EventViewModel eventViewModel;
+    private ArrayList<Event> eventsList = new ArrayList<>();
+    private EventArrayAdapter eventsListArrayAdapter;
+
     private User user;
     private String deviceId;
 
     // Ui elements
     private TextView instructions;
-    private ListView eventsList;
+    private ListView eventsListView;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -56,10 +65,15 @@ public class HomeFragment extends Fragment {
 
         // Retrieve the ViewModel scoped to the Activity
         entrantViewModel = new ViewModelProvider(requireActivity()).get(EntrantViewModel.class);
+        eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+
+        // Initialize the EventArrayAdapter
+        eventsListArrayAdapter = new EventArrayAdapter(getContext(), eventsList);
 
         // Initialize UI elements
         instructions = view.findViewById(R.id.instructions_textview);
-        eventsList = view.findViewById(R.id.events_listview);
+        eventsListView = view.findViewById(R.id.events_listview);
+        eventsListView.setAdapter(eventsListArrayAdapter);
 
         user = User.getInstance(getContext());
         deviceId = user.getDeviceId();
@@ -71,13 +85,28 @@ public class HomeFragment extends Fragment {
 
             // UI updates
             instructions.setVisibility(View.VISIBLE);
-            eventsList.setVisibility(View.GONE);
+            eventsListView.setVisibility(View.GONE);
         } else {
             // The entrant exists
             Log.d("HomeFragment", "Entrant exists.");
 
             // UI updates
             instructions.setVisibility(View.GONE);
+            updateEventList();
         }
     }
+
+    public void updateEventList() {
+        eventViewModel.getWaitlistedEvents().observe(getViewLifecycleOwner(), waitlistedEvents -> {
+            if (waitlistedEvents != null && !waitlistedEvents.isEmpty()) {
+                eventsList.clear(); // Clear the list before adding new events
+                eventsList.addAll(waitlistedEvents); // Add all events from LiveData
+                eventsListArrayAdapter.notifyDataSetChanged(); // Notify the adapter of the changes
+            }
+        });
+    }
+
+
+
+
 }
