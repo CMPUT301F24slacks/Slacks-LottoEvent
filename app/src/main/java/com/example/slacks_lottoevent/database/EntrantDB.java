@@ -3,6 +3,8 @@ package com.example.slacks_lottoevent.database;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.ListenerRegistration;
 
 public class EntrantDB {
     private static final FirebaseConnection db = FirebaseConnection.getInstance();
@@ -23,6 +25,10 @@ public class EntrantDB {
     }
 
     // Add methods to interact with the database here
+
+    public ListenerRegistration getEntrantSnapshotListener(String deviceId, EventListener<DocumentSnapshot> listener) {
+        return collection.document(deviceId).addSnapshotListener(listener);
+    }
 
     /**
      * Returns if the entrant with the given device ID exists in the database.

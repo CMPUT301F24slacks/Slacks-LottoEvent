@@ -35,11 +35,8 @@ public class MainActivity extends BaseActivity {
         entrantViewModel = new ViewModelProvider(this).get(EntrantViewModel.class);
         eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
 
-        entrantViewModel.entrantExists(deviceId).observe(this, exists -> {
-            if (exists != null && exists) {
-                entrantViewModel.setCurrentEntrant(deviceId);
-            }
-        });
+        // Observe the current entrant
+        entrantViewModel.observeEntrant(deviceId);
 
         entrantViewModel.getCurrentEntrant().observe(this, currentEntrant -> {
             if (currentEntrant != null) {
