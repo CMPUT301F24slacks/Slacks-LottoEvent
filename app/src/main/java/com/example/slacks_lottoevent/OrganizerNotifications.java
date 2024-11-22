@@ -94,6 +94,9 @@ public class OrganizerNotifications extends AppCompatActivity {
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
 
+                reSelect.setVisibility(View.GONE);
+                return;
+
             }
 
             if (event.getWaitlisted().size() == 0){
@@ -102,6 +105,7 @@ public class OrganizerNotifications extends AppCompatActivity {
                         .setMessage("There is no one who wants to be reselected.")
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
+                return;
             }
 
             if (!event.getEntrantsChosen()) {
@@ -110,6 +114,7 @@ public class OrganizerNotifications extends AppCompatActivity {
                         .setMessage("Need to sample entrants first.")
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
+                return;
             }
 
             if (event.getSelected().size() + event.getFinalists().size() == event.getEventSlots()){
@@ -118,10 +123,11 @@ public class OrganizerNotifications extends AppCompatActivity {
                         .setMessage("No Space right now.")
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
+                return;
             }
 
 //            everything worked
-            if(event.getEntrantsChosen() && event.getWaitlisted().size() > 0 &&event.getEventSlots() != event.getFinalists().size() ){
+            if(event.getEntrantsChosen() && event.getWaitlisted().size() > 0 && event.getEventSlots() != event.getFinalists().size() && event.getSelected().size() + event.getFinalists().size() != event.getEventSlots() ){
                 handleReSelect();
                 new AlertDialog.Builder(this)
                         .setTitle("Entrants Selected")
