@@ -317,8 +317,8 @@ public class Event implements Serializable {
 
         if (!(this.eventSlots == this.finalists.size())){
 //            current selected list cannot fill the the finalists or the selected size is 0 (meaning declined or cancelled) and the finalists still need more people
-            if(this.selected.size() < (this.eventSlots - this.finalists.size()) || (this.selected.size() == 0 && this.finalists.size() < this.eventSlots)){
-                Integer potentialNum = this.eventSlots-this.finalists.size()-this.selected.size();
+            if(this.selected.size() < (this.eventSlots - this.finalists.size()) || (this.selected.size() == 0 && this.finalists.size() < this.eventSlots)) {
+                Integer potentialNum = this.eventSlots - this.finalists.size() - this.selected.size();
                 Integer numOfSelectedEntrants = this.waitlisted.size() > potentialNum && (potentialNum > 0) ? potentialNum : this.waitlisted.size();
 
                 if (!this.waitlisted.isEmpty()) {
@@ -327,8 +327,6 @@ public class Event implements Serializable {
                     this.waitlisted.removeAll(this.selected);
                 }
             }
-
-
         }
     }
 
