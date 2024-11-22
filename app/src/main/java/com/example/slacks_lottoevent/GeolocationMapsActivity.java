@@ -53,7 +53,8 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
 
     /**
      *
-     *
+     *  Initializes the map, event data, and tab layout.
+     *  @param savedInstanceState The saved instance state
      *
      * */
     @Override
@@ -77,7 +78,11 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
         });
 
     }
-
+    /**
+     *
+     * Sets up the tab layout so the user can have distance-based filters.
+     * Adds listener to handle tab selections and the map is updated in accordance to these selections.
+     * */
     private void setupTabs(){
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -93,10 +98,8 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
                         updateMapRadius(20);
                         break;
                     case 3:
-                       updateMapRadius(50);
-
-
-
+                        updateMapToShowAllPoints();
+                        break;
                 }
             }
 
@@ -113,8 +116,8 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
 
     }
     /**
-     *
-     *
+     * Updates the map to display a radius circle around the event location and includes markers within this radius. Also changes the map camera so that all points are visible using bounds.
+     * @param radiusInKm The radius (in kilometers) around the event location to filter waitlisted entrants.
      * Relevant Documentation:
      * https://developers.google.com/maps/documentation/android-sdk/reference/com/google/android/libraries/maps/model/Circle
      * https://developers.google.com/android/reference/com/google/android/gms/maps/model/LatLng
@@ -140,7 +143,7 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
                 double distance = calculateDistanceBetweenTwoLatLng(eventLocation, position);
                 if (distance <= radiusInKm) {
                     googleMap.addMarker(new MarkerOptions().position(position)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
                     );
                     boundsBuilder.include(position);
                 }
@@ -160,6 +163,14 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
 
 
     }
+    /**
+     *
+     *
+     * Fetches the event address and join locations for participants in the waitlist from Firestore.
+     * Once all the data has been retrieved and utilized calls the provided listener is notified through
+     * its onDataFetchComplete method.
+     * @param listener A callback listener of type onDataFetchCompleteListener to notify when this function has finished executing.
+     * */
     private void fetchAddressAndWaitlistLocations(OnDataFetchCompleteListener listener){
         db.collection("events").whereEqualTo("eventID",eventID)
                 .get()
@@ -174,6 +185,10 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
 
     }
     /**
+     * Method that uses Geocoder to convert the address into corresponding latitude and longitude. Then
+     * combines the addresses latitude and longitude into a LatLng object so we can do distance calculations
+     * between the event location and waitlisted participant locations.
+     * @param eventAddress the event's address.
      * Relevant Documentation
      * https://developer.android.com/reference/android/location/Geocoder
      * https://developer.android.com/reference/android/location/Geocoder#getFromLocationName(java.lang.String,%20int)
@@ -208,7 +223,7 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
         updateMapRadius(10);
     }
     /**
-     *
+     * Calculates the distance between two LatLng objects and returns the distance between the two in meters.
      * Relevant Documentation
      * https://stackoverflow.com/questions/6981916/how-to-calculate-distance-between-two-locations-using-their-longitude-and-latitu
      * https://developer.android.com/reference/android/location/Location.html#distanceBetween(double,%20double,%20double,%20double,%20float[])
@@ -217,6 +232,41 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
         float[] results = new float[1];
         Location.distanceBetween(latLng1.latitude,latLng1.longitude,latLng2.latitude,latLng2.longitude,results);
         return (double) results[0] / 1000.0; // Convert to km since we need to compare with radius but cast to double for extra precision
+    }
+    /**
+     * Updates the map to display all markers/waitlisted participants including the event location regardless of distance.
+     * Similarly to updateMapRadius changes the map camera so that all points are visible using bounds.
+     * */
+    private void updateMapToShowAllPoints(){
+        googleMap.clear();
+        googleMap.addMarker(new MarkerOptions()
+                .position(eventLocation)
+                .title("Event Location")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        boundsBuilder.include(eventLocation);
+        for (Map<String, List<Double>> location : joinLocations) {
+            for (Map.Entry<String, List<Double>> entry : location.entrySet()) {
+                List<Double> coords = entry.getValue();
+                LatLng position = new LatLng(coords.get(0), coords.get(1));
+                googleMap.addMarker(new MarkerOptions().position(position)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
+                );
+                boundsBuilder.include(position);
+            }
+        }
+        googleMap.addMarker(new MarkerOptions()
+                .position(eventLocation)
+                .title("Event Location")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+        googleMap.setOnMarkerClickListener(marker ->{
+            LatLng position = marker.getPosition();
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,15));
+            marker.showInfoWindow();
+            return true;
+        });
+        LatLngBounds bounds = boundsBuilder.build();
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
     }
 
 }
