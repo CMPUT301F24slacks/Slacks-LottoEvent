@@ -57,7 +57,7 @@ public class AdminFacilities extends Fragment {
      * and populates the profile list.
      */
     private void fetchFacilitiesFromFirestore() {
-        db.collection("profiles")
+        db.collection("facilities")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

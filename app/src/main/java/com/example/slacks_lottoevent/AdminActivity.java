@@ -29,7 +29,7 @@ public class AdminActivity extends AppCompatActivity {
         frameLayout = (FrameLayout) findViewById(R.id.FrameLayoutAdmin);
         tabLayout = (TabLayout) findViewById(R.id.tab_Layout_Admin);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, AdminProfiles.newInstance()) //AdminEvents()
+        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayoutAdmin, AdminProfiles.newInstance()) //AdminEvents()
                 .addToBackStack(null)
                 .commit();
 
@@ -42,7 +42,7 @@ public class AdminActivity extends AppCompatActivity {
 //                        selected_fragment = AdminEvents.newInstance(event);
                         break;
                     case 1:
-//                        selected_fragment = AdminImages.newInstance(event);;
+                        selected_fragment = AdminImages.newInstance();;
                         break;
                     case 2:
                         selected_fragment = AdminFacilities.newInstance();;
@@ -53,7 +53,7 @@ public class AdminActivity extends AppCompatActivity {
                 }
                 if (selected_fragment != null) {
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.FrameLayout, selected_fragment)
+                            .replace(R.id.FrameLayoutAdmin, selected_fragment)
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                             .commit();
                 }

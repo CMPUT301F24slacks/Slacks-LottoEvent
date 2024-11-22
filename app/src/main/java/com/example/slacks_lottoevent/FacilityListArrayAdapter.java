@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -60,6 +61,9 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
             // Customize view based on "check" value
             ImageView userIcon = convertView.findViewById(R.id.userIcon);
             userIcon.setVisibility(View.GONE); // Hide the location icon
+
+            ImageButton ovalButton = convertView.findViewById(R.id.oval_rectangle);
+            ovalButton.setOnClickListener(v -> showFacilityOptionsDialog(facility, position));
 
             // Set OnClickListener to show profile options in a dialog
             convertView.setOnClickListener(v -> showFacilityOptionsDialog(facility, position));
