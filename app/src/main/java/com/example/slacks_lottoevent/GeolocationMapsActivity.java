@@ -18,6 +18,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -49,6 +50,12 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
     private String eventID;
     private FirebaseFirestore db;
     private ArrayList<Map<String, List<Double>>> joinLocations;
+
+    /**
+     *
+     *
+     *
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -58,8 +65,6 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
         Intent intent = getIntent();
         eventID = intent.getStringExtra("eventID");
         db = FirebaseFirestore.getInstance();
-
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         fetchAddressAndWaitlistLocations(() ->{
@@ -69,12 +74,9 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
                 updateMapRadius(5);
             });
 
-
         });
 
-
     }
-
 
     private void setupTabs(){
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -128,6 +130,8 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
                 .strokeColor(0xFF7B24EB)
                 .strokeWidth(2)
         );
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        boundsBuilder.include(eventLocation);
         for (Map<String, List<Double>> location : joinLocations) {
             for (Map.Entry<String, List<Double>> entry : location.entrySet()) {
                 List<Double> coords = entry.getValue();
@@ -138,6 +142,7 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
                     googleMap.addMarker(new MarkerOptions().position(position)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
                     );
+                    boundsBuilder.include(position);
                 }
             }
         }
@@ -150,7 +155,8 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,15));
             return true;
         });
-
+        LatLngBounds bounds = boundsBuilder.build();
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
 
 
     }
