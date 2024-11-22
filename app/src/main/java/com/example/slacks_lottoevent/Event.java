@@ -311,6 +311,9 @@ public class Event implements Serializable {
         this.entrantsChosen = true;
     }
 
+    /**
+     * Re-Selecting System for the event
+     */
     public void reSelecting(){
 //        Need to check if the slots are not filled up
 
@@ -330,6 +333,9 @@ public class Event implements Serializable {
         }
     }
 
+    /**
+     * Clearing list if event is full*
+     */
     public void fullEvent(){
         this.waitlisted.clear();
         this.waitlistedNotificationsList.clear();
