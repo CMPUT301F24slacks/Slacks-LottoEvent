@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.view;
+package com.example.slacks_lottoevent.enums;
 
 public enum EventParticipationStatus {
     WAITLISTED,

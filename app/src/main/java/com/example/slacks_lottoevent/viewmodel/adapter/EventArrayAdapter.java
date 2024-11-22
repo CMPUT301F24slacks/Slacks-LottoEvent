@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import com.example.slacks_lottoevent.EntrantEventDetailsActivity;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.model.Event;
-import com.example.slacks_lottoevent.view.EventParticipationStatus;
+import com.example.slacks_lottoevent.enums.EventParticipationStatus;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.example.slacks_lottoevent;
 
-import static com.example.slacks_lottoevent.view.EventParticipationStatus.INVITED;
+import static com.example.slacks_lottoevent.enums.EventParticipationStatus.INVITED;
 
 import android.os.Bundle;
 import android.provider.Settings;
@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.example.slacks_lottoevent.databinding.FragmentMyEventsBinding;
 import com.example.slacks_lottoevent.model.Entrant;
 import com.example.slacks_lottoevent.model.Event;
-import com.example.slacks_lottoevent.view.EventParticipationStatus;
+import com.example.slacks_lottoevent.enums.EventParticipationStatus;
 import com.example.slacks_lottoevent.viewmodel.adapter.EventArrayAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
