@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.databinding.ActivityEntrantEventDetailsBinding;
 import com.example.slacks_lottoevent.databinding.ActivityOrganizerEventDetailsBinding;
+import com.example.slacks_lottoevent.model.Event;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
