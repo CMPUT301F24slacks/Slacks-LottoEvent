@@ -1,5 +1,7 @@
 package com.example.slacks_lottoevent;
 
+import static com.example.slacks_lottoevent.view.EventParticipationStatus.ATTENDING;
+
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -14,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import com.example.slacks_lottoevent.databinding.FragmentMyEventsBinding;
 import com.example.slacks_lottoevent.model.Entrant;
 import com.example.slacks_lottoevent.model.Event;
+import com.example.slacks_lottoevent.view.EventParticipationStatus;
+import com.example.slacks_lottoevent.viewmodel.adapter.EventArrayAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -93,7 +97,8 @@ public class MyEventsFragment extends Fragment {
 
         ArrayList<Event> eventList = new ArrayList<>();
         myEventsListView = binding.myEventsListView;
-        eventArrayAdapter = new EventArrayAdapter(getContext(), eventList);
+        EventParticipationStatus eventParticipationStatus = ATTENDING;
+        eventArrayAdapter = new EventArrayAdapter(getContext(), eventList, eventParticipationStatus);
         myEventsListView.setAdapter(eventArrayAdapter);
 
         entrantListener = entrantRef.addSnapshotListener((value, error) -> {

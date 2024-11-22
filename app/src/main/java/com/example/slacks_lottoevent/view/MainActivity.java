@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.controller;
+package com.example.slacks_lottoevent.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,6 +46,25 @@ public class MainActivity extends BaseActivity {
                                       eventViewModel.setWaitlistedEvents(events);
                                   }
                               });
+                eventViewModel.getEvents(currentEntrant.getInvitedEvents())
+                        .observe(this, events -> {
+                            if (events != null && !events.isEmpty()) {
+                                eventViewModel.setInvitedEvents(events);
+                            }
+                        });
+                eventViewModel.getEvents(currentEntrant.getUninvitedEvents())
+                        .observe(this, events -> {
+                            if (events != null && !events.isEmpty()) {
+                                eventViewModel.setUnselectedEvents(events);
+                            }
+                        });
+                eventViewModel.getEvents(currentEntrant.getFinalistEvents())
+                        .observe(this, events -> {
+                            if (events != null && !events.isEmpty()) {
+                                eventViewModel.setAttendingEvents(events);
+                            }
+                        });
+
             }
         });
 

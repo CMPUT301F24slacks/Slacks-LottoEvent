@@ -1,13 +1,12 @@
-package com.example.slacks_lottoevent.adapter;
+package com.example.slacks_lottoevent.viewmodel.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.slacks_lottoevent.fragment.HomeFragment;
-import com.example.slacks_lottoevent.fragment.EventsFragment;
-import com.example.slacks_lottoevent.fragment.FacilityFragment;
+import com.example.slacks_lottoevent.view.fragment.EventsFragment;
+import com.example.slacks_lottoevent.view.fragment.FacilityFragment;
 
 public class TabsAdapter extends FragmentStateAdapter {
 
