@@ -265,8 +265,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     createNewEntrant(userId);
                     addEntrantToWaitlist(isDeclined);
                     addEntrantToNotis(chosenForLottery, notChosenForLottery); // TODO: fix this field
-                    addEntrantToWaitlist();
-                    addEntrantToNotis(chosenForLottery, notChosenForLottery);
                     getJoinLocation(usesGeolocation);
                     navigateToEventsHome();
                     dialog.dismiss();
