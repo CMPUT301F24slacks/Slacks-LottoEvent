@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -31,6 +32,7 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
     private String time;
     private Boolean usesGeolocation;
     private String description;
+    private String eventPosterURL;
     FirebaseFirestore db;
     String qrCodeValue;
     Long spotsRemaining;
@@ -60,7 +62,7 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                         location = document.getString("location");
                         description = document.getString("description");
                         signupDate = document.getString("signupDeadline");
-
+                        eventPosterURL = document.getString("eventPosterURL");
 
                         List<Object> waitlisted = (List<Object>) document.get("waitlisted");
 
@@ -78,6 +80,13 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                             spotsRemaining = waitListCapacity - waitlisted.size();
                             spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
                             binding.spotsAvailable.setText(spotsRemainingText);
+                        }
+                        if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
+                            Glide.with(this) // 'this' refers to the activity context
+                                    .load(eventPosterURL)
+                                    .into(binding.eventImage);
+                        } else {
+                            Log.e("EventDetails", "Event poster URL is empty or null");
                         }
 
                         binding.eventTitle.setText(eventName);

@@ -25,13 +25,6 @@
         android:scaleType="centerCrop"
         android:src="@drawable/event_image" />
 
-        <ImageView
-            android:id="@+id/qr_code_image"
-            android:layout_width="152dp"
-            android:layout_height="133dp"
-            android:layout_gravity="center"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter" />
 </FrameLayout>
 
 
