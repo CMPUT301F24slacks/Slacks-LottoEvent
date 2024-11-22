@@ -76,24 +76,6 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         facilitiesRef = db.collection("facilities");
         organizersRef = db.collection("organizers");
 
-        //ImageView qrCode = convertView.findViewById(R.id.event_poster_image);
-        //String qrData = event.getQRData();
-
-
-//        if (qrData != null && !qrData.isEmpty()) {
-//            try {
-//                BitMatrix bitMatrix = deserializeBitMatrix(qrData); // Convert back to BitMatrix
-//                BarcodeEncoder encoder = new BarcodeEncoder();
-//                Bitmap bitmap = encoder.createBitmap(bitMatrix); // Create Bitmap from BitMatrix
-//                qrCode.setImageBitmap(bitmap); // Set the QR code image
-//            } catch (WriterException e) {
-//                Log.e("QRCodeError", "Error converting QR code string to BitMatrix");
-//            }
-//        } else {
-//            qrCode.setImageBitmap(null); // Clear the image if QR data is null or empty
-//        }
-
-
         TextView eventName = convertView.findViewById(R.id.event_name);
         TextView eventDate = convertView.findViewById(R.id.event_date);
         TextView eventTime = convertView.findViewById(R.id.event_time);
@@ -158,41 +140,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
 
         eventDescription.setText(event.getDescription());
 
-//        //to connect with entrants cancelled, joined, etc.
-//        eventButton.setOnClickListener(v -> {
-//            // Create an Intent to navigate to OrganizerNotifications
-//            Intent intent = new Intent(EventArrayAdapter.this.getContext(), OrganizerNotifications.class);
-//
-//            // Pass any additional data if needed
-//            intent.putExtra("current_event", (Serializable) event);  // Example of passing data
-//
-//            // Start OrganizerNotifications
-//            getContext().startActivity(intent);
-//        });
         return convertView;
     }
 
-    /**
-     * Deserializes a BitMatrix from a string
-     *
-     * @param data The string to deserialize
-     * @return The deserialized BitMatrix
-     * @throws WriterException If the string cannot be deserialized
-     */
-//    private BitMatrix deserializeBitMatrix(String data) throws WriterException {
-//        String[] lines = data.split("\n");
-//        int width = lines[0].length();
-//        int height = lines.length;
-//        BitMatrix bitMatrix = new BitMatrix(width, height);
-//
-//        for (int y = 0; y < height; y++) {
-//            for (int x = 0; x < width; x++) {
-//                // Set pixel based on whether the character is '1' (black) or '0' (white)
-//                if (lines[y].charAt(x) == '1') {
-//                    bitMatrix.set(x, y); // Set pixel to black
-//                }
-//            }
-//        }
-//        return bitMatrix;
-//    }
 }
