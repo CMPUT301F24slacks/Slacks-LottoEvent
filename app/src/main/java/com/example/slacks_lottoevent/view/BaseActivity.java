@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.controller;
+package com.example.slacks_lottoevent.view;
 
 import android.os.Bundle;
 import android.view.Menu;

@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.controller;
+package com.example.slacks_lottoevent.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

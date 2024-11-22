@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.fragment;
+package com.example.slacks_lottoevent.view.fragment;
 
 import android.os.Bundle;
 
@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.slacks_lottoevent.R;
-import com.example.slacks_lottoevent.adapter.TabsAdapter;
+import com.example.slacks_lottoevent.viewmodel.adapter.TabsAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
