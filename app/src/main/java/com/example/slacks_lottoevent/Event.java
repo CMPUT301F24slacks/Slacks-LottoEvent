@@ -36,6 +36,7 @@ public class Event implements Serializable {
     private String deviceId;
     private String signupDeadline;
     private Boolean entrantsChosen;
+    private String eventPosterURL;
     public Event(){
     }
 
@@ -55,7 +56,7 @@ public class Event implements Serializable {
      * @param qrHash
      * @param signupDeadline
      */
-    public Event(String name, String eventDate, String location, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventID, Boolean geoLocation, String qrHash, String deviceId, String signupDeadline) {
+    public Event(String name, String eventDate, String location, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventID, Boolean geoLocation, String qrHash, String deviceId, String signupDeadline, String eventPosterURL) {
         this.name = name;
         this.eventDate = eventDate;
         this.time = time;
@@ -86,6 +87,7 @@ public class Event implements Serializable {
         this.signupDeadline = signupDeadline;
 
         this.entrantsChosen = false;
+        this.eventPosterURL = eventPosterURL;
 
     }
 
@@ -257,6 +259,13 @@ public class Event implements Serializable {
 
     public Boolean getEntrantsChosen(){return this.entrantsChosen;}
 
+    public String getEventPosterURL() {
+        return eventPosterURL;
+    }
+
+    public void setEventPosterURL(String eventPosterURL) {
+        this.eventPosterURL = eventPosterURL;
+    }
 
     /**
      * Checks if the event is full

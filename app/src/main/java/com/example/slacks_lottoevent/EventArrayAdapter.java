@@ -3,14 +3,18 @@ package com.example.slacks_lottoevent;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+
+import com.bumptech.glide.Glide;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -47,12 +51,21 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         TextView eventTime = convertView.findViewById(R.id.event_time);
         TextView eventAddress = convertView.findViewById(R.id.event_address);
         TextView eventDescription = convertView.findViewById(R.id.event_description);
+        ImageView eventPoster = convertView.findViewById(R.id.event_image);
         eventName.setText(event.getName());
         eventDate.setText(event.getEventDate());
         eventTime.setText(event.getTime());
         // eventAddress.setText(event.getFacilityId().getStreetAddress1());
         eventDescription.setText(event.getDescription());
         Button eventButton = convertView.findViewById(R.id.event_button);
+
+        if (event.getEventPosterURL() != null && !event.getEventPosterURL().isEmpty()) {
+            Glide.with(this.getContext()) // 'this' refers to the activity context
+                    .load(event.getEventPosterURL())
+                    .into(eventPoster);
+        } else {
+            Log.e("EventDetails", "Event poster URL is empty or null");
+        }
 
         eventButton.setOnClickListener(v -> {
             // Create an Intent to navigate to the EventDetailsActivity

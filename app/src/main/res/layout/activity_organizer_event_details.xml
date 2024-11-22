@@ -230,6 +230,22 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="98dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <Button
+                android:id="@+id/show_qr_code_button"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:backgroundTint="#7B24EB"
+                android:text="View QR Code" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="161dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
@@ -251,9 +267,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
-                android:text="Lottery System"
                 android:backgroundTint="#7B24EB"
-                android:textColor="#FFFFFF"/>
+                android:text="Lottery System"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/entrantListButton"
