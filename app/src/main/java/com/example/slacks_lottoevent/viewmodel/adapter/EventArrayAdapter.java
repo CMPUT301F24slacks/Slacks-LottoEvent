@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.viewmodel.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.example.slacks_lottoevent.EntrantEventDetailsActivity;
+import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.model.Event;
+import com.example.slacks_lottoevent.view.EventParticipationStatus;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,8 +25,18 @@ import java.util.ArrayList;
  * It is used to display the name, date, time, address, and description of each event.
  */
 public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
-    public EventArrayAdapter(@NonNull Context context, ArrayList eventList) {
+
+    private EventParticipationStatus eventParticipationStatus;
+
+    /**
+     * Constructor for the EventArrayAdapter.
+     * @param context
+     * @param eventList
+     * @param status
+     */
+    public EventArrayAdapter(@NonNull Context context, ArrayList eventList, EventParticipationStatus status) {
         super(context, 0, eventList);
+        this.eventParticipationStatus = status;
     }
 
     /**
@@ -41,21 +54,47 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         Event event = getItem(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.content_event, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_event, parent, false);
         }
 
+        // Initialize the main TextViews and Button
         TextView eventName = convertView.findViewById(R.id.event_name);
         TextView eventDate = convertView.findViewById(R.id.event_date);
         TextView eventTime = convertView.findViewById(R.id.event_time);
         TextView eventAddress = convertView.findViewById(R.id.event_address);
         TextView eventDescription = convertView.findViewById(R.id.event_description);
+        Button eventButton = convertView.findViewById(R.id.event_button);
+
+        // Initialize the TextViews for the event status
+        TextView statusAttending = convertView.findViewById(R.id.status_attending);
+        TextView statusInvited = convertView.findViewById(R.id.status_invited);
+        TextView statusUnselected = convertView.findViewById(R.id.status_unselected);
+        TextView statusWaitlisted = convertView.findViewById(R.id.status_waitlisted);
+
+        // Set the name, date, time, address, and description of the event
         eventName.setText(event.getName());
         eventDate.setText(event.getEventDate());
         eventTime.setText(event.getTime());
-        // eventAddress.setText(event.getFacilityId().getStreetAddress1());
+        eventAddress.setText(event.getLocation());
         eventDescription.setText(event.getDescription());
-        Button eventButton = convertView.findViewById(R.id.event_button);
 
+        // Set the status of the event based on the user's participation status
+        switch (eventParticipationStatus) {
+            case ATTENDING:
+                statusAttending.setVisibility(View.VISIBLE);
+                break;
+            case INVITED:
+                statusInvited.setVisibility(View.VISIBLE);
+                break;
+            case UNSELECTED:
+                statusUnselected.setVisibility(View.VISIBLE);
+                break;
+            case WAITLISTED:
+                statusWaitlisted.setVisibility(View.VISIBLE);
+                break;
+        }
+
+        // Set an OnClickListener for the event button
         eventButton.setOnClickListener(v -> {
             // Create an Intent to navigate to the EventDetailsActivity
             Intent intent = new Intent(getContext(), EntrantEventDetailsActivity.class);

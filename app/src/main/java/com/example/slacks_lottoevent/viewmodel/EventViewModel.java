@@ -13,9 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventViewModel extends ViewModel {
-    // Directly exposed MutableLiveData
-    public final MutableLiveData<List<Event>> events = new MutableLiveData<>();
     public final MutableLiveData<List<Event>> waitlistedEvents = new MutableLiveData<>();
+    public final MutableLiveData<List<Event>> unselectedEvents = new MutableLiveData<>();
+    public final MutableLiveData<List<Event>> invitedEvents = new MutableLiveData<>();
+    public final MutableLiveData<List<Event>> attendingEvents = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     public final MutableLiveData<String> error = new MutableLiveData<>();
     private final EventDB eventDB;
@@ -33,17 +34,17 @@ public class EventViewModel extends ViewModel {
         isLoading.setValue(true);
         MutableLiveData<List<Event>> tempEvents = new MutableLiveData<>();
         eventDB.getEvents(eventIds)
-               .addOnSuccessListener(queryDocumentSnapshots -> {
-                   List<Event> eventList = queryDocumentSnapshots.toObjects(Event.class);
-                   tempEvents.setValue(eventList);
-                   isLoading.setValue(false);
-                   Log.d("EventViewModel", "Retrieved " + eventList.size() + " events");
-               })
-               .addOnFailureListener(e -> {
-                   error.setValue(e.getMessage());
-                   isLoading.setValue(false);
-                   Log.e("EventViewModel", "Failed to retrieve events: " + e.getMessage());
-               });
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Event> eventList = queryDocumentSnapshots.toObjects(Event.class);
+                    tempEvents.setValue(eventList);
+                    isLoading.setValue(false);
+                    Log.d("EventViewModel", "Retrieved " + eventList.size() + " events");
+                })
+                .addOnFailureListener(e -> {
+                    error.setValue(e.getMessage());
+                    isLoading.setValue(false);
+                    Log.e("EventViewModel", "Failed to retrieve events: " + e.getMessage());
+                });
         return tempEvents;
     }
 
@@ -52,6 +53,27 @@ public class EventViewModel extends ViewModel {
      */
     public void setWaitlistedEvents(List<Event> eventList) {
         waitlistedEvents.setValue(eventList);
+    }
+
+    /**
+     * Sets unselected events LiveData to the given list of events.
+     */
+    public void setUnselectedEvents(List<Event> eventList) {
+        unselectedEvents.setValue(eventList);
+    }
+
+    /**
+     * Sets invited events LiveData to the given list of events.
+     */
+    public void setInvitedEvents(List<Event> eventList) {
+        invitedEvents.setValue(eventList);
+    }
+
+    /**
+     * Sets attending events LiveData to the given list of events.
+     */
+    public void setAttendingEvents(List<Event> eventList) {
+        attendingEvents.setValue(eventList);
     }
 
 }
