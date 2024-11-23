@@ -38,11 +38,11 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
     private Context context;
     private ArrayList<Event> events;
 
-    private FirebaseFirestore db;
-    private CollectionReference facilitiesRef;
-    private CollectionReference organizersRef;
-    private CollectionReference eventsRef;
-    private DocumentReference entrantsRef;
+//    private FirebaseFirestore db;
+//    private CollectionReference facilitiesRef;
+//    private CollectionReference organizersRef;
+//    private CollectionReference eventsRef;
+//    private DocumentReference entrantsRef;
 
     /**
      * Constructor for the OrganzierEventArrayAdapter
@@ -72,9 +72,9 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.content_organizer_events, parent, false);
         }
 
-        db = FirebaseFirestore.getInstance();
-        facilitiesRef = db.collection("facilities");
-        organizersRef = db.collection("organizers");
+//        db = FirebaseFirestore.getInstance();
+//        facilitiesRef = db.collection("facilities");
+//        organizersRef = db.collection("organizers");
 
         TextView eventName = convertView.findViewById(R.id.event_name);
         TextView eventDate = convertView.findViewById(R.id.event_date);
@@ -97,34 +97,9 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         } else {
             Log.e("EventDetails", "Event poster URL is empty or null");
         }
-        String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                DocumentSnapshot organizerDoc = task.getResult();
-
-                // Check if the facilityID field exists and is not empty
-                if (organizerDoc.exists() && organizerDoc.contains("facilityId")) {
-                    String facilityID = organizerDoc.getString("facilityId");
-
-                    if (facilityID != null && !facilityID.isEmpty()) {
-                        // Now query the facilities collection with the retrieved facilityID
-                        facilitiesRef.document(facilityID).addSnapshotListener((facilitySnapshot, e) -> {
-                            if (e != null) {
-                                Log.w("Firestore", "Facility listen failed.", e);
-                                return;
-                            }
-
-                            if (facilitySnapshot != null && facilitySnapshot.exists()) {
-                                // Retrieve facility data
-                                String facilityAddress= facilitySnapshot.getString("streetAddress1");
-                                eventAddress.setText(facilityAddress);
-                            }
-                        });
-                    }
-                }
-            }
-        });
+        eventAddress.setText(event.getLocation());
+        eventDescription.setText(event.getDescription());
 
         Button eventButton = convertView.findViewById(R.id.event_button);
         eventButton.setOnClickListener(v -> {
@@ -138,7 +113,6 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
             getContext().startActivity(intent);
         });
 
-        eventDescription.setText(event.getDescription());
 
         return convertView;
     }

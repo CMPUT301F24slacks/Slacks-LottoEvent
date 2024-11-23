@@ -136,6 +136,7 @@ public class OrganizerNotifications extends AppCompatActivity {
         ImageView back = findViewById(R.id.back_button);
         back.setOnClickListener(v -> {
             onBackPressed();
+            onBackPressed();
         });
 
     }

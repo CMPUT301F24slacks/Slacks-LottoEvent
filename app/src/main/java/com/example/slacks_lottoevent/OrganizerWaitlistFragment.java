@@ -66,43 +66,52 @@ public class OrganizerWaitlistFragment extends Fragment {
         EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), entrantNames);
         ListViewEntrantsWaitlisted.setAdapter(adapter);
 
-        // Use the event ID to fetch data from Firestore
-        db.collection("events").document(eventId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                DocumentSnapshot eventDoc = task.getResult();
+        // Listen for real-time updates to the event document
+        db.collection("events").document(eventId).addSnapshotListener((eventDoc, error) -> {
+            if (error != null) {
+                Log.e("Firestore", "Error listening to event document updates", error);
+                return;
+            }
 
-                if (eventDoc.exists()) {
-                    ArrayList<String> deviceIds = (ArrayList<String>) eventDoc.get("waitlisted");
+            if (eventDoc != null && eventDoc.exists()) {
+                ArrayList<String> deviceIds = (ArrayList<String>) eventDoc.get("waitlisted");
 
-                    if (deviceIds != null && !deviceIds.isEmpty()) {
-                        for (String deviceId : deviceIds) {
-                            db.collection("profiles").document(deviceId).get().addOnCompleteListener(profileTask -> {
-                                if (profileTask.isSuccessful() && profileTask.getResult() != null) {
-                                    DocumentSnapshot profileDoc = profileTask.getResult();
+                if (deviceIds != null && !deviceIds.isEmpty()) {
+                    entrantNames.clear(); // Clear the list before adding new data
 
-                                    if (profileDoc.exists()) {
-                                        String name = profileDoc.getString("name");
-                                        entrantNames.add(name);
-                                        adapter.notifyDataSetChanged();
-                                    } else {
-                                        Log.d("Firestore", "Profile document does not exist for device ID: " + deviceId);
-                                    }
-                                } else {
-                                    Log.e("Firestore", "Error fetching profile data for device ID: " + deviceId, profileTask.getException());
+                    // Listen for real-time updates to each profile document
+                    for (String deviceId : deviceIds) {
+                        db.collection("profiles").document(deviceId).addSnapshotListener((profileDoc, profileError) -> {
+                            if (profileError != null) {
+                                Log.e("Firestore", "Error listening to profile document updates", profileError);
+                                return;
+                            }
+
+                            if (profileDoc != null && profileDoc.exists()) {
+                                String name = profileDoc.getString("name");
+
+                                if (!entrantNames.contains(name)) {
+                                    entrantNames.add(name); // Add the name if it’s not already in the list
+                                    adapter.notifyDataSetChanged(); // Update the adapter
                                 }
-                            });
-                        }
-                    } else {
-                        Log.d("Firestore", "No device IDs found in the selectedNotificationsList.");
+                            } else {
+                                Log.d("Firestore", "Profile document does not exist for device ID: " + deviceId);
+                            }
+                        });
                     }
                 } else {
-                    Log.d("Firestore", "Event document does not exist for ID: " + eventId);
+                    Log.d("Firestore", "No device IDs found in the waitlisted list.");
+                    entrantNames.clear();
+                    adapter.notifyDataSetChanged(); // Clear the ListView if no device IDs are found
                 }
             } else {
-                Log.e("Firestore", "Error fetching event data for ID: " + eventId, task.getException());
+                Log.d("Firestore", "Event document does not exist for ID: " + eventId);
+                entrantNames.clear();
+                adapter.notifyDataSetChanged(); // Clear the ListView if the event document doesn't exist
             }
         });
 
         return view;
     }
+
 }

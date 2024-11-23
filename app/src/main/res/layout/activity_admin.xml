@@ -8,6 +8,23 @@
 
     <!-- Back Button at the top-left -->
 
+    <TextView
+        android:id="@+id/AdminModeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/inter_bold"
+        android:paddingBottom="8dp"
+        android:text="Admin Mode"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.169"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageButton
         android:id="@+id/oval_rectangle_input"
         android:layout_width="404dp"
@@ -36,39 +53,45 @@
 
 
     <!-- TabLayout below the title -->
+
+    <!-- FrameLayout to hold the selected fragment content -->
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_Layout_Admin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
         android:background="#27272A"
-        app:tabIndicatorColor="@color/white"
-        app:tabSelectedTextColor="#EC7CEE"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/AdminModeTitle"
         app:tabGravity="fill"
-        app:tabMode="fixed">
+        app:tabIndicatorColor="@color/white"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="#EC7CEE">
 
         <!-- Tabs for each category -->
         <com.google.android.material.tabs.TabItem
-            android:text="Events"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <com.google.android.material.tabs.TabItem
-            android:text="Images"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <com.google.android.material.tabs.TabItem
-            android:text="Facilities"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <com.google.android.material.tabs.TabItem
-            android:text="Profiles"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.tabs.TabLayout>
+            android:layout_height="wrap_content"
+            android:text="Events" />
 
-    <!-- FrameLayout to hold the selected fragment content -->
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Images" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Facilities" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profiles" />
+    </com.google.android.material.tabs.TabLayout>
 
     <FrameLayout
     android:id="@+id/FrameLayoutAdmin"
