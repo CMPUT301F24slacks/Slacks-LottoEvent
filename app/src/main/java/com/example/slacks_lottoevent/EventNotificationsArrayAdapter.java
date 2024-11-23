@@ -70,12 +70,14 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
             eventTime.setText(event.getTime());
             eventLocation.setText(event.getLocation());
 
+            //make changes to both events and entrants, not only events
             acceptButton.setOnClickListener(v -> {
                 handleAcceptEvent(event);
                 showConfirmationDialog(v.getContext(), "You have now joined the event.");
                 removeEvent(position);
 //                TODO: notification here
             });
+            //make changes to both events and entrants, not only events
             declineButton.setOnClickListener(v -> {
                 handleDeclineEvent(event);
                 showConfirmationDialog(v.getContext(), "You have now declined the event.");

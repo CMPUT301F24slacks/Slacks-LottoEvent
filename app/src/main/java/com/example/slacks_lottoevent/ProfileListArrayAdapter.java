@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
     private final Context context;
     private final FirebaseFirestore db;
+    private boolean isAdmin;
 
     /**
      * Constructor for the ArrayAdapter.
@@ -28,10 +30,11 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
      * @param context  The current context.
      * @param profiles The list of profiles to display.
      */
-    public ProfileListArrayAdapter(@NonNull Context context, ArrayList<Profile> profiles) {
+    public ProfileListArrayAdapter(@NonNull Context context, ArrayList<Profile> profiles, boolean isAdmin) {
         super(context, 0, profiles);
         this.context = context;
         this.db = FirebaseFirestore.getInstance();
+        this.isAdmin = isAdmin;
     }
 
     /**
@@ -61,8 +64,14 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
             ImageView locationIcon = convertView.findViewById(R.id.location_icon);
             locationIcon.setVisibility(View.GONE); // Hide the location icon
 
-            // Set OnClickListener to show profile options in a dialog
-            convertView.setOnClickListener(v -> showProfileOptionsDialog(profile, position));
+            //if User is not an Admin then they may not see the entrant's private information
+            if (isAdmin) {
+                ImageButton ovalButton = convertView.findViewById(R.id.oval_rectangle);
+                ovalButton.setOnClickListener(v -> showProfileOptionsDialog(profile, position));
+
+                // Set OnClickListener to show profile options in a dialog
+                convertView.setOnClickListener(v -> showProfileOptionsDialog(profile, position));
+            }
         }
 
         return convertView;

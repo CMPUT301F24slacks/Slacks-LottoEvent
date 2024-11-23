@@ -152,7 +152,7 @@ public class OrganizerNotifications extends AppCompatActivity {
 
 
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, OrganizerWaitlistFragment.newInstance(event))
+        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, OrganizerWaitlistFragment.newInstance(eventID))
                 .addToBackStack(null)
                 .commit();
 
@@ -206,8 +206,10 @@ public class OrganizerNotifications extends AppCompatActivity {
             }
         });
 
+
         ImageView back = findViewById(R.id.back_button);
         back.setOnClickListener(v -> {
+            onBackPressed();
             onBackPressed();
         });
     }
