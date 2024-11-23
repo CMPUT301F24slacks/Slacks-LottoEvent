@@ -3,6 +3,7 @@ package com.example.slacks_lottoevent;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -51,6 +52,7 @@ public class OrganizerNotifications extends AppCompatActivity {
         //Set Up ArrayAdapter, do getUsername() for every user in said category, change it in the case-by-case tabLayout system
         Intent intent = getIntent();
         String eventID = intent.getStringExtra("eventID");
+        ImageView mapBtn = findViewById(R.id.imageView_geolocation);
         // Get the current event's id from the intent
         // query the database for the event
         db = FirebaseFirestore.getInstance();
@@ -58,9 +60,11 @@ public class OrganizerNotifications extends AppCompatActivity {
         eventRef.document(eventID).get().addOnCompleteListener(eventTask -> {
             if (eventTask.isSuccessful() && eventTask.getResult() != null) {
                 DocumentSnapshot eventDoc = eventTask.getResult();
-
                 if (eventDoc.exists()) {
                     event = eventDoc.toObject(Event.class);
+                    if (!event.getgeoLocation()){
+                        mapBtn.setVisibility(View.GONE);
+                    }
                     event.setFinalists((ArrayList<String>) eventDoc.get("finalists"));
                     event.setWaitlisted((ArrayList<String>) eventDoc.get("waitlisted"));
                     event.setSelected((ArrayList<String>) eventDoc.get("selected"));
@@ -137,6 +141,17 @@ public class OrganizerNotifications extends AppCompatActivity {
             }
         });
 
+        mapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent geolocationMapsActivityIntent = new Intent(getApplicationContext(), GeolocationMapsActivity.class);
+                geolocationMapsActivityIntent.putExtra("eventID",eventID);
+                startActivity(geolocationMapsActivityIntent);
+            }
+        });
+
+
+
         getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, OrganizerWaitlistFragment.newInstance(event))
                 .addToBackStack(null)
                 .commit();
@@ -171,6 +186,7 @@ public class OrganizerNotifications extends AppCompatActivity {
                             .commit();
                 }
             }
+
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {

@@ -22,6 +22,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 
+import com.bumptech.glide.Glide;
 import com.example.slacks_lottoevent.databinding.ActivityJoinEventDetailsBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -59,6 +60,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     private String time;
     private Boolean usesGeolocation;
     private String description;
+    private String eventPosterURL;
     FirebaseFirestore db;
     String qrCodeValue;
     Long spotsRemaining;
@@ -90,6 +92,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         location = document.getString("location");
                         description = document.getString("description");
                         signupDeadline = document.getString("signupDeadline");
+                        eventPosterURL = document.getString("eventPosterURL");
                         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
                         Date signup = null;
                         try {
@@ -118,6 +121,13 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                             spotsRemaining = waitListCapacity - waitlisted.size();
                             spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
                             binding.spotsAvailable.setText(spotsRemainingText);
+                        }
+                        if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
+                            Glide.with(this) // 'this' refers to the activity context
+                                    .load(eventPosterURL)
+                                    .into(binding.eventImage);
+                        } else {
+                            Log.e("EventDetails", "Event poster URL is empty or null");
                         }
 
                         binding.eventTitle.setText(eventName);
