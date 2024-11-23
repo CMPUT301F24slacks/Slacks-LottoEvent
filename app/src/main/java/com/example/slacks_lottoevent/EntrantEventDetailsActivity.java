@@ -159,7 +159,7 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                     }
                 });
 
-        // Remove the entrant from the event's waitlistedNotifications and selectedNotifications
+        // Remove the entrant from the all event notifications
         db.collection("events").document(qrCodeValue).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
@@ -167,13 +167,15 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                         if (document.exists()) {
                             List<String> waitlistedNotifications = (List<String>) document.get("waitlistedNotificationsList");
                             List<String> selectedNotifications = (List<String>) document.get("selectedNotificationsList");
+                            List<String> joinedNotifications = (List<String>) document.get("joinedNotificationsList");
+                            List<String> cancelledNotifications = (List<String>) document.get("cancelledNotificationsList");
                             if (waitlistedNotifications != null && waitlistedNotifications.contains(userId)) {
                                 waitlistedNotifications.remove(userId);
                             }
                             if (selectedNotifications != null && selectedNotifications.contains(userId)) {
                                 selectedNotifications.remove(userId);
                             }
-                            db.collection("events").document(qrCodeValue).update("waitlistedNotificationsList", waitlistedNotifications, "selectedNotificationsList", selectedNotifications);
+                            db.collection("events").document(qrCodeValue).update("waitlistedNotificationsList", waitlistedNotifications, "selectedNotificationsList", selectedNotifications, "joinedNotificationsList", joinedNotifications, "cancelledNotifications", cancelledNotifications);
                         }
                     }
                 });

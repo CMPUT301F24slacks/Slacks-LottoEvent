@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -229,14 +230,13 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
 
-        AtomicBoolean chosenForLottery = new AtomicBoolean(false);
-        AtomicBoolean notChosenForLottery = new AtomicBoolean(false);
+        AtomicBoolean notis = new AtomicBoolean(false);
 
 
         organizerNotis.setOnClickListener(v -> {
-            boolean negation = !chosenForLottery.get();
-            chosenForLottery.set(negation);
-            organizerNotis.setImageResource(chosenForLottery.get() ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
+            boolean negation = !notis.get();
+            notis.set(negation);
+            organizerNotis.setImageResource(notis.get() ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
         });
 
 
@@ -263,40 +263,21 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         dialog.dismiss();
                     } else {
                         // Entrant is not in the event, add them to the event
-                        addEntrantToWaitlist(isDeclined);
-                        addEntrantToNotis(chosenForLottery);
-                        addEventToEntrant();
-                        getJoinLocation(usesGeolocation);
-                        navigateToEventsHome();
-                        dialog.dismiss();
-                        sendNotifications();
+                        handleEntrantActions(isDeclined,notis, usesGeolocation, dialog);
+
                     }
                 } else {
                     // Entrant does not exist, create a new one and add them
                     Log.d("JoinEventDetails", "Entrant does not exist. Creating a new entrant...");
                     createNewEntrant(userId);
-                    addEntrantToWaitlist(isDeclined);
-                    addEntrantToNotis(chosenForLottery);
-                    getJoinLocation(usesGeolocation);
-                    navigateToEventsHome();
-                    dialog.dismiss();
-                    sendNotifications();
-
-
+                    handleEntrantActions(isDeclined,notis, usesGeolocation, dialog);
                 }
             }).addOnFailureListener(e -> {
                 // Handle any errors in fetching the entrant document
                 Log.e("JoinEventDetails", "Error fetching entrant document: " + e.getMessage());
                 // Create a new entrant in case of a failure
                 createNewEntrant(userId);
-                addEntrantToWaitlist(isDeclined);
-                addEntrantToNotis(chosenForLottery);
-                getJoinLocation(usesGeolocation);
-                navigateToEventsHome();
-                dialog.dismiss();
-                sendNotifications();
-
-
+                handleEntrantActions(isDeclined,notis, usesGeolocation, dialog);
             });
         });
 
@@ -490,7 +471,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                 });
     }
 
-    private void sendNotifications(){
+    private void sendNotifications(AtomicBoolean notis){
 //        String channelID =getString(R.string.channel_id);
 //        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelID)
 //                .setContentTitle("Event Name")
@@ -510,29 +491,27 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 //            return;
 //        }
 //        managerCompat.notify(1, builder.build());
-        String channelId = getString(R.string.channel_id); // Ensure this matches the one in `createNotificationChannel()`
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.baseline_notifications_active_24) // Replace with your icon
-                .setContentTitle("Event Registration")
-                .setContentText("You have successfully registered for the event!")
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        if(notis.get()) {
+            String channelId = getString(R.string.channel_id); // Ensure this matches the one in `createNotificationChannel()`
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                    .setSmallIcon(R.drawable.baseline_notifications_active_24) // Replace with your icon
+                    .setContentTitle("Event Registration")
+                    .setContentText("You have successfully registered for the event waitlist!")
+                    .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
             // Check for notification permissions (required for Android 13+)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                Log.w("NotificationDebug", "Permission for POST_NOTIFICATIONS not granted.");
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
-                return;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
+                    return;
+                }
             }
-            Log.d("NotificationDebug", "POST_NOTIFICATIONS permission granted.");
+
+            notificationManager.notify(1, builder.build()); // Send the notification
         }
-
-
-        notificationManager.notify(1, builder.build()); // Send the notification
-        Log.d("Notification Send!", "The notifications have been sent, you should be able to see them");
-
     }
     /**
      * Function that checks if the users have enabled location permissions for the app and depending on if they do
@@ -612,4 +591,13 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
     }
 
+    private void handleEntrantActions(boolean isDeclined, AtomicBoolean notis, boolean usesGeolocation, DialogInterface dialog) {
+        addEntrantToWaitlist(isDeclined);
+        addEntrantToNotis(notis);
+        addEventToEntrant();
+        getJoinLocation(usesGeolocation);
+        navigateToEventsHome();
+        dialog.dismiss();
+        sendNotifications(notis);
+    }
 }
