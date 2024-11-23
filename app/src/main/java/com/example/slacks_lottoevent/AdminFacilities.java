@@ -67,7 +67,7 @@ public class AdminFacilities extends Fragment {
                             String name = document.getString("name");
                             String facilityId = document.getId();
                             String organizerId = document.getString("organizerID");
-                            Facility facility = new Facility(name," "," "," ",organizerId,facilityId); // Adjust constructor if needed
+                            Facility facility = new Facility(name," ",organizerId,facilityId); // Adjust constructor if needed
 
                             facilitiesList.add(facility); // Add to the list
                         }

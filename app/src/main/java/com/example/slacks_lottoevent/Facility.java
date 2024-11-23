@@ -6,8 +6,6 @@ package com.example.slacks_lottoevent;
 public class Facility {
     private String facilityName;
     private String streetAddress1;
-    private String streetAddress2;
-    private String postalCode;
     private String facilityId;
     private String organizerId;
     private String deviceId;
@@ -22,16 +20,12 @@ public class Facility {
      *
      * @param facilityName The name of the facility
      * @param streetAddress1 The first line of the street address
-     * @param streetAddress2 The second line of the street address
-     * @param postalCode The postal code of the facility
      * @param organizerId The ID of the organizer who owns the facility
      * @param deviceId The ID of the device that created the facility
      */
-    public Facility(String facilityName, String streetAddress1, String streetAddress2, String postalCode, String organizerId, String deviceId){
+    public Facility(String facilityName, String streetAddress1, String organizerId, String deviceId){
         this.facilityName = facilityName;
         this.streetAddress1 = streetAddress1;
-        this.streetAddress2 = streetAddress2;
-        this.postalCode = postalCode;
         this.organizerId = organizerId;
         this.deviceId = deviceId;
     }
@@ -50,24 +44,6 @@ public class Facility {
 
     public void setStreetAddress1(String streetAddress1) {
         this.streetAddress1 = streetAddress1;
-    }
-
-    public String getStreetAddress2() {
-        return streetAddress2;
-    }
-
-    public void setStreetAddress2(String streetAddress2) {
-        this.streetAddress2 = streetAddress2;
-    }
-
-
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
     }
 
     public String getFacilityId() {

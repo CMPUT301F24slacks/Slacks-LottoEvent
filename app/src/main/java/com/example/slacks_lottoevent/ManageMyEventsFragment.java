@@ -72,9 +72,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilityData.put("name", facilityName);
         // Add other attributes as needed, like location, type, etc.
         facilityData.put("streetAddress1", facility.getStreetAddress1());
-        facilityData.put("streetAddress2", facility.getStreetAddress2());
-
-        facilityData.put("postalCode", facility.getPostalCode());
         facilityData.put("organizerID", facility.getOrganizerId());
         facilityData.put("deviceID", facility.getDeviceId());
 
@@ -138,9 +135,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         Map<String, Object> facilityData = new HashMap<>();
         facilityData.put("name", existingFacility.getFacilityName());
         facilityData.put("streetAddress1", existingFacility.getStreetAddress1());
-        facilityData.put("streetAddress2", existingFacility.getStreetAddress2());
-
-        facilityData.put("postalCode", existingFacility.getPostalCode());
 
         // Update the document in Firestore
         facilitiesRef.document(documentId).update(facilityData)
