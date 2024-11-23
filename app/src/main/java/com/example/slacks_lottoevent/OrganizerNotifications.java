@@ -83,7 +83,7 @@ public class OrganizerNotifications extends AppCompatActivity {
 
 
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, OrganizerWaitlistFragment.newInstance(event))
+        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, OrganizerWaitlistFragment.newInstance(eventID))
                 .addToBackStack(null)
                 .commit();
 
