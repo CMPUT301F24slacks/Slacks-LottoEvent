@@ -1,25 +1,43 @@
 package com.example.slacks_lottoevent;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
-import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.User;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.WriterException;
@@ -29,9 +47,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -39,11 +59,15 @@ import java.util.concurrent.atomic.AtomicReference;
  * This class is responsible for creating an event and adding it to the database.
  */
 public class CreateEvent extends AppCompatActivity {
+    private static final int PERMISSION_REQUEST_CODE = 101;
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private ActivityCreateEventBinding binding;
     private CollectionReference organizersRef;
-
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+    FirebaseStorage storage;
+    StorageReference storageRef;
+    Uri selectedImageUri;
     /**
      * This method initializes the CreateEvent activity.
      * @param savedInstanceState the saved instance state
@@ -59,44 +83,54 @@ public class CreateEvent extends AppCompatActivity {
         eventsRef = db.collection("events");
         organizersRef = db.collection("organizers");
 
+        binding.eventDate.setOnClickListener(v -> {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
 
-//        Check in real time if event date is validated
-        binding.eventDate.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            // Show DatePickerDialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                    (view, year1, monthOfYear, dayOfMonth) -> {
+                        String pickedDate = (monthOfYear + 1) + "/" + dayOfMonth + "/" + year1;
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Real-time validation for Date format
-                if (!isValidDate(s.toString().trim())) {
-                    binding.eventDate.setError("Date must be in MM/DD/YY format");
-                } else {
-                    binding.eventDate.setError(null);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
+                        // Validate the picked date
+                        if (!isDateInFuture(pickedDate)) {
+                            binding.eventDate.setError("Date must be in the future.");
+                            Toast.makeText(CreateEvent.this, "Date Must be In the future", Toast.LENGTH_SHORT).show();
+                        } else {
+                            binding.eventDate.setError(null);
+                            binding.eventDate.setText(pickedDate); // Set the date on the button
+                        }
+                    },
+                    year, month, day);
+            datePickerDialog.show();
         });
 
-        binding.signupDeadline.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
+        binding.signupDeadline.setOnClickListener(v -> {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int count, int after) {
-                if (!isValidDate(s.toString().trim())) {
-                    binding.eventDate.setError("Date must be in MM/DD/YY format");
-                } else {
-                    binding.signupDeadline.setError(null); // Clear error if valid
-                }
-            }
+            // Show DatePickerDialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                    (view, year1, monthOfYear, dayOfMonth) -> {
+                        String pickedDate = (monthOfYear + 1) + "/" + dayOfMonth + "/" + year1;
 
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+                        // Validate the picked date
+                        if (!isDateInFuture(pickedDate)) {
+                            binding.signupDeadline.setError("Date must be in the future.");
+                            Toast.makeText(CreateEvent.this, "Date Must be In the future", Toast.LENGTH_SHORT).show();
+                        } else {
+                            binding.signupDeadline.setError(null);
+                            binding.signupDeadline.setText(pickedDate); // Set the date on the button
+                        }
+                    },
+                    year, month, day);
+            datePickerDialog.show();
         });
+
 
 //        Check in real time if eventTime is validated
         binding.eventTime.addTextChangedListener(new TextWatcher() {
@@ -193,7 +227,89 @@ public class CreateEvent extends AppCompatActivity {
                 finish();
             }
         });
+
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent data = result.getData();
+                            if (data != null && data.getData() != null) {
+                                selectedImageUri = data.getData();
+                                binding.eventPoster.setImageURI(selectedImageUri); // Display the image
+                                binding.eventUploaderButton.setVisibility(View.GONE); // Hide the button
+                            }
+                        }
+                    }
+                });
+
+
+        binding.eventUploaderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    // Check for READ_MEDIA_IMAGES permission
+                    if (ContextCompat.checkSelfPermission(
+                            CreateEvent.this,
+                            Manifest.permission.READ_MEDIA_IMAGES)
+                            != PackageManager.PERMISSION_GRANTED) {
+
+                        // Request READ_MEDIA_IMAGES permission
+                        ActivityCompat.requestPermissions(
+                                CreateEvent.this,
+                                new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                                PERMISSION_REQUEST_CODE
+                        );
+                    } else {
+                        // Permission already granted
+                        selectImage();
+                    }
+                } else {
+                    // Check for READ_EXTERNAL_STORAGE permission for older Android versions
+                    if (ContextCompat.checkSelfPermission(
+                            CreateEvent.this,
+                            Manifest.permission.READ_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
+
+                        // Request READ_EXTERNAL_STORAGE permission
+                        ActivityCompat.requestPermissions(
+                                CreateEvent.this,
+                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                PERMISSION_REQUEST_CODE
+                        );
+                    } else {
+                        // Permission already granted
+                        selectImage();
+                    }
+                }
+            }
+        });
+
+
     }
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        imagePickerLauncher.launch(intent);
+    }
+
+    // Handle the result of permission request
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                selectImage();
+            } else {
+                // Permission denied
+                Toast.makeText(this, "Permission denied. Please enable it in settings.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 
     /**
      * This method validates the inputs for creating an event.
@@ -206,6 +322,7 @@ public class CreateEvent extends AppCompatActivity {
         String price = binding.eventPrice.getText().toString().trim();
         String details = binding.eventDetails.getText().toString().trim();
         String eventSlot = binding.eventSlots.getText().toString().trim();
+        String signUpDeadline = binding.signupDeadline.getText().toString().trim();
 
 //        Event Name validation
         if (TextUtils.isEmpty(name)) {
@@ -214,9 +331,17 @@ public class CreateEvent extends AppCompatActivity {
             return false;
         }
 //        Event Date validation
-        if (TextUtils.isEmpty(date)) {
+        if (date.equals("Select Date")) {
             binding.eventDate.setError("Event date is required");
+            Toast.makeText(CreateEvent.this, "Event Date must be selected", Toast.LENGTH_SHORT).show();
             binding.eventDate.requestFocus();
+            return false;
+        }
+
+        if (signUpDeadline.equals("Select Date")) {
+            binding.signupDeadline.setError("Sign up deadline is required");
+            Toast.makeText(CreateEvent.this, "Sign up Deadline must be selected", Toast.LENGTH_SHORT).show();
+            binding.signupDeadline.requestFocus();
             return false;
         }
 
@@ -269,21 +394,53 @@ public class CreateEvent extends AppCompatActivity {
     }
 
     /**
-     * This method checks if the date is in the correct format.
+     * This method checks if the date is in the correct format and in the future.
      * @param date the date to be checked
-     * @return true if the date is in the correct format, false otherwise
+     * @return true if the date is in the correct format and in the future false otherwise
      */
-    private boolean isValidDate(String date) {
+    private boolean isDateFormatValid(String date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         dateFormat.setLenient(false); // Ensures strict date parsing
 
         try {
             dateFormat.parse(date); // Parse the date
-            return true; // Parsing succeeded, date is valid
+            return true; // Parsing succeeded, format is valid
         } catch (ParseException e) {
-            return false; // Parsing failed, date is invalid
+            return false; // Parsing failed, format is invalid
         }
     }
+
+    /**
+     * This method checks if the date is in future.
+     * @param date the date to be checked
+     * @return true if the date is in the future false otherwise
+     */
+    private boolean isDateInFuture(String date) {
+        if (!isDateFormatValid(date)) {
+            return false; // Invalid format, cannot check if in the future
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        dateFormat.setLenient(false);
+
+        try {
+            Date parsedDate = dateFormat.parse(date); // Parse the date
+
+            // Get the current date with time set to the start of the day
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR_OF_DAY, 0);
+            today.set(Calendar.MINUTE, 0);
+            today.set(Calendar.SECOND, 0);
+            today.set(Calendar.MILLISECOND, 0);
+
+            // Check if the parsed date is in the future
+            return parsedDate.after(today.getTime());
+        } catch (ParseException e) {
+            return false; // Should not happen as format is already validated
+        }
+    }
+
+
 
     /**
      * This method checks if the signupDeadline is after the eventdate.
@@ -306,6 +463,9 @@ public class CreateEvent extends AppCompatActivity {
                 // If eventDate is before signupDeadline, set an error
                 binding.eventDate.setError("Event date must be after the signup deadline");
                 binding.signupDeadline.setError("Signup Deadline must be before the eventDate");
+                Toast.makeText(CreateEvent.this, "Signup deadline must be before the eventDate, event date must be after signup date.", Toast.LENGTH_SHORT).show();
+
+
                 return false;
             } else {
                 // Clear any existing error if the dates are valid
@@ -329,17 +489,18 @@ public class CreateEvent extends AppCompatActivity {
         String time = binding.eventTime.getText().toString().trim();
         String price = binding.eventPrice.getText().toString().trim();
         String details = binding.eventDetails.getText().toString().trim();
-        Boolean geoLoc = binding.checkBoxGeo.isChecked() ? false: true;
+        Boolean geoLoc = binding.checkBoxGeo.isChecked() ? false : true;
         String signupDeadline = binding.signupDeadline.getText().toString().trim();
 
         Integer eventSlots = Integer.valueOf(binding.eventSlots.getText().toString().trim());
         String waitingListCapacity = binding.waitListCapacity.getText().toString().trim();
 
         if (TextUtils.isEmpty(waitingListCapacity) || Integer.parseInt(waitingListCapacity) == 0) {
-            waitingListCapacity = "-1";
+            waitingListCapacity = "0";
         }
 
         String eventId = UUID.randomUUID().toString();
+
 
         QRCodeWriter writer = new QRCodeWriter();
         try {
@@ -349,40 +510,91 @@ public class CreateEvent extends AppCompatActivity {
             String qrHash = generateHash(qrData);
             String deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
             String finalWaitingListCapacity = waitingListCapacity;
-            db.collection("facilities").whereEqualTo("deviceID", deviceID)
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if(task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                            location.set(document.getString("streetAddress1"));
-                            Event eventData =  new Event(name, eventDate, location.get(), time, price, details, eventSlots, Integer.parseInt(finalWaitingListCapacity), qrData, eventId, geoLoc, qrHash, deviceID, signupDeadline);
-                            eventsRef.document(eventId).set(eventData)
-                                    .addOnSuccessListener(nothing -> {
-                                        Toast.makeText(CreateEvent.this, "Event created successfully", Toast.LENGTH_SHORT).show();
-                                    })
-                                    .addOnFailureListener(nothing -> {
 
-                                        Toast.makeText(CreateEvent.this, "Failed to create event", Toast.LENGTH_SHORT).show();
-                                    });
-                        }
+            uploadImageToCloud(new Callback<String>() {
+                @Override
+                public void onComplete(String eventPosterURL) {
+                    // Use AtomicReference to hold the final or effectively final variable
+                    AtomicReference<String> posterURL = new AtomicReference<>(eventPosterURL == null ? "" : eventPosterURL);
+
+                    // Proceed after successfully uploading the image
+                    db.collection("facilities").whereEqualTo("deviceID", deviceID)
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                                    location.set(document.getString("streetAddress1"));
+
+                                    // Create the event with the retrieved URL
+                                    Event eventData = new Event(name, eventDate, location.get(), time, price, details, eventSlots,
+                                            Integer.parseInt(finalWaitingListCapacity), qrData, eventId, geoLoc, qrHash, deviceID,
+                                            signupDeadline, posterURL.get());
+
+                                    eventsRef.document(eventId).set(eventData)
+                                            .addOnSuccessListener(nothing -> {
+                                                Toast.makeText(CreateEvent.this, "Event created successfully", Toast.LENGTH_SHORT).show();
+                                            })
+                                            .addOnFailureListener(nothing -> {
+                                                Toast.makeText(CreateEvent.this, "Failed to create event", Toast.LENGTH_SHORT).show();
+                                            });
+                                } else {
+                                    Log.e("CreateEvent", "Failed to retrieve facility information or no matching facility found.");
+                                    Toast.makeText(CreateEvent.this, "Facility information is missing. Please create a facility first.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            });
+
+            String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            DocumentReference organizerRef = organizersRef.document(organizerId);
+            organizerRef.update("events", FieldValue.arrayUnion(eventId))
+                    .addOnSuccessListener(aVoid -> {
+                        // Event ID successfully added to the organizer's events array
+                        Log.d("Firestore", "Event added to organizer's events list.");
+                    })
+                    .addOnFailureListener(e -> {
+                        // Failed to add event ID
+                        Log.w("Firestore", "Error adding event to organizer's events list", e);
                     });
-        } catch (WriterException e) {
+
+        }catch (WriterException e) {
             throw new RuntimeException(e);
         }
-
-        String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        DocumentReference organizerRef = organizersRef.document(organizerId);
-        organizerRef.update("events", FieldValue.arrayUnion(eventId))
-                .addOnSuccessListener(aVoid -> {
-                    // Event ID successfully added to the organizer's events array
-                    Log.d("Firestore", "Event added to organizer's events list.");
-                })
-                .addOnFailureListener(e -> {
-                    // Failed to add event ID
-                    Log.w("Firestore", "Error adding event to organizer's events list", e);
-                });
-
     }
+
+private void uploadImageToCloud(Callback<String> callback) {
+    if (selectedImageUri == null) {
+        Log.d("CreateEvent", "No image selected, skipping upload.");
+        callback.onComplete(null); // Return null to indicate no image
+        return;
+    }
+
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
+    Date now = new Date();
+    String fileName = formatter.format(now);
+    StorageReference storageRef = FirebaseStorage.getInstance().getReference("event_posters/" + fileName);
+
+    storageRef.putFile(selectedImageUri)
+            .addOnSuccessListener(taskSnapshot -> {
+                Log.d("Storage", "Successfully uploaded");
+
+                // Retrieve the download URL
+                storageRef.getDownloadUrl()
+                        .addOnSuccessListener(uri -> {
+                            String eventPosterURL = uri.toString();
+                            callback.onComplete(eventPosterURL); // Pass the URL to the callback
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("Error", "Failed to get download URL", e);
+                            callback.onComplete(null); // Return null to indicate failure
+                        });
+            })
+            .addOnFailureListener(e -> {
+                Log.d("Storage", "Failed to upload");
+                callback.onComplete(null); // Return null to indicate failure
+            });
+}
+
 
     /**
      * This method generates a hash for the QR code.

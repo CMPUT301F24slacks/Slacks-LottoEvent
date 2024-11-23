@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -30,10 +31,12 @@ public class Event implements Serializable {
     private ArrayList<String> selectedNotificationsList;
     private ArrayList<String> joinedNotificationsList;
     private ArrayList<String> cancelledNotificationsList;
+    private ArrayList<HashMap<String,List<Double>>> joinLocations;
     private String location;
     private String deviceId;
     private String signupDeadline;
     private Boolean entrantsChosen;
+    private String eventPosterURL;
     public Event(){
     }
 
@@ -52,9 +55,8 @@ public class Event implements Serializable {
      * @param geoLocation
      * @param qrHash
      * @param signupDeadline
-     *
      */
-    public Event(String name, String eventDate, String location, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventID, Boolean geoLocation, String qrHash, String deviceId, String signupDeadline) {
+    public Event(String name, String eventDate, String location, String time, String price, String description, int eventSlots, int waitListCapacity, String qrData, String eventID, Boolean geoLocation, String qrHash, String deviceId, String signupDeadline, String eventPosterURL) {
         this.name = name;
         this.eventDate = eventDate;
         this.time = time;
@@ -73,7 +75,9 @@ public class Event implements Serializable {
         this.selectedNotificationsList = new ArrayList<>();
         this.cancelledNotificationsList = new ArrayList<>();
         this.joinedNotificationsList = new ArrayList<>();
-
+        if (geoLocation) {
+            this.joinLocations = new ArrayList<>();
+        }
         this.qrCodeData = qrData;
         this.eventID = eventID;
         this.qrHash = qrHash;
@@ -83,6 +87,7 @@ public class Event implements Serializable {
         this.signupDeadline = signupDeadline;
 
         this.entrantsChosen = false;
+        this.eventPosterURL = eventPosterURL;
 
     }
 
@@ -254,6 +259,13 @@ public class Event implements Serializable {
 
     public Boolean getEntrantsChosen(){return this.entrantsChosen;}
 
+    public String getEventPosterURL() {
+        return eventPosterURL;
+    }
+
+    public void setEventPosterURL(String eventPosterURL) {
+        this.eventPosterURL = eventPosterURL;
+    }
 
     /**
      * Checks if the event is full
@@ -293,5 +305,13 @@ public class Event implements Serializable {
         }
 
         this.entrantsChosen = true;
+    }
+
+    public ArrayList<HashMap<String, List<Double>>> getJoinLocations() {
+        return joinLocations;
+    }
+
+    public void setJoinLocations(ArrayList<HashMap<String, List<Double>>> joinLocations) {
+        this.joinLocations = joinLocations;
     }
 }

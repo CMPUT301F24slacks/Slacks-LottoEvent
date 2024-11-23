@@ -73,7 +73,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="2024-06-15"
+                    android:text="Event Date: 2024-06-15"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="Date Icon"
+                    android:src="@drawable/baseline_calendar_today_20"
+                    app:tint="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/signupDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Sign up Deadline: 2024-06-15"
                     android:textColor="#FFFFFF" />
             </LinearLayout>
 
@@ -146,6 +169,30 @@
                     app:tint="#FFFFFF" />
 
                 <TextView
+                    android:id="@+id/eventSlotsCapacity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Event Slots: 1000"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/eventWaitlistCapacitySection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="Capacity Icon"
+                    android:src="@drawable/baseline_account_circle_24"
+                    app:tint="#FFFFFF" />
+
+                <TextView
                     android:id="@+id/eventWaitlistCapacity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -155,6 +202,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/spotsAvailableSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -177,6 +225,23 @@
                     android:textColor="#BDBDBD" />
 
             </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="98dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <Button
+                android:id="@+id/show_qr_code_button"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:backgroundTint="#7B24EB"
+                android:text="View QR Code" />
         </LinearLayout>
 
         <LinearLayout
@@ -202,9 +267,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
-                android:text="Lottery System"
                 android:backgroundTint="#7B24EB"
-                android:textColor="#FFFFFF"/>
+                android:text="Lottery System"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/entrantListButton"
