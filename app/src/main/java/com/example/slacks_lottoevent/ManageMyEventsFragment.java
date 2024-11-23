@@ -22,7 +22,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.slacks_lottoevent.databinding.FragmentManageMyEventsBinding;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +50,8 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
     private CollectionReference organizersRef;
     String deviceId;
     FacilityViewModel facilityViewModel;
+    private List<ListenerRegistration> eventListeners = new ArrayList<>();
+
 
     /**
      * This method is called when the user creates a new facility.
@@ -180,6 +184,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilityViewModel = new ViewModelProvider(requireActivity()).get(FacilityViewModel.class);
 
 /// Listen for real-time updates to the organizer's document
+
         organizersRef.document(deviceId).addSnapshotListener((organizerSnapshot, error) -> {
             if (error != null) {
                 Log.w("Firestore", "Listen failed.", error);
@@ -187,52 +192,59 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
             }
 
             if (organizerSnapshot != null && organizerSnapshot.exists()) {
-                // Check if "events" field exists in the snapshot
                 List<String> eventIDs = (List<String>) organizerSnapshot.get("events");
 
                 if (eventIDs != null && !eventIDs.isEmpty()) {
-                    ArrayList<Event> newEvents = new ArrayList<>();
+                    eventList.clear(); // Clear the current list to avoid duplicates
 
-                    // Retrieve each event document and add to the newEvents list
                     for (String eventID : eventIDs) {
-                        eventsRef.document(eventID).get().addOnCompleteListener(eventTask -> {
-                            if (eventTask.isSuccessful() && eventTask.getResult() != null) {
-                                DocumentSnapshot eventDoc = eventTask.getResult();
+                        // Add a real-time listener for each event document
+                        eventsRef.document(eventID).addSnapshotListener((eventSnapshot, eventError) -> {
+                            if (eventError != null) {
+                                Log.w("Firestore", "Listen failed for event: " + eventID, eventError);
+                                return;
+                            }
 
-                                if (eventDoc.exists()) {
-                                    Event event = eventDoc.toObject(Event.class);
-                                    if (event != null) {
-                                        newEvents.add(event);
-
-                                        // Update the UI when all events are retrieved
-                                        if (newEvents.size() == eventIDs.size()) {
-                                            // Only update if there are changes
-                                            if (!newEvents.equals(eventList)) {
-                                                eventList.clear();
-                                                eventList.addAll(newEvents);
-                                                organizerEventArrayAdapter.notifyDataSetChanged();
-                                            }
+                            if (eventSnapshot != null && eventSnapshot.exists()) {
+                                Event updatedEvent = eventSnapshot.toObject(Event.class);
+                                if (updatedEvent != null) {
+                                    // Check if the event already exists in the list
+                                    boolean eventExists = false;
+                                    for (int i = 0; i < eventList.size(); i++) {
+                                        if (eventList.get(i).getEventID().equals(updatedEvent.getEventID())) {
+                                            // Update the existing event in the list
+                                            eventList.set(i, updatedEvent);
+                                            eventExists = true;
+                                            break;
                                         }
                                     }
-                                } else {
-                                    Log.w("Firestore", "Event document not found: " + eventID);
+
+                                    // If the event is new, add it to the list
+                                    if (!eventExists) {
+                                        eventList.add(updatedEvent);
+                                    }
+
+                                    // Notify the adapter of the changes
+                                    organizerEventArrayAdapter.notifyDataSetChanged();
                                 }
                             } else {
-                                Log.w("Firestore", "Failed to retrieve event document.", eventTask.getException());
+                                Log.w("Firestore", "Event document does not exist: " + eventID);
                             }
                         });
                     }
                 } else {
-                    // Handle the case where no events are found for this organizer
+                    // Handle the case where no events are associated with this organizer
                     eventList.clear();
                     organizerEventArrayAdapter.notifyDataSetChanged();
                 }
             } else {
-                Log.w("Firestore", "Organizer document does not exist or eventList missing.");
+                Log.w("Firestore", "Organizer document does not exist or event list missing.");
                 eventList.clear();
                 organizerEventArrayAdapter.notifyDataSetChanged();
             }
         });
+
+
 
         organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
