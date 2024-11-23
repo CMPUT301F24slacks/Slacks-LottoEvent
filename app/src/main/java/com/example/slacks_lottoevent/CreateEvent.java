@@ -244,12 +244,6 @@ public class CreateEvent extends AppCompatActivity {
                     }
                 });
 
-//        binding.eventUploaderButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                selectImage();
-//            }
-//        });
 
         binding.eventUploaderButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -520,23 +514,21 @@ public class CreateEvent extends AppCompatActivity {
             uploadImageToCloud(new Callback<String>() {
                 @Override
                 public void onComplete(String eventPosterURL) {
-                    if (eventPosterURL == null) {
-                        Toast.makeText(CreateEvent.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                    // Use AtomicReference to hold the final or effectively final variable
+                    AtomicReference<String> posterURL = new AtomicReference<>(eventPosterURL == null ? "" : eventPosterURL);
 
                     // Proceed after successfully uploading the image
                     db.collection("facilities").whereEqualTo("deviceID", deviceID)
                             .get()
                             .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
+                                if (task.isSuccessful() && !task.getResult().isEmpty()) {
                                     DocumentSnapshot document = task.getResult().getDocuments().get(0);
                                     location.set(document.getString("streetAddress1"));
 
                                     // Create the event with the retrieved URL
                                     Event eventData = new Event(name, eventDate, location.get(), time, price, details, eventSlots,
                                             Integer.parseInt(finalWaitingListCapacity), qrData, eventId, geoLoc, qrHash, deviceID,
-                                            signupDeadline, eventPosterURL);
+                                            signupDeadline, posterURL.get());
 
                                     eventsRef.document(eventId).set(eventData)
                                             .addOnSuccessListener(nothing -> {
@@ -545,6 +537,9 @@ public class CreateEvent extends AppCompatActivity {
                                             .addOnFailureListener(nothing -> {
                                                 Toast.makeText(CreateEvent.this, "Failed to create event", Toast.LENGTH_SHORT).show();
                                             });
+                                } else {
+                                    Log.e("CreateEvent", "Failed to retrieve facility information or no matching facility found.");
+                                    Toast.makeText(CreateEvent.this, "Facility information is missing. Please create a facility first.", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
@@ -568,6 +563,12 @@ public class CreateEvent extends AppCompatActivity {
     }
 
 private void uploadImageToCloud(Callback<String> callback) {
+    if (selectedImageUri == null) {
+        Log.d("CreateEvent", "No image selected, skipping upload.");
+        callback.onComplete(null); // Return null to indicate no image
+        return;
+    }
+
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
     Date now = new Date();
     String fileName = formatter.format(now);
