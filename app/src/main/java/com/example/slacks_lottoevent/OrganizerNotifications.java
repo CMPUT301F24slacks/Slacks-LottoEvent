@@ -90,6 +90,8 @@ public class OrganizerNotifications extends AppCompatActivity {
             // Call a method to perform the re-selection logic
 
             if(event.getEventSlots() == event.getFinalists().size()){
+
+//              Event has closed
                 updateUninvitedFinalEntrants(event);
                 updateUninvitedonEvents(event);
                 new AlertDialog.Builder(this)
@@ -124,7 +126,7 @@ public class OrganizerNotifications extends AppCompatActivity {
             if (event.getSelected().size() + event.getFinalists().size() == event.getEventSlots()){
                 new AlertDialog.Builder(this)
                         .setTitle("Cannot Re-Select")
-                        .setMessage("No Space right now.")
+                        .setMessage("No Space right now. Still waiting on responses.")
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
                 return;
@@ -291,10 +293,13 @@ public class OrganizerNotifications extends AppCompatActivity {
 
                 for (String entrant : event.getWaitlisted()) {
                     eventRef.update("waitlisted", FieldValue.arrayRemove(entrant),
-                            "waitlistedNotificationsList", FieldValue.arrayRemove(entrant)); //TODO: when doing notifications get rid of this line
+                            "waitlistedNotificationsList", FieldValue.arrayRemove(entrant),
+                            "cancelled", FieldValue.arrayUnion(entrant),
+                            "cancelledNotificationsList", FieldValue.arrayUnion(entrant)); //TODO: when doing notifications get rid of this line
                 }
                 event.fullEvent(); // clearing waitlist now
                 eventRef.update("waitlisted", event.getWaitlisted());
+                eventRef.update("reselected", event.getWaitlisted());
             }
         });
     }
