@@ -23,6 +23,8 @@ public class Event implements Serializable {
     private ArrayList<String> finalists;
     private ArrayList<String> cancelled;
     private ArrayList<String> selected;
+    private ArrayList<String> reselected;
+
     private String qrCodeData;
     private String qrHash;
     private String eventID;
@@ -70,6 +72,7 @@ public class Event implements Serializable {
         this.finalists = new ArrayList<>();
         this.cancelled = new ArrayList<>();
         this.selected = new ArrayList<>();
+        this.reselected = new ArrayList<>();
 
         this.waitlistedNotificationsList = new ArrayList<>();
         this.selectedNotificationsList = new ArrayList<>();
@@ -217,6 +220,14 @@ public class Event implements Serializable {
 
     public void setSelected(ArrayList<String> entrants) { this.selected = entrants;}
 
+    public void addReselected(String entrant) {this.reselected.add(entrant);}
+
+    public void setReselected(ArrayList<String> entrants) { this.reselected = entrants;}
+
+    public ArrayList<String> getReselected() {
+        return reselected;
+    }
+
     public ArrayList<String> getSelectedNotificationsList(){return selectedNotificationsList; }
 
     public void addSelectedNotification(String notification) { this.selectedNotificationsList.add(notification); }
@@ -299,12 +310,45 @@ public class Event implements Serializable {
             Collections.shuffle(this.waitlisted);
             this.selected = new ArrayList<>(this.waitlisted.subList(0, numOfSelectedEntrants));
 
-            for(Integer i = 0; i < numOfSelectedEntrants; i++){
-                this.waitlisted.remove(0);
+//            Removing everyone who got selected
+            this.waitlisted.removeAll(this.selected);
+            this.reselected.removeAll(this.selected);
+
+//            Removing
+            this.waitlisted.removeAll(this.reselected);
+            this.cancelled = this.waitlisted;
+        }
+        this.entrantsChosen = true;
+    }
+
+    /**
+     * Re-Selecting System for the event
+     */
+    public void reSelecting(){
+//        Need to check if the slots are not filled up
+
+
+        if (!(this.eventSlots == this.finalists.size())){
+//            current selected list cannot fill the the finalists or the selected size is 0 (meaning declined or cancelled) and the finalists still need more people
+            if(this.selected.size() < (this.eventSlots - this.finalists.size()) || (this.selected.size() == 0 && this.finalists.size() < this.eventSlots)) {
+                Integer potentialNum = this.eventSlots - this.finalists.size() - this.selected.size();
+                Integer numOfSelectedEntrants = this.waitlisted.size() > potentialNum && (potentialNum > 0) ? potentialNum : this.waitlisted.size();
+
+                if (!this.waitlisted.isEmpty()) {
+                    Collections.shuffle(this.waitlisted);
+                    this.selected = new ArrayList<>(this.waitlisted.subList(0, numOfSelectedEntrants)); // This will remove all entrants who haven't responded "Cancelling them"
+                    this.waitlisted.removeAll(this.selected);
+                }
             }
         }
+    }
 
-        this.entrantsChosen = true;
+    /**
+     * Clearing list if event is full*
+     */
+    public void fullEvent(){
+        this.waitlisted.clear();
+        this.waitlistedNotificationsList.clear();
     }
 
     public ArrayList<HashMap<String, List<Double>>> getJoinLocations() {

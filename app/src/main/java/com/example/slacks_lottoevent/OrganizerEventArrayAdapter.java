@@ -84,7 +84,6 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         ImageView eventPoster = convertView.findViewById(R.id.event_image);
         eventName.setText(event.getName());
         eventDate.setText(event.getEventDate());
-        Log.d("EventDetails", "eventDate" + event.getEventDate());
         eventTime.setText(event.getTime());
 //        eventAddress.setText(event.getLocation());
 
