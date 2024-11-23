@@ -217,8 +217,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         View dialogView = inflater.inflate(R.layout.dialog_registration, null);
         builder.setView(dialogView);
 
-        ImageView bellChosen = dialogView.findViewById(R.id.bellChosen);
-        ImageView bellNotChosen = dialogView.findViewById(R.id.bellNotChosen);
+        ImageView organizerNotis = dialogView.findViewById(R.id.organizerNotifications);
         CheckBox declineCheckbox = dialogView.findViewById(R.id.declineCheckbox);
         Button confirmButton = dialogView.findViewById(R.id.confirm_button);
         Button cancelButton = dialogView.findViewById(R.id.cancel_button);
@@ -237,16 +236,10 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         AtomicBoolean notChosenForLottery = new AtomicBoolean(false);
 
 
-        bellChosen.setOnClickListener(v -> {
+        organizerNotis.setOnClickListener(v -> {
             boolean negation = !chosenForLottery.get();
             chosenForLottery.set(negation);
-            bellChosen.setImageResource(chosenForLottery.get() ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
-        });
-
-        bellNotChosen.setOnClickListener(v -> {
-            boolean negation = !notChosenForLottery.get();
-            notChosenForLottery.set(negation);
-            bellNotChosen.setImageResource(notChosenForLottery.get() ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
+            organizerNotis.setImageResource(chosenForLottery.get() ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
         });
 
 
@@ -273,7 +266,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     } else {
                         // Entrant is not in the event, add them to the event
                         addEntrantToWaitlist();
-                        addEntrantToNotis(chosenForLottery, notChosenForLottery);
+                        addEntrantToNotis(chosenForLottery);
                         addEventToEntrant();
                         getJoinLocation(usesGeolocation);
                         navigateToEventsHome();
@@ -285,7 +278,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     Log.d("JoinEventDetails", "Entrant does not exist. Creating a new entrant...");
                     createNewEntrant(userId);
                     addEntrantToWaitlist();
-                    addEntrantToNotis(chosenForLottery, notChosenForLottery);
+                    addEntrantToNotis(chosenForLottery);
                     getJoinLocation(usesGeolocation);
                     navigateToEventsHome();
                     dialog.dismiss();
@@ -299,7 +292,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                 // Create a new entrant in case of a failure
                 createNewEntrant(userId);
                 addEntrantToWaitlist();
-                addEntrantToNotis(chosenForLottery, notChosenForLottery);
+                addEntrantToNotis(chosenForLottery);
                 getJoinLocation(usesGeolocation);
                 navigateToEventsHome();
                 dialog.dismiss();
@@ -451,10 +444,9 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      * addEntrantToNotis method for the JoinEventDetailsActivity.
      * This method adds the entrant to the notifications for the event.
      *
-     * @param chosenForLottery The boolean value for chosen for lottery
-     * @param notChosenForLottery The boolean value for not chosen for lottery
+     * @param organizerNotis The boolean value for chosen for lottery
      */
-    private void addEntrantToNotis(AtomicBoolean chosenForLottery, AtomicBoolean notChosenForLottery) {
+    private void addEntrantToNotis(AtomicBoolean organizerNotis) {
         // Query the Firestore for the event based on the QR code value
         db.collection("events").whereEqualTo("eventID", qrCodeValue)
                 .get()
@@ -463,24 +455,21 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         QueryDocumentSnapshot document = (QueryDocumentSnapshot) task.getResult().getDocuments().get(0);
                         Event event = document.toObject(Event.class); // Convert the document to an Event object
 
-
-//                       IF that entrant wants notifications then we add that entrant too the notifications for selected and or cancelled depending on what they want
-                        event.addWaitlistedNotification(deviceId);
-                        if (chosenForLottery.get()) {
+//                       IF that entrant wants notifications then we add that entrant too all the notification lists
+                        if (organizerNotis.get()) {
+                            event.addWaitlistedNotification(deviceId);
                             event.addSelectedNotification(deviceId);
-                            System.out.println("SelectedNotis List updated successfully.");
-                        }
-                        if (notChosenForLottery.get()) {
                             event.addCancelledNotification(deviceId);
-                            System.out.println("CancelledNotis List updated successfully.");
+                            event.addJoinedNotification(deviceId);
+                            System.out.println("Notifications List updated successfully.");
                         }
-
 
 //                        We update the lists that may have been changed
                         db.collection("events").document(event.getEventID())
                                 .update("waitlistedNotificationsList", event.getWaitlistedNotificationsList(), // Assuming this method returns the list
                                         "selectedNotificationsList", event.getSelectedNotificationsList(),      // Assuming this method returns the list
-                                        "cancelledNotificationsList", event.getCancelledNotificationsList())
+                                        "cancelledNotificationsList", event.getCancelledNotificationsList(),
+                                        "joinedNotificationsList", event.getJoinedNotificationsList())
                                 .addOnSuccessListener(aVoid -> {
                                     // Successfully updated Firestore
                                     System.out.println("Notifications updated successfully.");

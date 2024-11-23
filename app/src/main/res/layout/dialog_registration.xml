@@ -39,50 +39,23 @@
 
 
             <TextView
-                android:id="@+id/chosenForLotteryText"
+                android:id="@+id/organizerNotisText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Chosen for Lottery"
+                android:text="Recieve Notifications"
                 android:textColor="#BDBDBD"
                 android:layout_marginEnd="8dp" />
 
             <ImageView
-                android:id="@+id/bellChosen"
+                android:id="@+id/organizerNotifications"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/baseline_circle_notifications_24"
-                android:contentDescription="Chosen for Lottery Notification"
+                android:contentDescription="Recieve notifications from organizer"
                 android:clickable="true"
                 android:focusable="true"
                 app:tint="#BDBDBD" />
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
-
-            <TextView
-                android:id="@+id/notChosenForLotteryText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Not Chosen for Lottery"
-                android:textColor="#BDBDBD"
-                android:layout_marginEnd="8dp" />
-
-            <ImageView
-                android:id="@+id/bellNotChosen"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/baseline_circle_notifications_24"
-                android:contentDescription="Not Chosen for Lottery Notification"
-                android:clickable="true"
-                android:focusable="true"
-                app:tint="#BDBDBD" />
-        </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="wrap_content"
