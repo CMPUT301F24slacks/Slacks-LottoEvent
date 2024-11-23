@@ -225,8 +225,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
         AtomicBoolean chosenForLottery = new AtomicBoolean(false);
         AtomicBoolean notChosenForLottery = new AtomicBoolean(false);
-        Boolean isDeclined = declineCheckbox.isChecked();
-        System.out.println("isReselected: " + isDeclined);
 
 
         bellChosen.setOnClickListener(v -> {
@@ -244,6 +242,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
         cancelButton.setOnClickListener(view -> dialog.dismiss());
         confirmButton.setOnClickListener(view -> {
+            Boolean isDeclined = declineCheckbox.isChecked();
             // Get the user's unique device ID
             String userId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
