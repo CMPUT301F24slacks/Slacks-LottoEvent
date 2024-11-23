@@ -26,8 +26,8 @@ public class UserNotifications extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private CollectionReference entrantRef;
-    private CollectionReference organizersRef;
-    private CollectionReference facilitiesRef;
+//    private CollectionReference organizersRef;
+//    private CollectionReference facilitiesRef;
     private ArrayList<UserEventNotifications> eventList;
     private EventNotificationsArrayAdapter adapter;
 
@@ -44,8 +44,8 @@ public class UserNotifications extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
         entrantRef = db.collection("entrants");
-        organizersRef = db.collection("organizers");
-        facilitiesRef = db.collection("facilities");
+//        organizersRef = db.collection("organizers");
+//        facilitiesRef = db.collection("facilities");
         eventList = new ArrayList<>();
 
         // Set up the adapter

@@ -83,7 +83,7 @@ public class OrganizerNotifications extends AppCompatActivity {
 
 
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, OrganizerWaitlistFragment.newInstance(event))
+        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, OrganizerWaitlistFragment.newInstance(eventID))
                 .addToBackStack(null)
                 .commit();
 
@@ -93,16 +93,16 @@ public class OrganizerNotifications extends AppCompatActivity {
                 Fragment selected_fragment = null;
                 switch (tab.getPosition()){
                     case 0:
-                        selected_fragment = OrganizerWaitlistFragment.newInstance(event);
+                        selected_fragment = OrganizerWaitlistFragment.newInstance(eventID);
                         break;
                     case 1:
-                        selected_fragment = OrganizerInvitedFragment.newInstance(event);;
+                        selected_fragment = OrganizerInvitedFragment.newInstance(eventID);;
                         break;
                     case 2:
-                        selected_fragment = OrganizerCancelledFragment.newInstance(event);;
+                        selected_fragment = OrganizerCancelledFragment.newInstance(eventID);;
                         break;
                     case 3:
-                        selected_fragment = OrganizerEnrolledFragment.newInstance(event);;
+                        selected_fragment = OrganizerEnrolledFragment.newInstance(eventID);;
                         break;
                 }
                 if (selected_fragment != null) {
@@ -135,6 +135,7 @@ public class OrganizerNotifications extends AppCompatActivity {
 
         ImageView back = findViewById(R.id.back_button);
         back.setOnClickListener(v -> {
+            onBackPressed();
             onBackPressed();
         });
 

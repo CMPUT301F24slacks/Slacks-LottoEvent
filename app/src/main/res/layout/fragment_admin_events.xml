@@ -6,11 +6,16 @@
     android:layout_height="match_parent">
 
     <ListView
-        android:id="@+id/ListViewAdminFacilities"
+        android:id="@+id/ListViewAdminEvents"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:dividerHeight="16dp"
+        android:paddingTop="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
