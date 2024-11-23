@@ -162,20 +162,20 @@ public class OrganizerNotifications extends AppCompatActivity {
                 Fragment selected_fragment = null;
                 switch (tab.getPosition()){
                     case 0:
-                        selected_fragment = OrganizerWaitlistFragment.newInstance(event);
+                        selected_fragment = OrganizerWaitlistFragment.newInstance(event.getEventID());
                         reSelect.setVisibility(View.VISIBLE);
 
                         break;
                     case 1:
-                        selected_fragment = OrganizerInvitedFragment.newInstance(event);
+                        selected_fragment = OrganizerInvitedFragment.newInstance(event.getEventID());
                         reSelect.setVisibility(View.GONE);
                         break;
                     case 2:
-                        selected_fragment = OrganizerCancelledFragment.newInstance(event);
+                        selected_fragment = OrganizerCancelledFragment.newInstance(event.getEventID());
                         reSelect.setVisibility(View.GONE);
                         break;
                     case 3:
-                        selected_fragment = OrganizerEnrolledFragment.newInstance(event);
+                        selected_fragment = OrganizerEnrolledFragment.newInstance(event.getEventID());
                         reSelect.setVisibility(View.GONE);
                         break;
                 }
