@@ -26,6 +26,7 @@ public class OrganizerCancelledFragment extends Fragment {
     private String eventId;
     private static final String ARG_EVENT_ID = "eventID";
     private FirebaseFirestore db;
+    private ArrayList<Profile> profileList;
 
     /**
      * Default constructor
@@ -49,7 +50,7 @@ public class OrganizerCancelledFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
-
+        profileList = new ArrayList<>(); // Initialize the profile list
         // Retrieve the event ID from the fragment's arguments
         if (getArguments() != null) {
             eventId = getArguments().getString(ARG_EVENT_ID);
@@ -62,47 +63,53 @@ public class OrganizerCancelledFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_organizer_cancelled, container, false);
         ListViewEntrantsCancelled = view.findViewById(R.id.listViewEntrantsCancelled);
 
-        ArrayList<String> entrantNames = new ArrayList<>();
-        EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), entrantNames);
+        ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false);
         ListViewEntrantsCancelled.setAdapter(adapter);
 
-        // Use the event ID to fetch data from Firestore
-        db.collection("events").document(eventId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                DocumentSnapshot eventDoc = task.getResult();
+        // Listen for real-time updates to the event document
+        db.collection("events").document(eventId).addSnapshotListener((eventDoc, error) -> {
+            if (error != null) {
+                Log.e("Firestore", "Error listening to event document updates", error);
+                return;
+            }
 
-                if (eventDoc.exists()) {
-                    ArrayList<String> deviceIds = (ArrayList<String>) eventDoc.get("cancelled");
+            if (eventDoc != null && eventDoc.exists()) {
+                ArrayList<String> deviceIds = (ArrayList<String>) eventDoc.get("cancelled");
 
-                    if (deviceIds != null && !deviceIds.isEmpty()) {
-                        for (String deviceId : deviceIds) {
-                            db.collection("profiles").document(deviceId).get().addOnCompleteListener(profileTask -> {
-                                if (profileTask.isSuccessful() && profileTask.getResult() != null) {
-                                    DocumentSnapshot profileDoc = profileTask.getResult();
+                if (deviceIds != null && !deviceIds.isEmpty()) {
+                    profileList.clear(); // Clear the list before adding new data
 
-                                    if (profileDoc.exists()) {
-                                        String name = profileDoc.getString("name");
-                                        entrantNames.add(name);
-                                        adapter.notifyDataSetChanged();
-                                    } else {
-                                        Log.d("Firestore", "Profile document does not exist for device ID: " + deviceId);
-                                    }
-                                } else {
-                                    Log.e("Firestore", "Error fetching profile data for device ID: " + deviceId, profileTask.getException());
+                    // Listen for real-time updates to each profile document
+                    for (String deviceId : deviceIds) {
+                        db.collection("profiles").document(deviceId).addSnapshotListener((profileDoc, profileError) -> {
+                            if (profileError != null) {
+                                Log.e("Firestore", "Error listening to profile document updates", profileError);
+                                return;
+                            }
+
+                            if (profileDoc != null && profileDoc.exists()) {
+                                 Profile profile = profileDoc.toObject(Profile.class);
+                                profileList.add(profile); // Add the name if it’s not already in the list
+                                adapter.notifyDataSetChanged(); // Update the adapter
                                 }
-                            });
-                        }
-                    } else {
-                        Log.d("Firestore", "No device IDs found in the selectedNotificationsList.");
+                            else {
+                                Log.d("Firestore", "Profile document does not exist for device ID: " + deviceId);
+                            }
+                        });
                     }
                 } else {
-                    Log.d("Firestore", "Event document does not exist for ID: " + eventId);
+                    Log.d("Firestore", "No device IDs found in the waitlisted list.");
+                    profileList.clear();
+                    adapter.notifyDataSetChanged(); // Clear the ListView if no device IDs are found
                 }
             } else {
-                Log.e("Firestore", "Error fetching event data for ID: " + eventId, task.getException());
+                Log.d("Firestore", "Event document does not exist for ID: " + eventId);
+                profileList.clear();
+                adapter.notifyDataSetChanged(); // Clear the ListView if the event document doesn't exist
             }
         });
 
         return view;
     }
+
 }

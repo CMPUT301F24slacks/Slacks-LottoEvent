@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
     private final Context context;
     private final FirebaseFirestore db;
+    private boolean isAdmin;
 
     /**
      * Constructor for the ArrayAdapter.
@@ -29,10 +30,11 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
      * @param context  The current context.
      * @param facilities The list of profiles to display.
      */
-    public FacilityListArrayAdapter(@NonNull Context context, ArrayList<Facility> facilities) {
+    public FacilityListArrayAdapter(@NonNull Context context, ArrayList<Facility> facilities, boolean isAdmin) {
         super(context, 0, facilities);
         this.context = context;
         this.db = FirebaseFirestore.getInstance();
+        this.isAdmin = isAdmin;
     }
 
     /**
@@ -62,11 +64,13 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
             ImageView userIcon = convertView.findViewById(R.id.userIcon);
             userIcon.setVisibility(View.GONE); // Hide the location icon
 
-            ImageButton ovalButton = convertView.findViewById(R.id.oval_rectangle);
-            ovalButton.setOnClickListener(v -> showFacilityOptionsDialog(facility, position));
+            if (isAdmin) {
+                ImageButton ovalButton = convertView.findViewById(R.id.oval_rectangle);
+                ovalButton.setOnClickListener(v -> showFacilityOptionsDialog(facility, position));
 
-            // Set OnClickListener to show profile options in a dialog
-            convertView.setOnClickListener(v -> showFacilityOptionsDialog(facility, position));
+                // Set OnClickListener to show profile options in a dialog
+                convertView.setOnClickListener(v -> showFacilityOptionsDialog(facility, position));
+            }
         }
 
         return convertView;
@@ -82,7 +86,8 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         // Build the message with profile details
-        String message = "Name: " + facility.getFacilityName() + "\n";
+        String message = "Name: " + facility.getFacilityName() + "\n" +
+                "Address: " + facility.getStreetAddress1();
 
         builder.setTitle("Facility Details")
                 .setMessage(message)

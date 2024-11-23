@@ -26,6 +26,7 @@ public class OrganizerWaitlistFragment extends Fragment {
     private String eventId;
     private static final String ARG_EVENT_ID = "eventID";
     private FirebaseFirestore db;
+    private ArrayList<Profile> profileList;
 
     /**
      * Default constructor
@@ -49,7 +50,7 @@ public class OrganizerWaitlistFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
-
+        profileList = new ArrayList<>(); // Initialize the profile list
         // Retrieve the event ID from the fragment's arguments
         if (getArguments() != null) {
             eventId = getArguments().getString(ARG_EVENT_ID);
@@ -62,8 +63,7 @@ public class OrganizerWaitlistFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_organizer_waitlist, container, false);
         ListViewEntrantsWaitlisted = view.findViewById(R.id.listViewEntrantsWaitlisted);
 
-        ArrayList<String> entrantNames = new ArrayList<>();
-        EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), entrantNames);
+        ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false);
         ListViewEntrantsWaitlisted.setAdapter(adapter);
 
         // Listen for real-time updates to the event document
@@ -77,7 +77,7 @@ public class OrganizerWaitlistFragment extends Fragment {
                 ArrayList<String> deviceIds = (ArrayList<String>) eventDoc.get("waitlisted");
 
                 if (deviceIds != null && !deviceIds.isEmpty()) {
-                    entrantNames.clear(); // Clear the list before adding new data
+                    profileList.clear(); // Clear the list before adding new data
 
                     // Listen for real-time updates to each profile document
                     for (String deviceId : deviceIds) {
@@ -88,12 +88,9 @@ public class OrganizerWaitlistFragment extends Fragment {
                             }
 
                             if (profileDoc != null && profileDoc.exists()) {
-                                String name = profileDoc.getString("name");
-
-                                if (!entrantNames.contains(name)) {
-                                    entrantNames.add(name); // Add the name if it’s not already in the list
-                                    adapter.notifyDataSetChanged(); // Update the adapter
-                                }
+                                Profile profile = profileDoc.toObject(Profile.class);
+                                profileList.add(profile); // Add the name if it’s not already in the list
+                                adapter.notifyDataSetChanged(); // Update the adapter
                             } else {
                                 Log.d("Firestore", "Profile document does not exist for device ID: " + deviceId);
                             }
@@ -101,12 +98,12 @@ public class OrganizerWaitlistFragment extends Fragment {
                     }
                 } else {
                     Log.d("Firestore", "No device IDs found in the waitlisted list.");
-                    entrantNames.clear();
+                    profileList.clear();
                     adapter.notifyDataSetChanged(); // Clear the ListView if no device IDs are found
                 }
             } else {
                 Log.d("Firestore", "Event document does not exist for ID: " + eventId);
-                entrantNames.clear();
+                profileList.clear();
                 adapter.notifyDataSetChanged(); // Clear the ListView if the event document doesn't exist
             }
         });
