@@ -234,6 +234,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
             if (binding.lotterySystemButton.isEnabled() && !event.getEntrantsChosen() && currentDate.after(signup)) {
                 event.lotterySystem();
+                updateUnSelectedEntrants(event);
                 updateSelectedEntrants(event);
                 updateInvitedEntrants(event);
                 updateUninvitedEntrants(event);
@@ -408,6 +409,21 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         });
     }
 
+    private void updateUnSelectedEntrants(Event event){
+        Log.d("Event Cancelled: ", event.getCancelled().toString());
+        db.collection("events").whereEqualTo("eventID", event.getEventID()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                DocumentReference eventRef = db.collection("events").document(document.getId());
+
+                for (String entrant : event.getCancelled()) {
+                    eventRef.update("cancelled", FieldValue.arrayUnion(entrant),
+                            "cancelledNotificationsList", FieldValue.arrayUnion(entrant)); //TODO: when doing notifications get rid of this line
+                }
+            }
+        });
+    }
+
     private void updateInvitedEntrants(Event event){
         for(String entrant: event.getSelected()) {
             DocumentReference entrantsRef = db.collection("entrants").document(entrant);
@@ -440,7 +456,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
             });
         }
-        event.setWaitlisted(event.getReselected()); // local update - unecessary tho?
+        event.setWaitlisted(event.getReselected());
 
     }
 

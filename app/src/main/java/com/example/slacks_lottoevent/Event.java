@@ -310,12 +310,13 @@ public class Event implements Serializable {
             Collections.shuffle(this.waitlisted);
             this.selected = new ArrayList<>(this.waitlisted.subList(0, numOfSelectedEntrants));
 
-//            Removes from both the waitlist and reselected if they get picked - TODO: Can remove?
+//            Removing everyone who got selected
             this.waitlisted.removeAll(this.selected);
             this.reselected.removeAll(this.selected);
 
+//            Removing
             this.waitlisted.removeAll(this.reselected);
-
+            this.cancelled = this.waitlisted;
         }
         this.entrantsChosen = true;
     }
