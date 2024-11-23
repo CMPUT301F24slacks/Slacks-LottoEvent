@@ -16,19 +16,31 @@
         android:paddingBottom="10dp">
 
 
+        <ImageButton
+            android:id="@+id/event_uploader_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="25dp"
+            android:background="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/event_uploader_button"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+
         <!--       Event Picture     -->
 
         <ImageView
-            android:id="@+id/eventPoster"
+            android:id="@+id/event_poster"
             android:layout_width="363dp"
             android:layout_height="162dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
             android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.435"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/event_uploader_button"
             tools:srcCompat="@tools:sample/avatars" />
 
         <!--        Event Name-->
@@ -38,7 +50,6 @@
             android:layout_width="94dp"
             android:layout_height="29dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
             android:layout_marginEnd="367dp"
             android:text="Event Name"
             android:textColor="@android:color/white"
@@ -47,7 +58,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/eventPoster"
+            app:layout_constraintTop_toBottomOf="@+id/event_poster"
             tools:ignore="MissingConstraints" />
 
         <EditText
@@ -74,13 +85,16 @@
 
         <!--        Event Date -->
 
+
+        <!--        Event Time-->
+
         <TextView
             android:id="@+id/date_label"
-            android:layout_width="58dp"
-            android:layout_height="23dp"
-            android:layout_marginStart="44dp"
+            android:layout_width="93dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="45dp"
             android:layout_marginTop="24dp"
-            android:text="Date"
+            android:text="Event Date"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -88,70 +102,16 @@
             app:layout_constraintTop_toBottomOf="@+id/event_name"
             tools:ignore="MissingConstraints" />
 
-        <EditText
-            android:id="@+id/eventDate"
-            android:layout_width="99dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/rounded_borders"
-            android:ems="10"
-            android:inputType="date"
-            android:maxLength="50"
-            android:padding="8dp"
-            android:textColor="@android:color/white"
-            android:hint="08/04/2025"
-            android:textColorHint="@android:color/darker_gray"
-            android:textSize="15sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/date_label" />
 
-
-
-<!--        Event Time-->
+        <!--        Price-->
 
         <TextView
             android:id="@+id/time"
             android:layout_width="58dp"
             android:layout_height="23dp"
-            android:layout_marginStart="76dp"
+            android:layout_marginStart="63dp"
             android:layout_marginTop="24dp"
             android:text="Time"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/date_label"
-            app:layout_constraintTop_toBottomOf="@+id/event_name"
-            tools:ignore="MissingConstraints" />
-
-        <EditText
-            android:id="@+id/eventTime"
-            android:layout_width="99dp"
-            android:layout_height="44dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/rounded_borders"
-            android:ems="10"
-            android:inputType="none"
-            android:maxLength="50"
-            android:padding="8dp"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:hint="13:00-15:00"
-            android:textSize="15sp"
-            android:textColorHint="@android:color/darker_gray"
-            app:layout_constraintEnd_toStartOf="@+id/event_price"
-            app:layout_constraintStart_toEndOf="@+id/eventDate"
-            app:layout_constraintTop_toBottomOf="@+id/time" />
-
-
-<!--        Price-->
-        <TextView
-            android:id="@+id/pricetxt"
-            android:layout_width="58dp"
-            android:layout_height="23dp"
-            android:layout_marginStart="212dp"
-            android:layout_marginTop="24dp"
-            android:text="Price"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -163,11 +123,47 @@
         <!--        Description-->
 
         <EditText
-            android:id="@+id/event_price"
-            android:layout_width="74dp"
-            android:layout_height="44dp"
+            android:id="@+id/eventTime"
+            android:layout_width="100dp"
+            android:layout_height="43dp"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="36dp"
+            android:layout_marginEnd="48dp"
+            android:background="@drawable/rounded_borders"
+            android:ems="10"
+            android:inputType="none"
+            android:maxLength="50"
+            android:padding="8dp"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:hint="13:00-15:00"
+            android:textSize="15sp"
+            android:textColorHint="@android:color/darker_gray"
+            app:layout_constraintEnd_toStartOf="@+id/event_price"
+            app:layout_constraintTop_toBottomOf="@+id/time" />
+
+        <TextView
+            android:id="@+id/pricetxt"
+            android:layout_width="104dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="24dp"
+            android:text="Ticket Price"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/time"
+            app:layout_constraintTop_toBottomOf="@+id/event_name"
+            tools:ignore="MissingConstraints" />
+
+
+        <!--        Description-->
+
+        <EditText
+            android:id="@+id/event_price"
+            android:layout_width="63dp"
+            android:layout_height="43dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="24dp"
             android:background="@drawable/rounded_borders"
             android:ems="10"
             android:hint="10"
@@ -193,7 +189,7 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/eventDate"
+            app:layout_constraintTop_toBottomOf="@+id/event_Date"
             tools:ignore="MissingConstraints" />
 
         <EditText
@@ -244,8 +240,8 @@
             android:id="@+id/eventSlots"
             android:layout_width="74dp"
             android:layout_height="44dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/rounded_borders"
             android:ems="10"
             android:inputType="number"
@@ -261,8 +257,8 @@
 
         <TextView
             android:id="@+id/no_pp_accpt2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="276dp"
+            android:layout_height="27dp"
             android:layout_marginStart="44dp"
             android:layout_marginTop="24dp"
             android:text="Waiting List Capacity (Optional)"
@@ -281,10 +277,10 @@
 
         <EditText
             android:id="@+id/waitListCapacity"
-            android:layout_width="74dp"
+            android:layout_width="99dp"
             android:layout_height="44dp"
-            android:layout_marginStart="140dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="132dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/rounded_borders"
             android:ems="10"
             android:gravity="center"
@@ -303,12 +299,12 @@
             android:layout_width="149dp"
             android:layout_height="36dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="11dp"
             android:text="Cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkBoxGeo"
+            app:layout_constraintTop_toBottomOf="@+id/signupDeadline"
             tools:ignore="MissingConstraints" />
 
         <Button
@@ -346,13 +342,10 @@
             android:id="@+id/checkBoxGeo"
             android:layout_width="62dp"
             android:layout_height="52dp"
-            android:layout_marginStart="131dp"
             android:layout_marginTop="1dp"
             android:layout_marginEnd="88dp"
             android:buttonTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/signupDeadline"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
         <TextView
@@ -370,21 +363,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/eventSlots" />
 
-        <EditText
+        <Button
+            android:id="@+id/event_Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="13dp"
+            android:text="Select Date"
+            app:layout_constraintEnd_toStartOf="@+id/eventTime"
+            app:layout_constraintHorizontal_bias="0.105"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/date_label" />
+
+        <Button
             android:id="@+id/signupDeadline"
-            android:layout_width="99dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/rounded_borders"
-            android:ems="10"
-            android:inputType="date"
-            android:maxLength="50"
-            android:padding="8dp"
-            android:textColor="@android:color/white"
-            android:hint="07/24/2025"
-            android:textColorHint="@android:color/darker_gray"
-            android:textSize="15sp"
+            android:text="Select Date"
+            app:layout_constraintEnd_toStartOf="@+id/checkBoxGeo"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/signupDeadlineText" />
 

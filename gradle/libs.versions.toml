@@ -19,6 +19,7 @@ zxingAndroidEmbeddedVersion = "3.4.0"
 coreVersion = "1.6.1"
 fragmentTesting = "1.8.5"
 activity = "1.9.3"
+firebaseStorage = "21.0.1"
 
 [libraries]
 appcompat-v7 = { module = "com.android.support:appcompat-v7", version.ref = "appcompatV7" }
@@ -40,6 +41,7 @@ zxing-android-embedded-v410 = { module = "com.journeyapps:zxing-android-embedded
 test-core = { group = "androidx.test", name = "core", version.ref = "coreVersion" }
 fragment-testing = { group = "androidx.fragment", name = "fragment-testing", version.ref = "fragmentTesting" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -3,6 +3,7 @@ package com.example.slacks_lottoevent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,11 +38,11 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
     private Context context;
     private ArrayList<Event> events;
 
-    private FirebaseFirestore db;
-    private CollectionReference facilitiesRef;
-    private CollectionReference organizersRef;
-    private CollectionReference eventsRef;
-    private DocumentReference entrantsRef;
+//    private FirebaseFirestore db;
+//    private CollectionReference facilitiesRef;
+//    private CollectionReference organizersRef;
+//    private CollectionReference eventsRef;
+//    private DocumentReference entrantsRef;
 
     /**
      * Constructor for the OrganzierEventArrayAdapter
@@ -70,33 +72,16 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.content_organizer_events, parent, false);
         }
 
-        db = FirebaseFirestore.getInstance();
-        facilitiesRef = db.collection("facilities");
-        organizersRef = db.collection("organizers");
-
-        ImageView qrCode = convertView.findViewById(R.id.qr_code_image);
-        String qrData = event.getQRData();
-
-
-        if (qrData != null && !qrData.isEmpty()) {
-            try {
-                BitMatrix bitMatrix = deserializeBitMatrix(qrData); // Convert back to BitMatrix
-                BarcodeEncoder encoder = new BarcodeEncoder();
-                Bitmap bitmap = encoder.createBitmap(bitMatrix); // Create Bitmap from BitMatrix
-                qrCode.setImageBitmap(bitmap); // Set the QR code image
-            } catch (WriterException e) {
-                Log.e("QRCodeError", "Error converting QR code string to BitMatrix");
-            }
-        } else {
-            qrCode.setImageBitmap(null); // Clear the image if QR data is null or empty
-        }
-
+//        db = FirebaseFirestore.getInstance();
+//        facilitiesRef = db.collection("facilities");
+//        organizersRef = db.collection("organizers");
 
         TextView eventName = convertView.findViewById(R.id.event_name);
         TextView eventDate = convertView.findViewById(R.id.event_date);
         TextView eventTime = convertView.findViewById(R.id.event_time);
         TextView eventAddress = convertView.findViewById(R.id.event_address);
         TextView eventDescription = convertView.findViewById(R.id.event_description);
+        ImageView eventPoster = convertView.findViewById(R.id.event_image);
         eventName.setText(event.getName());
         eventDate.setText(event.getEventDate());
         Log.d("EventDetails", "eventDate" + event.getEventDate());
@@ -105,34 +90,16 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
 
 //        TODO: Can delete the below code once we know that the event location and facility are lined up.
 
-        String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        if (event.getEventPosterURL() != null && !event.getEventPosterURL().isEmpty()) {
+            Glide.with(this.getContext()) // 'this' refers to the activity context
+                    .load(event.getEventPosterURL())
+                    .into(eventPoster);
+        } else {
+            Log.e("EventDetails", "Event poster URL is empty or null");
+        }
 
-        organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                DocumentSnapshot organizerDoc = task.getResult();
-
-                // Check if the facilityID field exists and is not empty
-                if (organizerDoc.exists() && organizerDoc.contains("facilityId")) {
-                    String facilityID = organizerDoc.getString("facilityId");
-
-                    if (facilityID != null && !facilityID.isEmpty()) {
-                        // Now query the facilities collection with the retrieved facilityID
-                        facilitiesRef.document(facilityID).addSnapshotListener((facilitySnapshot, e) -> {
-                            if (e != null) {
-                                Log.w("Firestore", "Facility listen failed.", e);
-                                return;
-                            }
-
-                            if (facilitySnapshot != null && facilitySnapshot.exists()) {
-                                // Retrieve facility data
-                                String facilityAddress= facilitySnapshot.getString("streetAddress1");
-                                eventAddress.setText(facilityAddress);
-                            }
-                        });
-                    }
-                }
-            }
-        });
+        eventAddress.setText(event.getLocation());
+        eventDescription.setText(event.getDescription());
 
         Button eventButton = convertView.findViewById(R.id.event_button);
         eventButton.setOnClickListener(v -> {
@@ -146,43 +113,8 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
             getContext().startActivity(intent);
         });
 
-        eventDescription.setText(event.getDescription());
 
-//        //to connect with entrants cancelled, joined, etc.
-//        eventButton.setOnClickListener(v -> {
-//            // Create an Intent to navigate to OrganizerNotifications
-//            Intent intent = new Intent(EventArrayAdapter.this.getContext(), OrganizerNotifications.class);
-//
-//            // Pass any additional data if needed
-//            intent.putExtra("current_event", (Serializable) event);  // Example of passing data
-//
-//            // Start OrganizerNotifications
-//            getContext().startActivity(intent);
-//        });
         return convertView;
     }
 
-    /**
-     * Deserializes a BitMatrix from a string
-     *
-     * @param data The string to deserialize
-     * @return The deserialized BitMatrix
-     * @throws WriterException If the string cannot be deserialized
-     */
-    private BitMatrix deserializeBitMatrix(String data) throws WriterException {
-        String[] lines = data.split("\n");
-        int width = lines[0].length();
-        int height = lines.length;
-        BitMatrix bitMatrix = new BitMatrix(width, height);
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                // Set pixel based on whether the character is '1' (black) or '0' (white)
-                if (lines[y].charAt(x) == '1') {
-                    bitMatrix.set(x, y); // Set pixel to black
-                }
-            }
-        }
-        return bitMatrix;
-    }
 }

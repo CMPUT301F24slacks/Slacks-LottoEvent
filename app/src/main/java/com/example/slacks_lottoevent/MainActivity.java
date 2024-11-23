@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
         }
 
+
         new Handler().postDelayed(() ->{
             Map<String, ?> userInfo = sharedPreferences.getAll();
 

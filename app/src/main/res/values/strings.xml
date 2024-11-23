@@ -53,4 +53,6 @@
     </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="lt_5_km">&lt; 5km</string>
+    <string name="_20_km">&gt; 20km</string>
 </resources>
