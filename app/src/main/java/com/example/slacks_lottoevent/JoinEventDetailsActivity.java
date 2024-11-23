@@ -403,6 +403,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     DocumentSnapshot eventDocumentSnapshot = task.getDocuments().get(0);
                     DocumentReference eventRef = eventDocumentSnapshot.getReference();
                     eventRef.update("waitlisted", FieldValue.arrayUnion(deviceId));
+                    Log.d("Reselected: ", "Reselected Value: " + isReselected.toString());
                     if(isReselected){
                         eventRef.update("reselected", FieldValue.arrayUnion(deviceId));
                     }
