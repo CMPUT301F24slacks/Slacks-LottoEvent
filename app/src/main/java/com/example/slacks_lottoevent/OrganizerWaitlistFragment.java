@@ -91,6 +91,10 @@ public class OrganizerWaitlistFragment extends Fragment {
                                 Profile profile = profileDoc.toObject(Profile.class);
                                 profileList.add(profile); // Add the name if it’s not already in the list
                                 adapter.notifyDataSetChanged(); // Update the adapter
+
+
+
+
                             } else {
                                 Log.d("Firestore", "Profile document does not exist for device ID: " + deviceId);
                             }
