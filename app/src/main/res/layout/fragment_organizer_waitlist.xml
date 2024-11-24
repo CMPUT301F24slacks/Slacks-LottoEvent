@@ -22,17 +22,9 @@
         android:paddingBottom="16dp"
         android:gravity="center_horizontal">
 
-        <!-- First Button -->
-        <Button
-            android:id="@+id/first_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Default Message"
-            android:layout_marginEnd="16dp" />
-
         <!-- Second Button -->
         <Button
-            android:id="@+id/second_button"
+            android:id="@+id/craftMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Create Message" />

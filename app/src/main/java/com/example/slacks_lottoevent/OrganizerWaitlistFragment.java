@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -66,6 +67,7 @@ public class OrganizerWaitlistFragment extends Fragment {
         ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false);
         ListViewEntrantsWaitlisted.setAdapter(adapter);
 
+
         // Listen for real-time updates to the event document
         db.collection("events").document(eventId).addSnapshotListener((eventDoc, error) -> {
             if (error != null) {
@@ -91,15 +93,15 @@ public class OrganizerWaitlistFragment extends Fragment {
                                 Profile profile = profileDoc.toObject(Profile.class);
                                 profileList.add(profile); // Add the name if it’s not already in the list
                                 adapter.notifyDataSetChanged(); // Update the adapter
-
-
-
-
-                            } else {
+                            }
+                            else {
                                 Log.d("Firestore", "Profile document does not exist for device ID: " + deviceId);
                             }
                         });
                     }
+
+                    notificationHelper.sendNotificationsW("Waitlist Updated");
+
                 } else {
                     Log.d("Firestore", "No device IDs found in the waitlisted list.");
                     profileList.clear();

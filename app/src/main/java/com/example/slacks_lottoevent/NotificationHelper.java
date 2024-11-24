@@ -56,5 +56,10 @@ public class NotificationHelper {
         sendNotification("Confirmation for: " + eventName,
                 "Yay!! You have successfully joined this event! All the work is done so now just kick back and relax until the event.");
     }
+
+    public void sendNotificationscraftW(String eventTitle, String desc){
+        sendNotification(eventTitle, desc);
+    }
+
 }
 
