@@ -570,6 +570,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         dialog.dismiss();
 
         NotificationHelper notificationHelper = new NotificationHelper(this);
-        notificationHelper.sendNotifications(notis, eventName);
+        notificationHelper.sendNotificationsW(notis, eventName);
     }
 }
