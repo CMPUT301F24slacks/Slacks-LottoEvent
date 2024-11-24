@@ -67,7 +67,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         existingFacility = facility;
 
         Map<String, Object> facilityData = new HashMap<>();
-        facilityData.put("name", facilityName);
+        facilityData.put("facilityName", facilityName);
         // Add other attributes as needed, like location, type, etc.
         facilityData.put("streetAddress1", facility.getStreetAddress1());
         facilityData.put("streetAddress2", facility.getStreetAddress2());
