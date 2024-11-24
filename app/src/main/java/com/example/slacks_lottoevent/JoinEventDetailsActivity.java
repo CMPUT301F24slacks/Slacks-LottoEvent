@@ -240,7 +240,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
 
         organizerNotis.setOnClickListener(v -> {
-            boolean negation = !notis.get();
+            boolean negation = !(notis.get());
             notis.set(negation);
 
             SharedPreferences.Editor editor = sharedPreferences.edit();

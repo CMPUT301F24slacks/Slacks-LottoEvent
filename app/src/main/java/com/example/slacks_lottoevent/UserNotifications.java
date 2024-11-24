@@ -66,10 +66,12 @@ public class UserNotifications extends AppCompatActivity {
         back_btn.setOnClickListener(v -> onBackPressed());
 
         ImageView organizerNotis = findViewById(R.id.organizerNotifications);
-        boolean notisEnabled = sharedPreferences.getBoolean("notisEnabled", false);
+        boolean notisEnabled = sharedPreferences.getBoolean("notificationsEnabled", false);
+        Log.d("Notis", String.valueOf(notisEnabled));
 
         organizerNotis.setImageResource(notisEnabled ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
 
+//        TODO: fix this based on what the TA says
         organizerNotis.setOnClickListener(v -> {
             boolean negation = !notisEnabled;
 
@@ -84,7 +86,6 @@ public class UserNotifications extends AppCompatActivity {
 
             else{
                 wantNotifications();
-
             }
         });
     }
