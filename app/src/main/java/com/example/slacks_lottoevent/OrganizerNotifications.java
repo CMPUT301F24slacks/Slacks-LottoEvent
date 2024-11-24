@@ -91,7 +91,7 @@ public class OrganizerNotifications extends AppCompatActivity {
 
             if(event.getEventSlots() == event.getFinalists().size()){
 
-//              Event has closed
+//              Event has closed - updated final waitlisted entrants (remove and put too cancel)
                 updateUninvitedFinalEntrants(event);
                 updateUninvitedonEvents(event);
                 new AlertDialog.Builder(this)
@@ -232,7 +232,8 @@ public class OrganizerNotifications extends AppCompatActivity {
 
                 for (String entrant : event.getSelected()) {
                     eventRef.update("selected", FieldValue.arrayUnion(entrant),
-                            "selectedNotificationsList", FieldValue.arrayUnion(entrant)); //TODO: when doing notifications get rid of this line
+                            "selectedNotificationsList", FieldValue.arrayUnion(entrant),
+                            "waitlistedNotificationsList", FieldValue.arrayRemove(entrant));
                 }
 
                 eventRef.update("waitlisted", event.getWaitlisted());
@@ -257,18 +258,13 @@ public class OrganizerNotifications extends AppCompatActivity {
 
     //    Updating everyone who did not get selected and who do not want too be reselected
     private void updateUninvitedEntrants(Event event){
-        for(String entrant: event.getWaitlisted()) {
-            DocumentReference entrantsRef = db.collection("entrants").document(entrant);
-            entrantsRef.get().addOnSuccessListener(entrantDoc -> {
-                if (entrantDoc.exists()) {
+
                     // Send notification but don't put them into the uninvited unless its the due date
 //                    TODO: Sent notification if DID NOT get selected the nth time
-                }
-            });
-        }
+
     }
 
-//    Updating people who are still on waitlisted (wanted to get selected but the event is now full)
+//    Updating people who are still on waitlisted (wanted to get selected but the event is now full, so move too the other list)
     private void updateUninvitedFinalEntrants(Event event){
         for(String entrant: event.getWaitlisted()) {
             DocumentReference entrantsRef = db.collection("entrants").document(entrant);
@@ -278,7 +274,6 @@ public class OrganizerNotifications extends AppCompatActivity {
                                     "waitlistedEvents", FieldValue.arrayRemove(event.getEventID()))
                             .addOnSuccessListener(aVoid -> Log.d("Firestore", "Event added for entrant"))
                             .addOnFailureListener(e -> Log.e("Firestore", "Error updating invitedEvents for entrant"));
-//                    ADD notifications
                 }
             });
         }
@@ -294,8 +289,10 @@ public class OrganizerNotifications extends AppCompatActivity {
                 for (String entrant : event.getWaitlisted()) {
                     eventRef.update("waitlisted", FieldValue.arrayRemove(entrant),
                             "waitlistedNotificationsList", FieldValue.arrayRemove(entrant),
+                            "selectedNotificationsList", FieldValue.arrayRemove(entrant),
+                            "joinedNotificationsList", FieldValue.arrayRemove(entrant),
                             "cancelled", FieldValue.arrayUnion(entrant),
-                            "cancelledNotificationsList", FieldValue.arrayUnion(entrant)); //TODO: when doing notifications get rid of this line
+                            "cancelledNotificationsList", FieldValue.arrayUnion(entrant));
                 }
                 event.fullEvent(); // clearing waitlist now
                 eventRef.update("waitlisted", event.getWaitlisted());

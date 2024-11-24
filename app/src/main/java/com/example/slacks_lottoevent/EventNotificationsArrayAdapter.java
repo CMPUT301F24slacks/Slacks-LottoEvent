@@ -106,7 +106,8 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
                 "selected", FieldValue.arrayRemove(deviceId),
                 "selectedNotificationsList", FieldValue.arrayRemove(deviceId),
                 "finalists", FieldValue.arrayUnion(deviceId),
-                "joinedNotificationsList", FieldValue.arrayUnion(deviceId)); //TODO: DONT handle this here
+                "joinedNotificationsList", FieldValue.arrayUnion(deviceId),
+                "cancelledNotificationsList", FieldValue.arrayUnion(deviceId));
     }
 
     /**
@@ -118,14 +119,16 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
         String eventId = event.getEventId();
 
         db.collection("entrants").document(deviceId).update(
-                "invitedEvents", FieldValue.arrayRemove(eventId)).addOnSuccessListener(aVoid -> {
+                "invitedEvents", FieldValue.arrayRemove(eventId),
+                "uninvitedEvents", FieldValue.arrayRemove(eventId)).addOnSuccessListener(aVoid -> {
 
             db.collection("events").document(eventId).update(
                             "selected", FieldValue.arrayRemove(deviceId),
                     "selectedNotificationsList", FieldValue.arrayRemove(deviceId),
                     "cancelled", FieldValue.arrayUnion(deviceId),
-                    "cancelledNotificationsList", FieldValue.arrayUnion(deviceId) //Don't handle this hear
-                    ).addOnSuccessListener(aVoid1 -> Log.d("Firestore", "Event declined: " + eventId))
+                    "cancelledNotificationsList", FieldValue.arrayUnion(deviceId),
+                    "joinedNotificationsList", FieldValue.arrayRemove(deviceId))
+                    .addOnSuccessListener(aVoid1 -> Log.d("Firestore", "Event declined: " + eventId))
                     .addOnFailureListener(e -> Log.e("Firestore", "Error updating event invite list: " + eventId, e));
         }).addOnFailureListener(e -> Log.e("Firestore", "Error declining event: " + eventId, e));
     }
