@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * EntrantEventDetailsActivity is the activity that displays the details of an event for an entrant.
@@ -64,6 +65,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     Uri selectedImageUri;
     FirebaseFirestore db;
     String qrCodeValue;
+    boolean isAdmin;
     Long spotsRemaining;
     String spotsRemainingText;
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -80,88 +82,92 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityOrganizerEventDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
+        isAdmin = getIntent().getBooleanExtra("isAdmin", false); // Default value: false
 
         db = FirebaseFirestore.getInstance();
-        db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
 
-                        document = task.getResult().getDocuments().get(0);
-                        event = document.toObject(Event.class);
-                        date = document.getString("eventDate");
-                        signupDate = document.getString("signupDeadline");
-                        time = document.getString("time");
-                        eventName = document.getString("name");
-                        location = document.getString("location");
-                        description = document.getString("description");
-                        eventPosterURL = document.getString("eventPosterURL");
-                        qrData = document.getString("qrdata");
-                        eventID = document.getString("eventID");
-                        try {
-                            signup = sdf.parse(signupDate);
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
-                        try {
-                            // Format the current date to "MM/dd/yyyy" and parse it back into a Date object to remove time
-                            currentDate = sdf.parse(sdf.format(currentDate));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                            throw new RuntimeException("Error truncating current date", e);
-                        }
+        // Use addSnapshotListener for real-time updates
+        db.collection("events").whereEqualTo("eventID", qrCodeValue).addSnapshotListener((querySnapshot, error) -> {
+            if (error != null) {
+                Log.e("Firestore", "Error listening to event updates", error);
+                return;
+            }
 
-                        List<Object> finalists = (List<Object>) document.get("finalists");
+            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                // Get the document snapshot
+                document = querySnapshot.getDocuments().get(0);
+                event = document.toObject(Event.class);
 
-                        if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
-                            Glide.with(this) // 'this' refers to the activity context
-                                    .load(eventPosterURL)
-                                    .into(binding.eventImage);
-                        } else {
-                            Log.e("EventDetails", "Event poster URL is empty or null");
-                        }
-                        binding.eventTitle.setText(eventName);
-                        binding.eventDate.setText(date);
-                        List<Object> waitlisted = (List<Object>) document.get("waitlisted");
-                        Long capacity = (Long) document.get("eventSlots");
-                        Long waitListCapacity = (Long) document.get("waitListCapacity");
-                        assert capacity != null;
-                        String capacityAsString = capacity.toString();
+                // Extract and update fields
+                date = document.getString("eventDate");
+                signupDate = document.getString("signupDeadline");
+                time = document.getString("time");
+                eventName = document.getString("name");
+                location = document.getString("location");
+                description = document.getString("description");
+                eventPosterURL = document.getString("eventPosterURL");
+                qrData = document.getString("qrdata");
+                eventID = document.getString("eventID");
 
-                        //Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
-                        if (waitListCapacity <= 0){
-                            binding.eventWaitlistCapacitySection.setVisibility(View.GONE);
-                            binding.spotsAvailableSection.setVisibility(View.GONE);
-                        }
-                        else{
-                            spotsRemaining = waitListCapacity - waitlisted.size();
-                            spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
-                            binding.spotsAvailable.setText(spotsRemainingText);
-                        }
+                try {
+                    signup = sdf.parse(signupDate);
+                    currentDate = sdf.parse(sdf.format(new Date())); // Truncate current date
+                } catch (ParseException e) {
+                    Log.e("ParseError", "Error parsing dates", e);
+                }
 
-                        binding.eventTitle.setText(eventName);
-                        binding.eventDate.setText("Event Date: " + date);
-                        binding.signupDate.setText("Signup Deadline: " + signupDate);
-                        binding.eventWaitlistCapacity.setText("Waitlist Capacity: " +  waitListCapacity.toString());
-                        binding.eventLocation.setText(location);
-                        binding.eventSlotsCapacity.setText("Event Slots: " + capacityAsString);
-                        binding.eventDescription.setText(description);
-                        usesGeolocation = (Boolean) document.get("geoLocation");
+                List<Object> waitlisted = (List<Object>) document.get("waitlisted");
+                Long capacity = (Long) document.get("eventSlots");
+                Long waitListCapacity = (Long) document.get("waitListCapacity");
 
-                        event.setFinalists((ArrayList<String>) document.get("finalists"));
-                        event.setWaitlisted((ArrayList<String>) document.get("waitlisted"));
-                        event.setSelected((ArrayList<String>) document.get("selected"));
-                        event.setCancelled((ArrayList<String>) document.get("cancelled"));
-                        event.setReselected((ArrayList<String>) document.get("reselected"));
+                // Update UI
+                if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
+                    Glide.with(this).load(eventPosterURL).into(binding.eventImage);
+                } else {
+                    Log.e("EventDetails", "Event poster URL is empty or null");
+                }
 
-                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("waitlistedNotificationsList"));
-                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("joinedNotificationsList"));
-                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("cancelledNotificationsList"));
-                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("selectedNotificationsList"));
+                binding.eventTitle.setText(eventName);
+                binding.eventDate.setText("Event Date: " + date);
+                binding.signupDate.setText("Signup Deadline: " + signupDate);
+                binding.eventLocation.setText(location);
+                binding.eventDescription.setText(description);
+                if (capacity != null) {
+                    binding.eventSlotsCapacity.setText("Event Slots: " + capacity);
+                }
 
-                    }
-                });
-        eventsRef = db.collection("events");
+                // Update waitlist and spot availability
+                if (waitListCapacity != null && waitListCapacity > 0 && waitlisted != null) {
+                    spotsRemaining = waitListCapacity - waitlisted.size();
+                    spotsRemainingText = "Only " + spotsRemaining + " spot(s) available on waitlist";
+                    binding.spotsAvailable.setText(spotsRemainingText);
+                    binding.eventWaitlistCapacity.setText("Waitlist Capacity: " + waitListCapacity);
+                    binding.eventWaitlistCapacitySection.setVisibility(View.VISIBLE);
+                    binding.spotsAvailableSection.setVisibility(View.VISIBLE);
+                } else {
+                    binding.eventWaitlistCapacitySection.setVisibility(View.GONE);
+                    binding.spotsAvailableSection.setVisibility(View.GONE);
+                }
+
+                // Update event details in memory
+                if (event != null) {
+                    event.setFinalists((ArrayList<String>) document.get("finalists"));
+                    event.setWaitlisted((ArrayList<String>) document.get("waitlisted"));
+                    event.setSelected((ArrayList<String>) document.get("selected"));
+                    event.setCancelled((ArrayList<String>) document.get("cancelled"));
+                    event.setReselected((ArrayList<String>) document.get("reselected"));
+
+                    event.setWaitlistedNotificationsList((ArrayList<String>) document.get("waitlistedNotificationsList"));
+                    event.setWaitlistedNotificationsList((ArrayList<String>) document.get("joinedNotificationsList"));
+                    event.setWaitlistedNotificationsList((ArrayList<String>) document.get("cancelledNotificationsList"));
+                    event.setWaitlistedNotificationsList((ArrayList<String>) document.get("selectedNotificationsList"));
+                }
+            }
+        });
+
+    eventsRef = db.collection("events");
         // add a listener to the event details back button, go to the last item in the back stack
         binding.eventDetailsBackButton.setOnClickListener(v -> {
             onBackPressed();
@@ -259,12 +265,108 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         });
 
         binding.showQrCodeButton.setOnClickListener(view -> {
-            showQRCodePopup(qrData);
+            showQRCodePopup(db, event, qrData, isAdmin);
         });
 
+        if (isAdmin){
+            binding.lotterySystemButton.setVisibility(View.GONE);
+
+            binding.editEventButton.setText("Delete Event Poster");
+            binding.editEventButton.setOnClickListener(view -> {
+                DeletingEventPoster(event.getEventPosterURL());});
+
+            binding.entrantListButton.setVisibility(View.VISIBLE);
+            binding.entrantListButton.setText("Delete Event");
+            binding.entrantListButton.setOnClickListener(view ->
+                {
+                    DeletingEvent(event, db,
+                            () -> {
+                                Toast.makeText(this, "Event deleted successfully.", Toast.LENGTH_SHORT).show();
+                                finish(); // Close the activity or return to the previous screen
+                            },
+                            () -> Toast.makeText(this, "Failed to delete event.", Toast.LENGTH_SHORT).show()
+                    );
+
+                    //Go back to the previous page to simulate exiting the event
+//                    finish();
+//                    onBackPressed();
+                });
+
+            binding.showQrCodeButton.setText("Delete QR Code");
+            if (event != null && event.getQRData() != null && !event.getQRData().isEmpty()) {
+                binding.showQrCodeButton.setOnClickListener(view -> {
+                    showQRCodePopup(db, event, event.getQRData(), isAdmin);
+                });
+            } else {
+//                Toast.makeText(this, "QR code has already been deleted.", Toast.LENGTH_SHORT).show();
+            }
+
+            }
     }
 
-    
+    public void DeletingQRCode(FirebaseFirestore db, Event event) {
+        // Validate inputs
+        if (event == null || db == null || event.getEventID() == null || event.getEventID().isEmpty()) {
+            throw new IllegalArgumentException("Event, Firestore instance, or Event ID cannot be null or empty.");
+        }
+
+        // Reference the event document
+        String eventID = event.getEventID();
+
+        // Update the attributes in Firestore
+        db.collection("events")
+                .document(eventID) // Use the event's unique ID to identify the document
+                .update(
+                        "qrdata", "", // Set qrdata to an empty string
+                        "qrhash", ""  // Set qrhash to an empty string
+                )
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Firestore", "QR code attributes successfully updated for event: " + eventID);
+                    Toast.makeText(this, "QR code deleted successfully.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error updating QR code attributes for event: " + eventID, e);
+                    Toast.makeText(this, "Failed to delete QR code.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    public void DeletingEventPoster(String posterURL){
+            if (posterURL != null && !posterURL.isEmpty()) {
+                // Call the method if the URL is not empty
+                AdminImagesAdapter.showImageOptionsDialog(this, db, posterURL);
+            } else {
+                // Show a dialog indicating there is no poster to delete
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("No Poster Available");
+                builder.setMessage("There is no event poster to delete.");
+
+                // Add an OK button to close the dialog
+                builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+
+                // Show the dialog
+                builder.show();
+            }
+    }
+
+    public static void DeletingEvent(Event event, FirebaseFirestore db, Runnable onSuccess, Runnable onFailure) {
+        if (event == null || db == null || event.getEventID() == null || event.getEventID().isEmpty()) {
+            throw new IllegalArgumentException("Event, Firestore instance, or Event ID cannot be null or empty.");
+        }
+
+        db.collection("events")
+                .document(event.getEventID())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Firestore", "Event successfully deleted.");
+                    if (onSuccess != null) onSuccess.run();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error deleting event.", e);
+                    if (onFailure != null) onFailure.run();
+                });
+    }
+
+
     private void editImage(Uri newImageUri) {
         // Step 1: Delete the old image from Google Cloud Storage
         deleteOldImage(eventPosterURL, () -> {
@@ -347,11 +449,14 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         imagePickerLauncher.launch(intent);
     }
 
-    private void showQRCodePopup(String qrData) {
+    private void showQRCodePopup(FirebaseFirestore db, Event event, String qrData, boolean isAdmin) {
         LayoutInflater inflater = LayoutInflater.from(this);
         View popupView = inflater.inflate(R.layout.dialog_qr_code, null);
 
+        // Find the ImageView in the popup layout
         ImageView qrCode = popupView.findViewById(R.id.qr_code_image);
+
+        // Set the QR code image
         if (qrData != null && !qrData.isEmpty()) {
             try {
                 BitMatrix bitMatrix = deserializeBitMatrix(qrData); // Convert back to BitMatrix
@@ -359,19 +464,30 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 Bitmap bitmap = encoder.createBitmap(bitMatrix); // Create Bitmap from BitMatrix
                 qrCode.setImageBitmap(bitmap); // Set the QR code image
             } catch (WriterException e) {
-                Log.e("QRCodeError", "Error converting QR code string to BitMatrix");
+                Log.e("QRCodeError", "Error converting QR code string to BitMatrix", e);
             }
         } else {
             qrCode.setImageBitmap(null); // Clear the image if QR data is null or empty
         }
 
+        // Create the AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(popupView)
-                .setPositiveButton("Close", (dialog, which) -> dialog.dismiss())
-                .create()
-                .show();
+        builder.setView(popupView);
 
+        // Add the Close button
+        builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
+
+        // Add the Delete button if the user is an admin
+        if (isAdmin) {
+            builder.setNegativeButton("Delete", (dialog, which) -> {
+                DeletingQRCode(db, event); // Call the delete method
+            });
+        }
+
+        // Show the dialog
+        builder.create().show();
     }
+
 
 
     private BitMatrix deserializeBitMatrix(String data) throws WriterException {

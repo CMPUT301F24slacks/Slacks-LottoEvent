@@ -57,8 +57,8 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
 
         if (facility != null) {
             // Set the profile name
-            TextView profileName = convertView.findViewById(R.id.admin_profile_name);
-            profileName.setText(facility.getFacilityName());
+            TextView facilityName = convertView.findViewById(R.id.admin_profile_name);
+            facilityName.setText(facility.getName());
 
             // Customize view based on "check" value
             ImageView userIcon = convertView.findViewById(R.id.userIcon);
@@ -86,7 +86,7 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         // Build the message with profile details
-        String message = "Name: " + facility.getFacilityName() + "\n" +
+        String message = "Name: " + facility.getName() + "\n" +
                 "Address: " + facility.getStreetAddress1();
 
         builder.setTitle("Facility Details")

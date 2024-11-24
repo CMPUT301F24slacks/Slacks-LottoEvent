@@ -24,7 +24,7 @@ public class FacilityUnitTest {
      */
     @Test
     void testFacilityConstructor() {
-        assertEquals("DICE", facility.getFacilityName());
+        assertEquals("DICE", facility.getName());
         assertEquals("116 St NW", facility.getStreetAddress1());
         assertEquals("9211", facility.getStreetAddress2());
 
@@ -37,8 +37,8 @@ public class FacilityUnitTest {
      */
     @Test
     void testSetAndGetFacilityName() {
-        facility.setFacilityName("CN Tower");
-        assertEquals("CN Tower", facility.getFacilityName());
+        facility.setName("CN Tower");
+        assertEquals("CN Tower", facility.getName());
     }
 
     /**

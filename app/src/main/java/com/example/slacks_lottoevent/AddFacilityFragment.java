@@ -114,7 +114,7 @@ public class AddFacilityFragment extends DialogFragment {
 
 
         if (isEdit && facility != null) {
-            editFacilityName.setText(facility.getFacilityName());
+            editFacilityName.setText(facility.getName());
             editStreetAddress1.setText(facility.getStreetAddress1());
             editStreetAddress2.setText(facility.getStreetAddress2());
 
@@ -155,7 +155,7 @@ public class AddFacilityFragment extends DialogFragment {
 
                 String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
                 if (isEdit) {
-                    facility.setFacilityName(facilityName);
+                    facility.setName(facilityName);
                     facility.setStreetAddress1(streetAddress1);
                     facility.setStreetAddress2(editStreetAddress2.getText().toString().trim());
                     facility.setPostalCode(postalCode);

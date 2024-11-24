@@ -60,7 +60,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
     @Override
     public void addFacility(Facility facility) {
         // Retrieve the facility name and set it to display on the screen
-        String facilityName = facility.getFacilityName();
+        String facilityName = facility.getName();
 
 //        This is where we query for organizers for facility name
         facilityCreated.setText(facilityName);
@@ -113,7 +113,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
      */
     @Override
     public void updateFacility() {
-        String facilityName = existingFacility.getFacilityName();
+        String facilityName = existingFacility.getName();
         facilityCreated.setText(facilityName);
 
         if (existingFacility == null) {
@@ -130,7 +130,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
         // Prepare the updated facility data
         Map<String, Object> facilityData = new HashMap<>();
-        facilityData.put("name", existingFacility.getFacilityName());
+        facilityData.put("name", existingFacility.getName());
         facilityData.put("streetAddress1", existingFacility.getStreetAddress1());
         facilityData.put("streetAddress2", existingFacility.getStreetAddress2());
 
@@ -168,7 +168,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         organizersRef = db.collection("organizers");
 
         myEventsListView = binding.myEventsListView;
-        organizerEventArrayAdapter = new OrganizerEventArrayAdapter(getContext(), eventList);
+        organizerEventArrayAdapter = new OrganizerEventArrayAdapter(getContext(), eventList, false);
         myEventsListView.setAdapter(organizerEventArrayAdapter);
 
         createFacilitiesButton = view.findViewById(R.id.create_facility_button);
@@ -323,7 +323,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                                     // Populate existingFacility with data from Firestore
                                     existingFacility = facilitySnapshot.toObject(Facility.class);
                                     existingFacility.setFacilityId(facilitySnapshot.getId());
-                                    existingFacility.setFacilityName(facilityName);
+                                    existingFacility.setName(facilityName);
                                 } else {
                                     facilityCreated.setVisibility(View.GONE);
                                     existingFacility = null;

@@ -63,37 +63,12 @@ public class AdminImages extends Fragment {
             }
 
             if (querySnapshot != null) {
-                for (DocumentChange dc : querySnapshot.getDocumentChanges()) {
-                    switch (dc.getType()) {
-                        case ADDED:
-                            // Add new poster URLs
-                            DocumentSnapshot addedDoc = dc.getDocument();
-                            String addedPosterURL = addedDoc.getString("eventPosterURL");
-                            if (addedPosterURL != null && !addedPosterURL.isEmpty()) {
-                                posterURLs.add(addedPosterURL);
-                            }
-                            break;
+                posterURLs.clear(); // Clear the list to avoid duplicates or stale data
 
-                        case MODIFIED:
-                            // Update the poster URL if modified
-                            DocumentSnapshot modifiedDoc = dc.getDocument();
-                            String modifiedPosterURL = modifiedDoc.getString("eventPosterURL");
-                            if (modifiedPosterURL != null && !modifiedPosterURL.isEmpty()) {
-                                int index = findPosterIndex(modifiedDoc.getId());
-                                if (index != -1) {
-                                    posterURLs.set(index, modifiedPosterURL);
-                                }
-                            }
-                            break;
-
-                        case REMOVED:
-                            // Remove the poster URL if the event is deleted
-                            DocumentSnapshot removedDoc = dc.getDocument();
-                            String removedPosterURL = removedDoc.getString("eventPosterURL");
-                            if (removedPosterURL != null) {
-                                posterURLs.remove(removedPosterURL);
-                            }
-                            break;
+                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                    String posterURL = document.getString("eventPosterURL");
+                    if (posterURL != null && !posterURL.isEmpty()) {
+                        posterURLs.add(posterURL);
                     }
                 }
 
