@@ -1,5 +1,7 @@
 package com.example.slacks_lottoevent;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -73,6 +75,9 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     String qrCodeValue;
     Long spotsRemaining;
     String spotsRemainingText;
+
+    SharedPreferences sharedPreferences;
+
     @SuppressLint("HardwareIds") String deviceId;
     @Override
 
@@ -85,6 +90,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityJoinEventDetailsBinding.inflate(getLayoutInflater());
+        sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
         setContentView(binding.getRoot());
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
 
@@ -236,6 +242,11 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         organizerNotis.setOnClickListener(v -> {
             boolean negation = !notis.get();
             notis.set(negation);
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("notificationsEnabled", notis.get());
+            editor.apply();
+
             organizerNotis.setImageResource(notis.get() ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
         });
 
@@ -402,7 +413,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     }
 
     /**
-     * addEventToEntrant method for the JoinEventDetailsActivity.
+     * addEventToEntrant method for the JoinEventDetailsActivity and updates the notification preferences for said entrant.
      * This method adds the event to the entrant.
      */
     private void addEventToEntrant(){

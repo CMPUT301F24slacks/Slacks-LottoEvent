@@ -15,8 +15,6 @@ public class Entrant {
     private ArrayList<String> uninvitedEvents;
     private ArrayList<String> invites;
 
-    private Boolean notifications;
-
     /**
      * Constructs an {@code Entrant} instance with empty event lists.
      */
@@ -26,7 +24,6 @@ public class Entrant {
         this.invitedEvents = new ArrayList<>();
         this.uninvitedEvents = new ArrayList<>();
         this.invites = new ArrayList<>();
-        this.notifications = true;
     }
 
     /**
@@ -122,24 +119,4 @@ public class Entrant {
     private void removeEventInvite(String eventID) {
         invites.remove(eventID);
     }
-
-    /**
-     * Retrieves if user wants notifications from organizer.
-     */
-    private Boolean getNotifications() {
-        return notifications;
-    }
-
-    /**
-     * Removes an event invite from the invites list.
-     * <p>
-     * This method is private and used internally to manage event invites.
-     *
-     * @param newAns the answer if an entrant wants notifications or not
-     */
-    private void setNotifications(Boolean newAns) {
-        this.notifications = newAns;
-    }
-
-
 }
