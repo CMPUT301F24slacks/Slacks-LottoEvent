@@ -100,7 +100,7 @@ public class OrganizerWaitlistFragment extends Fragment {
                         });
                     }
 
-                    notificationHelper.sendNotificationsW("Waitlist Updated");
+//                    notificationHelper.sendNotificationsW("Waitlist Updated");
 
                 } else {
                     Log.d("Firestore", "No device IDs found in the waitlisted list.");
