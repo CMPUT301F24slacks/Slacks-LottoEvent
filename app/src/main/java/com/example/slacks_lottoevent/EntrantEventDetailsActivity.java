@@ -175,6 +175,14 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                             if (selectedNotifications != null && selectedNotifications.contains(userId)) {
                                 selectedNotifications.remove(userId);
                             }
+
+                            if (joinedNotifications != null && joinedNotifications.contains(userId)){
+                                joinedNotifications.remove(userId);
+                            }
+
+                            if (cancelledNotifications != null && cancelledNotifications.contains(userId)){
+                                cancelledNotifications.remove(userId);
+                            }
                             db.collection("events").document(qrCodeValue).update("waitlistedNotificationsList", waitlistedNotifications, "selectedNotificationsList", selectedNotifications, "joinedNotificationsList", joinedNotifications, "cancelledNotifications", cancelledNotifications);
                         }
                     }
