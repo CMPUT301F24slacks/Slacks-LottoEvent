@@ -274,21 +274,21 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         dialog.dismiss();
                     } else {
                         // Entrant is not in the event, add them to the event
-                        handleEntrantActions(isDeclined,notis, usesGeolocation, dialog);
+                        handleEntrantActions(isDeclined,notis, usesGeolocation, dialog, eventName);
 
                     }
                 } else {
                     // Entrant does not exist, create a new one and add them
                     Log.d("JoinEventDetails", "Entrant does not exist. Creating a new entrant...");
                     createNewEntrant(userId);
-                    handleEntrantActions(isDeclined,notis, usesGeolocation, dialog);
+                    handleEntrantActions(isDeclined,notis, usesGeolocation, dialog, eventName);
                 }
             }).addOnFailureListener(e -> {
                 // Handle any errors in fetching the entrant document
                 Log.e("JoinEventDetails", "Error fetching entrant document: " + e.getMessage());
                 // Create a new entrant in case of a failure
                 createNewEntrant(userId);
-                handleEntrantActions(isDeclined,notis, usesGeolocation, dialog);
+                handleEntrantActions(isDeclined,notis, usesGeolocation, dialog, eventName);
             });
         });
 
@@ -482,48 +482,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                 });
     }
 
-    private void sendNotifications(AtomicBoolean notis){
-//        String channelID =getString(R.string.channel_id);
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelID)
-//                .setContentTitle("Event Name")
-//                .setContentText("Event Description")
-//                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-////                TODO: Call intent?
-//                .setAutoCancel(true);
-//        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-//        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-//            // TODO: Consider calling
-//            //    ActivityCompat#requestPermissions
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for ActivityCompat#requestPermissions for more details.
-//            return;
-//        }
-//        managerCompat.notify(1, builder.build());
 
-        if(notis.get()) {
-            String channelId = getString(R.string.channel_id); // Ensure this matches the one in `createNotificationChannel()`
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                    .setSmallIcon(R.drawable.baseline_notifications_active_24) // Replace with your icon
-                    .setContentTitle("Event Registration")
-                    .setContentText("You have successfully registered for the event waitlist!")
-                    .setPriority(NotificationCompat.PRIORITY_HIGH);
-
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-            // Check for notification permissions (required for Android 13+)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
-                    return;
-                }
-            }
-
-            notificationManager.notify(1, builder.build()); // Send the notification
-        }
-    }
     /**
      * Function that checks if the users have enabled location permissions for the app and depending on if they do
      * redirects to the registration dialog and if they don't redirects them to the enable geolocation dialog. .
@@ -602,13 +561,15 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void handleEntrantActions(boolean isDeclined, AtomicBoolean notis, boolean usesGeolocation, DialogInterface dialog) {
+    private void handleEntrantActions(boolean isDeclined, AtomicBoolean notis, boolean usesGeolocation, DialogInterface dialog, String eventName) {
         addEntrantToWaitlist(isDeclined);
         addEntrantToNotis(notis);
         addEventToEntrant();
         getJoinLocation(usesGeolocation);
         navigateToEventsHome();
         dialog.dismiss();
-        sendNotifications(notis);
+
+        NotificationHelper notificationHelper = new NotificationHelper(this);
+        notificationHelper.sendNotifications(notis, eventName);
     }
 }

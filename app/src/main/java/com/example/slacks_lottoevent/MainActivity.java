@@ -3,21 +3,17 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
 
 //testing purposes
-import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.multidex.BuildConfig;
 
 
 import com.google.android.libraries.places.api.Places;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  *
@@ -37,6 +33,8 @@ import java.util.Objects;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private NotificationHelper notificationHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -44,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.splash_activity);
 
         createNotificationChannel();
+
 
         SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
 
