@@ -1,5 +1,7 @@
 package com.example.slacks_lottoevent;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -62,10 +66,17 @@ public class OrganizerWaitlistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_organizer_waitlist, container, false);
+        View dialogView = inflater.inflate(R.layout.dialog_custom_message, null);
+
         ListViewEntrantsWaitlisted = view.findViewById(R.id.listViewEntrantsWaitlisted);
+        Button craftMessageButton = view.findViewById(R.id.craftMessage);
 
         ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false);
         ListViewEntrantsWaitlisted.setAdapter(adapter);
+
+        NotificationHelper notificationHelper = new NotificationHelper(getActivity()); // Initialize NotificationHelper
+
+        craftMessageButton.setOnClickListener(v -> showMessageDialog()); // Button to show the dialog
 
 
         // Listen for real-time updates to the event document
@@ -100,7 +111,7 @@ public class OrganizerWaitlistFragment extends Fragment {
                         });
                     }
 
-//                    notificationHelper.sendNotificationsW("Waitlist Updated");
+//                    notificationHelper.sendNotificationsW(1"Waitlist Updated");
 
                 } else {
                     Log.d("Firestore", "No device IDs found in the waitlisted list.");
@@ -116,5 +127,62 @@ public class OrganizerWaitlistFragment extends Fragment {
 
         return view;
     }
+
+    // Show the dialog
+    private void showMessageDialog() {
+        // Inflate the custom dialog layout
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View dialogView = inflater.inflate(R.layout.dialog_custom_message, null);
+
+        // Get references to the input fields from the dialog view
+        EditText inputTitle = dialogView.findViewById(R.id.dialogMessageTitle);  // Assuming inputTitle exists in the dialog layout
+        EditText inputMessage = dialogView.findViewById(R.id.dialogMessageInput); // Assuming inputMessage exists in the dialog layout
+
+        // Create and show the dialog
+        new AlertDialog.Builder(getContext())
+                .setTitle("Craft Message")
+                .setView(dialogView)  // Set the custom dialog layout here
+                .setPositiveButton("Send", (dialog, which) -> {
+                    // Get the input values
+                    String message = inputMessage.getText().toString();
+                    String title = inputTitle.getText().toString();
+
+                    // Check if the message and title are not empty
+                    if (!message.isEmpty() && !title.isEmpty()) {
+                        sendNotificationsToWaitlist(title, message);
+                    } else {
+                        // Show a Toast if either title or message is empty
+                        Toast.makeText(getContext(), "Message and title cannot be empty", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+
+    private void sendNotificationsToWaitlist(String customName, String customMessage) {
+        db.collection("events").document(eventId).get().addOnSuccessListener(eventDoc -> {
+            if (eventDoc.exists()) {
+                ArrayList<String> deviceIds = (ArrayList<String>) eventDoc.get("waitlistedNotificationsList");
+
+                if (deviceIds != null && !deviceIds.isEmpty()) {
+                    NotificationHelper notificationHelper = new NotificationHelper(getActivity());
+                    // Send individual notifications to each user in the waitlist
+                    for (int i = 0; i < deviceIds.size(); i++) {
+                        String deviceId = deviceIds.get(i);
+
+                        db.collection("profiles").document(deviceId).get().addOnSuccessListener(profileDoc -> {
+                            if (profileDoc.exists()) {
+                                // Build a notification for each waitlisted user
+                                notificationHelper.sendNotificationscraftW(deviceId,customName,customMessage);
+                            }
+                        });
+                    }
+                    Toast.makeText(getContext(), "Notifications sent to waitlisted users.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 
 }

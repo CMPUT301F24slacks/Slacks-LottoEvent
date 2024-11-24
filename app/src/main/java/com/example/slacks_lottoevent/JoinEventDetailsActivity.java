@@ -569,7 +569,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         navigateToEventsHome();
         dialog.dismiss();
 
-        NotificationHelper notificationHelper = new NotificationHelper(this);
-        notificationHelper.sendNotificationsW(eventName);
+        String deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 }
