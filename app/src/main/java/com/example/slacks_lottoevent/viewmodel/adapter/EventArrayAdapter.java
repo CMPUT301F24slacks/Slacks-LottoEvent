@@ -17,6 +17,7 @@ import com.example.slacks_lottoevent.EntrantEventDetailsActivity;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.enums.EventParticipationStatus;
+import com.example.slacks_lottoevent.model.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -77,10 +78,11 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         TextView statusUnselected = convertView.findViewById(R.id.status_unselected);
         TextView statusWaitlisted = convertView.findViewById(R.id.status_waitlisted);
 
-        // Set the name, date, time, address, and description of the event
+        // Set the name, date, time, and description of the event
         eventName.setText(event.getName());
         eventDate.setText(event.getEventDate());
         eventTime.setText(event.getTime());
+        eventDescription.setText(event.getDescription());
         // Set the address with a newline after removing the first comma
         if (event.getLocation() != null && event.getLocation().contains(",")) {
             String[] addressParts = event.getLocation().split(",", 2);
@@ -90,31 +92,17 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
             eventAddress.setText(event.getLocation());
         }
 
-        eventDescription.setText(event.getDescription());
-
-        // Set the status of the event based on the user's participation status
-        switch (eventParticipationStatus) {
-            case ATTENDING:
-                statusAttending.setVisibility(View.VISIBLE);
-                break;
-            case INVITED:
-                statusInvited.setVisibility(View.VISIBLE);
-                break;
-            case UNSELECTED:
-                statusUnselected.setVisibility(View.VISIBLE);
-                break;
-            case WAITLISTED:
-                statusWaitlisted.setVisibility(View.VISIBLE);
-                break;
-            case HOSTING:
-                // Do nothing for HOSTING status
-                break;
-            default:
-                // Optional: Handle unexpected statuses (e.g., log or set a default visibility)
-                Log.w("EventAdapter", "Unhandled status: " + eventParticipationStatus);
-                break;
+        User user = User.getInstance(getContext());
+        String deviceId = user.getDeviceId();
+        if (event.getWaitlisted().contains(deviceId)) {
+            statusWaitlisted.setVisibility(View.VISIBLE);
+        } else if (event.getSelected().contains(deviceId)) {
+            statusInvited.setVisibility(View.VISIBLE);
+        } else if (event.getFinalists().contains(deviceId)) {
+            statusAttending.setVisibility(View.VISIBLE);
+        } else if (event.getCancelled().contains(deviceId)) {
+            statusUnselected.setVisibility(View.VISIBLE);
         }
-
 
         // Set an OnClickListener for the event button
         eventButton.setOnClickListener(v -> {
