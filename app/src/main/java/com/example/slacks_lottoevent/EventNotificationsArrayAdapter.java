@@ -75,14 +75,12 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
                 handleAcceptEvent(event);
                 showConfirmationDialog(v.getContext(), "You have now joined the event.");
                 removeEvent(position);
-//                TODO: notification here
             });
             //make changes to both events and entrants, not only events
             declineButton.setOnClickListener(v -> {
                 handleDeclineEvent(event);
                 showConfirmationDialog(v.getContext(), "You have now declined the event.");
                 removeEvent(position);
-//                TODO: notifcation here
             });
         }
 
@@ -106,8 +104,7 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
                 "selected", FieldValue.arrayRemove(deviceId),
                 "selectedNotificationsList", FieldValue.arrayRemove(deviceId),
                 "finalists", FieldValue.arrayUnion(deviceId),
-                "joinedNotificationsList", FieldValue.arrayUnion(deviceId),
-                "cancelledNotificationsList", FieldValue.arrayUnion(deviceId));
+                "joinedNotificationsList", FieldValue.arrayUnion(deviceId));
     }
 
     /**
@@ -126,8 +123,7 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
                             "selected", FieldValue.arrayRemove(deviceId),
                     "selectedNotificationsList", FieldValue.arrayRemove(deviceId),
                     "cancelled", FieldValue.arrayUnion(deviceId),
-                    "cancelledNotificationsList", FieldValue.arrayUnion(deviceId),
-                    "joinedNotificationsList", FieldValue.arrayRemove(deviceId))
+                    "cancelledNotificationsList", FieldValue.arrayUnion(deviceId))
                     .addOnSuccessListener(aVoid1 -> Log.d("Firestore", "Event declined: " + eventId))
                     .addOnFailureListener(e -> Log.e("Firestore", "Error updating event invite list: " + eventId, e));
         }).addOnFailureListener(e -> Log.e("Firestore", "Error declining event: " + eventId, e));

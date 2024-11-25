@@ -419,9 +419,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 for (String entrant : event.getCancelled()) {
                     eventRef.update("cancelled", FieldValue.arrayUnion(entrant),
                             "cancelledNotificationsList", FieldValue.arrayUnion(entrant),
-                            "waitlistedNotificationsList", FieldValue.arrayRemove(entrant),
-                            "joinedNotificationsList", FieldValue.arrayRemove(entrant),
-                            "selectedNotificationsList", FieldValue.arrayRemove(entrant));
+                            "waitlistedNotificationsList", FieldValue.arrayRemove(entrant));
                 }
             }
         });

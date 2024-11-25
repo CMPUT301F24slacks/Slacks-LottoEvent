@@ -239,6 +239,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         AtomicBoolean notis = new AtomicBoolean(false);
 
 
+//        TODO: fix for opt out
         organizerNotis.setOnClickListener(v -> {
             boolean negation = !(notis.get());
             notis.set(negation);
@@ -274,21 +275,21 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         dialog.dismiss();
                     } else {
                         // Entrant is not in the event, add them to the event
-                        handleEntrantActions(isDeclined,notis, usesGeolocation, dialog, eventName);
+                        handleEntrantActions(isDeclined,notis, usesGeolocation, dialog);
 
                     }
                 } else {
                     // Entrant does not exist, create a new one and add them
                     Log.d("JoinEventDetails", "Entrant does not exist. Creating a new entrant...");
                     createNewEntrant(userId);
-                    handleEntrantActions(isDeclined,notis, usesGeolocation, dialog, eventName);
+                    handleEntrantActions(isDeclined,notis, usesGeolocation, dialog);
                 }
             }).addOnFailureListener(e -> {
                 // Handle any errors in fetching the entrant document
                 Log.e("JoinEventDetails", "Error fetching entrant document: " + e.getMessage());
                 // Create a new entrant in case of a failure
                 createNewEntrant(userId);
-                handleEntrantActions(isDeclined,notis, usesGeolocation, dialog, eventName);
+                handleEntrantActions(isDeclined,notis, usesGeolocation, dialog);
             });
         });
 
@@ -393,7 +394,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      * addEntrantToWaitlist method for the JoinEventDetailsActivity.
      * This method adds the entrant to the waitlist for the event.
      */
-    private void addEntrantToWaitlist(Boolean isReselected){
+    private void addEntrantToWaitlist(Boolean isReselected, AtomicBoolean organizerNotis){
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         db.collection("events").whereEqualTo("eventID",qrCodeValue)
@@ -402,10 +403,14 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     DocumentSnapshot eventDocumentSnapshot = task.getDocuments().get(0);
                     DocumentReference eventRef = eventDocumentSnapshot.getReference();
                     eventRef.update("waitlisted", FieldValue.arrayUnion(deviceId));
-                    Log.d("Reselected: ", "Reselected Value: " + isReselected.toString());
                     if(isReselected){
                         eventRef.update("reselected", FieldValue.arrayUnion(deviceId));
                     }
+
+                    if (organizerNotis.get()){
+                        eventRef.update("waitlistedNotificationsList", FieldValue.arrayUnion(deviceId));
+                    }
+
                 })
                 .addOnFailureListener(task -> {
                     System.err.println("Error fetching event document: " + task);
@@ -431,55 +436,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                 entrantDocRef.set(newEntrant);
             }
         });
-    }
-
-    /**
-     * addEntrantToNotis method for the JoinEventDetailsActivity.
-     * This method adds the entrant to the notifications for the event.
-     *
-     * @param organizerNotis The boolean value for chosen for lottery
-     */
-    private void addEntrantToNotis(AtomicBoolean organizerNotis) {
-        // Query the Firestore for the event based on the QR code value
-        db.collection("events").whereEqualTo("eventID", qrCodeValue)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        QueryDocumentSnapshot document = (QueryDocumentSnapshot) task.getResult().getDocuments().get(0);
-                        Event event = document.toObject(Event.class); // Convert the document to an Event object
-
-//                       IF that entrant wants notifications then we add that entrant too all the notification lists
-                        if (organizerNotis.get()) {
-                            event.addWaitlistedNotification(deviceId);
-                            event.addSelectedNotification(deviceId);
-                            event.addCancelledNotification(deviceId);
-                            event.addJoinedNotification(deviceId);
-                            System.out.println("Notifications List updated successfully.");
-                        }
-
-//                        We update the lists that may have been changed
-                        db.collection("events").document(event.getEventID())
-                                .update("waitlistedNotificationsList", event.getWaitlistedNotificationsList(), // Assuming this method returns the list
-                                        "selectedNotificationsList", event.getSelectedNotificationsList(),      // Assuming this method returns the list
-                                        "cancelledNotificationsList", event.getCancelledNotificationsList(),
-                                        "joinedNotificationsList", event.getJoinedNotificationsList())
-                                .addOnSuccessListener(aVoid -> {
-                                    // Successfully updated Firestore
-                                    System.out.println("Notifications updated successfully.");
-                                })
-                                .addOnFailureListener(e -> {
-                                    // Handle failure
-                                    System.err.println("Error updating notifications: " + e.getMessage());
-                                });
-                    } else {
-                        // Handle case where no events were found
-                        Toast.makeText(this, "No event found with the specified ID.", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    // Handle failure in retrieving the event document
-                    Toast.makeText(this, "Error fetching event document: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
     }
 
 
@@ -561,14 +517,11 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void handleEntrantActions(boolean isDeclined, AtomicBoolean notis, boolean usesGeolocation, DialogInterface dialog, String eventName) {
-        addEntrantToWaitlist(isDeclined);
-        addEntrantToNotis(notis);
+    private void handleEntrantActions(boolean isDeclined, AtomicBoolean notis, boolean usesGeolocation, DialogInterface dialog) {
+        addEntrantToWaitlist(isDeclined, notis);
         addEventToEntrant();
         getJoinLocation(usesGeolocation);
         navigateToEventsHome();
         dialog.dismiss();
-
-        String deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 }

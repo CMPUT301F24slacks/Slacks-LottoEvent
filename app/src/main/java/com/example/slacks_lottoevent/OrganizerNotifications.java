@@ -219,9 +219,8 @@ public class OrganizerNotifications extends AppCompatActivity {
     private void handleReSelect() {
 
         event.reSelecting();
-        updateSelectedEntrants(event); // in the event
+        updateSelectedEntrants(event); // in the event - update the waitlist this way
         updateInvitedEntrants(event); // in entrant
-        updateUninvitedEntrants(event); // in entrant
     }
 
     private void updateSelectedEntrants(Event event) {
@@ -256,13 +255,6 @@ public class OrganizerNotifications extends AppCompatActivity {
         }
     }
 
-    //    Updating everyone who did not get selected and who do not want too be reselected
-    private void updateUninvitedEntrants(Event event){
-
-                    // Send notification but don't put them into the uninvited unless its the due date
-//                    TODO: Sent notification if DID NOT get selected the nth time
-
-    }
 
 //    Updating people who are still on waitlisted (wanted to get selected but the event is now full, so move too the other list)
     private void updateUninvitedFinalEntrants(Event event){
@@ -289,8 +281,6 @@ public class OrganizerNotifications extends AppCompatActivity {
                 for (String entrant : event.getWaitlisted()) {
                     eventRef.update("waitlisted", FieldValue.arrayRemove(entrant),
                             "waitlistedNotificationsList", FieldValue.arrayRemove(entrant),
-                            "selectedNotificationsList", FieldValue.arrayRemove(entrant),
-                            "joinedNotificationsList", FieldValue.arrayRemove(entrant),
                             "cancelled", FieldValue.arrayUnion(entrant),
                             "cancelledNotificationsList", FieldValue.arrayUnion(entrant));
                 }
