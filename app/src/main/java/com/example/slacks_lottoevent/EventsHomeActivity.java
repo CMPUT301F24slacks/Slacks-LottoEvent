@@ -248,12 +248,18 @@ public class EventsHomeActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startFetchingNotifications();
+                editor.putBoolean("notificationsEnabled", true);
+
             } else {
+                editor.putBoolean("notificationsEnabled", false);
                 Log.d("EventsHomeActivity", "Notification permission denied.");
+
             }
         }
     }

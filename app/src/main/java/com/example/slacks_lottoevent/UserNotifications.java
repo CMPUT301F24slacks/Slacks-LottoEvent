@@ -1,6 +1,7 @@
 package com.example.slacks_lottoevent;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -67,7 +68,6 @@ public class UserNotifications extends AppCompatActivity {
 
         ImageView organizerNotis = findViewById(R.id.organizerNotifications);
         boolean notisEnabled = sharedPreferences.getBoolean("notificationsEnabled", false);
-        Log.d("Notis", String.valueOf(notisEnabled));
 
         organizerNotis.setImageResource(notisEnabled ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
 
@@ -80,13 +80,18 @@ public class UserNotifications extends AppCompatActivity {
             editor.apply();
             organizerNotis.setImageResource(negation ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
 
-            if(!notisEnabled){
-                removeNotifications();
+            if (negation) {
+                Toast.makeText(this, "Notifications are disabled. To fully disable, revoke the permission in app settings.", Toast.LENGTH_LONG).show();
+            }
+            else{
+                Toast.makeText(this, "Notifications are enabled. To fully disable, revoke the permission in app settings.", Toast.LENGTH_LONG).show();
             }
 
-            else{
-                wantNotifications();
-            }
+            // Redirect to the app's notification settings
+            Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+            startActivityForResult(intent, 100);  // Start activity for result to return back to app
+
         });
     }
 
@@ -150,111 +155,6 @@ public class UserNotifications extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    /**
-     * If user opts out of notifications, then they are removed.
-     */
-    private void removeNotifications() {
-        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        eventsRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    // Get the lists from the document
-                    List<String> cancelledNotificationsList = (List<String>) document.get("cancelledNotificationsList");
-                    List<String> joinedNotificationsList = (List<String>) document.get("joinedNotificationsList");
-                    List<String> selectedNotificationsList = (List<String>) document.get("selectedNotificationsList");
-                    List<String> waitlistedNotificationsList = (List<String>) document.get("waitlistedNotificationsList");
-
-                    boolean isUpdated = false;
-
-                    // Remove the notification ID from each list if it exists
-                    if (cancelledNotificationsList != null && cancelledNotificationsList.contains(deviceId)) {
-                        cancelledNotificationsList.remove(deviceId);
-                        isUpdated = true;
-                    }
-                    if (joinedNotificationsList != null && joinedNotificationsList.contains(deviceId)) {
-                        joinedNotificationsList.remove(deviceId);
-                        isUpdated = true;
-                    }
-                    if (selectedNotificationsList != null && selectedNotificationsList.contains(deviceId)) {
-                        selectedNotificationsList.remove(deviceId);
-                        isUpdated = true;
-                    }
-                    if (waitlistedNotificationsList != null && waitlistedNotificationsList.contains(deviceId)) {
-                        waitlistedNotificationsList.remove(deviceId);
-                        isUpdated = true;
-                    }
-
-                    // If any list was updated, update the document in Firestore
-                    if (isUpdated) {
-                        eventsRef.document(document.getId())
-                                .update("cancelledNotificationsList", cancelledNotificationsList,
-                                        "joinedNotificationsList", joinedNotificationsList,
-                                        "selectedNotificationsList", selectedNotificationsList,
-                                        "waitlistedNotificationsList", waitlistedNotificationsList)
-                                .addOnSuccessListener(aVoid -> {
-                                    Log.d("Notification Removal", "Notification removed from event " + document.getId());
-                                })
-                                .addOnFailureListener(e -> {
-                                    Log.e("Notification Removal", "Failed to remove notification from event " + document.getId(), e);
-                                });
-                    }
-                }
-            }
-        });
-    }
-
-    private void wantNotifications(){
-        List<String> eventList = new ArrayList<>();  // List to store event IDs
-        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        entrantRef.document(deviceId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                DocumentSnapshot entrantDoc = task.getResult();
-
-                if (entrantDoc.exists()) {
-                    // Get the event lists from Firestore
-                    List<String> invitedEvents = (List<String>) entrantDoc.get("invitedEvents");
-                    List<String> uninvitedEvents = (List<String>) entrantDoc.get("uninvitedEvents");
-                    List<String> finalistEvents = (List<String>) entrantDoc.get("finalistEvents");
-                    List<String> waitlistedEvents = (List<String>) entrantDoc.get("waitlistedEvents");
-
-                    // Add all events to the eventList
-                    eventList.addAll(invitedEvents);
-                    eventList.addAll(uninvitedEvents);
-                    eventList.addAll(finalistEvents);
-                    eventList.addAll(waitlistedEvents);
-
-                    // Now that the eventList is populated, perform further operations
-                    if (eventList != null && !eventList.isEmpty()) {
-                        for (String event : eventList) {
-                            eventsRef.document(event).get().addOnCompleteListener(eventTask -> {
-                                if (eventTask.isSuccessful() && eventTask.getResult() != null) {
-                                    DocumentSnapshot eventDoc = eventTask.getResult();
-
-                                    if (eventDoc.exists()) {
-                                        // Check which list the event belongs to and handle accordingly
-                                        if (finalistEvents.contains(event)) {
-                                            // If it's a finalist event, add to the finalist notifications list
-                                            // Example: Add to the finalist notifications list
-                                        } else if (uninvitedEvents.contains(event)) {
-                                            // If it's an uninvited event, add to the cancelled notifications list
-                                        } else if (invitedEvents.contains(event)) {
-                                            // If it's an invited event, add to selected, finalist, and uninvited
-                                        } else if (waitlistedEvents.contains(event)) {
-                                            // If it's a waitlisted event, add to all four notification lists
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        });
-
     }
 }
 

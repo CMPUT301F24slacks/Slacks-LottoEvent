@@ -24,7 +24,7 @@
         android:textColor="#FFFFFF" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="8dp">
@@ -40,21 +40,11 @@
 
             <TextView
                 android:id="@+id/organizerNotisText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Recieve Notifications"
-                android:textColor="#BDBDBD"
-                android:layout_marginEnd="8dp" />
-
-            <ImageView
-                android:id="@+id/organizerNotifications"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/baseline_circle_notifications_24"
-                android:contentDescription="Recieve notifications from organizer"
-                android:clickable="true"
-                android:focusable="true"
-                app:tint="#BDBDBD" />
+                android:layout_width="296dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:text="**This event sends notifications, you can opt out under the notification tab.**"
+                android:textColor="#BDBDBD" />
         </LinearLayout>
 
         <LinearLayout

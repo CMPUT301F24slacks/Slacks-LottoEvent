@@ -221,7 +221,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         View dialogView = inflater.inflate(R.layout.dialog_registration, null);
         builder.setView(dialogView);
 
-        ImageView organizerNotis = dialogView.findViewById(R.id.organizerNotifications);
         CheckBox declineCheckbox = dialogView.findViewById(R.id.declineCheckbox);
         Button confirmButton = dialogView.findViewById(R.id.confirm_button);
         Button cancelButton = dialogView.findViewById(R.id.cancel_button);
@@ -236,20 +235,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
 
-        AtomicBoolean notis = new AtomicBoolean(false);
-
-
-//        TODO: fix for opt out
-        organizerNotis.setOnClickListener(v -> {
-            boolean negation = !(notis.get());
-            notis.set(negation);
-
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("notificationsEnabled", notis.get());
-            editor.apply();
-
-            organizerNotis.setImageResource(notis.get() ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
-        });
 
 
         cancelButton.setOnClickListener(view -> dialog.dismiss());
@@ -275,21 +260,21 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         dialog.dismiss();
                     } else {
                         // Entrant is not in the event, add them to the event
-                        handleEntrantActions(isDeclined,notis, usesGeolocation, dialog);
+                        handleEntrantActions(isDeclined, usesGeolocation, dialog);
 
                     }
                 } else {
                     // Entrant does not exist, create a new one and add them
                     Log.d("JoinEventDetails", "Entrant does not exist. Creating a new entrant...");
                     createNewEntrant(userId);
-                    handleEntrantActions(isDeclined,notis, usesGeolocation, dialog);
+                    handleEntrantActions(isDeclined, usesGeolocation, dialog);
                 }
             }).addOnFailureListener(e -> {
                 // Handle any errors in fetching the entrant document
                 Log.e("JoinEventDetails", "Error fetching entrant document: " + e.getMessage());
                 // Create a new entrant in case of a failure
                 createNewEntrant(userId);
-                handleEntrantActions(isDeclined,notis, usesGeolocation, dialog);
+                handleEntrantActions(isDeclined, usesGeolocation, dialog);
             });
         });
 
@@ -394,7 +379,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      * addEntrantToWaitlist method for the JoinEventDetailsActivity.
      * This method adds the entrant to the waitlist for the event.
      */
-    private void addEntrantToWaitlist(Boolean isReselected, AtomicBoolean organizerNotis){
+    private void addEntrantToWaitlist(Boolean isReselected){
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         db.collection("events").whereEqualTo("eventID",qrCodeValue)
@@ -402,14 +387,12 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                 .addOnSuccessListener(task -> {
                     DocumentSnapshot eventDocumentSnapshot = task.getDocuments().get(0);
                     DocumentReference eventRef = eventDocumentSnapshot.getReference();
-                    eventRef.update("waitlisted", FieldValue.arrayUnion(deviceId));
+                    eventRef.update("waitlisted", FieldValue.arrayUnion(deviceId),
+                            "waitlistedNotificationsList", FieldValue.arrayUnion(deviceId));
                     if(isReselected){
                         eventRef.update("reselected", FieldValue.arrayUnion(deviceId));
                     }
 
-                    if (organizerNotis.get()){
-                        eventRef.update("waitlistedNotificationsList", FieldValue.arrayUnion(deviceId));
-                    }
 
                 })
                 .addOnFailureListener(task -> {
@@ -517,8 +500,8 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void handleEntrantActions(boolean isDeclined, AtomicBoolean notis, boolean usesGeolocation, DialogInterface dialog) {
-        addEntrantToWaitlist(isDeclined, notis);
+    private void handleEntrantActions(boolean isDeclined, boolean usesGeolocation, DialogInterface dialog) {
+        addEntrantToWaitlist(isDeclined);
         addEventToEntrant();
         getJoinLocation(usesGeolocation);
         navigateToEventsHome();
