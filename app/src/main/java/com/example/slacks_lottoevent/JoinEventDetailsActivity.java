@@ -43,6 +43,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  * JoinEventDetailsActivity is the activity for the Join Event Details screen.
@@ -95,17 +97,12 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         Date signup = null;
                         try {
                             signup = sdf.parse(signupDeadline);
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
+                        } catch (ParseException e) {}
                         Date currentDate = new Date();
                         try {
                             // Format the current date to "MM/dd/yyyy" and parse it back into a Date object to remove time
                             currentDate = sdf.parse(sdf.format(currentDate));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                            throw new RuntimeException("Error truncating current date", e);
-                        }
+                        } catch (ParseException e) {}
 
 
                         List<Object> waitlisted = (List<Object>) document.get("waitlisted");
@@ -245,6 +242,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
         cancelButton.setOnClickListener(view -> dialog.dismiss());
         confirmButton.setOnClickListener(view -> {
+            Boolean isDeclined = declineCheckbox.isChecked();
             // Get the user's unique device ID
             String userId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -265,10 +263,9 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         dialog.dismiss();
                     } else {
                         // Entrant is not in the event, add them to the event
-                        addEntrantToWaitlist();
+                        addEntrantToWaitlist(isDeclined);
                         addEntrantToNotis(chosenForLottery, notChosenForLottery);
                         addEventToEntrant();
-                        getJoinLocation(usesGeolocation);
                         navigateToEventsHome();
                         dialog.dismiss();
                     }
@@ -276,8 +273,8 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     // Entrant does not exist, create a new one and add them
                     Log.d("JoinEventDetails", "Entrant does not exist. Creating a new entrant...");
                     createNewEntrant(userId);
-                    addEntrantToWaitlist();
-                    addEntrantToNotis(chosenForLottery, notChosenForLottery);
+                    addEntrantToWaitlist(isDeclined);
+                    addEntrantToNotis(chosenForLottery, notChosenForLottery); // TODO: fix this field
                     getJoinLocation(usesGeolocation);
                     navigateToEventsHome();
                     dialog.dismiss();
@@ -287,7 +284,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                 Log.e("JoinEventDetails", "Error fetching entrant document: " + e.getMessage());
                 // Create a new entrant in case of a failure
                 createNewEntrant(userId);
-                addEntrantToWaitlist();
+                addEntrantToWaitlist(isDeclined);
                 addEntrantToNotis(chosenForLottery, notChosenForLottery);
                 getJoinLocation(usesGeolocation);
                 navigateToEventsHome();
@@ -396,7 +393,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      * addEntrantToWaitlist method for the JoinEventDetailsActivity.
      * This method adds the entrant to the waitlist for the event.
      */
-    private void addEntrantToWaitlist(){
+    private void addEntrantToWaitlist(Boolean isReselected){
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         db.collection("events").whereEqualTo("eventID",qrCodeValue)
@@ -405,7 +402,10 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     DocumentSnapshot eventDocumentSnapshot = task.getDocuments().get(0);
                     DocumentReference eventRef = eventDocumentSnapshot.getReference();
                     eventRef.update("waitlisted", FieldValue.arrayUnion(deviceId));
-
+                    Log.d("Reselected: ", "Reselected Value: " + isReselected.toString());
+                    if(isReselected){
+                        eventRef.update("reselected", FieldValue.arrayUnion(deviceId));
+                    }
                 })
                 .addOnFailureListener(task -> {
                     System.err.println("Error fetching event document: " + task);

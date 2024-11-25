@@ -29,7 +29,7 @@ public class AdminActivity extends AppCompatActivity {
         frameLayout = (FrameLayout) findViewById(R.id.FrameLayoutAdmin);
         tabLayout = (TabLayout) findViewById(R.id.tab_Layout_Admin);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, AdminProfiles.newInstance()) //AdminEvents()
+        getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayoutAdmin, AdminEvents.newInstance()) //AdminEvents()
                 .addToBackStack(null)
                 .commit();
 
@@ -39,10 +39,10 @@ public class AdminActivity extends AppCompatActivity {
                 Fragment selected_fragment = null;
                 switch (tab.getPosition()){
                     case 0:
-//                        selected_fragment = AdminEvents.newInstance(event);
+                        selected_fragment = AdminEvents.newInstance();
                         break;
                     case 1:
-//                        selected_fragment = AdminImages.newInstance(event);;
+                        selected_fragment = AdminImages.newInstance();;
                         break;
                     case 2:
                         selected_fragment = AdminFacilities.newInstance();;
@@ -53,7 +53,7 @@ public class AdminActivity extends AppCompatActivity {
                 }
                 if (selected_fragment != null) {
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.FrameLayout, selected_fragment)
+                            .replace(R.id.FrameLayoutAdmin, selected_fragment)
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                             .commit();
                 }
@@ -78,10 +78,11 @@ public class AdminActivity extends AppCompatActivity {
         });
 
 
-//        ImageView back = findViewById(R.id.back_button);
-//        back.setOnClickListener(v -> {
-//            onBackPressed();
-//        });
+        ImageView back = findViewById(R.id.back_button2);
+        back.setOnClickListener(v -> {
+            onBackPressed();
+            onBackPressed();
+        });
 
     }
 }
