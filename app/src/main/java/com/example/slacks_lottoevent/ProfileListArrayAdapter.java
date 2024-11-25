@@ -110,6 +110,7 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
      * @param position The position of the profile in the list.
      */
     private void deleteProfileFromDatabase(Profile profile, int position) {
+        //
         // Assume the profile's document ID is the same as the email
         db.collection("profiles").document(profile.getDeviceId())
                 .delete()

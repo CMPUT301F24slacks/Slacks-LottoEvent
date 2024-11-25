@@ -93,7 +93,7 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
                 .setMessage(message)
                 .setPositiveButton("Delete", (dialog, which) -> {
                     // Call method to delete profile
-                    deleteProfileFromDatabase(facility, position);
+                    deleteFacilityFromDatabase(db, facility, position);
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
@@ -107,7 +107,12 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
      * @param facility  The profile to delete.
      * @param position The position of the profile in the list.
      */
-    private void deleteProfileFromDatabase(Facility facility, int position) {
+    public static void deleteFacilityFromDatabase(FirebaseFirestore db, Facility facility, int position) {
+        //get the organizerID attribute or facility.getOrganizerID(), delete the object, then use that organizer ID
+        //as a key to the "organizers" database and the list of events and erase facility ID,
+        //then go to the events database and for every event in the list of events, set
+        //geoLocation to false (check with john), set location to be an empty string,
+
         // Assume the profile's document ID is the same as the email
         db.collection("facilities").document(facility.getFacilityId())
                 .delete()
