@@ -39,22 +39,20 @@ import java.util.Map;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private NotificationHelper notificationHelper;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
 
-
-        createNotificationChannel();
-        notificationHelper = new NotificationHelper(this);
-        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        grabbingNotifications(deviceId);
-        Notifications notification = new Notifications();
-        notification.removeNotifications(deviceId);
+//
+//        createNotificationChannel();
+//        notificationHelper = new NotificationHelper(this);
+//        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+//
+//        grabbingNotifications(deviceId);
+//        Notifications notification = new Notifications();
+//        notification.removeNotifications(deviceId);
 
 
         SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
@@ -79,47 +77,6 @@ public class MainActivity extends AppCompatActivity {
             Places.initialize(getApplicationContext(),com.example.slacks_lottoevent.BuildConfig.MAPS_API_KEY);
 
         }
-    }
-
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is not in the Support Library.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Use the appropriate context method
-            String channelId = getString(R.string.channel_id); // ensure channel ID is properly defined in strings.xml
-            CharSequence name = getString(R.string.channel_name); // name of the channel
-            String description = getString(R.string.channel_description); // description of the channel
-            int importance = NotificationManager.IMPORTANCE_DEFAULT; // adjust as necessary
-
-            // Create the NotificationChannel
-            NotificationChannel channel = new NotificationChannel(channelId, name, importance);
-            channel.setDescription(description);
-
-            // Register the channel with the system
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
-            }
-        }
-    }
-
-    private void grabbingNotifications(String deviceId){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("notifications")
-                .whereEqualTo("userId", deviceId)  // Match documents where userId is "user1"
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (DocumentSnapshot document : queryDocumentSnapshots) {
-                        // doc3 will be included in the results, along with other matching documents
-                        String title = document.getString("title");
-                        String messageContent = document.getString("message");
-                        notificationHelper.sendNotifications(deviceId, title, messageContent);
-
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error fetching notifications", e);
-                });
     }
 
 }
