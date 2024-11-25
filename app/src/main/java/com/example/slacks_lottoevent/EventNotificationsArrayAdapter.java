@@ -63,12 +63,20 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
         TextView eventLocation = convertView.findViewById(R.id.user_notification_event_location);
         Button acceptButton = convertView.findViewById(R.id.Accept_Invitation);
         Button declineButton = convertView.findViewById(R.id.Decline_Invitation);
+        Button okayButton = convertView.findViewById(R.id.Okay_Button);
 
         if (event != null) {
             eventName.setText(event.getName());
             eventDate.setText(event.getDate());
             eventTime.setText(event.getTime());
             eventLocation.setText(event.getLocation());
+
+            if (!event.getSelected()){
+                acceptButton.setVisibility(View.GONE);
+                declineButton.setVisibility(View.GONE);
+                okayButton.setVisibility(View.VISIBLE);
+            }
+
 
             //make changes to both events and entrants, not only events
             acceptButton.setOnClickListener(v -> {
@@ -80,6 +88,11 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
             declineButton.setOnClickListener(v -> {
                 handleDeclineEvent(event);
                 showConfirmationDialog(v.getContext(), "You have now declined the event.");
+                removeEvent(position);
+            });
+
+            okayButton.setOnClickListener(v->{
+                showConfirmationDialog(v.getContext(), "You have now got rid of this message.");
                 removeEvent(position);
             });
         }

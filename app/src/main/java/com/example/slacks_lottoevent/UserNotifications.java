@@ -61,7 +61,8 @@ public class UserNotifications extends AppCompatActivity {
         listView.setAdapter(adapter);
 
         // Fetch and populate invited events
-        fetchInvitedEvents();
+        fetchInvitedEvents("invitedEvents", true);
+        fetchInvitedEvents("uninvitedEvents", false);
 
         Button back_btn = findViewById(R.id.back_btn);
         back_btn.setOnClickListener(v -> onBackPressed());
@@ -71,7 +72,6 @@ public class UserNotifications extends AppCompatActivity {
 
         organizerNotis.setImageResource(notisEnabled ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
 
-//        TODO: fix this based on what the TA says
         organizerNotis.setOnClickListener(v -> {
             boolean negation = !notisEnabled;
 
@@ -98,17 +98,17 @@ public class UserNotifications extends AppCompatActivity {
     /**
      * Fetch the invited events for the current user and facility location.
      */
-    private void fetchInvitedEvents() {
+    private void fetchInvitedEvents(String eventTypes, Boolean selected) {
         String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         entrantRef.document(deviceId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 DocumentSnapshot entrantDoc = task.getResult();
 
-                if (entrantDoc.exists() && entrantDoc.contains("invitedEvents")) {
-                    List<String> eventIds = (List<String>) entrantDoc.get("invitedEvents");
+                if (entrantDoc.exists() && entrantDoc.contains(eventTypes)) {
+                    List<String> eventIds = (List<String>) entrantDoc.get(eventTypes);
 
                     if (eventIds != null && !eventIds.isEmpty()) {
-                        fetchEventDetails(eventIds);
+                        fetchEventDetails(eventIds, selected);
                     } else {
                         Log.d("Firestore", "No invited events found.");
                     }
@@ -125,7 +125,7 @@ public class UserNotifications extends AppCompatActivity {
      * Fetch the event details from the events collection.
      * @param eventIds the list of event IDs to fetch details for
      */
-    private void fetchEventDetails(List<String> eventIds) {
+    private void fetchEventDetails(List<String> eventIds, Boolean invited) {
         for (String eventId : eventIds) {
             if (eventId == null || eventId.isEmpty()) {
                 Log.e("Firestore", "Invalid eventId: " + eventId);
@@ -136,18 +136,34 @@ public class UserNotifications extends AppCompatActivity {
                 if (task.isSuccessful() && task.getResult() != null) {
                     DocumentSnapshot eventDoc = task.getResult();
 
-                    if (eventDoc.exists()) {
+                    if (eventDoc.exists() && invited) {
                         String name = eventDoc.getString("name");
                         String date = eventDoc.getString("eventDate");
                         String time = eventDoc.getString("time");
                         String location = eventDoc.getString("location");
 
-                        UserEventNotifications event = new UserEventNotifications(name, date, time, location, eventId);
+                        UserEventNotifications event = new UserEventNotifications(name + ": Selected", date, time, location, eventId, true);
                         eventList.add(event);
 
                         // Notify adapter of data changes
                         adapter.notifyDataSetChanged();
-                    } else {
+                    }
+
+                    else if(eventDoc.exists() && !invited){
+                        String name = eventDoc.getString("name");
+                        String date = eventDoc.getString("eventDate");
+                        String time = eventDoc.getString("time");
+                        String location = eventDoc.getString("location");
+
+                        UserEventNotifications event = new UserEventNotifications(name + ": Unselected", date, time, location, eventId, false);
+                        eventList.add(event);
+
+                        // Notify adapter of data changes
+                        adapter.notifyDataSetChanged();
+
+                    }
+
+                    else {
                         Log.d("Firestore", "Event document does not exist for ID: " + eventId);
                     }
                 } else {
