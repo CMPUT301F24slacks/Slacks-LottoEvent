@@ -21,7 +21,7 @@ public class NotificationHelper {
     }
 
     // Reusable notification sender
-    private void sendNotification(String deviceId, String title, String message) {
+    public void sendNotifications(String deviceId, String title, String message) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.POST_NOTIFICATIONS},1);
@@ -37,33 +37,9 @@ public class NotificationHelper {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(activity);
 
 
-        notificationManager.notify(deviceId.hashCode(), builder.build());
+        notificationManager.notify((deviceId + System.currentTimeMillis()).hashCode(), builder.build());
 
         Log.d("Notis", "Notifications send");
-    }
-
-    public void sendNotificationsW(String deviceId, String eventName) {
-        sendNotification(deviceId,"Event Registration: " + eventName,
-                "You have successfully registered for the event waitlist!");
-    }
-
-//    public void sendNotificationsSel(String eventName) {
-//        sendNotification("Update for: " + eventName,
-//                "You have been selected for the event! Please check your invites to accept or decline the invitation ASAP!");
-//    }
-//
-//    public void sendNotificationsCanc(String eventName) {
-//        sendNotification("Updated for: " + eventName,
-//                "Unfortunately, you have not been selected for the event.");
-//    }
-//
-//    public void sendNotificationsJoined(String eventName) {
-//        sendNotification("Confirmation for: " + eventName,
-//                "Yay!! You have successfully joined this event! All the work is done so now just kick back and relax until the event.");
-//    }
-//
-    public void sendNotificationscraftW(String deviceId, String eventTitle, String desc){
-        sendNotification(deviceId, eventTitle, desc);
     }
 
 }

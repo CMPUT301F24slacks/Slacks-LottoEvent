@@ -1,7 +1,9 @@
 package com.example.slacks_lottoevent;
 
+import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -48,5 +50,29 @@ public class Notifications {
                 }
             }
         });
+    }
+
+    public void removeNotifications(String deviceId){
+        db.collection("notifications")
+                .whereEqualTo("userId", deviceId)  // Match documents where userId is equal to deviceId
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    // Iterate through each matching document
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        // Document reference to be deleted
+                        document.getReference().delete()
+                                .addOnSuccessListener(aVoid -> {
+                                    // Successfully deleted the document
+                                    Log.d("Firestore", "Notification document deleted successfully.");
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Error occurred while deleting the document
+                                    Log.e("Firestore", "Error deleting document", e);
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error fetching notifications", e);
+                });
     }
 }

@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.util.Log;
 
 
 //testing purposes
@@ -13,6 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.google.android.libraries.places.api.Places;
+import com.google.firebase.Firebase;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.Map;
 
 /**
@@ -41,7 +47,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
 
+
         createNotificationChannel();
+        notificationHelper = new NotificationHelper(this);
+        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        grabbingNotifications(deviceId);
+        Notifications notification = new Notifications();
+        notification.removeNotifications(deviceId);
 
 
         SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
@@ -88,6 +101,25 @@ public class MainActivity extends AppCompatActivity {
                 notificationManager.createNotificationChannel(channel);
             }
         }
+    }
+
+    private void grabbingNotifications(String deviceId){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("notifications")
+                .whereEqualTo("userId", deviceId)  // Match documents where userId is "user1"
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        // doc3 will be included in the results, along with other matching documents
+                        String title = document.getString("title");
+                        String messageContent = document.getString("message");
+                        notificationHelper.sendNotifications(deviceId, title, messageContent);
+
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error fetching notifications", e);
+                });
     }
 
 }
