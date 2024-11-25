@@ -19,10 +19,9 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="bottom"
-        android:paddingBottom="16dp"
+        android:padding="16dp"
         android:gravity="center_horizontal">
 
-        <!-- Second Button -->
         <Button
             android:id="@+id/craftMessage"
             android:layout_width="wrap_content"
