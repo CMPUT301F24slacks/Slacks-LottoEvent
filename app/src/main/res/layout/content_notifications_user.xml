@@ -135,4 +135,17 @@
         android:textColor="#F4F4F5"
         app:layout_constraintEnd_toEndOf="@id/RectangularBackground"
         app:layout_constraintTop_toTopOf="@id/RectangularBackground" />
+
+    <Button
+        android:id="@+id/Okay_Button"
+        android:layout_width="110dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="180dp"
+        android:layout_marginEnd="12dp"
+        android:backgroundTint="#7B24EB"
+        android:text="Okay"
+        android:textColor="#F4F4F5"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/RectangularBackground"
+        app:layout_constraintTop_toTopOf="@id/RectangularBackground" />
 </androidx.constraintlayout.widget.ConstraintLayout>

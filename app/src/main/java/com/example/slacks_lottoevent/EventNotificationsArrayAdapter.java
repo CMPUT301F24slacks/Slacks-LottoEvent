@@ -63,6 +63,7 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
         TextView eventLocation = convertView.findViewById(R.id.user_notification_event_location);
         Button acceptButton = convertView.findViewById(R.id.Accept_Invitation);
         Button declineButton = convertView.findViewById(R.id.Decline_Invitation);
+        Button okayButton = convertView.findViewById(R.id.Okay_Button);
 
         if (event != null) {
             eventName.setText(event.getName());
@@ -70,19 +71,29 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
             eventTime.setText(event.getTime());
             eventLocation.setText(event.getLocation());
 
+            if (!event.getSelected()){
+                acceptButton.setVisibility(View.GONE);
+                declineButton.setVisibility(View.GONE);
+                okayButton.setVisibility(View.VISIBLE);
+            }
+
+
             //make changes to both events and entrants, not only events
             acceptButton.setOnClickListener(v -> {
                 handleAcceptEvent(event);
                 showConfirmationDialog(v.getContext(), "You have now joined the event.");
                 removeEvent(position);
-//                TODO: notification here
             });
             //make changes to both events and entrants, not only events
             declineButton.setOnClickListener(v -> {
                 handleDeclineEvent(event);
                 showConfirmationDialog(v.getContext(), "You have now declined the event.");
                 removeEvent(position);
-//                TODO: notifcation here
+            });
+
+            okayButton.setOnClickListener(v->{
+                showConfirmationDialog(v.getContext(), "You have now got rid of this message.");
+                removeEvent(position);
             });
         }
 
@@ -106,7 +117,7 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
                 "selected", FieldValue.arrayRemove(deviceId),
                 "selectedNotificationsList", FieldValue.arrayRemove(deviceId),
                 "finalists", FieldValue.arrayUnion(deviceId),
-                "joinedNotificationsList", FieldValue.arrayUnion(deviceId)); //TODO: DONT handle this here
+                "joinedNotificationsList", FieldValue.arrayUnion(deviceId));
     }
 
     /**
@@ -118,14 +129,15 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
         String eventId = event.getEventId();
 
         db.collection("entrants").document(deviceId).update(
-                "invitedEvents", FieldValue.arrayRemove(eventId)).addOnSuccessListener(aVoid -> {
+                "invitedEvents", FieldValue.arrayRemove(eventId),
+                "uninvitedEvents", FieldValue.arrayRemove(eventId)).addOnSuccessListener(aVoid -> {
 
             db.collection("events").document(eventId).update(
                             "selected", FieldValue.arrayRemove(deviceId),
                     "selectedNotificationsList", FieldValue.arrayRemove(deviceId),
                     "cancelled", FieldValue.arrayUnion(deviceId),
-                    "cancelledNotificationsList", FieldValue.arrayUnion(deviceId) //Don't handle this hear
-                    ).addOnSuccessListener(aVoid1 -> Log.d("Firestore", "Event declined: " + eventId))
+                    "cancelledNotificationsList", FieldValue.arrayUnion(deviceId))
+                    .addOnSuccessListener(aVoid1 -> Log.d("Firestore", "Event declined: " + eventId))
                     .addOnFailureListener(e -> Log.e("Firestore", "Error updating event invite list: " + eventId, e));
         }).addOnFailureListener(e -> Log.e("Firestore", "Error declining event: " + eventId, e));
     }

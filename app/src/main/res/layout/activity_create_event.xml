@@ -74,6 +74,9 @@
             android:textColor="@android:color/white"
             android:maxLength="50"
             android:padding="8dp"
+            android:hint="Beach Cleanup"
+            android:textColorHint="@android:color/darker_gray"
+            android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -132,6 +135,9 @@
             android:padding="8dp"
             android:singleLine="true"
             android:textColor="@android:color/white"
+            android:hint="13:00-15:00"
+            android:textSize="15sp"
+            android:textColorHint="@android:color/darker_gray"
             app:layout_constraintEnd_toStartOf="@+id/event_price"
             app:layout_constraintTop_toBottomOf="@+id/time" />
 
@@ -149,6 +155,9 @@
             app:layout_constraintTop_toBottomOf="@+id/event_name"
             tools:ignore="MissingConstraints" />
 
+
+        <!--        Description-->
+
         <EditText
             android:id="@+id/event_price"
             android:layout_width="63dp"
@@ -157,10 +166,14 @@
             android:layout_marginEnd="24dp"
             android:background="@drawable/rounded_borders"
             android:ems="10"
+            android:hint="10"
             android:inputType="textLongMessage"
             android:maxLength="50"
             android:padding="8dp"
             android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
+            android:textSize="15sp"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/time"
             tools:ignore="MissingConstraints" />
@@ -171,13 +184,10 @@
             android:layout_height="27dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="24dp"
-            android:layout_marginEnd="333dp"
             android:text="Event Details"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/event_Date"
             tools:ignore="MissingConstraints" />
@@ -196,6 +206,9 @@
             android:maxLines="5"
             android:padding="8dp"
             android:maxLength="250"
+            android:hint="Provide a brief description about the event.."
+            android:textColorHint="@android:color/darker_gray"
+            android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -222,9 +235,10 @@
 
 
         <!--        Waitlist Capacity-->
+
         <EditText
             android:id="@+id/eventSlots"
-            android:layout_width="99dp"
+            android:layout_width="74dp"
             android:layout_height="44dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
@@ -233,6 +247,10 @@
             android:inputType="number"
             android:padding="8dp"
             android:textColor="@android:color/white"
+            android:hint="20"
+            android:textColorHint="@android:color/darker_gray"
+            android:textSize="15sp"
+            android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/no_pp_accpt"
             tools:ignore="MissingConstraints" />
@@ -247,6 +265,9 @@
             android:textColor="@android:color/white"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="none"
+            android:gravity="center"
             app:layout_constraintStart_toEndOf="@+id/no_pp_accpt"
             app:layout_constraintTop_toBottomOf="@+id/event_details"
             tools:ignore="MissingConstraints" />
@@ -262,9 +283,13 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/rounded_borders"
             android:ems="10"
+            android:gravity="center"
+            android:hint="40"
             android:inputType="number"
             android:padding="8dp"
             android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
+            android:textSize="15sp"
             app:layout_constraintStart_toEndOf="@+id/eventSlots"
             app:layout_constraintTop_toBottomOf="@+id/no_pp_accpt2"
             tools:ignore="MissingConstraints" />

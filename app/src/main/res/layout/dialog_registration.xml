@@ -24,7 +24,7 @@
         android:textColor="#FFFFFF" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="8dp">
@@ -39,50 +39,13 @@
 
 
             <TextView
-                android:id="@+id/chosenForLotteryText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Chosen for Lottery"
-                android:textColor="#BDBDBD"
-                android:layout_marginEnd="8dp" />
-
-            <ImageView
-                android:id="@+id/bellChosen"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/baseline_circle_notifications_24"
-                android:contentDescription="Chosen for Lottery Notification"
-                android:clickable="true"
-                android:focusable="true"
-                app:tint="#BDBDBD" />
+                android:id="@+id/organizerNotisText"
+                android:layout_width="296dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:text="**This event sends notifications, you can opt out under the notification tab.**"
+                android:textColor="#BDBDBD" />
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
-
-            <TextView
-                android:id="@+id/notChosenForLotteryText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Not Chosen for Lottery"
-                android:textColor="#BDBDBD"
-                android:layout_marginEnd="8dp" />
-
-            <ImageView
-                android:id="@+id/bellNotChosen"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/baseline_circle_notifications_24"
-                android:contentDescription="Not Chosen for Lottery Notification"
-                android:clickable="true"
-                android:focusable="true"
-                app:tint="#BDBDBD" />
-        </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="wrap_content"

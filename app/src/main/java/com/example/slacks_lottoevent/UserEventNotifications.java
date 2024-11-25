@@ -7,16 +7,19 @@ public class UserEventNotifications {
     private String location;
     private String eventId; // Add event ID field
 
+    private Boolean selected;
+
     /**
      * UserEventNotifications is a class that represents the user's event notifications.
      * It takes in the event's name, date, time, location, and event ID.
      */
-    public UserEventNotifications(String name, String date, String time, String location, String eventId) {
+    public UserEventNotifications(String name, String date, String time, String location, String eventId, Boolean selected) {
         this.name = name;
         this.date = date;
         this.time = time;
         this.location = location;
         this.eventId = eventId; // Initialize event ID
+        this.selected = selected;
     }
 
     // Getter methods
@@ -39,4 +42,6 @@ public class UserEventNotifications {
     public String getEventId() {
         return eventId; // Provide access to event ID
     }
+
+    public Boolean getSelected() { return selected;}
 }
