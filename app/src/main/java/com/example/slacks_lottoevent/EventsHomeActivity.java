@@ -46,8 +46,6 @@ public class EventsHomeActivity extends AppCompatActivity {
 
     private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1;
 
-    private ListenerRegistration notificationListener;
-
 
 
     /**
@@ -220,7 +218,7 @@ public class EventsHomeActivity extends AppCompatActivity {
     private void grabbingNotifications(String deviceId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        notificationListener = db.collection("notifications")
+        db.collection("notifications")
                 .whereEqualTo("userId", deviceId)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
@@ -235,6 +233,7 @@ public class EventsHomeActivity extends AppCompatActivity {
                             notificationHelper.sendNotifications(deviceId, title, messageContent);
                         }
                     }
+                    new Notifications().removeNotifications(deviceId);
                 });
     }
 
@@ -278,25 +277,6 @@ public class EventsHomeActivity extends AppCompatActivity {
         notification.removeNotifications(deviceId);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // Start or reinitialize the notification listener when the activity starts
-        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        grabbingNotifications(deviceId);
-        new Notifications().removeNotifications(deviceId);
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // Detach notification listener when the activity stops
-        if (notificationListener != null) {
-            notificationListener.remove();
-            notificationListener = null;
-        }
-    }
 
 
 }
