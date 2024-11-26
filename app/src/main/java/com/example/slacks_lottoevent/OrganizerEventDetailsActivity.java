@@ -353,6 +353,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
             throw new IllegalArgumentException("Event, Firestore instance, or Event ID cannot be null or empty.");
         }
 
+
+
         db.collection("events")
                 .document(event.getEventID())
                 .delete()

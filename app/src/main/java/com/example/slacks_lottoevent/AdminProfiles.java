@@ -68,7 +68,7 @@ public class AdminProfiles extends Fragment {
 
                 for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                     // Create Profile object from Firestore data
-                    String name = document.getString("name");
+                    String name = document.getString("facilityName");
                     String email = document.getString("email");
                     String phone = document.getString("phone");
                     String deviceId = document.getId();

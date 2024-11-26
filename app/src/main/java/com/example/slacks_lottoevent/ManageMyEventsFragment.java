@@ -60,14 +60,14 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
     @Override
     public void addFacility(Facility facility) {
         // Retrieve the facility name and set it to display on the screen
-        String facilityName = facility.getName();
+        String facilityName = facility.getFacilityName();
 
 //        This is where we query for organizers for facility name
         facilityCreated.setText(facilityName);
         existingFacility = facility;
 
         Map<String, Object> facilityData = new HashMap<>();
-        facilityData.put("name", facilityName);
+        facilityData.put("facilityName", facilityName);
         // Add other attributes as needed, like location, type, etc.
         facilityData.put("streetAddress1", facility.getStreetAddress1());
         facilityData.put("streetAddress2", facility.getStreetAddress2());
@@ -113,7 +113,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
      */
     @Override
     public void updateFacility() {
-        String facilityName = existingFacility.getName();
+        String facilityName = existingFacility.getFacilityName();
         facilityCreated.setText(facilityName);
 
         if (existingFacility == null) {

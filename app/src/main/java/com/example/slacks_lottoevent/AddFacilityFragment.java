@@ -61,7 +61,7 @@ public class AddFacilityFragment extends DialogFragment {
      * Default constructor for creating a new Facility
      */
     public AddFacilityFragment() {
-        this.facility = new Facility("FacilityName", "StreetAddress1", "StreetAddress2", "PostalCode", "OrganizerId", "DeviceId");
+        this.facility = new Facility("facilityName", "StreetAddress1", "StreetAddress2", "PostalCode", "OrganizerId", "DeviceId");
         this.isEdit = false;
     }
 
@@ -114,7 +114,7 @@ public class AddFacilityFragment extends DialogFragment {
 
 
         if (isEdit && facility != null) {
-            editFacilityName.setText(facility.getName());
+            editFacilityName.setText(facility.getFacilityName());
             editStreetAddress1.setText(facility.getStreetAddress1());
             editStreetAddress2.setText(facility.getStreetAddress2());
 
@@ -155,7 +155,7 @@ public class AddFacilityFragment extends DialogFragment {
 
                 String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
                 if (isEdit) {
-                    facility.setName(facilityName);
+                    facility.setFacilityName(facilityName);
                     facility.setStreetAddress1(streetAddress1);
                     facility.setStreetAddress2(editStreetAddress2.getText().toString().trim());
                     facility.setPostalCode(postalCode);
