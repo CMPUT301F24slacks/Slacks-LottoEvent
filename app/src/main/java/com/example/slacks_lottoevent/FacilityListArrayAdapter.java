@@ -69,10 +69,10 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
 
             if (isAdmin) {
                 ImageButton ovalButton = convertView.findViewById(R.id.oval_rectangle);
-                ovalButton.setOnClickListener(v -> showFacilityOptionsDialog(facility, position));
+                ovalButton.setOnClickListener(v -> showFacilityOptionsDialog(facility));
 
                 // Set OnClickListener to show profile options in a dialog
-                convertView.setOnClickListener(v -> showFacilityOptionsDialog(facility, position));
+                convertView.setOnClickListener(v -> showFacilityOptionsDialog(facility));
             }
         }
 
@@ -83,9 +83,9 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
      * Shows a dialog with "Cancel" and "Delete" options for a profile.
      *
      * @param facility The profile to display options for.
-     * @param position The position of the profile in the list.
+//     * @param position The position of the profile in the list.
      */
-    private void showFacilityOptionsDialog(Facility facility, int position) {
+    private void showFacilityOptionsDialog(Facility facility) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         // Build the message with facility details
@@ -96,7 +96,18 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
                 .setMessage(message)
                 .setPositiveButton("Delete", (dialog, which) -> {
                     // Call method to delete facility
-                    deleteFacilityFromDatabase(this.getContext(), db, facility, position);
+                    deleteFacilityFromDatabase(this.getContext(), db, facility.getFacilityId(), facility.getOrganizerId());
+                    // Explicitly delete the facility document
+                    db.collection("facilities").document(facility.getFacilityId()).delete()
+                            .addOnSuccessListener(aVoid -> {
+                                // Remove the facility from the adapter and notify the dataset change
+                                remove(facility);
+                                notifyDataSetChanged();
+                                Toast.makeText(context, "Facility deleted successfully.", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(context, "Failed to delete facility: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
@@ -109,12 +120,12 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
      *
      * @param context  The context for Toast messages.
      * @param db       The Firestore database instance.
-     * @param facility The facility to delete.
-     * @param position The position of the facility in the adapter.
+     * @param FacilityId The facility Id to delete.
+     * @param OrganizerId The facility's organizer Id to be deleted.
      */
-    public void deleteFacilityFromDatabase(Context context, FirebaseFirestore db, Facility facility, int position) {
+    public static void deleteFacilityFromDatabase(Context context, FirebaseFirestore db, String FacilityId, String OrganizerId) {
         // Add a real-time listener to track the facility document
-        db.collection("facilities").document(facility.getFacilityId())
+        db.collection("facilities").document(FacilityId)
                 .addSnapshotListener((documentSnapshot, error) -> {
                     if (error != null) {
                         Toast.makeText(context, "Error listening for facility updates: " + error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -127,7 +138,7 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
                 });
 
         // Fetch the organizer's events and delete each event
-        db.collection("organizers").document(facility.getOrganizerId()).get()
+        db.collection("organizers").document(OrganizerId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         // Get the events array from the organizer document
@@ -156,7 +167,7 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
                         }
 
                         // Delete the organizer document explicitly
-                        db.collection("organizers").document(facility.getOrganizerId()).delete()
+                        db.collection("organizers").document(OrganizerId).delete()
                                 .addOnSuccessListener(aVoid -> {
                                     Toast.makeText(context, "Organizer deleted successfully.", Toast.LENGTH_SHORT).show();
                                 })
@@ -167,18 +178,6 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(context, "Failed to fetch organizer details: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-
-        // Explicitly delete the facility document
-        db.collection("facilities").document(facility.getFacilityId()).delete()
-                .addOnSuccessListener(aVoid -> {
-                    // Remove the facility from the adapter and notify the dataset change
-                    remove(facility);
-                    notifyDataSetChanged();
-                    Toast.makeText(context, "Facility deleted successfully.", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(context, "Failed to delete facility: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 

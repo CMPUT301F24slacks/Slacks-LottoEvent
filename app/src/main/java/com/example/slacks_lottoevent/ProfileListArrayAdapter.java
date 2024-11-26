@@ -8,11 +8,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 
@@ -67,10 +70,10 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
             //if User is not an Admin then they may not see the entrant's private information
             if (isAdmin) {
                 ImageButton ovalButton = convertView.findViewById(R.id.oval_rectangle);
-                ovalButton.setOnClickListener(v -> showProfileOptionsDialog(profile, position));
+                ovalButton.setOnClickListener(v -> showProfileOptionsDialog(profile));
 
                 // Set OnClickListener to show profile options in a dialog
-                convertView.setOnClickListener(v -> showProfileOptionsDialog(profile, position));
+                convertView.setOnClickListener(v -> showProfileOptionsDialog(profile));
             }
         }
 
@@ -80,10 +83,9 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
     /**
      * Shows a dialog with "Cancel" and "Delete" options for a profile.
      *
-     * @param profile  The profile to display options for.
-     * @param position The position of the profile in the list.
+     * @param profile The profile to display options for.
      */
-    private void showProfileOptionsDialog(Profile profile, int position) {
+    private void showProfileOptionsDialog(Profile profile) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         // Build the message with profile details
@@ -94,8 +96,29 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
         builder.setTitle("Profile Details")
                 .setMessage(message)
                 .setPositiveButton("Delete", (dialog, which) -> {
-                    // Call method to delete profile
-                    deleteProfileFromDatabase(profile, position);
+                    // Show a confirmation dialog to avoid accidental deletion
+                    new AlertDialog.Builder(context)
+                            .setTitle("Confirm Deletion")
+                            .setMessage("Are you sure you want to delete this profile?")
+                            .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
+                                // Call method to delete profile
+                                deleteProfileFromDatabase(context, db, profile.getDeviceId(),
+                                        // On success
+                                        () -> {
+                                            // Remove the profile from the adapter and notify the dataset change
+                                            remove(profile);
+                                            notifyDataSetChanged();
+                                            Toast.makeText(context, "Profile deleted successfully.", Toast.LENGTH_SHORT).show();
+                                        },
+                                        // On failure
+                                        () -> {
+                                            // Notify the user of the failure
+                                            Toast.makeText(context, "Failed to delete profile.", Toast.LENGTH_SHORT).show();
+                                        }
+                                );
+                            })
+                            .setNegativeButton("No", (confirmDialog, confirmWhich) -> confirmDialog.dismiss())
+                            .create().show();
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
@@ -104,25 +127,197 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
     }
 
     /**
-     * Deletes the profile from Firestore and updates the list.
+     * Deletes the profile from Firestore and calls appropriate callbacks.
      *
-     * @param profile  The profile to delete.
-     * @param position The position of the profile in the list.
+     * @param context   The context for Toast messages.
+     * @param db        The Firestore instance.
+     * @param deviceId  The device ID of the profile to delete.
+     * @param onSuccess Callback to run on successful deletion.
+     * @param onFailure Callback to run on failure.
      */
-    private void deleteProfileFromDatabase(Profile profile, int position) {
-        //
-        // Assume the profile's document ID is the same as the email
-        db.collection("profiles").document(profile.getDeviceId())
+    public static void deleteProfileFromDatabase(Context context, FirebaseFirestore db, String deviceId, Runnable onSuccess, Runnable onFailure) {
+        // Delete entrant-related data
+        deleteProfileFromDatabaseEntrant(context, db, deviceId);
+
+        // Delete organizer-related data
+        deleteProfileFromDatabaseOrganizer(context, db, deviceId);
+
+        // Delete the profile document from the "profiles" collection
+        db.collection("profiles").document(deviceId)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
-                    // Remove profile from the list and notify the adapter
-                    remove(getItem(position));
-                    //delete cascade for their facility, events, and as an entrant, and as an organizer
-                    notifyDataSetChanged();
+                    // Call the success callback
+                    onSuccess.run();
                 })
                 .addOnFailureListener(e -> {
-                    // Log error or show a toast
+                    // Call the failure callback
+                    onFailure.run();
+                });
+    }
+
+    /**
+     * Deletes data associated with the profile from the "entrants" collection.
+     */
+    private static void deleteProfileFromDatabaseEntrant(Context context, FirebaseFirestore db, String deviceId) {
+        db.collection("entrants").document(deviceId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Fetch event lists from the entrant document
+                        ArrayList<String> waitlistedEvents = (ArrayList<String>) documentSnapshot.get("waitlistedEvents");
+                        ArrayList<String> selectedEvents = (ArrayList<String>) documentSnapshot.get("invitedEvents");
+                        ArrayList<String> finalistEvents = (ArrayList<String>) documentSnapshot.get("finalistEvents");
+                        ArrayList<String> cancelledEvents = (ArrayList<String>) documentSnapshot.get("uninvitedEvents");
+
+                        // Remove the entrant from associated events
+                        EntrantRemovalWaitlisted(db, waitlistedEvents, deviceId);
+                        EntrantRemovalSelected(db, selectedEvents, deviceId);
+                        EntrantRemovalFinalist(db, finalistEvents, deviceId);
+                        EntrantRemovalCancelled(db, cancelledEvents, deviceId);
+
+                        // Delete the entrant document itself
+                        db.collection("entrants").document(deviceId).delete()
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(context, "Entrant data deleted successfully.", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(context, "Failed to delete entrant data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                });
+                    } else {
+                        Toast.makeText(context, "Entrant profile not found.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Failed to fetch entrant profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 });
     }
+
+    /**
+     * Deletes data associated with the profile from the "organizers" collection.
+     */
+    private static void deleteProfileFromDatabaseOrganizer(Context context, FirebaseFirestore db, String deviceId) {
+        db.collection("organizers").document(deviceId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Fetch the facility ID from the organizer document
+                        String facilityId = documentSnapshot.getString("facilityId");
+                        if (facilityId != null && !facilityId.isEmpty()) {
+                            // Call method to delete the facility
+                            FacilityListArrayAdapter.deleteFacilityFromDatabase(context, db, facilityId, deviceId);
+                        } else {
+                            Toast.makeText(context, "No associated facility found for organizer.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        // Delete the organizer document itself
+                        db.collection("organizers").document(deviceId).delete()
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(context, "Organizer data deleted successfully.", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(context, "Failed to delete organizer data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                });
+                    } else {
+                        Toast.makeText(context, "Organizer profile not found.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Failed to fetch organizer profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                });
+    }
+
+
+
+    public static void EntrantRemovalWaitlisted(FirebaseFirestore db, ArrayList<String> waitlistedEvents, String deviceId) {
+        if (waitlistedEvents == null || waitlistedEvents.isEmpty()) {
+            return; // No events to process
+        }
+
+        for (String eventID : waitlistedEvents) {
+            db.collection("events").document(eventID)
+                    .update(
+                            "waitlisted", FieldValue.arrayRemove(deviceId),
+                            "waitlistedNotificationsList", FieldValue.arrayRemove(deviceId),
+                            "reselected", FieldValue.arrayRemove(deviceId)
+                    )
+                    .addOnSuccessListener(aVoid -> {
+                        // Successfully removed deviceId from the lists
+                        System.out.println("Device ID removed from event: " + eventID);
+                    })
+                    .addOnFailureListener(e -> {
+                        // Log or handle the failure
+                        System.err.println("Failed to remove Device ID from event: " + eventID + " - " + e.getMessage());
+                    });
+        }
+    }
+
+    public static void EntrantRemovalSelected(FirebaseFirestore db, ArrayList<String> SelectedEvents, String deviceId) {
+        if (SelectedEvents == null || SelectedEvents.isEmpty()) {
+            return; // No events to process
+        }
+
+        for (String eventID : SelectedEvents) {
+            db.collection("events").document(eventID)
+                    .update(
+                            "selected", FieldValue.arrayRemove(deviceId),
+                            "selectedNotificationsList", FieldValue.arrayRemove(deviceId)
+//                            "reselected", FieldValue.arrayRemove(deviceId)
+                    )
+                    .addOnSuccessListener(aVoid -> {
+                        // Successfully removed deviceId from the lists
+                        System.out.println("Device ID removed from event: " + eventID);
+                    })
+                    .addOnFailureListener(e -> {
+                        // Log or handle the failure
+                        System.err.println("Failed to remove Device ID from event: " + eventID + " - " + e.getMessage());
+                    });
+        }
+    }
+
+    public static void EntrantRemovalFinalist(FirebaseFirestore db, ArrayList<String> FinalistEvents, String deviceId) {
+        if (FinalistEvents == null || FinalistEvents.isEmpty()) {
+            return; // No events to process
+        }
+
+        for (String eventID : FinalistEvents) {
+            db.collection("events").document(eventID)
+                    .update(
+                            "finalists", FieldValue.arrayRemove(deviceId),
+                            "joinedNotificationsList", FieldValue.arrayRemove(deviceId)
+                    )
+                    .addOnSuccessListener(aVoid -> {
+                        // Successfully removed deviceId from the lists
+                        System.out.println("Device ID removed from event: " + eventID);
+                    })
+                    .addOnFailureListener(e -> {
+                        // Log or handle the failure
+                        System.err.println("Failed to remove Device ID from event: " + eventID + " - " + e.getMessage());
+                    });
+        }
+    }
+
+    public static void EntrantRemovalCancelled(FirebaseFirestore db, ArrayList<String> CancelledEvents, String deviceId) {
+        if (CancelledEvents == null || CancelledEvents.isEmpty()) {
+            return; // No events to process
+        }
+
+        for (String eventID : CancelledEvents) {
+            db.collection("events").document(eventID)
+                    .update(
+                            "cancelled", FieldValue.arrayRemove(deviceId),
+                            "cancelledNotificationsList", FieldValue.arrayRemove(deviceId)
+                    )
+                    .addOnSuccessListener(aVoid -> {
+                        // Successfully removed deviceId from the lists
+                        System.out.println("Device ID removed from event: " + eventID);
+                    })
+                    .addOnFailureListener(e -> {
+                        // Log or handle the failure
+                        System.err.println("Failed to remove Device ID from event: " + eventID + " - " + e.getMessage());
+                    });
+        }
+    }
+
 }

@@ -15,6 +15,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AdminProfiles extends Fragment {
 
@@ -68,12 +69,7 @@ public class AdminProfiles extends Fragment {
 
                 for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                     // Create Profile object from Firestore data
-                    String name = document.getString("facilityName");
-                    String email = document.getString("email");
-                    String phone = document.getString("phone");
-                    String deviceId = document.getId();
-                    Profile profile = new Profile(name, email, phone, deviceId, null); // Adjust constructor if needed
-
+                    Profile profile = document.toObject(Profile.class);
                     profileList.add(profile); // Add to the list
                 }
                 adapter.notifyDataSetChanged(); // Notify adapter about data changes

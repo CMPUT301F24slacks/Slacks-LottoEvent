@@ -485,8 +485,6 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 });
     }
 
-
-
     private void editImage(Uri newImageUri) {
         // Step 1: Delete the old image from Google Cloud Storage
         deleteOldImage(eventPosterURL, () -> {
