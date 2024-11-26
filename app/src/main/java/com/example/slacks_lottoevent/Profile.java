@@ -164,7 +164,8 @@ public class Profile {
         String[] parts = name.split(" ");
         StringBuilder initials = new StringBuilder();
 
-        for (String part : parts) {
+        for (int i = 0 ; i < 2 && i < parts.length; i++) {
+            String part = parts[i];
             if (!part.isEmpty() && Character.isLetter(part.charAt(0))) {
                 initials.append(part.charAt(0));
             }
