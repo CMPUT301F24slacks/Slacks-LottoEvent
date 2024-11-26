@@ -8,6 +8,7 @@ import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -141,9 +142,11 @@ public class AddFacilityFragment extends DialogFragment {
 
                 String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
                 if (isEdit) {
+                    Log.d("msg", "updating facility");
                     facility.setFacilityName(facilityName);
                     facility.setStreetAddress1(streetAddress1);
                     listener.updateFacility();
+
                 } else {
                     listener.addFacility(new Facility(facilityName, streetAddress1, deviceId, deviceId));
                 }

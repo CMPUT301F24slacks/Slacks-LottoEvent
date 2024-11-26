@@ -21,10 +21,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.slacks_lottoevent.databinding.FragmentManageMyEventsBinding;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,18 +118,38 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
      */
     @Override
     public void updateFacility() {
-        String facilityName = existingFacility.getFacilityName();
-        facilityCreated.setText(facilityName);
-
+//        String facilityName = existingFacility.getFacilityName();
+//        facilityCreated.setText(facilityName);
+//
+//        if (existingFacility == null) {
+//            Log.w("updateFacility", "No facility selected to update");
+//            return;
+//        }
+//
+//        // Retrieve the document ID for the existing facility
+//        String documentId = existingFacility.getFacilityId();
+//        if (documentId == null || documentId.isEmpty()) {
+//            Log.w("updateFacility", "No document ID provided for update");
+//            return;
+//        }
+//
+//        // Prepare the updated facility data
+//        Map<String, Object> facilityData = new HashMap<>();
+//        facilityData.put("facilityName", existingFacility.getFacilityName());
+//        facilityData.put("streetAddress1", existingFacility.getStreetAddress1());
+//
+//        // Update the document in Firestore
+//        facilitiesRef.document(documentId).update(facilityData)
+//                .addOnSuccessListener(aVoid -> Log.d("updateFacility", "Facility updated successfully"))
+//                .addOnFailureListener(e -> Log.w("updateFacility", "Error updating facility", e));
         if (existingFacility == null) {
-            Log.w("updateFacility", "No facility selected to update");
+            Log.w("updateFacilityAndEvents", "No facility selected to update");
             return;
         }
 
-        // Retrieve the document ID for the existing facility
-        String documentId = existingFacility.getFacilityId();
-        if (documentId == null || documentId.isEmpty()) {
-            Log.w("updateFacility", "No document ID provided for update");
+        String facilityId = existingFacility.getFacilityId();
+        if (facilityId == null || facilityId.isEmpty()) {
+            Log.w("updateFacilityAndEvents", "No facility ID provided for update");
             return;
         }
 
@@ -136,10 +158,35 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilityData.put("facilityName", existingFacility.getFacilityName());
         facilityData.put("streetAddress1", existingFacility.getStreetAddress1());
 
-        // Update the document in Firestore
-        facilitiesRef.document(documentId).update(facilityData)
-                .addOnSuccessListener(aVoid -> Log.d("updateFacility", "Facility updated successfully"))
-                .addOnFailureListener(e -> Log.w("updateFacility", "Error updating facility", e));
+        // Update the facility and then proceed to update related events
+        facilitiesRef.document(facilityId).update(facilityData)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("updateFacilityAndEvents", "Facility updated successfully");
+
+                    // Query to fetch all events associated with this facility
+                    eventsRef.whereEqualTo("deviceId", deviceId).get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                if (!queryDocumentSnapshots.isEmpty()) {
+                                    WriteBatch batch = db.batch(); // Create a batch for atomic updates
+
+                                    // Iterate through all matching events and update their location
+                                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                                        DocumentReference eventDocRef = document.getReference();
+                                        batch.update(eventDocRef, "location", existingFacility.getStreetAddress1());
+                                    }
+
+                                    // Commit the batch write
+                                    batch.commit()
+                                            .addOnSuccessListener(aVoid1 -> Log.d("updateFacilityAndEvents", "Event locations updated successfully"))
+                                            .addOnFailureListener(e -> Log.w("updateFacilityAndEvents", "Error updating event locations", e));
+                                } else {
+                                    Log.d("updateFacilityAndEvents", "No events found for this facility");
+                                }
+                            })
+                            .addOnFailureListener(e -> Log.w("updateFacilityAndEvents", "Error fetching events", e));
+                })
+                .addOnFailureListener(e -> Log.w("updateFacilityAndEvents", "Error updating facility", e));
+
     }
 
     /**
@@ -450,6 +497,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         });
 
         facilityCreated.setOnClickListener(v -> {
+            Log.d("msg", "created new facility fragment");
             new AddFacilityFragment(existingFacility, true).show(getChildFragmentManager(), "Edit Facility");
         });
     }

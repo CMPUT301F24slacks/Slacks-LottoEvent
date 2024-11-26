@@ -64,7 +64,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
                     .load(event.getEventPosterURL())
                     .into(eventPoster);
         } else {
-            Log.e("EventDetails", "Event poster URL is empty or null");
+            Log.d("EventDetails", "Event poster URL is empty or null");
         }
 
         eventButton.setOnClickListener(v -> {
