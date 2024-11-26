@@ -1,5 +1,7 @@
 package com.example.slacks_lottoevent;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,12 +10,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +34,8 @@ public class OrganizerWaitlistFragment extends Fragment {
     private static final String ARG_EVENT_ID = "eventID";
     private FirebaseFirestore db;
     private ArrayList<Profile> profileList;
+
+    Notifications notifications;
 
     /**
      * Default constructor
@@ -66,6 +75,12 @@ public class OrganizerWaitlistFragment extends Fragment {
         ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false);
         ListViewEntrantsWaitlisted.setAdapter(adapter);
 
+        Button craftMessageButton = view.findViewById(R.id.craftMessage);
+        notifications = new Notifications();
+
+        craftMessageButton.setOnClickListener(v -> DialogHelper.showMessageDialog(getContext(), notifications, eventId, "waitlistedNotificationsList")); // Button to show the dialog
+
+
         // Listen for real-time updates to the event document
         db.collection("events").document(eventId).addSnapshotListener((eventDoc, error) -> {
             if (error != null) {
@@ -91,11 +106,15 @@ public class OrganizerWaitlistFragment extends Fragment {
                                 Profile profile = profileDoc.toObject(Profile.class);
                                 profileList.add(profile); // Add the name if it’s not already in the list
                                 adapter.notifyDataSetChanged(); // Update the adapter
-                            } else {
+                            }
+                            else {
                                 Log.d("Firestore", "Profile document does not exist for device ID: " + deviceId);
                             }
                         });
                     }
+
+//                    notificationHelper.sendNotificationsW(1"Waitlist Updated");
+
                 } else {
                     Log.d("Firestore", "No device IDs found in the waitlisted list.");
                     profileList.clear();

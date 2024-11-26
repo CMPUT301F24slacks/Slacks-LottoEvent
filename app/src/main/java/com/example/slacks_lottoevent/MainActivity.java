@@ -1,20 +1,25 @@
 package com.example.slacks_lottoevent;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.util.Log;
 
 
 //testing purposes
-import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.multidex.BuildConfig;
 
 
 import com.google.android.libraries.places.api.Places;
+import com.google.firebase.Firebase;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.Map;
-import java.util.Objects;
 
 /**
  *
@@ -33,10 +38,22 @@ import java.util.Objects;
  * It is the first activity that is launched when the app is opened.
  */
 public class MainActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
+
+//
+//        createNotificationChannel();
+//        notificationHelper = new NotificationHelper(this);
+//        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+//
+//        grabbingNotifications(deviceId);
+//        Notifications notification = new Notifications();
+//        notification.removeNotifications(deviceId);
+
 
         SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
 
@@ -61,4 +78,5 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
 }

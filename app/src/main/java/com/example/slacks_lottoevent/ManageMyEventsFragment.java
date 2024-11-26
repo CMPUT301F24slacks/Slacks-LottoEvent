@@ -130,7 +130,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
         // Prepare the updated facility data
         Map<String, Object> facilityData = new HashMap<>();
-        facilityData.put("name", existingFacility.getName());
+        facilityData.put("facilityName", existingFacility.getFacilityName());
         facilityData.put("streetAddress1", existingFacility.getStreetAddress1());
         facilityData.put("streetAddress2", existingFacility.getStreetAddress2());
 
@@ -315,7 +315,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
                             if (facilitySnapshot != null && facilitySnapshot.exists()) {
                                 // Retrieve facility data
-                                String facilityName = facilitySnapshot.getString("name");
+                                String facilityName = facilitySnapshot.getString("facilityName");
                                 if (facilityName != null && !facilityName.isEmpty()) {
                                     facilityCreated.setText(facilityName);
                                     facilityCreated.setVisibility(View.VISIBLE);
@@ -323,7 +323,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                                     // Populate existingFacility with data from Firestore
                                     existingFacility = facilitySnapshot.toObject(Facility.class);
                                     existingFacility.setFacilityId(facilitySnapshot.getId());
-                                    existingFacility.setName(facilityName);
+                                    existingFacility.setFacilityName(facilityName);
                                 } else {
                                     facilityCreated.setVisibility(View.GONE);
                                     existingFacility = null;

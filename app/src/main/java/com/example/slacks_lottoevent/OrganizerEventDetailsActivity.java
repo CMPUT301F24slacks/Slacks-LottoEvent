@@ -517,7 +517,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
                 for (String entrant : event.getSelected()) {
                     eventRef.update("selected", FieldValue.arrayUnion(entrant),
-                            "selectedNotificationsList", FieldValue.arrayUnion(entrant)); //TODO: when doing notifications get rid of this line
+                            "selectedNotificationsList", FieldValue.arrayUnion(entrant),
+                            "waitlistedNotificationsList", FieldValue.arrayRemove(entrant));
                 }
 
                 eventRef.update("waitlisted", event.getReselected()); // DB update
@@ -528,7 +529,6 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     }
 
     private void updateUnSelectedEntrants(Event event){
-        Log.d("Event Cancelled: ", event.getCancelled().toString());
         db.collection("events").whereEqualTo("eventID", event.getEventID()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && !task.getResult().isEmpty()) {
                 DocumentSnapshot document = task.getResult().getDocuments().get(0);
@@ -536,7 +536,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
                 for (String entrant : event.getCancelled()) {
                     eventRef.update("cancelled", FieldValue.arrayUnion(entrant),
-                            "cancelledNotificationsList", FieldValue.arrayUnion(entrant)); //TODO: when doing notifications get rid of this line
+                            "cancelledNotificationsList", FieldValue.arrayUnion(entrant),
+                            "waitlistedNotificationsList", FieldValue.arrayRemove(entrant));
                 }
             }
         });
@@ -567,8 +568,6 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                                     "waitlistedEvents", FieldValue.arrayRemove(event.getEventID()))
                             .addOnSuccessListener(aVoid -> Log.d("Firestore", "Notification added for entrant"))
                             .addOnFailureListener(e -> Log.e("Firestore", "Error updating uninvitedEvents for entrant"));
-
-//                    TODO: Sent notification if DID NOT get selected and did not want to get reselected for the first time
 
                 }
 

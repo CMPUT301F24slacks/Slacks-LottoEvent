@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#333333"
+    android:layout_gravity="center">
+
+    <EditText
+        android:id="@+id/dialogMessageTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Message"
+        android:textSize="18sp"
+        android:textColorHint="#D3D3D3"
+        android:textColor="#FFFFFF"
+        android:paddingBottom="8dp"
+        android:backgroundTint="#BDBDBD" />
+
+    <EditText
+        android:id="@+id/dialogMessageInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#D3D3D3"
+        android:hint="Type your message here"
+        android:inputType="textMultiLine"
+        android:minLines="3"
+        android:backgroundTint="#BDBDBD" />
+
+</LinearLayout>
