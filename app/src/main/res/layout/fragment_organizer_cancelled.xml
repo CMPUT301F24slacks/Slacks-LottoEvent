@@ -13,12 +13,19 @@
         android:dividerHeight="1dp"
         android:padding="16dp"/>
 
-    <Button
-        android:id="@+id/buttonCancelNotification"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_margin="16dp"
-        android:background="#EC7CEE"
-        android:text="Click to test notification" />
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:padding="16dp"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/craftMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Message" />
+
+    </LinearLayout>
 </FrameLayout>

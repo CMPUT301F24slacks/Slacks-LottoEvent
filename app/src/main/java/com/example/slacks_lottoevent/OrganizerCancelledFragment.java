@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -65,6 +66,12 @@ public class OrganizerCancelledFragment extends Fragment {
 
         ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false);
         ListViewEntrantsCancelled.setAdapter(adapter);
+
+        Button craftMessageButton = view.findViewById(R.id.craftMessage);
+        Notifications notifications = new Notifications();
+
+        craftMessageButton.setOnClickListener(v -> DialogHelper.showMessageDialog(getContext(), notifications,eventId, "cancelledNotificationsList"));
+
 
         // Listen for real-time updates to the event document
         db.collection("events").document(eventId).addSnapshotListener((eventDoc, error) -> {
