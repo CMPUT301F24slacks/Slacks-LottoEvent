@@ -79,7 +79,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
         facilitiesRef.add(facilityData)
                 .addOnSuccessListener(documentReference -> {
-                    Log.d("addFacility", "Facility added with ID: " + documentReference.getId());
                     existingFacility.setFacilityId(documentReference.getId()); // Set document ID here
 
                     // Now add the facility data to the organizer after the facility ID is set
@@ -91,16 +90,12 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                     organizersRef.document(facility.getOrganizerId()) // Sets userId as the document ID
                             .set(organizerData)
                             .addOnSuccessListener(aVoid -> {
-                                Log.d("addFacility", "Organizer updated with facility ID.");
-                                // Successfully added organizer with facility ID
-
                                 // Update the ViewModel to reflect the change
                                 facilityViewModel.setFacilityStatus(true);
                                 facilityViewModel.setCurrentFacility(existingFacility);
                             })
                             .addOnFailureListener(e -> {
                                 Log.w("addFacility", "Error adding organizer", e);
-                                // Handle the error
                             });
                 })
                 .addOnFailureListener(e -> Log.w("addFacility", "Error adding facility", e));
@@ -118,30 +113,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
      */
     @Override
     public void updateFacility() {
-//        String facilityName = existingFacility.getFacilityName();
-//        facilityCreated.setText(facilityName);
-//
-//        if (existingFacility == null) {
-//            Log.w("updateFacility", "No facility selected to update");
-//            return;
-//        }
-//
-//        // Retrieve the document ID for the existing facility
-//        String documentId = existingFacility.getFacilityId();
-//        if (documentId == null || documentId.isEmpty()) {
-//            Log.w("updateFacility", "No document ID provided for update");
-//            return;
-//        }
-//
-//        // Prepare the updated facility data
-//        Map<String, Object> facilityData = new HashMap<>();
-//        facilityData.put("facilityName", existingFacility.getFacilityName());
-//        facilityData.put("streetAddress1", existingFacility.getStreetAddress1());
-//
-//        // Update the document in Firestore
-//        facilitiesRef.document(documentId).update(facilityData)
-//                .addOnSuccessListener(aVoid -> Log.d("updateFacility", "Facility updated successfully"))
-//                .addOnFailureListener(e -> Log.w("updateFacility", "Error updating facility", e));
         if (existingFacility == null) {
             Log.w("updateFacilityAndEvents", "No facility selected to update");
             return;
@@ -161,20 +132,16 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         // Update the facility and then proceed to update related events
         facilitiesRef.document(facilityId).update(facilityData)
                 .addOnSuccessListener(aVoid -> {
-                    Log.d("updateFacilityAndEvents", "Facility updated successfully");
-
                     // Query to fetch all events associated with this facility
                     eventsRef.whereEqualTo("deviceId", deviceId).get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 if (!queryDocumentSnapshots.isEmpty()) {
                                     WriteBatch batch = db.batch(); // Create a batch for atomic updates
-
                                     // Iterate through all matching events and update their location
                                     for (DocumentSnapshot document : queryDocumentSnapshots) {
                                         DocumentReference eventDocRef = document.getReference();
                                         batch.update(eventDocRef, "location", existingFacility.getStreetAddress1());
                                     }
-
                                     // Commit the batch write
                                     batch.commit()
                                             .addOnSuccessListener(aVoid1 -> Log.d("updateFacilityAndEvents", "Event locations updated successfully"))
@@ -186,8 +153,140 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                             .addOnFailureListener(e -> Log.w("updateFacilityAndEvents", "Error fetching events", e));
                 })
                 .addOnFailureListener(e -> Log.w("updateFacilityAndEvents", "Error updating facility", e));
-
     }
+
+    private void fetchOrganizerEvents(String deviceId) {
+        organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DocumentSnapshot organizerDoc = task.getResult();
+                if (organizerDoc.exists() && organizerDoc.contains("events")) {
+                    List<String> eventIDs = (List<String>) organizerDoc.get("events");
+                    if (eventIDs != null && !eventIDs.isEmpty()) {
+                        retrieveEventDetails(eventIDs);
+                    } else {
+                        handleEmptyEvents();
+                    }
+                } else {
+                    handleMissingEvents();
+                }
+            } else {
+                Log.w("Firestore", "Organizer query failed.", task.getException());
+            }
+        });
+    }
+
+    private void retrieveEventDetails(List<String> eventIDs) {
+        ArrayList<Event> newEvents = new ArrayList<>();
+        for (String eventID : eventIDs) {
+            eventsRef.document(eventID).get().addOnCompleteListener(eventTask -> {
+                if (eventTask.isSuccessful() && eventTask.getResult() != null) {
+                    DocumentSnapshot eventDoc = eventTask.getResult();
+                    if (eventDoc.exists()) {
+                        Event event = eventDoc.toObject(Event.class);
+                        if (event != null) {
+                            newEvents.add(event);
+                            if (newEvents.size() == eventIDs.size()) {
+                                updateEventList(newEvents);
+                            }
+                        }
+                    } else {
+                        Log.w("Firestore", "Event document not found: " + eventID);
+                    }
+                } else {
+                    Log.w("Firestore", "Failed to retrieve event document.", eventTask.getException());
+                }
+            });
+        }
+    }
+
+    private void updateEventList(ArrayList<Event> newEvents) {
+        if (!newEvents.equals(eventList)) {
+            eventList.clear();
+            eventList.addAll(newEvents);
+            organizerEventArrayAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void handleEmptyEvents() {
+        Log.w("Firestore", "No events found for this organizer.");
+        eventList.clear();
+        organizerEventArrayAdapter.notifyDataSetChanged();
+    }
+
+    private void handleMissingEvents() {
+        Log.w("Firestore", "Organizer document does not exist or eventList missing.");
+        eventList.clear();
+        organizerEventArrayAdapter.notifyDataSetChanged();
+    }
+
+    private void fetchOrganizerFacility(String deviceId) {
+        organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DocumentSnapshot organizerDoc = task.getResult();
+                if (organizerDoc.exists() && organizerDoc.contains("facilityId")) {
+                    String facilityID = organizerDoc.getString("facilityId");
+                    if (facilityID != null && !facilityID.isEmpty()) {
+                        fetchFacilityDetails(facilityID);
+                    } else {
+                        handleMissingFacilityID();
+                    }
+                } else {
+                    handleMissingFacilityID();
+                }
+            } else {
+                Log.w("Firestore", "Organizer query failed.", task.getException());
+                facilityViewModel.setFacilityStatus(false);
+            }
+        });
+    }
+
+    private void fetchFacilityDetails(String facilityID) {
+        facilitiesRef.document(facilityID).addSnapshotListener((facilitySnapshot, e) -> {
+            if (e != null) {
+                Log.w("Firestore", "Facility listen failed.", e);
+                facilityViewModel.setFacilityStatus(false);
+                return;
+            }
+
+            if (facilitySnapshot != null && facilitySnapshot.exists()) {
+                handleFacilityExists(facilitySnapshot);
+            } else {
+                handleFacilityNotExists();
+            }
+        });
+    }
+
+    private void handleFacilityExists(DocumentSnapshot facilitySnapshot) {
+        String facilityName = facilitySnapshot.getString("facilityName");
+        if (facilityName != null && !facilityName.isEmpty()) {
+            facilityCreated.setText(facilityName);
+            facilityCreated.setVisibility(View.VISIBLE);
+            Facility existingFacility = facilitySnapshot.toObject(Facility.class);
+            if (existingFacility != null) {
+                existingFacility.setFacilityId(facilitySnapshot.getId());
+                existingFacility.setFacilityName(facilityName);
+            }
+            facilityViewModel.setFacilityStatus(true);
+            facilityViewModel.setCurrentFacility(existingFacility);
+        } else {
+            facilityCreated.setVisibility(View.GONE);
+            facilityViewModel.setFacilityStatus(false);
+        }
+    }
+
+    private void handleFacilityNotExists() {
+        facilityCreated.setVisibility(View.GONE);
+        createFacilitiesButton.setVisibility(View.VISIBLE);
+        facilityViewModel.setFacilityStatus(false);
+    }
+
+    private void handleMissingFacilityID() {
+        Log.w("Firestore", "No facilityID found for this organizer.");
+        facilityCreated.setVisibility(View.GONE);
+        createFacilitiesButton.setVisibility(View.VISIBLE);
+        facilityViewModel.setFacilityStatus(false);
+    }
+
 
     /**
      * This method is called when the user deletes an existing facility.
@@ -213,7 +312,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         eventsRef = db.collection("events"); // Reference to events collection
         facilitiesRef = db.collection("facilities");
         organizersRef = db.collection("organizers");
-
         myEventsListView = binding.myEventsListView;
         organizerEventArrayAdapter = new OrganizerEventArrayAdapter(getContext(), eventList);
         myEventsListView.setAdapter(organizerEventArrayAdapter);
@@ -224,8 +322,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
         facilityViewModel = new ViewModelProvider(requireActivity()).get(FacilityViewModel.class);
 
-/// Listen for real-time updates to the organizer's document
-
+//        /// Listen for real-time updates to the organizer's document so we can get the events in real-time
         organizersRef.document(deviceId).addSnapshotListener((organizerSnapshot, error) -> {
             if (error != null) {
                 Log.w("Firestore", "Listen failed.", error);
@@ -259,7 +356,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                                             break;
                                         }
                                     }
-
                                     // If the event is new, add it to the list
                                     if (!eventExists) {
                                         eventList.add(updatedEvent);
@@ -285,185 +381,8 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
             }
         });
 
-
-
-        organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                DocumentSnapshot organizerDoc = task.getResult();
-
-                // Check if the eventList field exists and is not empty
-                if (organizerDoc.exists() && organizerDoc.contains("events")) {
-                    List<String> eventIDs = (List<String>) organizerDoc.get("events");
-
-                    if (eventIDs != null && !eventIDs.isEmpty()) {
-                        ArrayList<Event> newEvents = new ArrayList<>(); // Temporary list for storing Event objects
-
-                        // Loop through each event ID and retrieve the event document from events collection
-                        for (String eventID : eventIDs) {
-                            eventsRef.document(eventID).get().addOnCompleteListener(eventTask -> {
-                                if (eventTask.isSuccessful() && eventTask.getResult() != null) {
-                                    DocumentSnapshot eventDoc = eventTask.getResult();
-
-                                    if (eventDoc.exists()) {
-                                        // Convert document to Event object and add it to newEvents
-                                        Event event = eventDoc.toObject(Event.class);
-                                        if (event != null) {
-                                            newEvents.add(event);
-
-                                            // Check if all events have been added, then update the UI
-                                            if (newEvents.size() == eventIDs.size()) {
-                                                // Update eventList and UI only if there are changes
-                                                if (!newEvents.equals(eventList)) {
-                                                    eventList.clear();
-                                                    eventList.addAll(newEvents);
-                                                    organizerEventArrayAdapter.notifyDataSetChanged();
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        Log.w("Firestore", "Event document not found: " + eventID);
-                                    }
-                                } else {
-                                    Log.w("Firestore", "Failed to retrieve event document.", eventTask.getException());
-                                }
-                            });
-                        }
-                    } else {
-                        // Handle case when eventList is null or empty
-                        Log.w("Firestore", "No events found for this organizer.");
-                        eventList.clear();
-                        organizerEventArrayAdapter.notifyDataSetChanged();
-                    }
-                } else {
-                    // Handle case when organizer document doesn't exist or eventList is missing
-                    Log.w("Firestore", "Organizer document does not exist or eventList missing.");
-                    eventList.clear();
-                    organizerEventArrayAdapter.notifyDataSetChanged();
-                }
-            } else {
-                Log.w("Firestore", "Organizer query failed.", task.getException());
-            }
-        });
-
-
-
-//        organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful() && task.getResult() != null) {
-//                DocumentSnapshot organizerDoc = task.getResult();
-//
-//                // Check if the facilityID field exists and is not empty
-//                if (organizerDoc.exists() && organizerDoc.contains("facilityId")) {
-//                    String facilityID = organizerDoc.getString("facilityId");
-//
-//                    if (facilityID != null && !facilityID.isEmpty()) {
-//                        // Now query the facilities collection with the retrieved facilityID
-//                        facilitiesRef.document(facilityID).addSnapshotListener((facilitySnapshot, e) -> {
-//                            if (e != null) {
-//                                Log.w("Firestore", "Facility listen failed.", e);
-//                                return;
-//                            }
-//
-//                            if (facilitySnapshot != null && facilitySnapshot.exists()) {
-//                                // Retrieve facility data
-//                                String facilityName = facilitySnapshot.getString("name");
-//                                if (facilityName != null && !facilityName.isEmpty()) {
-//                                    facilityCreated.setText(facilityName);
-//                                    facilityCreated.setVisibility(View.VISIBLE);
-//
-//                                    // Populate existingFacility with data from Firestore
-//                                    existingFacility = facilitySnapshot.toObject(Facility.class);
-//                                    existingFacility.setFacilityId(facilitySnapshot.getId());
-//                                    existingFacility.setFacilityName(facilityName);
-//                                } else {
-//                                    facilityCreated.setVisibility(View.GONE);
-//                                    existingFacility = null;
-//                                }
-//                            } else {
-//                                facilityCreated.setVisibility(View.GONE);
-//                                createFacilitiesButton.setVisibility(View.VISIBLE);
-//                            }
-//                        });
-//                    } else {
-//                        // Handle case when facilityID is null or empty
-//                        Log.w("Firestore", "No facilityID found for this organizer.");
-//                        facilityCreated.setVisibility(View.GONE);
-//                        createFacilitiesButton.setVisibility(View.VISIBLE);
-//                    }
-//                } else {
-//                    // Handle case when organizer document doesn't exist or facilityID is missing
-//                    Log.w("Firestore", "Organizer document does not exist or facilityID missing.");
-//                    facilityCreated.setVisibility(View.GONE);
-//                    createFacilitiesButton.setVisibility(View.VISIBLE);
-//                }
-//            } else {
-//                Log.w("Firestore", "Organizer query failed.", task.getException());
-//            }
-//        });
-        organizersRef.document(deviceId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                DocumentSnapshot organizerDoc = task.getResult();
-
-                // Check if the facilityID field exists and is not empty
-                if (organizerDoc.exists() && organizerDoc.contains("facilityId")) {
-                    String facilityID = organizerDoc.getString("facilityId");
-
-                    if (facilityID != null && !facilityID.isEmpty()) {
-                        // Now query the facilities collection with the retrieved facilityID
-                        facilitiesRef.document(facilityID).addSnapshotListener((facilitySnapshot, e) -> {
-                            if (e != null) {
-                                Log.w("Firestore", "Facility listen failed.", e);
-                                facilityViewModel.setFacilityStatus(false); // No facility
-                                return;
-                            }
-
-                            if (facilitySnapshot != null && facilitySnapshot.exists()) {
-                                // Retrieve facility data
-                                String facilityName = facilitySnapshot.getString("facilityName");
-                                if (facilityName != null && !facilityName.isEmpty()) {
-                                    // Update UI components
-                                    facilityCreated.setText(facilityName);
-                                    facilityCreated.setVisibility(View.VISIBLE);
-
-                                    // Populate existingFacility with data from Firestore
-                                    Facility existingFacility = facilitySnapshot.toObject(Facility.class);
-                                    if (existingFacility != null) {
-                                        existingFacility.setFacilityId(facilitySnapshot.getId());
-                                        existingFacility.setFacilityName(facilityName);
-                                    }
-                                    Log.d("Firestore", "Facility exists: " + facilitySnapshot.getId());
-                                    // Update ViewModel
-                                    facilityViewModel.setFacilityStatus(true); // Facility exists
-                                    facilityViewModel.setCurrentFacility(existingFacility);
-                                } else {
-                                    Log.d("Firestore", "Facility does not exists: " + facilitySnapshot.getId());
-                                    facilityCreated.setVisibility(View.GONE);
-                                    facilityViewModel.setFacilityStatus(false); // No facility
-                                }
-                            } else {
-                                facilityCreated.setVisibility(View.GONE);
-                                createFacilitiesButton.setVisibility(View.VISIBLE);
-                                facilityViewModel.setFacilityStatus(false); // No facility
-                            }
-                        });
-                    } else {
-                        // Handle case when facilityID is null or empty
-                        Log.w("Firestore", "No facilityID found for this organizer.");
-                        facilityCreated.setVisibility(View.GONE);
-                        createFacilitiesButton.setVisibility(View.VISIBLE);
-                        facilityViewModel.setFacilityStatus(false); // No facility
-                    }
-                } else {
-                    // Handle case when organizer document doesn't exist or facilityID is missing
-                    Log.w("Firestore", "Organizer document does not exist or facilityID missing.");
-                    facilityCreated.setVisibility(View.GONE);
-                    createFacilitiesButton.setVisibility(View.VISIBLE);
-                    facilityViewModel.setFacilityStatus(false); // No facility
-                }
-            } else {
-                Log.w("Firestore", "Organizer query failed.", task.getException());
-                facilityViewModel.setFacilityStatus(false); // No facility
-            }
-        });
+        fetchOrganizerEvents(deviceId);
+        fetchOrganizerFacility(deviceId);
 
         if (existingFacility == null) {
             createFacilitiesButton.setVisibility(View.GONE);
@@ -497,7 +416,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         });
 
         facilityCreated.setOnClickListener(v -> {
-            Log.d("msg", "created new facility fragment");
             new AddFacilityFragment(existingFacility, true).show(getChildFragmentManager(), "Edit Facility");
         });
     }
