@@ -30,6 +30,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 
 /**
@@ -44,6 +45,9 @@ public class EventsHomeActivity extends AppCompatActivity {
     private NotificationHelper notificationHelper;
 
     private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1;
+
+    private ListenerRegistration notificationListener;
+
 
 
     /**
@@ -213,22 +217,24 @@ public class EventsHomeActivity extends AppCompatActivity {
         }
     }
 
-    private void grabbingNotifications(String deviceId){
+    private void grabbingNotifications(String deviceId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("notifications")
-                .whereEqualTo("userId", deviceId)  // Match documents where userId is "user1"
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (DocumentSnapshot document : queryDocumentSnapshots) {
-                        // doc3 will be included in the results, along with other matching documents
-                        String title = document.getString("title");
-                        String messageContent = document.getString("message");
-                        notificationHelper.sendNotifications(deviceId, title, messageContent);
 
+        notificationListener = db.collection("notifications")
+                .whereEqualTo("userId", deviceId)
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        Log.e("Firestore", "Error listening for notifications", e);
+                        return;
                     }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error fetching notifications", e);
+
+                    if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
+                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                            String title = document.getString("title");
+                            String messageContent = document.getString("message");
+                            notificationHelper.sendNotifications(deviceId, title, messageContent);
+                        }
+                    }
                 });
     }
 
@@ -270,6 +276,26 @@ public class EventsHomeActivity extends AppCompatActivity {
 
         Notifications notification = new Notifications();
         notification.removeNotifications(deviceId);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Start or reinitialize the notification listener when the activity starts
+        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        grabbingNotifications(deviceId);
+        new Notifications().removeNotifications(deviceId);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // Detach notification listener when the activity stops
+        if (notificationListener != null) {
+            notificationListener.remove();
+            notificationListener = null;
+        }
     }
 
 
