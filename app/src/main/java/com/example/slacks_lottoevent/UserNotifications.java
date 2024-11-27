@@ -56,7 +56,7 @@ public class UserNotifications extends AppCompatActivity {
         eventList = new ArrayList<>();
 
         // Set up the adapter
-        adapter = new EventNotificationsArrayAdapter(this, eventList);
+        adapter = new EventNotificationsArrayAdapter(this, eventList, getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE));
         ListView listView = findViewById(R.id.listViewUserInvitations);
         listView.setAdapter(adapter);
 
@@ -150,7 +150,7 @@ public class UserNotifications extends AppCompatActivity {
                         UserEventNotifications event = new UserEventNotifications(name + ": Selected", date, time, location, eventId, true);
                         eventList.add(event);
 
-                        saveEventAsDisplayed(eventId);
+//                        saveEventAsDisplayed(eventId);
 
                         // Notify adapter of data changes
                         adapter.notifyDataSetChanged();
@@ -165,7 +165,7 @@ public class UserNotifications extends AppCompatActivity {
                         UserEventNotifications event = new UserEventNotifications(name + ": Unselected", date, time, location, eventId, false);
                         eventList.add(event);
 
-                        saveEventAsDisplayed(eventId);
+//                        saveEventAsDisplayed(eventId);
 
                         // Notify adapter of data changes
                         adapter.notifyDataSetChanged();
@@ -180,16 +180,6 @@ public class UserNotifications extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    /**
-     * Save the event ID in SharedPreferences to avoid displaying it again.
-     * @param eventId The ID of the event to save.
-     */
-    private void saveEventAsDisplayed(String eventId) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(eventId, true); // Save event ID with a true value indicating it's displayed
-        editor.apply();
     }
 
     /**
