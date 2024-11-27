@@ -1,6 +1,7 @@
 package com.example.slacks_lottoevent;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.zxing.WriterException;
 
 import java.util.ArrayList;
 
@@ -67,18 +70,21 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
             ImageView locationIcon = convertView.findViewById(R.id.location_icon);
             locationIcon.setVisibility(View.GONE); // Hide the location icon
 
-            //if User is not an Admin then they may not see the entrant's private information
+            // If user is an admin, enable additional functionality
             if (isAdmin) {
                 ImageButton ovalButton = convertView.findViewById(R.id.oval_rectangle);
+
+                // Set OnClickListener for the oval button
                 ovalButton.setOnClickListener(v -> showProfileOptionsDialog(profile));
 
-                // Set OnClickListener to show profile options in a dialog
+                // Set OnClickListener for the entire view
                 convertView.setOnClickListener(v -> showProfileOptionsDialog(profile));
             }
         }
 
         return convertView;
     }
+
 
     /**
      * Shows a dialog with "Cancel" and "Delete" options for a profile.
@@ -90,37 +96,43 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
 
         // Build the message with profile details
         String message = "Name: " + profile.getName() + "\n" +
-                "Email: " + profile.getEmail() + "\n" +
-                "Phone: " + profile.getPhone();
+                "Email: " + profile.getEmail();
 
-        builder.setTitle("Profile Details")
-                .setMessage(message)
-                .setPositiveButton("Delete", (dialog, which) -> {
-                    // Show a confirmation dialog to avoid accidental deletion
-                    new AlertDialog.Builder(context)
-                            .setTitle("Confirm Deletion")
-                            .setMessage("Are you sure you want to delete this profile?")
-                            .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
-                                // Call method to delete profile
-                                deleteProfileFromDatabase(context, db, profile.getDeviceId(),
-                                        // On success
-                                        () -> {
-                                            // Remove the profile from the adapter and notify the dataset change
-                                            remove(profile);
-                                            notifyDataSetChanged();
-                                            Toast.makeText(context, "Profile deleted successfully.", Toast.LENGTH_SHORT).show();
-                                        },
-                                        // On failure
-                                        () -> {
-                                            // Notify the user of the failure
-                                            Toast.makeText(context, "Failed to delete profile.", Toast.LENGTH_SHORT).show();
-                                        }
-                                );
-                            })
-                            .setNegativeButton("No", (confirmDialog, confirmWhich) -> confirmDialog.dismiss())
-                            .create().show();
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        if (!profile.isUsingDefaultPicture()) {
+            // Show the profile picture for custom profiles
+            View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_profile_details, null);
+            ImageView profilePicture = dialogView.findViewById(R.id.profile_picture);
+            Glide.with(context)
+                    .load(profile.getProfilePicturePath())
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.error_image)
+                    .into(profilePicture);
+
+            TextView detailsText = dialogView.findViewById(R.id.profile_details_text);
+            detailsText.setText(message);
+
+            builder.setView(dialogView);
+        } else {
+            // Show the name and email directly for default profiles
+            builder.setMessage(message);
+        }
+
+        // Set Delete button
+        builder.setPositiveButton("Delete", (dialog, which) -> {
+            // Show a confirmation dialog to avoid accidental deletion
+            new AlertDialog.Builder(context)
+                    .setTitle("Confirm Deletion")
+                    .setMessage("Are you sure you want to delete this profile?")
+                    .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
+                        deleteProfileFromDatabase(context, db, profile);
+                        Toast.makeText(context, "Profile deleted successfully.", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("No", (confirmDialog, confirmWhich) -> confirmDialog.dismiss())
+                    .create().show();
+        });
+
+        // Set Cancel button
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
         // Show the dialog
         builder.create().show();
@@ -131,29 +143,51 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
      *
      * @param context   The context for Toast messages.
      * @param db        The Firestore instance.
-     * @param deviceId  The device ID of the profile to delete.
-     * @param onSuccess Callback to run on successful deletion.
-     * @param onFailure Callback to run on failure.
+//     * @param deviceId  The device ID of the profile to delete.
      */
-    public static void deleteProfileFromDatabase(Context context, FirebaseFirestore db, String deviceId, Runnable onSuccess, Runnable onFailure) {
-        // Delete entrant-related data
-        deleteProfileFromDatabaseEntrant(context, db, deviceId);
+    public static void deleteProfileFromDatabase(Context context, FirebaseFirestore db, Profile profile) {
+//        String name = profile.getName();
+//        String email = profile.getEmail();
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//        builder.setTitle("Profile Details");
+//
+//        String message = "Name: " + (name != null ? name : "N/A") + "\n" +
+//                "Email: " + (email != null ? email : "N/A");
+//
+//        builder.setMessage(message);
+//
+//        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+//
+//        builder.setPositiveButton("Delete", (dialog, which) -> {
+            // Has Profile Picture
+            if (!profile.isUsingDefaultPicture()) {
+                AdminImagesAdapter.deleteImageFromStorageAndFirestore(context, db, profile.getProfilePicturePath(), false);
+            }
 
-        // Delete organizer-related data
-        deleteProfileFromDatabaseOrganizer(context, db, deviceId);
+            // Delete entrant-related data
+            deleteProfileFromDatabaseEntrant(context, db, profile.getDeviceId());
 
-        // Delete the profile document from the "profiles" collection
-        db.collection("profiles").document(deviceId)
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    // Call the success callback
-                    onSuccess.run();
-                })
-                .addOnFailureListener(e -> {
-                    // Call the failure callback
-                    onFailure.run();
-                });
+            // Delete organizer-related data
+            deleteProfileFromDatabaseOrganizer(context, db, profile.getDeviceId());
+
+            // Delete the profile document from the "profiles" collection
+            db.collection("profiles").document(profile.getDeviceId())
+                    .delete()
+                    .addOnSuccessListener(aVoid -> {
+                        // Call the success callback
+                        Toast.makeText(context, "Profile deleted successfully.", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        // Call the failure callback
+                        Toast.makeText(context, "Failed to delete profile.", Toast.LENGTH_SHORT).show();
+                    });
+//        }); // Corrected: Added missing closing parenthesis and semicolon for the setPositiveButton block
+
+        // Show the dialog
+//        builder.create().show();
     }
+
 
     /**
      * Deletes data associated with the profile from the "entrants" collection.
@@ -227,8 +261,6 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
                     e.printStackTrace();
                 });
     }
-
-
 
     public static void EntrantRemovalWaitlisted(FirebaseFirestore db, ArrayList<String> waitlistedEvents, String deviceId) {
         if (waitlistedEvents == null || waitlistedEvents.isEmpty()) {
@@ -319,5 +351,50 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
                     });
         }
     }
+
+    //    private void showingProfilePicture(Profile profile) {
+//        LayoutInflater inflater = LayoutInflater.from(context);
+//        View popupView = inflater.inflate(R.layout.dialog_qr_code, null);
+//
+//        // Find the ImageView in the popup layout
+//        ImageView imageView = popupView.findViewById(R.id.qr_code_image);
+//
+//        // Set the Profile Picture
+//        if (!profile.isUsingDefaultPicture() && profile.getProfilePicturePath() != null && !profile.getProfilePicturePath().isEmpty()) {
+//            // Load the custom profile picture using Glide
+//            Glide.with(context)
+//                    .load(profile.getProfilePicturePath()) // Load the image from the URL
+//                    .placeholder(R.drawable.placeholder_image) // Placeholder while loading
+//                    .error(R.drawable.error_image) // Error image if the URL fails to load
+//                    .into(imageView); // Set into the ImageView
+//        } else {
+//            // If qrData is null or empty, set a default or error image
+//            imageView.setImageResource(R.drawable.error_image);
+//        }
+//
+//        // Create the AlertDialog
+//        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+//        builder.setView(popupView);
+//
+//        // Add the Close button
+//        builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
+//
+//        if (!profile.isUsingDefaultPicture()) {
+//            builder.setNegativeButton("continue to delete profile", (dialog, which) -> {
+//                try {
+//                    // Call method to delete profile
+//                    deleteProfileFromDatabase(context, db, profile);
+////                    Toast.makeText(context, "Profile deleted successfully.", Toast.LENGTH_SHORT).show();
+//                } catch (Exception e) {
+//                    // Notify the user of the failure
+//                    Toast.makeText(context, "Failed to delete profile.", Toast.LENGTH_SHORT).show();
+//                    Log.e("ProfileDeletion", "Error deleting profile: ", e);
+//                }
+//            });
+//        }
+//
+//        // Show the dialog
+//        builder.create().show();
+//    }
 
 }

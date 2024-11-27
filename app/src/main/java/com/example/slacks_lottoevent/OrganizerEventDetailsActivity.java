@@ -32,6 +32,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.encoder.QRCode;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import org.checkerframework.checker.units.qual.A;
@@ -169,7 +170,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         event.setWaitlistedNotificationsList((ArrayList<String>) document.get("cancelledNotificationsList"));
                         event.setWaitlistedNotificationsList((ArrayList<String>) document.get("selectedNotificationsList"));
 
-                        updateLotteryButtonVisibility();
+                        updateLotteryButtonVisibility(isAdmin);
 
                     }
                 });
@@ -256,7 +257,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         .show();
             }
 
-            updateLotteryButtonVisibility();
+            updateLotteryButtonVisibility(isAdmin);
         });
 
 
@@ -337,7 +338,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     public static void DeletingEventPoster(Context context, FirebaseFirestore db, String posterURL){
             if (posterURL != null && !posterURL.isEmpty()) {
                 // Call the method if the URL is not empty
-                AdminImagesAdapter.showImageOptionsDialog(context, db, posterURL);
+                AdminImagesAdapter.showImageOptionsDialog(context, db, posterURL, true);
             } else {
                 // Show a dialog indicating there is no poster to delete
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -559,8 +560,6 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void selectImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -568,29 +567,31 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         imagePickerLauncher.launch(intent);
     }
 
-    private void showQRCodePopup(Context context, FirebaseFirestore db, Event event, String qrData, boolean isAdmin) {
-        LayoutInflater inflater = LayoutInflater.from(this);
+    public static void showQRCodePopup(Context context, FirebaseFirestore db, Event event, String qrData, boolean isAdmin) {
+        LayoutInflater inflater = LayoutInflater.from(context);
         View popupView = inflater.inflate(R.layout.dialog_qr_code, null);
 
         // Find the ImageView in the popup layout
         ImageView qrCode = popupView.findViewById(R.id.qr_code_image);
 
         // Set the QR code image
-        if (qrData != null && !qrData.isEmpty()) {
-            try {
-                BitMatrix bitMatrix = deserializeBitMatrix(qrData); // Convert back to BitMatrix
-                BarcodeEncoder encoder = new BarcodeEncoder();
-                Bitmap bitmap = encoder.createBitmap(bitMatrix); // Create Bitmap from BitMatrix
-                qrCode.setImageBitmap(bitmap); // Set the QR code image
-            } catch (WriterException e) {
-                Log.e("QRCodeError", "Error converting QR code string to BitMatrix", e);
+        if (event != null) {
+            if (qrData != null && !qrData.isEmpty()) {
+                try {
+                    BitMatrix bitMatrix = deserializeBitMatrix(qrData); // Convert back to BitMatrix
+                    BarcodeEncoder encoder = new BarcodeEncoder();
+                    Bitmap bitmap = encoder.createBitmap(bitMatrix); // Create Bitmap from BitMatrix
+                    qrCode.setImageBitmap(bitmap); // Set the QR code image
+                } catch (WriterException e) {
+                    Log.e("QRCodeError", "Error converting QR code string to BitMatrix", e);
+                }
+            } else {
+                qrCode.setImageBitmap(null); // Clear the image if QR data is null or empty
             }
-        } else {
-            qrCode.setImageBitmap(null); // Clear the image if QR data is null or empty
         }
 
         // Create the AlertDialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(popupView);
 
         // Add the Close button
@@ -607,9 +608,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-
-
-    private BitMatrix deserializeBitMatrix(String data) throws WriterException {
+    public static BitMatrix deserializeBitMatrix(String data) throws WriterException {
         String[] lines = data.split("\n");
         int width = lines[0].length();
         int height = lines.length;
@@ -694,14 +693,16 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void updateLotteryButtonVisibility() {
+    private void updateLotteryButtonVisibility(boolean isAdmin) {
         if (event == null) {
             binding.lotterySystemButton.setVisibility(View.GONE);
             return;
         }
 
-        boolean showLotteryButton = !event.getEntrantsChosen() && currentDate.after(signup);
-        binding.lotterySystemButton.setVisibility(showLotteryButton ? View.VISIBLE : View.GONE);
+        if (!isAdmin) {
+            boolean showLotteryButton = !event.getEntrantsChosen() && currentDate.after(signup);
+            binding.lotterySystemButton.setVisibility(showLotteryButton ? View.VISIBLE : View.GONE);
+        }
     }
 
 }

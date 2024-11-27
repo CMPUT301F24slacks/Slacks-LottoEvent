@@ -21,9 +21,9 @@ import java.util.List;
 
 public class AdminImages extends Fragment {
 
-    private RecyclerView recyclerViewEventPosters;
+    private RecyclerView RecyclerViewImages;
     private AdminImagesAdapter adapter;
-    private List<String> posterURLs = new ArrayList<>();
+    private List<ImageMetadata> imageList = new ArrayList<>(); // Updated to use ImageMetadata
 
     public AdminImages() {
         // Required empty public constructor
@@ -40,15 +40,20 @@ public class AdminImages extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_images, container, false);
 
         // Initialize RecyclerView
-        recyclerViewEventPosters = view.findViewById(R.id.recyclerViewEventPosters);
-        recyclerViewEventPosters.setLayoutManager(new LinearLayoutManager(getContext()));
+        RecyclerViewImages = view.findViewById(R.id.recyclerViewImages);
+        RecyclerViewImages.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Initialize Adapter
-        adapter = new AdminImagesAdapter(getContext(), posterURLs);
-        recyclerViewEventPosters.setAdapter(adapter);
+        adapter = new AdminImagesAdapter(getContext(), imageList);
+        RecyclerViewImages.setAdapter(adapter);
+
+        imageList.clear(); // Clear the list to avoid duplicates or stale data
 
         // Fetch Event Posters
         fetchEventPosters();
+
+        // Fetch Profile Pictures
+        fetchProfilePictures();
 
         return view;
     }
@@ -63,12 +68,25 @@ public class AdminImages extends Fragment {
             }
 
             if (querySnapshot != null) {
-                posterURLs.clear(); // Clear the list to avoid duplicates or stale data
-
-                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                for (DocumentChange change : querySnapshot.getDocumentChanges()) {
+                    DocumentSnapshot document = change.getDocument();
                     String posterURL = document.getString("eventPosterURL");
-                    if (posterURL != null && !posterURL.isEmpty()) {
-                        posterURLs.add(posterURL);
+
+                    if (posterURL != null && !posterURL.trim().isEmpty()) {
+                        switch (change.getType()) {
+                            case ADDED:
+                                imageList.add(new ImageMetadata(posterURL, true)); // true for event poster
+                                break;
+                            case REMOVED:
+                                imageList.removeIf(meta -> meta.getImageUrl().equals(posterURL));
+                                break;
+                            case MODIFIED:
+                                // Handle modifications if needed
+                                if (!imageList.stream().anyMatch(meta -> meta.getImageUrl().equals(posterURL))) {
+                                    imageList.add(new ImageMetadata(posterURL, true));
+                                }
+                                break;
+                        }
                     }
                 }
 
@@ -78,15 +96,44 @@ public class AdminImages extends Fragment {
         });
     }
 
-    // Helper method to find the index of a poster URL by event ID
-    private int findPosterIndex(String eventId) {
-        for (int i = 0; i < posterURLs.size(); i++) {
-            // Assuming `posterURLs` can be mapped to event IDs if needed
-            if (posterURLs.get(i).contains(eventId)) {
-                return i;
-            }
-        }
-        return -1;
-    }
+    private void fetchProfilePictures() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        db.collection("profiles").addSnapshotListener((querySnapshot, error) -> {
+            if (error != null) {
+                Log.e("Firestore", "Error listening for profile updates: ", error);
+                return;
+            }
+
+            if (querySnapshot != null) {
+                for (DocumentChange change : querySnapshot.getDocumentChanges()) {
+                    DocumentSnapshot document = change.getDocument();
+                    Boolean usingDefaultPictureObj = document.getBoolean("usingDefaultPicture");
+                    boolean UsingDefaultPicture = usingDefaultPictureObj == null || usingDefaultPictureObj; // Defaults to true if null
+
+                    if (!UsingDefaultPicture) {
+                        String profilePicturePath = document.getString("profilePicturePath");
+                        if (profilePicturePath != null && !profilePicturePath.trim().isEmpty()) {
+                            switch (change.getType()) {
+                                case ADDED:
+                                    imageList.add(new ImageMetadata(profilePicturePath, false)); // false for profile picture
+                                    break;
+                                case REMOVED:
+                                    imageList.removeIf(meta -> meta.getImageUrl().equals(profilePicturePath));
+                                    break;
+                                case MODIFIED:
+                                    if (!imageList.stream().anyMatch(meta -> meta.getImageUrl().equals(profilePicturePath))) {
+                                        imageList.add(new ImageMetadata(profilePicturePath, false));
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                // Notify Adapter of Changes
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
 }
