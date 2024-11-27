@@ -70,10 +70,8 @@ public class AdminFacilities extends Fragment {
                     // Create Facility object from Firestore data
                     String deviceId = document.getString("deviceId");
                     String name = document.getString("name");
-                    String postalCode = document.getString("postalCode");
                     String streetAddress1 = document.getString("streetAddress1");
-                    String streetAddress2 = document.getString("streetAddress2");
-                    Facility facility = new Facility(name, streetAddress1, streetAddress2, postalCode, deviceId, deviceId);
+                    Facility facility = new Facility(name, streetAddress1, deviceId, deviceId);
 //                    Facility facility = document.toObject(Facility.class);
                     facilitiesList.add(facility); // Add to the list
                 }

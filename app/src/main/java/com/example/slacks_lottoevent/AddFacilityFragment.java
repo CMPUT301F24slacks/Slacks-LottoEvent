@@ -62,7 +62,7 @@ public class AddFacilityFragment extends DialogFragment {
      * Default constructor for creating a new Facility
      */
     public AddFacilityFragment() {
-        this.facility = new Facility("facilityName", "StreetAddress1", "StreetAddress2", "PostalCode", "OrganizerId", "DeviceId");
+        this.facility = new Facility("FacilityName", "StreetAddress1", "OrganizerId", "DeviceId");
         this.isEdit = false;
     }
 
