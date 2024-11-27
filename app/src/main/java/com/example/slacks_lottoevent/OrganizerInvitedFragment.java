@@ -68,11 +68,13 @@ public class OrganizerInvitedFragment extends Fragment {
         ListViewEntrantsInvited.setAdapter(adapter);
 
         Button craftMessageButton = view.findViewById(R.id.craftMessage);
+        Button cancelEntrantsButton = view.findViewById(R.id.cancel_entrants);
         Notifications notifications = new Notifications();
 
         craftMessageButton.setOnClickListener(v -> DialogHelper.showMessageDialog(getContext(), notifications,eventId, "selectedNotificationsList"));
 
-
+        //1. get the event day and see if it less than 1/2 a day away -> if so let the user move the entrants that havent responded yet but if not show an alert dialog/toast
+        // remove the entrants from their respective lists
 
         // Listen for real-time updates to the event document
         db.collection("events").document(eventId).addSnapshotListener((eventDoc, error) -> {

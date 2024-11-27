@@ -5,6 +5,30 @@
     android:layout_height="match_parent"
     tools:context=".OrganizerInvitedFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:padding="16dp"
+        android:gravity="center_horizontal">
+
+
+        <Button
+            android:id="@+id/craftMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:text="Create Message" />
+
+        <Button
+            android:id="@+id/cancel_entrants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel Entrants" />
+
+    </LinearLayout>
+
     <ListView
         android:id="@+id/listViewEntrantsInvited"
         android:layout_width="match_parent"
@@ -20,12 +44,6 @@
         android:layout_gravity="bottom"
         android:padding="16dp"
         android:gravity="center_horizontal">
-
-        <Button
-            android:id="@+id/craftMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Create Message" />
 
     </LinearLayout>
 </FrameLayout>
