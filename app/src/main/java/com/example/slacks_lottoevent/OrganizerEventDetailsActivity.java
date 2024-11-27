@@ -121,56 +121,57 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                     Log.e("ParseError", "Error parsing dates", e);
                 }
 
-                List<Object> waitlisted = (List<Object>) document.get("waitlisted");
-                Long capacity = (Long) document.get("eventSlots");
-                Long waitListCapacity = (Long) document.get("waitListCapacity");
+                List<Object> finalists = (List<Object>) document.get("finalists");
 
-                // Update UI
-                if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
-                    Glide.with(this).load(eventPosterURL).into(binding.eventImage);
-                } else {
-                    Log.e("EventDetails", "Event poster URL is empty or null");
-                }
+                        if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
+                            Glide.with(this) // 'this' refers to the activity context
+                                    .load(eventPosterURL)
+                                    .into(binding.eventImage);
+                        } else {
+                            Log.d("EventDetails", "Event poster URL is empty or null");
+                        }
+                        binding.eventTitle.setText(eventName);
+                        binding.eventDate.setText(date);
+                        List<Object> waitlisted = (List<Object>) document.get("waitlisted");
+                        Long capacity = (Long) document.get("eventSlots");
+                        Long waitListCapacity = (Long) document.get("waitListCapacity");
+                        assert capacity != null;
+                        String capacityAsString = capacity.toString();
 
-                binding.eventTitle.setText(eventName);
-                binding.eventDate.setText("Event Date: " + date);
-                binding.signupDate.setText("Signup Deadline: " + signupDate);
-                binding.eventLocation.setText(location);
-                binding.eventDescription.setText(description);
-                if (capacity != null) {
-                    binding.eventSlotsCapacity.setText("Event Slots: " + capacity);
-                }
+                        //Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
+                        if (waitListCapacity <= 0){
+                            binding.eventWaitlistCapacitySection.setVisibility(View.GONE);
+                            binding.spotsAvailableSection.setVisibility(View.GONE);
+                        }
+                        else{
+                            spotsRemaining = waitListCapacity - waitlisted.size();
+                            spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
+                            binding.spotsAvailable.setText(spotsRemainingText);
+                        }
 
-                // Update waitlist and spot availability
-                if (waitListCapacity != null && waitListCapacity > 0 && waitlisted != null) {
-                    spotsRemaining = waitListCapacity - waitlisted.size();
-                    spotsRemainingText = "Only " + spotsRemaining + " spot(s) available on waitlist";
-                    binding.spotsAvailable.setText(spotsRemainingText);
-                    binding.eventWaitlistCapacity.setText("Waitlist Capacity: " + waitListCapacity);
-                    binding.eventWaitlistCapacitySection.setVisibility(View.VISIBLE);
-                    binding.spotsAvailableSection.setVisibility(View.VISIBLE);
-                } else {
-                    binding.eventWaitlistCapacitySection.setVisibility(View.GONE);
-                    binding.spotsAvailableSection.setVisibility(View.GONE);
-                }
+                        binding.eventTitle.setText(eventName);
+                        binding.eventDate.setText("Event Date: " + date);
+                        binding.signupDate.setText("Signup Deadline: " + signupDate);
+                        binding.eventWaitlistCapacity.setText("Waitlist Capacity: " +  waitListCapacity.toString());
+                        binding.eventLocation.setText(location);
+                        binding.eventSlotsCapacity.setText("Event Slots: " + capacityAsString);
+                        binding.eventDescription.setText(description);
+                        usesGeolocation = (Boolean) document.get("geoLocation");
 
-                // Update event details in memory
-                if (event != null) {
-                    event.setFinalists((ArrayList<String>) document.get("finalists"));
-                    event.setWaitlisted((ArrayList<String>) document.get("waitlisted"));
-                    event.setSelected((ArrayList<String>) document.get("selected"));
-                    event.setCancelled((ArrayList<String>) document.get("cancelled"));
-                    event.setReselected((ArrayList<String>) document.get("reselected"));
+                        event.setFinalists((ArrayList<String>) document.get("finalists"));
+                        event.setWaitlisted((ArrayList<String>) document.get("waitlisted"));
+                        event.setSelected((ArrayList<String>) document.get("selected"));
+                        event.setCancelled((ArrayList<String>) document.get("cancelled"));
+                        event.setReselected((ArrayList<String>) document.get("reselected"));
 
-                    event.setWaitlistedNotificationsList((ArrayList<String>) document.get("waitlistedNotificationsList"));
-                    event.setWaitlistedNotificationsList((ArrayList<String>) document.get("joinedNotificationsList"));
-                    event.setWaitlistedNotificationsList((ArrayList<String>) document.get("cancelledNotificationsList"));
-                    event.setWaitlistedNotificationsList((ArrayList<String>) document.get("selectedNotificationsList"));
-                }
-            }
-        });
+                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("waitlistedNotificationsList"));
+                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("joinedNotificationsList"));
+                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("cancelledNotificationsList"));
+                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("selectedNotificationsList"));
 
-    eventsRef = db.collection("events");
+                    }
+                });
+        eventsRef = db.collection("events");
         // add a listener to the event details back button, go to the last item in the back stack
         binding.eventDetailsBackButton.setOnClickListener(v -> {
             onBackPressed();

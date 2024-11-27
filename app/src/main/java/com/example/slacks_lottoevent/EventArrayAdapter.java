@@ -55,7 +55,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         eventName.setText(event.getName());
         eventDate.setText(event.getEventDate());
         eventTime.setText(event.getTime());
-        // eventAddress.setText(event.getFacilityId().getStreetAddress1());
+        eventAddress.setText(event.getLocation());
         eventDescription.setText(event.getDescription());
         Button eventButton = convertView.findViewById(R.id.event_button);
 
@@ -64,7 +64,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
                     .load(event.getEventPosterURL())
                     .into(eventPoster);
         } else {
-            Log.e("EventDetails", "Event poster URL is empty or null");
+            Log.d("EventDetails", "Event poster URL is empty or null");
         }
 
         eventButton.setOnClickListener(v -> {

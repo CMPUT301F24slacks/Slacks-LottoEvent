@@ -96,7 +96,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
                     .load(event.getEventPosterURL())
                     .into(eventPoster);
         } else {
-            Log.e("EventDetails", "Event poster URL is empty or null");
+            Log.d("EventDetails", "Event poster URL is empty or null");
         }
 
         eventAddress.setText(event.getLocation());

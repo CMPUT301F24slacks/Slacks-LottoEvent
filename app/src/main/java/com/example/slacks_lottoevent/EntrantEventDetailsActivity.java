@@ -86,7 +86,7 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                                     .load(eventPosterURL)
                                     .into(binding.eventImage);
                         } else {
-                            Log.e("EventDetails", "Event poster URL is empty or null");
+                            Log.d("EventDetails", "Event poster URL is empty or null");
                         }
 
                         binding.eventTitle.setText(eventName);
