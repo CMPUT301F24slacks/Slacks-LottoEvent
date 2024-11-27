@@ -283,10 +283,12 @@ public class EventsHomeActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this,
                         new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
                         NOTIFICATION_PERMISSION_REQUEST_CODE);
-            } else {
+            }
+            else {
                 startFetchingNotifications();
             }
-        } else {
+        }
+        else {
             startFetchingNotifications();
         }
     }

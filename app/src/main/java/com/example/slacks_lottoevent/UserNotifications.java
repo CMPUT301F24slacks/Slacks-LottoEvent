@@ -56,7 +56,7 @@ public class UserNotifications extends AppCompatActivity {
         eventList = new ArrayList<>();
 
         // Set up the adapter
-        adapter = new EventNotificationsArrayAdapter(this, eventList);
+        adapter = new EventNotificationsArrayAdapter(this, eventList, getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE));
         ListView listView = findViewById(R.id.listViewUserInvitations);
         listView.setAdapter(adapter);
 
@@ -132,6 +132,11 @@ public class UserNotifications extends AppCompatActivity {
                 continue; // Skip this iteration if eventId is invalid
             }
 
+            // Check if the event has already been displayed
+            if (isEventDisplayed(eventId)) {
+                continue; // Skip adding this event if it was previously displayed
+            }
+
             eventsRef.document(eventId).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful() && task.getResult() != null) {
                     DocumentSnapshot eventDoc = task.getResult();
@@ -144,6 +149,8 @@ public class UserNotifications extends AppCompatActivity {
 
                         UserEventNotifications event = new UserEventNotifications(name + ": Selected", date, time, location, eventId, true);
                         eventList.add(event);
+
+//                        saveEventAsDisplayed(eventId);
 
                         // Notify adapter of data changes
                         adapter.notifyDataSetChanged();
@@ -158,6 +165,8 @@ public class UserNotifications extends AppCompatActivity {
                         UserEventNotifications event = new UserEventNotifications(name + ": Unselected", date, time, location, eventId, false);
                         eventList.add(event);
 
+//                        saveEventAsDisplayed(eventId);
+
                         // Notify adapter of data changes
                         adapter.notifyDataSetChanged();
 
@@ -171,6 +180,15 @@ public class UserNotifications extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    /**
+     * Check if the event has already been displayed using SharedPreferences.
+     * @param eventId The ID of the event to check.
+     * @return True if the event was already displayed, false otherwise.
+     */
+    private boolean isEventDisplayed(String eventId) {
+        return sharedPreferences.getBoolean(eventId, false); // Default to false if not found
     }
 }
 
