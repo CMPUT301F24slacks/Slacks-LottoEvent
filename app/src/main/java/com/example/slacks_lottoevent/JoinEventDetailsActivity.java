@@ -73,7 +73,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     private String eventPosterURL;
     FirebaseFirestore db;
     String qrCodeValue;
-    Long spotsRemaining;
+    Integer spotsRemaining;
     String spotsRemainingText;
 
     SharedPreferences sharedPreferences;
@@ -126,22 +126,33 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         assert capacity != null;
                         String capacityAsString = capacity.toString();
 
+                        spotsRemaining = waitListCapacity.intValue() - waitlisted.size();
 //                        Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
-                        if (waitListCapacity <= 0){
+                        if (spotsRemaining <= 0 && waitListCapacity > 0){
                             binding.waitlistCapacitySection.setVisibility(View.GONE);
                             binding.spotsAvailableSection.setVisibility(View.GONE);
                         }
                         else{
-                            spotsRemaining = waitListCapacity - waitlisted.size();
                             spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
                             binding.spotsAvailable.setText(spotsRemainingText);
+
                         }
+
                         if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
                             Glide.with(this) // 'this' refers to the activity context
                                     .load(eventPosterURL)
                                     .into(binding.eventImage);
-                        } else {
-                            Log.d("EventDetails", "Event poster URL is empty or null");
+                        }
+
+
+                        if (spotsRemaining <= 0 && waitListCapacity > 0 || currentDate.after(signup)) {
+                            // Capacity is full show we want to show the waitlist badge
+                            binding.joinButton.setVisibility(View.GONE);
+                            binding.waitlistFullBadge.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            binding.joinButton.setVisibility(View.VISIBLE);
+                            binding.waitlistFullBadge.setVisibility(View.GONE);
                         }
 
                         binding.eventTitle.setText(eventName);
@@ -156,23 +167,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         usesGeolocation = (Boolean) document.get("geoLocation");
 
 
-                        if (capacity.equals((long) waitlisted.size())) {
-                            // Capacity is full show we want to show the waitlist badge
-                            binding.joinButton.setVisibility(View.GONE);
-                            binding.waitlistFullBadge.setVisibility(View.VISIBLE);
-                        }
-                        else {
-                            binding.joinButton.setVisibility(View.VISIBLE);
-                            binding.waitlistFullBadge.setVisibility(View.GONE);
-                        }
-
-                        if (currentDate.after(signup)) {
-                            binding.joinButton.setVisibility(View.GONE);
-                            binding.signupPassed.setVisibility(View.VISIBLE);
-                        } else {
-                            binding.joinButton.setVisibility(View.VISIBLE);
-                            binding.signupPassed.setVisibility(View.GONE);
-                        }
 
                         // The reason to add the onClickListener in here is because we don't want the join button to do anything unless this event actually exists in the firebase
                         binding.joinButton.setOnClickListener(view -> {
