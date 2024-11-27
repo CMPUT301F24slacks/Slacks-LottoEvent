@@ -1,5 +1,7 @@
 package com.example.slacks_lottoevent;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
@@ -21,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -30,6 +33,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 
 /**
@@ -40,10 +44,13 @@ public class EventsHomeActivity extends AppCompatActivity {
     private ActivityEventsHomeBinding binding;
     private AppBarConfiguration appBarConfiguration;
     private MaterialToolbar toolbar;
+    private FacilityViewModel facilityViewModel;
+    private Boolean hasFacility = null;
 
     private NotificationHelper notificationHelper;
 
     private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1;
+
 
 
     /**
@@ -66,6 +73,8 @@ public class EventsHomeActivity extends AppCompatActivity {
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_events_home); // Get the navigation controller
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build(); // Build the app bar configuration
+        facilityViewModel = new ViewModelProvider(this).get(FacilityViewModel.class);
+
 
 
         createNotificationChannel();
@@ -114,18 +123,51 @@ public class EventsHomeActivity extends AppCompatActivity {
             }
         });
 
+        facilityViewModel.getFacilityStatus().observe(this, observedHasFacility -> {
+            if (observedHasFacility != null) {
+                // Update the class-level variable with the observed value
+                this.hasFacility = observedHasFacility;
+            } else {
+                // Handle the case where observedHasFacility is null (optional)
+                this.hasFacility = false;
+            }
+        });
+
         /*
          * Create event button, opens the create event screen upon being clicked.
          */
         binding.createEventFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // create event button
-                Intent intent = new Intent(EventsHomeActivity.this, CreateEvent.class);
-                startActivity(intent);
+                SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+                boolean isSignedUp = sharedPreferences.getBoolean("isSignedUp", false);
+                if (!isSignedUp){
+                    new AlertDialog.Builder(EventsHomeActivity.this)
+                            .setTitle("Sign-Up Required")
+                            .setMessage("In order to create an event, we first need to collect some information about you.")
+                            .setPositiveButton("Proceed", (dialog, which) -> {
+                                Intent signUpIntent = new Intent(EventsHomeActivity.this, SignUpActivity.class);
+                                startActivity(signUpIntent);
+                            })
+                            .setNegativeButton("Cancel", (dialog, which) -> {
+                                dialog.dismiss();
+                            })
+                            .show();
+                }
+                else if(hasFacility == null || !hasFacility){
+                    //Toast.makeText(this, "Please create a facility first!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventsHomeActivity.this, "Please create a facility first!", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    // open the create event page
+                    Intent intent = new Intent(EventsHomeActivity.this, CreateEvent.class);
+                    startActivity(intent);
+                }
 
             }
         });
+
+
 
         /*
          * Handle app bar title clicks here.
@@ -213,22 +255,25 @@ public class EventsHomeActivity extends AppCompatActivity {
         }
     }
 
-    private void grabbingNotifications(String deviceId){
+    private void grabbingNotifications(String deviceId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("notifications")
-                .whereEqualTo("userId", deviceId)  // Match documents where userId is "user1"
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (DocumentSnapshot document : queryDocumentSnapshots) {
-                        // doc3 will be included in the results, along with other matching documents
-                        String title = document.getString("title");
-                        String messageContent = document.getString("message");
-                        notificationHelper.sendNotifications(deviceId, title, messageContent);
 
+        db.collection("notifications")
+                .whereEqualTo("userId", deviceId)
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        Log.e("Firestore", "Error listening for notifications", e);
+                        return;
                     }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error fetching notifications", e);
+
+                    if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
+                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                            String title = document.getString("title");
+                            String messageContent = document.getString("message");
+                            notificationHelper.sendNotifications(deviceId, title, messageContent);
+                        }
+                    }
+                    new Notifications().removeNotifications(deviceId);
                 });
     }
 
@@ -271,6 +316,7 @@ public class EventsHomeActivity extends AppCompatActivity {
         Notifications notification = new Notifications();
         notification.removeNotifications(deviceId);
     }
+
 
 
 }

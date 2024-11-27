@@ -35,7 +35,7 @@ public class Notifications {
 
                         db.collection("profiles").document(deviceId).get().addOnSuccessListener(profileDoc -> {
                             if (profileDoc.exists()) {
-                                // Build a notification for each waitlisted user and add too the notification collection using the userID/deviceIds
+                                // Build a notification for each user on specific list and add too the notification collection using the userID/deviceIds
 
                                 Map<String, Object> notificationData = new HashMap<>();
                                 notificationData.put("userId", deviceId);

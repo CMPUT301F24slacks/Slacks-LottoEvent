@@ -118,7 +118,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                                     .load(eventPosterURL)
                                     .into(binding.eventImage);
                         } else {
-                            Log.e("EventDetails", "Event poster URL is empty or null");
+                            Log.d("EventDetails", "Event poster URL is empty or null");
                         }
                         binding.eventTitle.setText(eventName);
                         binding.eventDate.setText(date);
@@ -159,6 +159,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         event.setWaitlistedNotificationsList((ArrayList<String>) document.get("cancelledNotificationsList"));
                         event.setWaitlistedNotificationsList((ArrayList<String>) document.get("selectedNotificationsList"));
 
+                        updateLotteryButtonVisibility();
+
                     }
                 });
         eventsRef = db.collection("events");
@@ -192,7 +194,6 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
                 });
 
-        binding.lotterySystemButton.setVisibility(View.VISIBLE);
         binding.lotterySystemButton.setOnClickListener(view -> {
             if (event == null) {
                 // Show a message that the event data is not available yet
@@ -229,7 +230,6 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         .setMessage("Cannot sample entrants again. You can reselect them in the List of Entrants tab.")
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
-                binding.lotterySystemButton.setVisibility(View.GONE);
             }
 
             if (binding.lotterySystemButton.isEnabled() && !event.getEntrantsChosen() && currentDate.after(signup)) {
@@ -244,9 +244,9 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         .setMessage("Entrants were selected for the event.")
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
-
-//                TODO: Send notifications for here
             }
+
+            updateLotteryButtonVisibility();
         });
 
 
@@ -457,6 +457,16 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         }
         event.setWaitlisted(event.getReselected());
 
+    }
+
+    private void updateLotteryButtonVisibility() {
+        if (event == null) {
+            binding.lotterySystemButton.setVisibility(View.GONE);
+            return;
+        }
+
+        boolean showLotteryButton = !event.getEntrantsChosen() && currentDate.after(signup);
+        binding.lotterySystemButton.setVisibility(showLotteryButton ? View.VISIBLE : View.GONE);
     }
 
 }

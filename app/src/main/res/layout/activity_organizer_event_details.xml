@@ -269,7 +269,8 @@
                 android:layout_weight="1"
                 android:backgroundTint="#7B24EB"
                 android:text="Lottery System"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/entrantListButton"

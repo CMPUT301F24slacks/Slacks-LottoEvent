@@ -39,6 +39,8 @@ public class OrganizerNotifications extends AppCompatActivity {
     private FrameLayout frameLayout;
     private TabLayout tabLayout;
 
+    Button reSelect;
+
     /**
      * This method is called when the activity is first created.
      * It sets up the tab layout for the organizer to view the waitlist, invited, cancelled, and enrolled users.
@@ -48,6 +50,7 @@ public class OrganizerNotifications extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notifications_organizer);
+        reSelect = findViewById(R.id.reselectButton);
 
         //Set Up ArrayAdapter, do getUsername() for every user in said category, change it in the case-by-case tabLayout system
         Intent intent = getIntent();
@@ -71,6 +74,8 @@ public class OrganizerNotifications extends AppCompatActivity {
                     event.setCancelled((ArrayList<String>) eventDoc.get("cancelled"));
                     event.setReselected((ArrayList<String>) eventDoc.get("reselected"));
                     event.setSelectedNotificationsList((ArrayList<String>) eventDoc.get("selectedNotificationsList"));
+
+                    updateReselectButtonVisibility();
                 } else {
                     // Go back to the last thing in the stack
                     onBackPressed();
@@ -82,7 +87,6 @@ public class OrganizerNotifications extends AppCompatActivity {
         });
 
 
-        Button reSelect = findViewById(R.id.reselectButton);
         frameLayout = (FrameLayout) findViewById(R.id.FrameLayout);
         tabLayout = (TabLayout) findViewById(R.id.tab_Layout);
 
@@ -99,8 +103,6 @@ public class OrganizerNotifications extends AppCompatActivity {
                         .setMessage("Event slots are full")
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
-
-                reSelect.setVisibility(View.GONE);
                 return;
 
             }
@@ -165,20 +167,16 @@ public class OrganizerNotifications extends AppCompatActivity {
                 switch (tab.getPosition()){
                     case 0:
                         selected_fragment = OrganizerWaitlistFragment.newInstance(event.getEventID());
-                        reSelect.setVisibility(View.VISIBLE);
-
+                        updateReselectButtonVisibility();
                         break;
                     case 1:
                         selected_fragment = OrganizerInvitedFragment.newInstance(event.getEventID());
-                        reSelect.setVisibility(View.GONE);
                         break;
                     case 2:
                         selected_fragment = OrganizerCancelledFragment.newInstance(event.getEventID());
-                        reSelect.setVisibility(View.GONE);
                         break;
                     case 3:
                         selected_fragment = OrganizerEnrolledFragment.newInstance(event.getEventID());
-                        reSelect.setVisibility(View.GONE);
                         break;
                 }
                 if (selected_fragment != null) {
@@ -221,6 +219,8 @@ public class OrganizerNotifications extends AppCompatActivity {
         event.reSelecting();
         updateSelectedEntrants(event); // in the event - update the waitlist this way
         updateInvitedEntrants(event); // in entrant
+
+        updateReselectButtonVisibility();
     }
 
     private void updateSelectedEntrants(Event event) {
@@ -290,4 +290,19 @@ public class OrganizerNotifications extends AppCompatActivity {
             }
         });
     }
+
+    private void updateReselectButtonVisibility() {
+        if (event == null) {
+            reSelect.setVisibility(View.GONE);
+            return;
+        }
+
+        boolean canReselect = event.getWaitlisted().size() > 0
+                && event.getEntrantsChosen()
+                && event.getFinalists().size() < event.getEventSlots()
+                && (event.getSelected().size() + event.getFinalists().size() < event.getEventSlots());
+
+        reSelect.setVisibility(canReselect ? View.VISIBLE : View.GONE);
+    }
+
 }
