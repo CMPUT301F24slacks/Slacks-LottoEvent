@@ -42,8 +42,16 @@ public class AdminFacilities extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_facilities, container, false);
         listViewAdminFacilities = view.findViewById(R.id.ListViewAdminFacilities);
 
-        // Initialize adapter with the profile list
-        adapter = new FacilityListArrayAdapter(getContext(), facilitiesList, true);
+        // Initialize facilities list and event list
+        ArrayList<Event> eventList = new ArrayList<>();
+
+        // Create the events adapter
+        OrganizerEventArrayAdapter eventsAdapter = new OrganizerEventArrayAdapter(getContext(), eventList, true);
+
+        // Create the facilities adapter
+        adapter = new FacilityListArrayAdapter(getContext(), facilitiesList, true, eventsAdapter, eventList);
+
+        // Set the adapter to a ListView or RecyclerView
         listViewAdminFacilities.setAdapter(adapter);
 
         // Fetch profiles from Firestore
@@ -68,7 +76,13 @@ public class AdminFacilities extends Fragment {
 
                 for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                     // Create Facility object from Firestore data
+//                    String deviceId = document.getString("deviceId");
+//                    String name = document.getString("name");
+//                    String streetAddress1 = document.getString("streetAddress1");
+//                    Facility facility = new Facility(name, streetAddress1, deviceId, deviceId);
                     Facility facility = document.toObject(Facility.class);
+                    facility.setFacilityId(document.getId()); // Set document ID here
+
                     facilitiesList.add(facility); // Add to the list
                 }
                 adapter.notifyDataSetChanged(); // Notify adapter about data changes

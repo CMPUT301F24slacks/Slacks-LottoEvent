@@ -39,6 +39,7 @@ public class Event implements Serializable {
     private String signupDeadline;
     private Boolean entrantsChosen;
     private String eventPosterURL;
+    private Boolean disabled;
     public Event(){
     }
 
@@ -67,7 +68,7 @@ public class Event implements Serializable {
         this.eventSlots = eventSlots;
         this.waitListCapacity = waitListCapacity;
         this.location = location;
-
+        this.disabled = false;
         this.waitlisted = new ArrayList<>();
         this.finalists = new ArrayList<>();
         this.cancelled = new ArrayList<>();
@@ -92,6 +93,12 @@ public class Event implements Serializable {
         this.entrantsChosen = false;
         this.eventPosterURL = eventPosterURL;
 
+    }
+    public Boolean getDisabled(){
+        return disabled;
+    }
+    public void setDisabled(Boolean disabled){
+        this.disabled = disabled;
     }
 
     public String getLocation(){

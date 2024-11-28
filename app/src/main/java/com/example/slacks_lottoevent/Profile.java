@@ -98,7 +98,7 @@ public class Profile {
         this.phone = phone;
     }
 
-    public boolean isUsingDefaultPicture() {
+    public boolean getUsingDefaultPicture() {
         return usingDefaultPicture;
     }
 
@@ -121,7 +121,7 @@ public class Profile {
      * @param context The application context for accessing file storage.
      * @return The file path of the saved profile picture.
      */
-    private String generateProfilePicture(String name, Context context) {
+    public String generateProfilePicture(String name, Context context) {
         // Set dimensions for the image
         int width = 200;
         int height = 200;

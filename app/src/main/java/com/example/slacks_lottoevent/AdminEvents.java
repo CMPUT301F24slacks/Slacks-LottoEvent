@@ -43,7 +43,7 @@ public class AdminEvents extends Fragment {
         listViewAdminEvents = view.findViewById(R.id.ListViewAdminEvents);
 
         // Initialize adapter with the profile list
-        adapter = new OrganizerEventArrayAdapter(getContext(), eventsList);
+        adapter = new OrganizerEventArrayAdapter(getContext(), eventsList, true);
         listViewAdminEvents.setAdapter(adapter);
 
         // Fetch profiles from Firestore
