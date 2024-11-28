@@ -30,18 +30,36 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
     private final FirebaseFirestore db;
     private boolean isAdmin;
 
+    private ArrayList<Event> eventList; // Shared list of events
+    private OrganizerEventArrayAdapter eventsAdapter; // Reference to the events adapter
+
+    private ArrayList<Facility> facilities; // Shared list of facilities
+    private FacilityListArrayAdapter facilitiesAdapter; // Reference to the facilities adapter
+
     /**
      * Constructor for the ArrayAdapter.
      *
-     * @param context  The current context.
-     * @param profiles The list of profiles to display.
+     * @param context          The current context.
+     * @param profiles         The list of profiles to display.
+     * @param isAdmin          Boolean flag for admin functionality.
+     * @param facilities       Shared list of facilities.
+     * @param facilitiesAdapter Adapter for facility views.
+     * @param eventList        Shared list of events.
+     * @param eventsAdapter    Adapter for event views.
      */
-    public ProfileListArrayAdapter(@NonNull Context context, ArrayList<Profile> profiles, boolean isAdmin) {
+    public ProfileListArrayAdapter(@NonNull Context context, ArrayList<Profile> profiles, boolean isAdmin,
+                                   ArrayList<Facility> facilities, FacilityListArrayAdapter facilitiesAdapter,
+                                   ArrayList<Event> eventList, OrganizerEventArrayAdapter eventsAdapter) {
         super(context, 0, profiles);
         this.context = context;
         this.db = FirebaseFirestore.getInstance();
         this.isAdmin = isAdmin;
+        this.facilities = facilities;
+        this.facilitiesAdapter = facilitiesAdapter;
+        this.eventList = eventList;
+        this.eventsAdapter = eventsAdapter;
     }
+
 
     /**
      * Get the view for a single profile.
@@ -57,7 +75,12 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.content_admin_profiles, parent, false);
         }
-
+        if (eventsAdapter == null){
+            eventsAdapter = new OrganizerEventArrayAdapter(context, eventList, true);
+        }
+        if (facilitiesAdapter == null){
+            facilitiesAdapter = new FacilityListArrayAdapter(context, facilities, isAdmin, eventsAdapter, eventList);
+        }
         // Get the profile at the current position
         Profile profile = getItem(position);
 
@@ -124,7 +147,7 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
                     .setTitle("Confirm Deletion")
                     .setMessage("Are you sure you want to delete this profile?")
                     .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
-                        deleteProfileFromDatabase(context, db, profile);
+                        deleteProfileFromDatabase(context, db, profile, facilitiesAdapter, eventsAdapter);
                         Toast.makeText(context, "Profile deleted successfully.", Toast.LENGTH_SHORT).show();
                     })
                     .setNegativeButton("No", (confirmDialog, confirmWhich) -> confirmDialog.dismiss())
@@ -145,47 +168,31 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
      * @param db        The Firestore instance.
 //     * @param deviceId  The device ID of the profile to delete.
      */
-    public static void deleteProfileFromDatabase(Context context, FirebaseFirestore db, Profile profile) {
-//        String name = profile.getName();
-//        String email = profile.getEmail();
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//        builder.setTitle("Profile Details");
-//
-//        String message = "Name: " + (name != null ? name : "N/A") + "\n" +
-//                "Email: " + (email != null ? email : "N/A");
-//
-//        builder.setMessage(message);
-//
-//        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-//
-//        builder.setPositiveButton("Delete", (dialog, which) -> {
-            // Has Profile Picture
-            if (!profile.isUsingDefaultPicture()) {
-                AdminImagesAdapter.deleteImageFromStorageAndFirestore(context, db, profile.getProfilePicturePath(), false);
-            }
+    public static void deleteProfileFromDatabase(Context context, FirebaseFirestore db, Profile profile,
+                                                 FacilityListArrayAdapter facilitiesAdapter,
+                                                 OrganizerEventArrayAdapter eventsAdapter) {
+        // Has Profile Picture
+        if (!profile.isUsingDefaultPicture()) {
+            AdminImagesAdapter.deleteImageFromStorageAndFirestore(context, db, profile.getProfilePicturePath(), false);
+        }
 
-            // Delete entrant-related data
-            deleteProfileFromDatabaseEntrant(context, db, profile.getDeviceId());
+        // Delete entrant-related data
+        deleteProfileFromDatabaseEntrant(context, db, profile.getDeviceId());
 
-            // Delete organizer-related data
-            deleteProfileFromDatabaseOrganizer(context, db, profile.getDeviceId());
+        // Delete organizer-related data
+        deleteProfileFromDatabaseOrganizer(context, db, profile.getDeviceId(), facilitiesAdapter, eventsAdapter);
 
-            // Delete the profile document from the "profiles" collection
-            db.collection("profiles").document(profile.getDeviceId())
-                    .delete()
-                    .addOnSuccessListener(aVoid -> {
-                        // Call the success callback
-                        Toast.makeText(context, "Profile deleted successfully.", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        // Call the failure callback
-                        Toast.makeText(context, "Failed to delete profile.", Toast.LENGTH_SHORT).show();
-                    });
-//        }); // Corrected: Added missing closing parenthesis and semicolon for the setPositiveButton block
-
-        // Show the dialog
-//        builder.create().show();
+        // Delete the profile document from the "profiles" collection
+        db.collection("profiles").document(profile.getDeviceId())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    // Call the success callback
+                    Toast.makeText(context, "Profile deleted successfully.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    // Call the failure callback
+                    Toast.makeText(context, "Failed to delete profile.", Toast.LENGTH_SHORT).show();
+                });
     }
 
 
@@ -230,15 +237,18 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
     /**
      * Deletes data associated with the profile from the "organizers" collection.
      */
-    private static void deleteProfileFromDatabaseOrganizer(Context context, FirebaseFirestore db, String deviceId) {
+    private static void deleteProfileFromDatabaseOrganizer(Context context, FirebaseFirestore db, String deviceId,
+                                                           FacilityListArrayAdapter facilitiesAdapter,
+                                                           OrganizerEventArrayAdapter eventsAdapter) {
         db.collection("organizers").document(deviceId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         // Fetch the facility ID from the organizer document
                         String facilityId = documentSnapshot.getString("facilityId");
+
                         if (facilityId != null && !facilityId.isEmpty()) {
                             // Call method to delete the facility
-                            FacilityListArrayAdapter.deleteFacilityFromDatabase(context, db, facilityId, deviceId);
+                            FacilityListArrayAdapter.deleteFacilityFromDatabase(context, db, facilityId, deviceId, eventsAdapter);
                         } else {
                             Toast.makeText(context, "No associated facility found for organizer.", Toast.LENGTH_SHORT).show();
                         }
@@ -247,6 +257,11 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
                         db.collection("organizers").document(deviceId).delete()
                                 .addOnSuccessListener(aVoid -> {
                                     Toast.makeText(context, "Organizer data deleted successfully.", Toast.LENGTH_SHORT).show();
+
+                                    // Notify the adapter to refresh the UI
+                                    if (facilitiesAdapter != null) {
+                                        facilitiesAdapter.notifyDataSetChanged();
+                                    }
                                 })
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(context, "Failed to delete organizer data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -261,6 +276,7 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
                     e.printStackTrace();
                 });
     }
+
 
     public static void EntrantRemovalWaitlisted(FirebaseFirestore db, ArrayList<String> waitlistedEvents, String deviceId) {
         if (waitlistedEvents == null || waitlistedEvents.isEmpty()) {

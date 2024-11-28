@@ -26,11 +26,13 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
     private Context context;
     private List<ImageMetadata> imageList; // Updated to use ImageMetadata
     private FirebaseFirestore db;
+    boolean FromFacility;
 
-    public AdminImagesAdapter(Context context, List<ImageMetadata> imageList) {
+    public AdminImagesAdapter(Context context, List<ImageMetadata> imageList, boolean FromFacility) {
         this.context = context;
         this.imageList = imageList;
         this.db = FirebaseFirestore.getInstance(); // Initialize Firestore
+        this.FromFacility = FromFacility;
         listenForPosterChanges(); // Start listening for changes
     }
 
@@ -55,9 +57,9 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
         // Set OnClickListener to determine type
         holder.imageHolder.setOnClickListener(v -> {
             if (meta.isEventPoster()) {
-                AdminImagesAdapter.showImageOptionsDialog(context, db, meta.getImageUrl(), true);
+                showImageOptionsDialog(context, db, meta.getImageUrl(), true, FromFacility);
             } else {
-                AdminImagesAdapter.showImageOptionsDialog(context, db, meta.getImageUrl(), false);
+                showImageOptionsDialog(context, db, meta.getImageUrl(), false, FromFacility);
             }
         });
     }
@@ -88,30 +90,18 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
             }
 
             if (querySnapshot != null) {
-                for (DocumentChange change : querySnapshot.getDocumentChanges()) {
-                    DocumentSnapshot document = change.getDocument();
-                    String ImageURL = document.getString("eventPosterURL");
+                // Clear the list before repopulating to prevent duplicates
+                imageList.clear();
 
-                    if (ImageURL != null && !ImageURL.trim().isEmpty()) {
-                        switch (change.getType()) {
-                            case ADDED:
-                                imageList.add(new ImageMetadata(ImageURL, true)); // true for event posters
-                                break;
+                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                    String imageURL = document.getString("eventPosterURL");
 
-                            case REMOVED:
-                                imageList.removeIf(meta -> meta.getImageUrl().equals(ImageURL));
-                                break;
-
-                            case MODIFIED:
-                                // Handle modifications if necessary
-                                if (!imageList.stream().anyMatch(meta -> meta.getImageUrl().equals(ImageURL))) {
-                                    imageList.add(new ImageMetadata(ImageURL, true));
-                                }
-                                break;
-                        }
+                    if (imageURL != null && !imageURL.trim().isEmpty()) {
+                        imageList.add(new ImageMetadata(imageURL, true)); // true for event posters
                     }
                 }
-                notifyDataSetChanged();
+
+                notifyDataSetChanged(); // Refresh the UI
             }
         });
 
@@ -123,30 +113,19 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
             }
 
             if (querySnapshot != null) {
-                for (DocumentChange change : querySnapshot.getDocumentChanges()) {
-                    DocumentSnapshot document = change.getDocument();
-                    boolean UsingDefaultPicture = Boolean.TRUE.equals(document.getBoolean("usingDefaultPicture"));
-                    String ProfilePicturePath = document.getString("profilePicturePath");
+                // Clear the list for profile images too (if needed, depending on use case)
+                imageList.removeIf(meta -> !meta.isEventPoster()); // Keep only event posters
 
-                    if (!UsingDefaultPicture && ProfilePicturePath != null && !ProfilePicturePath.trim().isEmpty()) {
-                        switch (change.getType()) {
-                            case ADDED:
-                                imageList.add(new ImageMetadata(ProfilePicturePath, false)); // false for profile pictures
-                                break;
+                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                    boolean usingDefaultPicture = Boolean.TRUE.equals(document.getBoolean("usingDefaultPicture"));
+                    String profilePicturePath = document.getString("profilePicturePath");
 
-                            case REMOVED:
-                                imageList.removeIf(meta -> meta.getImageUrl().equals(ProfilePicturePath));
-                                break;
-
-                            case MODIFIED:
-                                if (!imageList.stream().anyMatch(meta -> meta.getImageUrl().equals(ProfilePicturePath))) {
-                                    imageList.add(new ImageMetadata(ProfilePicturePath, false));
-                                }
-                                break;
-                        }
+                    if (!usingDefaultPicture && profilePicturePath != null && !profilePicturePath.trim().isEmpty()) {
+                        imageList.add(new ImageMetadata(profilePicturePath, false)); // false for profile pictures
                     }
                 }
-                notifyDataSetChanged();
+
+                notifyDataSetChanged(); // Refresh the UI
             }
         });
     }
@@ -154,7 +133,7 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
     /**
      * Shows a dialog with event name and location, and options to Cancel or Delete the image.
      */
-    public static void showImageOptionsDialog(Context context, FirebaseFirestore db, String ImageURL, boolean isPoster) {
+    public static void showImageOptionsDialog(Context context, FirebaseFirestore db, String ImageURL, boolean isPoster, boolean FromFacility) {
         if (isPoster)
         {
             db.collection("events")
@@ -188,7 +167,10 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
 
                             // Show the dialog
                             builder.show();
-                        } else {
+                        }
+                        else if (querySnapshot != null && !querySnapshot.isEmpty() && FromFacility){
+                            deleteImageFromStorageAndFirestore(context, db, ImageURL, isPoster);
+                        }else {
                             Log.e("Firestore", "No matching event found.");
                             Toast.makeText(context, "No matching event found.", Toast.LENGTH_SHORT).show();
                         }

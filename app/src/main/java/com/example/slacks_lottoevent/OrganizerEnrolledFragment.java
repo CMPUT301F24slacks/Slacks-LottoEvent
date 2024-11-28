@@ -64,7 +64,8 @@ public class OrganizerEnrolledFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_organizer_enrolled, container, false);
         ListViewEntrantsEnrolled = view.findViewById(R.id.listViewEntrantsEnrolled);
 
-        ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false);
+        ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false, null, null,
+                null, null);
         ListViewEntrantsEnrolled.setAdapter(adapter);
 
         Button craftMessageButton = view.findViewById(R.id.craftMessage);

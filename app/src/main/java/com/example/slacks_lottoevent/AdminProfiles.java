@@ -1,5 +1,6 @@
 package com.example.slacks_lottoevent;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,8 +44,15 @@ public class AdminProfiles extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_profiles, container, false);
         listViewAdminProfiles = view.findViewById(R.id.ListViewAdminProfiles);
 
+        ArrayList<Event> eventList = new ArrayList<>();
+        ArrayList<Facility> facilityList = new ArrayList<>();
+
+        OrganizerEventArrayAdapter eventsAdapter = new OrganizerEventArrayAdapter(getContext(), eventList, true);
+        FacilityListArrayAdapter facilitiesAdapter = new FacilityListArrayAdapter(getContext(), facilityList, true, eventsAdapter, eventList);
+
         // Initialize adapter with the profile list
-        adapter = new ProfileListArrayAdapter(getContext(), profileList, true);
+        adapter = new ProfileListArrayAdapter(getContext(), profileList, true, facilityList, facilitiesAdapter,
+                eventList, eventsAdapter);
         listViewAdminProfiles.setAdapter(adapter);
 
         // Fetch profiles from Firestore

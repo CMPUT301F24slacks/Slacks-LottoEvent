@@ -278,7 +278,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
             binding.editEventButton.setText("Delete Event Poster");
             binding.editEventButton.setOnClickListener(view -> {
-                DeletingEventPoster(this, db, event.getEventPosterURL());});
+                DeletingEventPoster(this, db, event.getEventPosterURL(), false);});
 
             binding.entrantListButton.setVisibility(View.VISIBLE);
             binding.entrantListButton.setText("Delete Event");
@@ -289,7 +289,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                                 Toast.makeText(this, "Event deleted successfully.", Toast.LENGTH_SHORT).show();
                                 finish(); // Close the activity or return to the previous screen
                             },
-                            () -> Toast.makeText(this, "Failed to delete event.", Toast.LENGTH_SHORT).show()
+                            () -> Toast.makeText(this, "Failed to delete event.", Toast.LENGTH_SHORT).show(), false
                     );
 
                     //Go back to the previous page to simulate exiting the event
@@ -335,25 +335,28 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 });
     }
 
-    public static void DeletingEventPoster(Context context, FirebaseFirestore db, String posterURL){
+    public static void DeletingEventPoster(Context context, FirebaseFirestore db, String posterURL, boolean FromFacility){
             if (posterURL != null && !posterURL.isEmpty()) {
                 // Call the method if the URL is not empty
-                AdminImagesAdapter.showImageOptionsDialog(context, db, posterURL, true);
+                AdminImagesAdapter.showImageOptionsDialog(context, db, posterURL, true, FromFacility);
             } else {
-                // Show a dialog indicating there is no poster to delete
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("No Poster Available");
-                builder.setMessage("There is no event poster to delete.");
+                if (!FromFacility)
+                {
+                    // Show a dialog indicating there is no poster to delete
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("No Poster Available");
+                    builder.setMessage("There is no event poster to delete.");
 
-                // Add an OK button to close the dialog
-                builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+                    // Add an OK button to close the dialog
+                    builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
 
-                // Show the dialog
-                builder.show();
+                    // Show the dialog
+                    builder.show();
+                }
             }
     }
 
-    public static void DeletingEvent(Context context, String eventID, FirebaseFirestore db, Runnable onSuccess, Runnable onFailure) {
+    public static void DeletingEvent(Context context, String eventID, FirebaseFirestore db, Runnable onSuccess, Runnable onFailure, boolean FromFacility) {
         // Fetch the event document from Firestore
         db.collection("events").document(eventID).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -369,7 +372,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                     ArrayList<String> CancelledEntrants = current_event.getCancelled();
 
                     // Delete the event poster and QR code
-                    DeletingEventPoster(context, db, current_event.getEventPosterURL());
+                    DeletingEventPoster(context, db, current_event.getEventPosterURL(), FromFacility);
                     DeletingQRCode(context, db, current_event);
 
                     DeletingAsWaitlisted(current_event.getDeviceId(), current_event.getEventID(), db, WaitlistedEntrants);

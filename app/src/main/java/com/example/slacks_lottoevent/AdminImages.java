@@ -44,7 +44,7 @@ public class AdminImages extends Fragment {
         RecyclerViewImages.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Initialize Adapter
-        adapter = new AdminImagesAdapter(getContext(), imageList);
+        adapter = new AdminImagesAdapter(getContext(), imageList, false);
         RecyclerViewImages.setAdapter(adapter);
 
         imageList.clear(); // Clear the list to avoid duplicates or stale data
