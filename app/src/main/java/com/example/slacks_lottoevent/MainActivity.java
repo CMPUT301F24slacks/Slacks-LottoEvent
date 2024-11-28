@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.libraries.places.api.Places;
 import com.google.firebase.Firebase;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -38,9 +39,14 @@ import java.util.Map;
  * It is the first activity that is launched when the app is opened.
  */
 public class MainActivity extends AppCompatActivity {
+    private FirebaseFirestore db;
+    CollectionReference usersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        db = FirebaseFirestore.getInstance();
+
+        usersRef = db.collection("profiles");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
@@ -55,19 +61,7 @@ public class MainActivity extends AppCompatActivity {
 //        notification.removeNotifications(deviceId);
 
 
-        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
-
-
-        if (!sharedPreferences.contains("isSignedUp")) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("isSignedUp", false);
-            editor.apply();
-        }
-
-
         new Handler().postDelayed(() ->{
-            Map<String, ?> userInfo = sharedPreferences.getAll();
-
             Intent homeIntent = new Intent(MainActivity.this, EventsHomeActivity.class);
             startActivity(homeIntent);
 
