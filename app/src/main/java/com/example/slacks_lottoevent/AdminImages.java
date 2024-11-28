@@ -44,22 +44,21 @@ public class AdminImages extends Fragment {
         RecyclerViewImages.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Initialize Adapter
-        adapter = new AdminImagesAdapter(getContext(), imageList, false);
+        adapter = new AdminImagesAdapter(getContext(), imageList);
         RecyclerViewImages.setAdapter(adapter);
 
         imageList.clear(); // Clear the list to avoid duplicates or stale data
 
         // Fetch Event Posters
-        fetchEventPosters();
-
         // Fetch Profile Pictures
-        fetchProfilePictures();
-
+        fetchImages();
         return view;
     }
 
-    private void fetchEventPosters() {
+    private void fetchImages() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        List<ImageMetadata> tempEventImages = new ArrayList<>();
+        List<ImageMetadata> tempProfileImages = new ArrayList<>();
 
         db.collection("events").addSnapshotListener((querySnapshot, error) -> {
             if (error != null) {
@@ -68,36 +67,17 @@ public class AdminImages extends Fragment {
             }
 
             if (querySnapshot != null) {
-                for (DocumentChange change : querySnapshot.getDocumentChanges()) {
-                    DocumentSnapshot document = change.getDocument();
+                tempEventImages.clear();
+                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                     String posterURL = document.getString("eventPosterURL");
-
+                    String eventId = document.getId();
                     if (posterURL != null && !posterURL.trim().isEmpty()) {
-                        switch (change.getType()) {
-                            case ADDED:
-                                imageList.add(new ImageMetadata(posterURL, true)); // true for event poster
-                                break;
-                            case REMOVED:
-                                imageList.removeIf(meta -> meta.getImageUrl().equals(posterURL));
-                                break;
-                            case MODIFIED:
-                                // Handle modifications if needed
-                                if (!imageList.stream().anyMatch(meta -> meta.getImageUrl().equals(posterURL))) {
-                                    imageList.add(new ImageMetadata(posterURL, true));
-                                }
-                                break;
-                        }
+                        tempEventImages.add(new ImageMetadata(posterURL, true, eventId));
                     }
                 }
-
-                // Notify Adapter of Changes
-                adapter.notifyDataSetChanged();
+                updateImageList(tempEventImages, tempProfileImages);
             }
         });
-    }
-
-    private void fetchProfilePictures() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("profiles").addSnapshotListener((querySnapshot, error) -> {
             if (error != null) {
@@ -106,34 +86,25 @@ public class AdminImages extends Fragment {
             }
 
             if (querySnapshot != null) {
-                for (DocumentChange change : querySnapshot.getDocumentChanges()) {
-                    DocumentSnapshot document = change.getDocument();
-                    Boolean usingDefaultPictureObj = document.getBoolean("usingDefaultPicture");
-                    boolean UsingDefaultPicture = usingDefaultPictureObj == null || usingDefaultPictureObj; // Defaults to true if null
-
-                    if (!UsingDefaultPicture) {
-                        String profilePicturePath = document.getString("profilePicturePath");
-                        if (profilePicturePath != null && !profilePicturePath.trim().isEmpty()) {
-                            switch (change.getType()) {
-                                case ADDED:
-                                    imageList.add(new ImageMetadata(profilePicturePath, false)); // false for profile picture
-                                    break;
-                                case REMOVED:
-                                    imageList.removeIf(meta -> meta.getImageUrl().equals(profilePicturePath));
-                                    break;
-                                case MODIFIED:
-                                    if (!imageList.stream().anyMatch(meta -> meta.getImageUrl().equals(profilePicturePath))) {
-                                        imageList.add(new ImageMetadata(profilePicturePath, false));
-                                    }
-                                    break;
-                            }
-                        }
+                tempProfileImages.clear();
+                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                    boolean usingDefaultPicture = Boolean.TRUE.equals(document.getBoolean("usingDefaultPicture"));
+                    String profilePicturePath = document.getString("profilePicturePath");
+                    String deviceId = document.getId();
+                    if (!usingDefaultPicture && profilePicturePath != null && !profilePicturePath.trim().isEmpty()) {
+                        tempProfileImages.add(new ImageMetadata(profilePicturePath, false, deviceId));
                     }
                 }
-
-                // Notify Adapter of Changes
-                adapter.notifyDataSetChanged();
+                updateImageList(tempEventImages, tempProfileImages);
             }
         });
     }
+
+    private void updateImageList(List<ImageMetadata> tempEventImages, List<ImageMetadata> tempProfileImages) {
+        imageList.clear();
+        imageList.addAll(tempEventImages);
+        imageList.addAll(tempProfileImages);
+        adapter.notifyDataSetChanged();
+    }
+
 }

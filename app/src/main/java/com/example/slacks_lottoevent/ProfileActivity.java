@@ -364,7 +364,7 @@ public class ProfileActivity extends AppCompatActivity {
         nameEditText.setText(profile.getName());
         emailEditText.setText(profile.getEmail());
         phoneEditText.setText(profile.getPhone());
-        if (profile.isUsingDefaultPicture()) {
+        if (profile.getUsingDefaultPicture()) {
             profilePhoto.setImageURI(Uri.parse(profile.getProfilePicturePath()));
         } else {
             Glide.with(this).load(profile.getProfilePicturePath()).into(profilePhoto);

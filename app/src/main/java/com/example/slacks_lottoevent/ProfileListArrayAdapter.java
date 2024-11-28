@@ -123,7 +123,7 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
         String message = "Name: " + profile.getName() + "\n" +
                 "Email: " + profile.getEmail();
 
-        if (!profile.isUsingDefaultPicture()) {
+        if (!profile.getUsingDefaultPicture()) {
             // Show the profile picture for custom profiles
             View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_profile_details, null);
             ImageView profilePicture = dialogView.findViewById(R.id.profile_picture);
@@ -174,8 +174,8 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
                                                  FacilityListArrayAdapter facilitiesAdapter,
                                                  OrganizerEventArrayAdapter eventsAdapter) {
         // Has Profile Picture
-        if (!profile.isUsingDefaultPicture()) {
-            AdminImagesAdapter.deleteImageFromStorageAndFirestore(context, db, profile.getProfilePicturePath(), false);
+        if (!profile.getUsingDefaultPicture()) {
+            AdminImagesAdapter.deleteImageFromFirestore(context, db, profile.getProfilePicturePath(), false);
         }
 
         // Delete entrant-related data

@@ -98,7 +98,7 @@ public class Profile {
         this.phone = phone;
     }
 
-    public boolean isUsingDefaultPicture() {
+    public boolean getUsingDefaultPicture() {
         return usingDefaultPicture;
     }
 

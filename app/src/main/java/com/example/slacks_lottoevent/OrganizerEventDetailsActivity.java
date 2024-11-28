@@ -341,7 +341,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 AdminImagesAdapter.showImageOptionsDialog(context, db, posterURL, true);
             } else if (posterURL != null && !posterURL.isEmpty() && FromFacility)
                 {
-                    AdminImagesAdapter.deleteImageFromStorageAndFirestore(context, db, posterURL, true);
+                    AdminImagesAdapter.deleteImageFromFirestore(context, db, posterURL, true);
                 }
              else {
                 if (!FromFacility)
