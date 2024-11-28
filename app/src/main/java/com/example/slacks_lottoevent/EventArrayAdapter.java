@@ -28,22 +28,8 @@ import java.util.ArrayList;
  */
 public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
 
-    private EventParticipationStatus eventParticipationStatus;
-
-    /**
-     * Constructor for the EventArrayAdapter.
-     * @param context
-     * @param eventList
-     * @param status
-     */
-    public EventArrayAdapter(@NonNull Context context, ArrayList eventList, EventParticipationStatus status) {
-        super(context, 0, eventList);
-        this.eventParticipationStatus = status;
-    }
-
     public EventArrayAdapter(@NonNull Context context, ArrayList eventList) {
         super(context, 0, eventList);
-        this.eventParticipationStatus = EventParticipationStatus.HOSTING;
     }
 
     /**
@@ -102,7 +88,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
             Log.d("EventDetails", "Event poster URL is empty or null");
         }
 
-        User user = User.getInstance(getContext());
+        User user = User.getInstance();
         String deviceId = user.getDeviceId();
         if (event.getWaitlisted().contains(deviceId)) {
             statusWaitlisted.setVisibility(View.VISIBLE);

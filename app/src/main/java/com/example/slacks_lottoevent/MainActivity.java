@@ -23,6 +23,7 @@ import com.example.slacks_lottoevent.model.User;
 import com.example.slacks_lottoevent.view.BaseActivity;
 import com.example.slacks_lottoevent.viewmodel.EntrantViewModel;
 import com.example.slacks_lottoevent.viewmodel.EventViewModel;
+import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -36,6 +37,7 @@ import java.util.Map;
 public class MainActivity extends BaseActivity {
     private EntrantViewModel entrantViewModel;
     private EventViewModel eventViewModel;
+    private ProfileViewModel profileViewModel;
     private User user;
     private String deviceId;
     private FirebaseFirestore db;
@@ -52,12 +54,13 @@ public class MainActivity extends BaseActivity {
         // Inflate activity_main layout into content_frame of activity_base
         getLayoutInflater().inflate(R.layout.activity_main, findViewById(R.id.content_frame), true);
 
-        user = User.getInstance(this);
+        user = User.getInstance();
         deviceId = user.getDeviceId();
 
         // Initialize ViewModels
         entrantViewModel = new ViewModelProvider(this).get(EntrantViewModel.class);
         eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
         // Observe the current entrant
         entrantViewModel.observeEntrant(deviceId);

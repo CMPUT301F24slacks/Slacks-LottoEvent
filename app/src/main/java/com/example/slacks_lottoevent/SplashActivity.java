@@ -17,8 +17,6 @@ import com.google.android.libraries.places.api.Places;
  * SplashActivity displays the app logo for a few seconds when the app is launched.
  */
 public class SplashActivity extends AppCompatActivity {
-    private User user;
-    private String deviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +32,14 @@ public class SplashActivity extends AppCompatActivity {
             editor.apply();
         }
 
-        user = User.getInstance(this);
-        deviceId = user.getDeviceId();
+        User.initialize(this);
+        User user = User.getInstance();
 
         EntrantViewModel entrantViewModel = new ViewModelProvider(this).get(EntrantViewModel.class);
         EventViewModel eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
 
         // Observe the current entrant
-        entrantViewModel.observeEntrant(deviceId);
+        entrantViewModel.observeEntrant(user.getDeviceId());
 
         entrantViewModel.getCurrentEntrant().observe(this, currentEntrant -> {
             if (currentEntrant != null) {

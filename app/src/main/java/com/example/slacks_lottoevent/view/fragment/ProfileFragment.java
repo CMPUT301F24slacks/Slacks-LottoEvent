@@ -3,12 +3,19 @@ package com.example.slacks_lottoevent.view.fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.example.slacks_lottoevent.R;
+import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,34 +23,30 @@ import com.example.slacks_lottoevent.R;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
+    // UI elements
+    private TextView usernameText;
+    private EditText nameEditText;
+    private EditText emailEditText;
+    private EditText phoneEditText;
+    private ImageView profilePhoto;
+    private ImageView backButton;
+    private ImageView notificationsIcon;
+    private Switch notificationsSwitch;
+    private Button editProfileButton;
+    private Button editPictureButton;
+    private Button confirmButton;
+    private Button cancelButton;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // ViewModel
+    private ProfileViewModel profileViewModel;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
+    public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,10 +54,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -62,5 +61,40 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // ui elements
+        // Initialize UI elements
+        usernameText = view.findViewById(R.id.username);
+        nameEditText = view.findViewById(R.id.edit_name);
+        emailEditText = view.findViewById(R.id.edit_email);
+        phoneEditText = view.findViewById(R.id.edit_phone);
+        profilePhoto = view.findViewById(R.id.profile_image);
+        backButton = view.findViewById(R.id.back_button);
+        notificationsIcon = view.findViewById(R.id.notifications_icon);
+        notificationsSwitch = view.findViewById(R.id.switch_notifications);
+        editProfileButton = view.findViewById(R.id.btn_edit_profile);
+        editPictureButton = view.findViewById(R.id.btn_edit_picture);
+        confirmButton = view.findViewById(R.id.btn_confirm);
+        cancelButton = view.findViewById(R.id.btn_cancel);
+
+        // Set up ViewModel
+        ProfileViewModel profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+
+        profileViewModel.getCurrentProfileLiveData().observe(getViewLifecycleOwner(), profile -> {
+            if (profile != null) {
+                usernameText.setText(profile.getName());
+                nameEditText.setText(profile.getName());
+                emailEditText.setText(profile.getEmail());
+                phoneEditText.setText(profile.getPhone());
+                // Set profile photo
+                // Set notifications switch
+            }
+        });
+
     }
 }

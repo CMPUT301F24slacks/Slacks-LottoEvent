@@ -94,8 +94,7 @@ public class MyEventsFragment extends Fragment {
 
         ArrayList<Event> eventList = new ArrayList<>();
         myEventsListView = binding.myEventsListView;
-        EventParticipationStatus asd = INVITED;
-        eventArrayAdapter = new EventArrayAdapter(getContext(), eventList, asd);
+        eventArrayAdapter = new EventArrayAdapter(getContext(), eventList);
         myEventsListView.setAdapter(eventArrayAdapter);
 
         entrantListener = entrantRef.addSnapshotListener((value, error) -> {

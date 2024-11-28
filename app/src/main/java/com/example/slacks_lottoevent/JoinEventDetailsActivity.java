@@ -34,6 +34,7 @@ import androidx.core.content.ContextCompat;
 import com.example.slacks_lottoevent.Entrant;
 import com.example.slacks_lottoevent.Event;
 import com.example.slacks_lottoevent.EventsHomeActivity;
+import com.example.slacks_lottoevent.FirestoreProfileUtil;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.SignUpActivity;
 

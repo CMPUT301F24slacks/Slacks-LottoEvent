@@ -12,10 +12,17 @@ public class User {
         deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
-    // Use a synchronized singleton pattern with context
-    public static synchronized User getInstance(Context context) {
+    // Initialize the User instance once with context
+    public static synchronized void initialize(Context context) {
         if (instance == null) {
             instance = new User(context.getApplicationContext());
+        }
+    }
+
+    // Get the singleton instance without passing context
+    public static synchronized User getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException("User not initialized. Call initialize() first.");
         }
         return instance;
     }

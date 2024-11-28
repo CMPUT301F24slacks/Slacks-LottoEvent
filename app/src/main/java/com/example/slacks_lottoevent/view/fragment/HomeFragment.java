@@ -75,7 +75,7 @@ public class HomeFragment extends Fragment {
         eventsListView = view.findViewById(R.id.events_listview);
         eventsListView.setAdapter(eventsListArrayAdapter);
 
-        user = User.getInstance(getContext());
+        user = User.getInstance();
         deviceId = user.getDeviceId();
 
         // Checks if the entrant in entrantViewModel exists
