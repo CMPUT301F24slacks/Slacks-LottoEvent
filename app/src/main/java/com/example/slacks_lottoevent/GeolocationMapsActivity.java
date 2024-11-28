@@ -5,6 +5,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,6 +52,7 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
     private String eventID;
     private FirebaseFirestore db;
     private ArrayList<Map<String, List<Double>>> joinLocations;
+    private Button backBtn;
 
     /**
      *
@@ -61,6 +64,13 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organizer_geolocation_map);
+        backBtn = findViewById(R.id.back_button);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish(); // Return back to the previous activity 
+            }
+        });
         tabLayout = findViewById(R.id.distance_tab_layout);
         setupTabs();
         Intent intent = getIntent();
