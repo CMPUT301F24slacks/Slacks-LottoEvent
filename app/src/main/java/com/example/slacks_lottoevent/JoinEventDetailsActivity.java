@@ -37,6 +37,7 @@ import com.example.slacks_lottoevent.databinding.ActivityJoinEventDetailsBinding
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -72,6 +73,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     private String description;
     private String eventPosterURL;
     FirebaseFirestore db;
+    CollectionReference usersRef;
     String qrCodeValue;
     Integer spotsRemaining;
     String spotsRemainingText;
@@ -90,10 +92,9 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityJoinEventDetailsBinding.inflate(getLayoutInflater());
-        sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
         setContentView(binding.getRoot());
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
-
+        deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         db = FirebaseFirestore.getInstance();
         db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
                 .addOnCompleteListener(task -> {
@@ -166,33 +167,29 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
                         usesGeolocation = (Boolean) document.get("geoLocation");
 
-
-
                         // The reason to add the onClickListener in here is because we don't want the join button to do anything unless this event actually exists in the firebase
                         binding.joinButton.setOnClickListener(view -> {
-                            SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
-                            boolean isSignedUp = sharedPreferences.getBoolean("isSignedUp", false);
-                            if (isSignedUp){
-                               if(usesGeolocation){
-                                   checkAndRequestGeolocation();
-                               }
-                               else {
-                                   showRegistrationDialog();
-                               }
-                            }
-                            else {
-                                new AlertDialog.Builder(this)
-                                        .setTitle("Sign-Up Required")
-                                        .setMessage("In order to join an event, we need to collect some information about you.")
-                                        .setPositiveButton("Proceed", (dialog, which) -> {
-                                            Intent signUpIntent = new Intent(JoinEventDetailsActivity.this, SignUpActivity.class);
-                                            startActivity(signUpIntent);
-                                        })
-                                        .setNegativeButton("Cancel", (dialog, which) -> {
-                                            dialog.dismiss();
-                                        })
-                                        .show();
-                            }
+                            FirestoreProfileUtil.checkIfSignedUp(deviceId, isSignedUp -> {
+                                if (isSignedUp) {
+                                    if (usesGeolocation) {
+                                        checkAndRequestGeolocation();
+                                    } else {
+                                        showRegistrationDialog();
+                                    }
+                                } else {
+                                    new AlertDialog.Builder(this)
+                                            .setTitle("Sign-Up Required")
+                                            .setMessage("In order to join an event, we need to collect some information about you.")
+                                            .setPositiveButton("Proceed", (dialog, which) -> {
+                                                Intent signUpIntent = new Intent(JoinEventDetailsActivity.this, SignUpActivity.class);
+                                                startActivity(signUpIntent);
+                                            })
+                                            .setNegativeButton("Cancel", (dialog, which) -> {
+                                                dialog.dismiss();
+                                            })
+                                            .show();
+                                }
+                            });
 
                         });
                     }
@@ -374,8 +371,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      * This method adds the entrant to the waitlist for the event.
      */
     private void addEntrantToWaitlist(Boolean isReselected){
-        deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
         db.collection("events").whereEqualTo("eventID",qrCodeValue)
                 .get()
                 .addOnSuccessListener(task -> {
