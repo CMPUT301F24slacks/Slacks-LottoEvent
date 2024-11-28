@@ -246,12 +246,22 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     System.err.println("Error fetching event document in storeJoinLocation: " + task);
                 });
     }
-
+    /**
+     * Intializes varaibles that are needed in order for the rest of the activity to work as intended.
+     *
+     * Variables Initialized:
+     * - `qrCodeValue`: The QR code string passed to the activity via Intent.
+     * - `deviceId`: The unique identifier for the current device.
+     * - `db`: The Firestore database instance used to fetch event details.
+     * */
     private void initializeVariables(){
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         db = FirebaseFirestore.getInstance();
     }
+    /**
+     * Fetches event details from Firestore based on the provided QR code value.
+     * */
     private void fetcheventDetails(){
         db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
                 .addOnCompleteListener(task -> {
@@ -264,6 +274,13 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     }
                 });
     }
+    /**
+     * Processes the event document from the firestore and calls the appropriate functions based upon this event document.
+     * - Shows an invalid QR code dialog if the event is disabled.
+     * - Shows an organizer cannot join own event dialog if the user is the event organizer
+     * - Otherwise displays event details if the above two cases do not occur.
+     * @param document The Firestore document containing event data.
+     * */
     private void handleEventDocument(DocumentSnapshot document){
         Boolean isDisabled = document.getBoolean("disabled");
         String organizerDeviceId = document.getString("deviceId");
@@ -278,6 +295,10 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
             displayEventDetails(document);
         }
     }
+    /**
+     * Displays event details on the activities UI.
+     * @param document The Firestore document containing event data.
+     * */
     private void displayEventDetails(DocumentSnapshot document){
         String date = document.getString("eventDate");
         String time = document.getString("time");
@@ -304,7 +325,13 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         setupJoinButton(document);
     }
 
-
+    /**
+     * Handles date and capacity logic for the event.
+     * This method checks the signup deadline and capacity details of the event.
+     * It updates the UI to show relevant badges or messages, such as indicating when the waitlist is full or when the signup deadline has passed.
+     *  @param document The Firestore document containing event data.
+     *  @param signupDeadline The signup deadline as a string.
+     * */
     private void handleDatesAndCapacity(DocumentSnapshot document, String signupDeadline) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -329,6 +356,10 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    /**
+     *  Sets up the Join button behavior for the event.
+     * @param document The Firestore document containing event data.
+     * */
     private void setupJoinButton(DocumentSnapshot document){
         binding.joinButton.setOnClickListener(view -> {
             FirestoreProfileUtil.checkIfSignedUp(deviceId, isSignedUp -> {
@@ -345,6 +376,10 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
             });
         });
     }
+    /**
+     * Displays a dialog prompting the user to sign up before joining an event.
+     *
+     * */
     private void showSignUpRequiredDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Sign-Up Required")
@@ -387,6 +422,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     /**
      * addEntrantToWaitlist method for the JoinEventDetailsActivity.
      * This method adds the entrant to the waitlist for the event.
+     * @param isReselected if the user wants to be reselected from waitlist if someone else declines a event invitation.
      */
     private void addEntrantToWaitlist(Boolean isReselected){
         db.collection("events").whereEqualTo("eventID",qrCodeValue)
@@ -506,7 +542,12 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         }
 
     }
-
+    /**
+     * Handles the possible Entrant actions that occur in the Event Registration Dialog.
+     * @param isDeclined whether or not the they want to be reselected if someone declines.
+     * @param usesGeolocation whether or not the event uses geolocation.
+     * @param dialog the registration dialog box.
+     * */
     private void handleEntrantActions(boolean isDeclined, boolean usesGeolocation, DialogInterface dialog) {
         addEntrantToWaitlist(isDeclined);
         addEventToEntrant();
