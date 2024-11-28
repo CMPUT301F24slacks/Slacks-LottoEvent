@@ -223,7 +223,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Only ** spots available"
+                    android:text="Only ** spots available on waitlist"
                     android:textColor="#BDBDBD" />
 
             </LinearLayout>

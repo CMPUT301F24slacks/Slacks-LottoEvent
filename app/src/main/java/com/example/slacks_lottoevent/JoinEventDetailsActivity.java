@@ -128,15 +128,21 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         String capacityAsString = capacity.toString();
 
                         spotsRemaining = waitListCapacity.intValue() - waitlisted.size();
-//                        Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
-                        if (spotsRemaining <= 0 && waitListCapacity > 0){
+
+                        if (waitListCapacity == 0){
+//                            Does not show badge if there is no waitlistCapacity section
                             binding.waitlistCapacitySection.setVisibility(View.GONE);
                             binding.spotsAvailableSection.setVisibility(View.GONE);
                         }
-                        else{
+
+                        else if (waitListCapacity > 0){
+//                            There is a waitlist capacity and shows the spots left
+                            spotsRemaining = spotsRemaining > 0 ? spotsRemaining : 0;
                             spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
                             binding.spotsAvailable.setText(spotsRemainingText);
-
+                            if (spotsRemaining <= 0){
+                                binding.waitlistFullBadge.setVisibility(View.VISIBLE);
+                            }
                         }
 
                         if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
@@ -146,10 +152,25 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                         }
 
 
-                        if (spotsRemaining <= 0 && waitListCapacity > 0 || currentDate.after(signup)) {
-                            // Capacity is full show we want to show the waitlist badge
+                        if (spotsRemaining <= 0 && waitListCapacity > 0 && !(currentDate.after(signup) )) {
+                            // Capacity is full show we want to show the waitlist badge and no join
                             binding.joinButton.setVisibility(View.GONE);
                             binding.waitlistFullBadge.setVisibility(View.VISIBLE);
+                        }
+
+                        else if (spotsRemaining <= 0 && waitListCapacity > 0 && currentDate.after(signup)){
+//                            Capacity is full and after sign up deadline
+                            binding.joinButton.setVisibility(View.GONE);
+                            binding.waitlistFullBadge.setVisibility(View.VISIBLE);
+                            binding.signupPassed.setVisibility(View.VISIBLE);
+
+                        }
+
+                        else if (currentDate.after(signup) && spotsRemaining > 0 && waitListCapacity > 0 ){
+//                            Sign up passed but waitlist was not full
+                            binding.joinButton.setVisibility(View.GONE);
+                            binding.signupPassed.setVisibility(View.VISIBLE);
+
                         }
                         else {
                             binding.joinButton.setVisibility(View.VISIBLE);

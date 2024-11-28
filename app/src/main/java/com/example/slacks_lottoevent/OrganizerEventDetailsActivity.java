@@ -64,7 +64,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     Uri selectedImageUri;
     FirebaseFirestore db;
     String qrCodeValue;
-    Long spotsRemaining;
+    Integer spotsRemaining;
     String spotsRemainingText;
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     Date currentDate = new Date();
@@ -128,13 +128,14 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         assert capacity != null;
                         String capacityAsString = capacity.toString();
 
-                        //Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
-                        if (waitListCapacity <= 0){
+                        if (waitListCapacity == 0){
+//                          Does not show badges if there is no waitlistCapacity section
                             binding.eventWaitlistCapacitySection.setVisibility(View.GONE);
                             binding.spotsAvailableSection.setVisibility(View.GONE);
                         }
-                        else{
-                            spotsRemaining = waitListCapacity - waitlisted.size();
+
+                        else if (waitListCapacity > 0){
+                            spotsRemaining = (waitListCapacity.intValue() - waitlisted.size()) > 0 ? (waitListCapacity.intValue() - waitlisted.size()) : 0 ;
                             spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
                             binding.spotsAvailable.setText(spotsRemainingText);
                         }
