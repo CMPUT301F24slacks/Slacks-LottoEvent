@@ -7,7 +7,7 @@ public class Facility {
     private String facilityName;
     private String streetAddress1;
     private String facilityId;
-    private String organizerId;
+    private String organizerID;
     private String deviceId;
 
     /**
@@ -20,13 +20,13 @@ public class Facility {
      *
      * @param facilityName The name of the facility
      * @param streetAddress1 The first line of the street address
-     * @param organizerId The ID of the organizer who owns the facility
+     * @param organizerID The ID of the organizer who owns the facility
      * @param deviceId The ID of the device that created the facility
      */
-    public Facility(String facilityName, String streetAddress1, String organizerId, String deviceId){
+    public Facility(String facilityName, String streetAddress1, String organizerID, String deviceId){
         this.facilityName = facilityName;
         this.streetAddress1 = streetAddress1;
-        this.organizerId = organizerId;
+        this.organizerID = organizerID;
         this.deviceId = deviceId;
     }
 
@@ -54,8 +54,8 @@ public class Facility {
         this.facilityId = facilityId;
     }
 
-    public String getOrganizerId() {
-        return organizerId;
+    public String getOrganizerID() {
+        return organizerID;
     }
 
     public String getDeviceId() {

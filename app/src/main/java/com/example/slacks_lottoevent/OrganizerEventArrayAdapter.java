@@ -37,6 +37,7 @@ import java.util.List;
 public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
     private Context context;
     private ArrayList<Event> events;
+    boolean isAdmin;
 
 //    private FirebaseFirestore db;
 //    private CollectionReference facilitiesRef;
@@ -50,10 +51,11 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
      * @param context The context of the activity
      * @param events  The list of events to display
      */
-    public OrganizerEventArrayAdapter(@NonNull Context context, ArrayList<Event> events) {
+    public OrganizerEventArrayAdapter(@NonNull Context context, ArrayList<Event> events, boolean isAdmin) {
         super(context, 0, events);
         this.context = context;
         this.events = events;
+        this.isAdmin = isAdmin;
     }
 
     /**
@@ -92,6 +94,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         if (event.getEventPosterURL() != null && !event.getEventPosterURL().isEmpty()) {
             Glide.with(this.getContext()) // 'this' refers to the activity context
                     .load(event.getEventPosterURL())
+                    .placeholder(R.drawable.placeholder_image)
                     .into(eventPoster);
         } else {
             Log.d("EventDetails", "Event poster URL is empty or null");
@@ -107,6 +110,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
             String userId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
             intent.putExtra("userId", userId);
             intent.putExtra("qrCodeValue", event.getEventID());
+            intent.putExtra("isAdmin", isAdmin);
 
             // Start the OrganizerDetailsActivity
             getContext().startActivity(intent);

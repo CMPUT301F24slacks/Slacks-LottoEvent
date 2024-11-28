@@ -64,7 +64,8 @@ public class OrganizerCancelledFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_organizer_cancelled, container, false);
         ListViewEntrantsCancelled = view.findViewById(R.id.listViewEntrantsCancelled);
 
-        ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false);
+        ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false, null, null,
+                null, null);
         ListViewEntrantsCancelled.setAdapter(adapter);
 
         Button craftMessageButton = view.findViewById(R.id.craftMessage);

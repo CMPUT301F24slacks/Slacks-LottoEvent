@@ -74,7 +74,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilityData.put("facilityName", facilityName);
         // Add other attributes as needed, like location, type, etc.
         facilityData.put("streetAddress1", facility.getStreetAddress1());
-        facilityData.put("organizerID", facility.getOrganizerId());
+        facilityData.put("organizerID", facility.getOrganizerID());
         facilityData.put("deviceID", facility.getDeviceId());
 
         facilitiesRef.add(facilityData)
@@ -83,11 +83,11 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
                     // Now add the facility data to the organizer after the facility ID is set
                     Map<String, Object> organizerData = new HashMap<>();
-                    organizerData.put("userId", facility.getOrganizerId());
+                    organizerData.put("userId", facility.getOrganizerID());
                     organizerData.put("facilityId", existingFacility.getFacilityId());
                     organizerData.put("events", null); // Assuming EventList can be serialized
 
-                    organizersRef.document(facility.getOrganizerId()) // Sets userId as the document ID
+                    organizersRef.document(facility.getOrganizerID()) // Sets userId as the document ID
                             .set(organizerData)
                             .addOnSuccessListener(aVoid -> {
                                 // Update the ViewModel to reflect the change
@@ -313,7 +313,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilitiesRef = db.collection("facilities");
         organizersRef = db.collection("organizers");
         myEventsListView = binding.myEventsListView;
-        organizerEventArrayAdapter = new OrganizerEventArrayAdapter(getContext(), eventList);
+        organizerEventArrayAdapter = new OrganizerEventArrayAdapter(getContext(), eventList, false);
         myEventsListView.setAdapter(organizerEventArrayAdapter);
 
         createFacilitiesButton = view.findViewById(R.id.create_facility_button);

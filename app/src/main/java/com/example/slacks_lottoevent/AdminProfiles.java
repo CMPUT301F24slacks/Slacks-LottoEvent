@@ -1,5 +1,6 @@
 package com.example.slacks_lottoevent;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AdminProfiles extends Fragment {
 
@@ -42,8 +44,15 @@ public class AdminProfiles extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_profiles, container, false);
         listViewAdminProfiles = view.findViewById(R.id.ListViewAdminProfiles);
 
+        ArrayList<Event> eventList = new ArrayList<>();
+        ArrayList<Facility> facilityList = new ArrayList<>();
+
+        OrganizerEventArrayAdapter eventsAdapter = new OrganizerEventArrayAdapter(getContext(), eventList, true);
+        FacilityListArrayAdapter facilitiesAdapter = new FacilityListArrayAdapter(getContext(), facilityList, true, eventsAdapter, eventList);
+
         // Initialize adapter with the profile list
-        adapter = new ProfileListArrayAdapter(getContext(), profileList, true);
+        adapter = new ProfileListArrayAdapter(getContext(), profileList, true, facilityList, facilitiesAdapter,
+                eventList, eventsAdapter);
         listViewAdminProfiles.setAdapter(adapter);
 
         // Fetch profiles from Firestore
@@ -68,12 +77,7 @@ public class AdminProfiles extends Fragment {
 
                 for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                     // Create Profile object from Firestore data
-                    String name = document.getString("name");
-                    String email = document.getString("email");
-                    String phone = document.getString("phone");
-                    String deviceId = document.getId();
-                    Profile profile = new Profile(name, email, phone, deviceId, null); // Adjust constructor if needed
-
+                    Profile profile = document.toObject(Profile.class);
                     profileList.add(profile); // Add to the list
                 }
                 adapter.notifyDataSetChanged(); // Notify adapter about data changes
