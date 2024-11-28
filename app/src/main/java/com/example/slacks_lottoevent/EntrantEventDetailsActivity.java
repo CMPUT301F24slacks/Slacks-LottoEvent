@@ -33,6 +33,8 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
     private Boolean usesGeolocation;
     private String description;
     private String eventPosterURL;
+
+    private Boolean entrantsChosen;
     FirebaseFirestore db;
     String qrCodeValue;
     Integer spotsRemaining;
@@ -63,6 +65,7 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                         description = document.getString("description");
                         signupDate = document.getString("signupDeadline");
                         eventPosterURL = document.getString("eventPosterURL");
+                        entrantsChosen = document.getBoolean("entrantsChosen");
 
                         List<Object> waitlisted = (List<Object>) document.get("waitlisted");
 
@@ -88,6 +91,10 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
 
                             if (spotsRemaining <= 0){
                                 binding.waitlistFullBadge.setVisibility(View.VISIBLE);
+                            }
+                            else if (entrantsChosen) {
+                                spotsRemainingText = "Only 0 spots available on waitlist";
+                                binding.spotsAvailable.setText(spotsRemainingText);
                             }
                         }
 

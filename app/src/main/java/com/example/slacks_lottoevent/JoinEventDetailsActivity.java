@@ -72,6 +72,8 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     private Boolean usesGeolocation;
     private String description;
     private String eventPosterURL;
+
+    private Boolean entrantsChosen;
     FirebaseFirestore db;
     CollectionReference usersRef;
     String qrCodeValue;
@@ -114,6 +116,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                             description = document.getString("description");
                             signupDeadline = document.getString("signupDeadline");
                             eventPosterURL = document.getString("eventPosterURL");
+                            entrantsChosen = document.getBoolean("entrantsChosen");
                             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
                             Date signup = null;
                             try {
@@ -131,7 +134,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                             List<Object> waitlisted = (List<Object>) document.get("waitlisted");
                             Long capacity = (Long) document.get("eventSlots");
                             Long waitListCapacity = (Long) document.get("waitListCapacity");
-                            String waitlistCapacityAsString = "";
                             assert capacity != null;
                             String capacityAsString = capacity.toString();
 
@@ -150,6 +152,10 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                             binding.spotsAvailable.setText(spotsRemainingText);
                             if (spotsRemaining <= 0){
                                 binding.waitlistFullBadge.setVisibility(View.VISIBLE);
+                            }
+                            else if (entrantsChosen) {
+                                spotsRemainingText = "Only 0 spots available on waitlist";
+                                binding.spotsAvailable.setText(spotsRemainingText);
                             }
                         }
 
@@ -191,7 +197,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                             binding.eventLocation.setText(location);
                             binding.eventSlots.setText("Event Slots: " + capacityAsString);
                             binding.eventDescription.setText(description);
-                            binding.waitlistCapacity.setText("Waitlist Capacity: " + waitlistCapacityAsString);
+                            binding.waitlistCapacity.setText("Waitlist Capacity: " + waitListCapacity.toString());
 
                             usesGeolocation = (Boolean) document.get("geoLocation");
                             // The reason to add the onClickListener in here is because we don't want the join button to do anything unless this event actually exists in the firebase

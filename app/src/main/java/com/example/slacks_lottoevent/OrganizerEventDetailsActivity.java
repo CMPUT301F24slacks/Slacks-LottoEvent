@@ -66,6 +66,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     private String eventID;
     private CollectionReference eventsRef;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+
+    Boolean entrantsChosen;
     Uri selectedImageUri;
     FirebaseFirestore db;
     String qrCodeValue;
@@ -114,6 +116,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 eventPosterURL = document.getString("eventPosterURL");
                 qrData = document.getString("qrdata");
                 eventID = document.getString("eventID");
+                entrantsChosen = document.getBoolean("entrantsChosen");
+
 
                 try {
                     signup = sdf.parse(signupDate);
@@ -149,7 +153,14 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                             spotsRemaining = (waitListCapacity.intValue() - waitlisted.size()) > 0 ? (waitListCapacity.intValue() - waitlisted.size()) : 0 ;
                             spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
                             binding.spotsAvailable.setText(spotsRemainingText);
+
+                            if (entrantsChosen){
+                                spotsRemainingText = "Only 0 spots available on waitlist";
+                                binding.spotsAvailable.setText(spotsRemainingText);
+                            }
                         }
+
+
 
                         binding.eventTitle.setText(eventName);
                         binding.eventDate.setText("Event Date: " + date);
