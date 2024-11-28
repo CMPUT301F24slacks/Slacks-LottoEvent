@@ -43,12 +43,7 @@ public class ProfileViewModel extends ViewModel {
         HashMap<String, Profile> profiles = profilesLiveData.getValue();
         if (profiles != null) {
             Profile currentProfile = profiles.get(user.getDeviceId());
-            if (currentProfile == null) {
-                Log.d("ProfileViewModel", "No profile found for user ID: " + user.getDeviceId());
-            } else {
-                currentProfileLiveData.setValue(currentProfile);
-                Log.d("ProfileViewModel", "Current profile updated for user ID: " + user.getDeviceId());
-            }
+            currentProfileLiveData.setValue(currentProfile);
         }
     }
 }

@@ -93,6 +93,11 @@ public class ProfileFragment extends Fragment {
                 phoneEditText.setText(profile.getPhone());
                 // Set profile photo
                 // Set notifications switch
+            } else {
+                usernameText.setText("Profile not found");
+                nameEditText.setText("");
+                emailEditText.setText("");
+                phoneEditText.setText("");
             }
         });
 
