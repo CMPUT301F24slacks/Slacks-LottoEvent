@@ -87,14 +87,14 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
             acceptButton.setOnClickListener(v -> {
                 AdminActivity.showAdminAlertDialog(context, () -> handleAcceptEvent(event), "Enrollment Confirmed",
                         "You have opted to join the event.", "Note: You can still forfeit your position and leave the event",
-                        "Cancel", "Confirm");
+                        "Cancel", "Confirm", null);
                 removeEvent(position);
             });
             //make changes to both events and entrants, not only events
             declineButton.setOnClickListener(v -> {
                 AdminActivity.showAdminAlertDialog(context, () -> handleDeclineEvent(event), "Declination Confirmed",
                         "You have opted to decline the event.", "WARNING: You cannot forfeit your invitation",
-                        "Cancel", "Confirm");
+                        "Cancel", "Confirm", null);
                 removeEvent(position);
             });
 
@@ -102,7 +102,7 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
                 AdminActivity.showAdminAlertDialog(context, () -> saveEventAsDisplayed(event.getEventId()), "Don't Give Up!",
                         "You have opted to rid of this message.",
                         "WARNING: This notice is meant to remind you of the possible opportunity, reminder cannot be undeleted",
-                        null, "OK");
+                        null, "OK", null);
                 removeEvent(position);
             });
         }

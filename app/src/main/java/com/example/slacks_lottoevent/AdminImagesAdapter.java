@@ -96,7 +96,8 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
                                     "Location: " + (location != null ? location : "N/A");
 
                             AdminActivity.showAdminAlertDialog(context, () -> deleteImageFromFirestore(context, db, ImageURL, isPoster),
-                                    "Event Details", message, "WARNING: DELETION CANNOT BE UNDONE", "Cancel", "Delete");
+                                    "Event Details", message, "WARNING: DELETION CANNOT BE UNDONE", "Cancel",
+                                    "Delete", null);
 
                         }else {
                             Log.e("Firestore", "No matching event found.");
@@ -124,7 +125,8 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
                                     "Email: " + (email != null ? email : "N/A");
 
                             AdminActivity.showAdminAlertDialog(context, () -> deleteImageFromFirestore(context, db, ImageURL, false),
-                                    "Profile Details", message, "WARNING: DELETION CANNOT BE UNDONE", "Cancel", "Delete");
+                                    "Profile Details", message, "WARNING: DELETION CANNOT BE UNDONE", "Cancel",
+                                    "Delete", null);
                         } else {
                             Log.e("Firestore", "No matching event found.");
                             Toast.makeText(context, "No matching event found.", Toast.LENGTH_SHORT).show();

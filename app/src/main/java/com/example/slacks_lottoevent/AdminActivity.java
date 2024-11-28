@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 
 import org.w3c.dom.Text;
@@ -69,14 +70,6 @@ public class AdminActivity extends AppCompatActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-//                // Change the background color of the tab to white
-//                tab.view.setBackgroundColor(Color.WHITE);
-//
-//                // Change the text color of the tab to pink
-//                TextView tabTextView = (TextView) ((LinearLayout) tab.view).getChildAt(1);
-//                if (tabTextView != null) {
-//                    tabTextView.setTextColor(Color.parseColor("#FFC0CB")); // Pink color
-//                }
             }
 
             @Override
@@ -98,11 +91,11 @@ public class AdminActivity extends AppCompatActivity {
      * Creates a Customized Dialog box
      * */
     public static void showAdminAlertDialog(Context context, Runnable onConfirmAction, String Title, String Message, String Terms,
-                                            String CancelText, String ConfirmText) {
+                                            String CancelText, String ConfirmText, String PictureURL) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
-        View dialogView = inflater.inflate(R.layout.dialog_enable_geolocation, null);
+        View dialogView = inflater.inflate(R.layout.dialog_profile_details, null);
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
 
@@ -111,6 +104,7 @@ public class AdminActivity extends AppCompatActivity {
         TextView DialogTerms = dialogView.findViewById(R.id.dialog_terms);
         Button cancelBtn = dialogView.findViewById(R.id.cancel_button);
         Button confirmBtn = dialogView.findViewById(R.id.confirm_button);
+        ImageView Picture = dialogView.findViewById(R.id.Picture);
 
         if (Title != null && !Title.isEmpty()) DialogTitle.setText(Title);
         if (Message != null && !Message.isEmpty()) DialogMessage.setText(Message);
@@ -122,6 +116,18 @@ public class AdminActivity extends AppCompatActivity {
         } else {
             cancelBtn.setText(CancelText); // Optionally set the text if not null or empty
             cancelBtn.setOnClickListener(view -> dialog.dismiss());
+        }
+
+        if (PictureURL != null && !PictureURL.isEmpty()) {
+            Glide.with(context)
+                    .load(PictureURL)
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.error_image)
+                    .into(Picture);
+        }
+        else
+        {
+            Picture.setVisibility(View.GONE);
         }
 
         confirmBtn.setOnClickListener(view -> {
