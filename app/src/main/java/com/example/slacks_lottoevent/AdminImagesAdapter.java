@@ -57,9 +57,9 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
         // Set OnClickListener to determine type
         holder.imageHolder.setOnClickListener(v -> {
             if (meta.isEventPoster()) {
-                showImageOptionsDialog(context, db, meta.getImageUrl(), true, FromFacility);
+                showImageOptionsDialog(context, db, meta.getImageUrl(), true);
             } else {
-                showImageOptionsDialog(context, db, meta.getImageUrl(), false, FromFacility);
+                showImageOptionsDialog(context, db, meta.getImageUrl(), false);
             }
         });
     }
@@ -133,7 +133,7 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
     /**
      * Shows a dialog with event name and location, and options to Cancel or Delete the image.
      */
-    public static void showImageOptionsDialog(Context context, FirebaseFirestore db, String ImageURL, boolean isPoster, boolean FromFacility) {
+    public static void showImageOptionsDialog(Context context, FirebaseFirestore db, String ImageURL, boolean isPoster) {
         if (isPoster)
         {
             db.collection("events")
@@ -167,9 +167,6 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
 
                             // Show the dialog
                             builder.show();
-                        }
-                        else if (querySnapshot != null && !querySnapshot.isEmpty() && FromFacility){
-                            deleteImageFromStorageAndFirestore(context, db, ImageURL, isPoster);
                         }else {
                             Log.e("Firestore", "No matching event found.");
                             Toast.makeText(context, "No matching event found.", Toast.LENGTH_SHORT).show();

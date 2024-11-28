@@ -336,10 +336,14 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     }
 
     public static void DeletingEventPoster(Context context, FirebaseFirestore db, String posterURL, boolean FromFacility){
-            if (posterURL != null && !posterURL.isEmpty()) {
+            if (posterURL != null && !posterURL.isEmpty() && !FromFacility) {
                 // Call the method if the URL is not empty
-                AdminImagesAdapter.showImageOptionsDialog(context, db, posterURL, true, FromFacility);
-            } else {
+                AdminImagesAdapter.showImageOptionsDialog(context, db, posterURL, true);
+            } else if (posterURL != null && !posterURL.isEmpty() && FromFacility)
+                {
+                    AdminImagesAdapter.deleteImageFromStorageAndFirestore(context, db, posterURL, true);
+                }
+             else {
                 if (!FromFacility)
                 {
                     // Show a dialog indicating there is no poster to delete
