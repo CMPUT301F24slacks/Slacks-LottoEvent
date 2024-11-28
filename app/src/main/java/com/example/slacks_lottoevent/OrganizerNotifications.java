@@ -1,6 +1,9 @@
 package com.example.slacks_lottoevent;
 
+import static com.example.slacks_lottoevent.AdminActivity.showAdminAlertDialog;
+
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -98,50 +101,64 @@ public class OrganizerNotifications extends AppCompatActivity {
 //              Event has closed - updated final waitlisted entrants (remove and put too cancel)
                 updateUninvitedFinalEntrants(event);
                 updateUninvitedonEvents(event);
-                new AlertDialog.Builder(this)
-                        .setTitle("Cannot Re-Select")
-                        .setMessage("Event slots are full")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                showAdminAlertDialog(this, null, "Cannot Re-Select", "Event slots are full",
+                        null, null, "OK");
+
+
+
+
+//
+//                new AlertDialog.Builder(this)
+//                        .setTitle("Cannot Re-Select")
+//                        .setMessage("Event slots are full")
+//                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+//                        .show();
                 return;
 
             }
 
             if (event.getWaitlisted().size() == 0){
-                new AlertDialog.Builder(this)
-                        .setTitle("Cannot Re-Select.")
-                        .setMessage("There is no one who wants to be reselected.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+
+                showAdminAlertDialog(this, null, "Cannot Re-Select", "There is no one who wants to be reselected.", null, null, "OK");
+//                new AlertDialog.Builder(this)
+//                        .setTitle("Cannot Re-Select.")
+//                        .setMessage("There is no one who wants to be reselected.")
+//                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+//                        .show();
                 return;
             }
 
             if (!event.getEntrantsChosen()) {
-                new AlertDialog.Builder(this)
-                        .setTitle("Cannot Re-Select")
-                        .setMessage("Need to sample entrants first.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                showAdminAlertDialog(this, null, "Cannot Re-Select", "Need to sample entrants first.", null, null, "OK");
+
+//                new AlertDialog.Builder(this)
+//                        .setTitle("Cannot Re-Select")
+//                        .setMessage("Need to sample entrants first.")
+//                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+//                        .show();
                 return;
             }
 
             if (event.getSelected().size() + event.getFinalists().size() == event.getEventSlots()){
-                new AlertDialog.Builder(this)
-                        .setTitle("Cannot Re-Select")
-                        .setMessage("No Space right now. Still waiting on responses.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                showAdminAlertDialog(this, null, "Cannot Re-Select", "No Space right now. Still waiting on responses.", null, null, "OK");
+//                new AlertDialog.Builder(this)
+//                        .setTitle("Cannot Re-Select")
+//                        .setMessage("No Space right now. Still waiting on responses.")
+//                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+//                        .show();
                 return;
             }
 
 //            everything worked
             if(event.getEntrantsChosen() && event.getWaitlisted().size() > 0 && event.getEventSlots() != event.getFinalists().size() && event.getSelected().size() + event.getFinalists().size() != event.getEventSlots() ){
                 handleReSelect();
-                new AlertDialog.Builder(this)
-                        .setTitle("Entrants Selected")
-                        .setMessage("Entrants were selected for the event.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                showAdminAlertDialog(this, null, "Entrants Selected", "Entrants were selected for the event.", null, null, "OK");
+
+//                new AlertDialog.Builder(this)
+//                        .setTitle("Entrants Selected")
+//                        .setMessage("Entrants were selected for the event.")
+//                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+//                        .show();
             }
         });
 

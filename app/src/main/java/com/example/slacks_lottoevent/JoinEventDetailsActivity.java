@@ -309,6 +309,8 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         String description = document.getString("description");
         String signupDeadline = document.getString("signupDeadline");
         String eventPosterURL = document.getString("eventPosterURL");
+        Long eventSlots  = document.getLong("eventSlots");
+
 
         handleDatesAndCapacity(document, signupDeadline);
 
@@ -322,6 +324,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         binding.signupDate.setText("Sign up deadline: " + signupDeadline);
         binding.eventLocation.setText(location);
         binding.eventDescription.setText(description);
+        binding.eventSlots.setText("Event Slots: " + eventSlots.intValue());
 
 
         setupJoinButton(document);
@@ -344,14 +347,61 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
             Long capacity = document.getLong("eventSlots");
             Long waitListCapacity = document.getLong("waitListCapacity");
 
-            if (waitListCapacity != null && waitlisted != null) {
-                int spotsRemaining = waitListCapacity.intValue() - waitlisted.size();
-                binding.spotsAvailable.setText("Only " + spotsRemaining + " spot(s) available on waitlist");
+
+
+            spotsRemaining = waitListCapacity.intValue() - waitlisted.size();
+
+            if (waitListCapacity == 0){
+//                            Does not show badge if there is no waitlistCapacity section
+                binding.waitlistCapacitySection.setVisibility(View.GONE);
+                binding.spotsAvailableSection.setVisibility(View.GONE);
             }
 
-            if (signupDate != null && currentDate.after(signupDate)) {
+            else if (waitListCapacity > 0){
+//                            There is a waitlist capacity and shows the spots left
+                spotsRemaining = spotsRemaining > 0 ? spotsRemaining : 0;
+                spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
+                binding.spotsAvailable.setText(spotsRemainingText);
+
+                if (spotsRemaining <= 0){
+                    binding.waitlistFullBadge.setVisibility(View.VISIBLE);
+                }
+                else if (entrantsChosen) {
+                    spotsRemainingText = "Only 0 spots available on waitlist";
+                    binding.spotsAvailable.setText(spotsRemainingText);
+                }
+            }
+
+            if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
+                Glide.with(this) // 'this' refers to the activity context
+                        .load(eventPosterURL)
+                        .into(binding.eventImage);
+            }
+
+
+            if (spotsRemaining <= 0 && waitListCapacity > 0 && !(currentDate.after(signupDate) )) {
+                // Capacity is full show we want to show the waitlist badge and no join
                 binding.joinButton.setVisibility(View.GONE);
                 binding.waitlistFullBadge.setVisibility(View.VISIBLE);
+            }
+
+            else if (spotsRemaining <= 0 && waitListCapacity > 0 && currentDate.after(signupDate)){
+//                            Capacity is full and after sign up deadline
+                binding.joinButton.setVisibility(View.GONE);
+                binding.waitlistFullBadge.setVisibility(View.VISIBLE);
+                binding.signupPassed.setVisibility(View.VISIBLE);
+
+            }
+
+            else if (currentDate.after(signupDate) && spotsRemaining > 0 && waitListCapacity > 0 ){
+//                            Sign up passed but waitlist was not full
+                binding.joinButton.setVisibility(View.GONE);
+                binding.signupPassed.setVisibility(View.VISIBLE);
+
+            }
+            else {
+                binding.joinButton.setVisibility(View.VISIBLE);
+                binding.waitlistFullBadge.setVisibility(View.GONE);
             }
 
         } catch (ParseException e) {
