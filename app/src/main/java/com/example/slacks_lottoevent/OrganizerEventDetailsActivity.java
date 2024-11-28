@@ -346,16 +346,10 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
              else {
                 if (!FromFacility)
                 {
-                    // Show a dialog indicating there is no poster to delete
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("No Poster Available");
-                    builder.setMessage("There is no event poster to delete.");
-
-                    // Add an OK button to close the dialog
-                    builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
-
-                    // Show the dialog
-                    builder.show();
+                    AdminActivity.showAdminAlertDialog(context, null, "No Poster Available",
+                            "There is no event poster to delete.",
+                            "TIP: ADD AN EVENT POSTER TO MAKE YOUR EVENT MORE ENTICING!",
+                            null, "OK");
                 }
             }
     }

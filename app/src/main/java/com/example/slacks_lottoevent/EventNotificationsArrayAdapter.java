@@ -2,7 +2,6 @@ package com.example.slacks_lottoevent;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -86,20 +85,24 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
 
             //make changes to both events and entrants, not only events
             acceptButton.setOnClickListener(v -> {
-                handleAcceptEvent(event);
-                showConfirmationDialog(v.getContext(), "You have now joined the event.");
+                AdminActivity.showAdminAlertDialog(context, () -> handleAcceptEvent(event), "Enrollment Confirmed",
+                        "You have opted to join the event.", "Note: You can still forfeit your position and leave the event",
+                        "Cancel", "Confirm");
                 removeEvent(position);
             });
             //make changes to both events and entrants, not only events
             declineButton.setOnClickListener(v -> {
-                handleDeclineEvent(event);
-                showConfirmationDialog(v.getContext(), "You have now declined the event.");
+                AdminActivity.showAdminAlertDialog(context, () -> handleDeclineEvent(event), "Declination Confirmed",
+                        "You have opted to decline the event.", "WARNING: You cannot forfeit your invitation",
+                        "Cancel", "Confirm");
                 removeEvent(position);
             });
 
             okayButton.setOnClickListener(v->{
-                saveEventAsDisplayed(event.getEventId());
-                showConfirmationDialog(v.getContext(), "You have now got rid of this message.");
+                AdminActivity.showAdminAlertDialog(context, () -> saveEventAsDisplayed(event.getEventId()), "Don't Give Up!",
+                        "You have opted to rid of this message.",
+                        "WARNING: This notice is meant to remind you of the possible opportunity, reminder cannot be undeleted",
+                        null, "OK");
                 removeEvent(position);
             });
         }
@@ -147,17 +150,6 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
                     .addOnSuccessListener(aVoid1 -> Log.d("Firestore", "Event declined: " + eventId))
                     .addOnFailureListener(e -> Log.e("Firestore", "Error updating event invite list: " + eventId, e));
         }).addOnFailureListener(e -> Log.e("Firestore", "Error declining event: " + eventId, e));
-    }
-
-    /**
-     * Shows confirmation regarding if the user decline or accepted the event.
-     * @param message that will appear whether or not user decline or accepted message
-     */
-    private void showConfirmationDialog(Context context, String message) {
-        new AlertDialog.Builder(context)
-                .setMessage(message)
-                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                .show();
     }
 
     /**

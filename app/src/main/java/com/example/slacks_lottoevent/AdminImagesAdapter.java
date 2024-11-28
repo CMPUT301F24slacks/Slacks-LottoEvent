@@ -5,11 +5,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -92,23 +92,12 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
                             String eventName = querySnapshot.getDocuments().get(0).getString("name");
                             String location = querySnapshot.getDocuments().get(0).getString("location");
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setTitle("Event Details");
-
                             String message = "Event Name: " + (eventName != null ? eventName : "N/A") + "\n" +
                                     "Location: " + (location != null ? location : "N/A");
 
-                            builder.setMessage(message);
+                            AdminActivity.showAdminAlertDialog(context, () -> deleteImageFromFirestore(context, db, ImageURL, isPoster),
+                                    "Event Details", message, "WARNING: DELETION CANNOT BE UNDONE", "Cancel", "Delete");
 
-                            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-                            builder.setPositiveButton("Delete", (dialog, which) -> {
-                                // Call method to delete image and Firestore data
-                                deleteImageFromFirestore(context, db, ImageURL, isPoster);
-                            });
-
-                            // Show the dialog
-                            builder.show();
                         }else {
                             Log.e("Firestore", "No matching event found.");
                             Toast.makeText(context, "No matching event found.", Toast.LENGTH_SHORT).show();
@@ -131,23 +120,11 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
                             String name = querySnapshot.getDocuments().get(0).getString("name");
                             String email = querySnapshot.getDocuments().get(0).getString("email");
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setTitle("Profile Details");
-
                             String message = "Name: " + (name != null ? name : "N/A") + "\n" +
                                     "Email: " + (email != null ? email : "N/A");
 
-                            builder.setMessage(message);
-
-                            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-                            builder.setPositiveButton("Delete", (dialog, which) -> {
-                                // Call method to delete image and Firestore data
-                                deleteImageFromFirestore(context, db, ImageURL, false);
-                            });
-
-                            // Show the dialog
-                            builder.show();
+                            AdminActivity.showAdminAlertDialog(context, () -> deleteImageFromFirestore(context, db, ImageURL, false),
+                                    "Profile Details", message, "WARNING: DELETION CANNOT BE UNDONE", "Cancel", "Delete");
                         } else {
                             Log.e("Firestore", "No matching event found.");
                             Toast.makeText(context, "No matching event found.", Toast.LENGTH_SHORT).show();

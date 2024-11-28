@@ -138,29 +138,17 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
 
             builder.setView(dialogView);
         } else {
+            AdminActivity.showAdminAlertDialog(context, () ->
+                    AdminActivity.showAdminAlertDialog(context,
+                            () -> deleteProfileFromDatabase(context, db, profile, facilitiesAdapter, eventsAdapter),
+                            "Confirm Deletion", "Are you sure you want to delete this profile?",
+                            "WARNING: DELETION CANNOT BE UNDONE",
+                            "Cancel", "Confirm"),
+                    "Profile Details", message, "WARNING: DELETION CANNOT BE UNDONE",
+                    "Cancel", "Delete");
             // Show the name and email directly for default profiles
             builder.setMessage(message);
         }
-
-        // Set Delete button
-        builder.setPositiveButton("Delete", (dialog, which) -> {
-            // Show a confirmation dialog to avoid accidental deletion
-            new AlertDialog.Builder(context)
-                    .setTitle("Confirm Deletion")
-                    .setMessage("Are you sure you want to delete this profile?")
-                    .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
-                        deleteProfileFromDatabase(context, db, profile, facilitiesAdapter, eventsAdapter);
-                        Toast.makeText(context, "Profile deleted successfully.", Toast.LENGTH_SHORT).show();
-                    })
-                    .setNegativeButton("No", (confirmDialog, confirmWhich) -> confirmDialog.dismiss())
-                    .create().show();
-        });
-
-        // Set Cancel button
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-        // Show the dialog
-        builder.create().show();
     }
 
     /**
