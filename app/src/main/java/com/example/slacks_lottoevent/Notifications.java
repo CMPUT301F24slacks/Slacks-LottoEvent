@@ -22,7 +22,7 @@ public class Notifications {
         db = FirebaseFirestore.getInstance();
     }
 
-    public void sendNotifications(String customName, String customMessage, String listToGrab, String eventId) {
+    public void addNotifications(String customName, String customMessage, String listToGrab, String eventId) {
         db.collection("events").document(eventId).get().addOnSuccessListener(eventDoc -> {
             if (eventDoc.exists()) {
 //                Grabbing people who want these notifications
@@ -51,6 +51,7 @@ public class Notifications {
             }
         });
     }
+
 
     public void removeNotifications(String deviceId){
         db.collection("notifications")

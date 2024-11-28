@@ -278,11 +278,17 @@ public class EventsHomeActivity extends AppCompatActivity {
     }
 
     private void checkAndRequestNotificationPermission() {
+        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Boolean hasAsked = sharedPreferences.getBoolean("hasAskedNotifcations", false);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED && (!hasAsked)) {
                 ActivityCompat.requestPermissions(this,
                         new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
                         NOTIFICATION_PERMISSION_REQUEST_CODE);
+                editor.putBoolean("hasAskedNotifcations", true);
+                editor.apply();
             }
             else {
                 startFetchingNotifications();
@@ -302,11 +308,11 @@ public class EventsHomeActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startFetchingNotifications();
                 editor.putBoolean("notificationsEnabled", true);
+                editor.apply();
 
             } else {
                 editor.putBoolean("notificationsEnabled", false);
-                Log.d("EventsHomeActivity", "Notification permission denied.");
-
+                editor.apply();
             }
         }
     }
@@ -318,7 +324,5 @@ public class EventsHomeActivity extends AppCompatActivity {
         Notifications notification = new Notifications();
         notification.removeNotifications(deviceId);
     }
-
-
 
 }
