@@ -100,112 +100,42 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityJoinEventDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        qrCodeValue = getIntent().getStringExtra("qrCodeValue");
-        deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        db = FirebaseFirestore.getInstance();
-        db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
 
-                        document = task.getResult().getDocuments().get(0);
-                        date = document.getString("eventDate");
-                        time = document.getString("time");
-                        eventName = document.getString("name");
-                        location = document.getString("location");
-                        description = document.getString("description");
-                        signupDeadline = document.getString("signupDeadline");
-                        eventPosterURL = document.getString("eventPosterURL");
-                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                        Date signup = null;
-                        try {
-                            signup = sdf.parse(signupDeadline);
-                        } catch (ParseException e) {}
-                        Date currentDate = new Date();
-                        try {
-                            // Format the current date to "MM/dd/yyyy" and parse it back into a Date object to remove time
-                            currentDate = sdf.parse(sdf.format(currentDate));
-                        } catch (ParseException e) {}
+        binding.loadingIndicator.setVisibility(View.VISIBLE);
+        initializeVariables();
+        fetcheventDetails();
+        binding.eventDetailsBackButton.setOnClickListener(v -> navigateToEventsHome());
 
+    }
 
-                        List<Object> waitlisted = (List<Object>) document.get("waitlisted");
-                        Long capacity = (Long) document.get("eventSlots");
-                        Long waitListCapacity = (Long) document.get("waitListCapacity");
-                        String waitlistCapacityAsString = "";
-                        assert capacity != null;
-                        String capacityAsString = capacity.toString();
+    /**
+     * Displays a dialog to inform the organizer that they cannot join their own event as a participant.
+     * */
+    private void showOrganizerCannotJoinDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Action Not Allowed")
+                .setMessage("You cannot join your own event as a participant. To view your event navigate to the Manage My Events Tab and click view on your event.")
+                .setCancelable(false)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    dialog.dismiss();
+                    navigateToEventsHome();
+                })
+                .show();
+    }
+    /**
+     * Displays a dialog to inform the user that the scanned QR code is invalid or the associated event has been disabled by an admin.
+     * */
+    private void showInvalidQRCodeDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle("Event Unavailable")
+                .setMessage("This event either doesn't exist or the QR code has been disabled by a Admin. Please check back later or scan a different Event QR Code!")
+                .setCancelable(false)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    dialog.dismiss();
+                    navigateToEventsHome();
 
-                        spotsRemaining = waitListCapacity.intValue() - waitlisted.size();
-//                        Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
-                        if (spotsRemaining <= 0 && waitListCapacity > 0){
-                            binding.waitlistCapacitySection.setVisibility(View.GONE);
-                            binding.spotsAvailableSection.setVisibility(View.GONE);
-                        }
-                        else{
-                            spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
-                            binding.spotsAvailable.setText(spotsRemainingText);
-
-                        }
-
-                        if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
-                            Glide.with(this) // 'this' refers to the activity context
-                                    .load(eventPosterURL)
-                                    .into(binding.eventImage);
-                        }
-
-
-                        if (spotsRemaining <= 0 && waitListCapacity > 0 || currentDate.after(signup)) {
-                            // Capacity is full show we want to show the waitlist badge
-                            binding.joinButton.setVisibility(View.GONE);
-                            binding.waitlistFullBadge.setVisibility(View.VISIBLE);
-                        }
-                        else {
-                            binding.joinButton.setVisibility(View.VISIBLE);
-                            binding.waitlistFullBadge.setVisibility(View.GONE);
-                        }
-
-                        binding.eventTitle.setText(eventName);
-                        binding.eventDate.setText("Event Date: " + date);
-                        binding.signupDate.setText("Sign up deadline: " + signupDeadline);
-                        binding.eventLocation.setText(location);
-                        binding.eventSlots.setText("Event Slots: " + capacityAsString);
-                        binding.eventDescription.setText(description);
-                        binding.waitlistCapacity.setText("Waitlist Capacity: " + waitlistCapacityAsString);
-
-
-                        usesGeolocation = (Boolean) document.get("geoLocation");
-
-                        // The reason to add the onClickListener in here is because we don't want the join button to do anything unless this event actually exists in the firebase
-                        binding.joinButton.setOnClickListener(view -> {
-                            FirestoreProfileUtil.checkIfSignedUp(deviceId, isSignedUp -> {
-                                if (isSignedUp) {
-                                    if (usesGeolocation) {
-                                        checkAndRequestGeolocation();
-                                    } else {
-                                        showRegistrationDialog();
-                                    }
-                                } else {
-                                    new AlertDialog.Builder(this)
-                                            .setTitle("Sign-Up Required")
-                                            .setMessage("In order to join an event, we need to collect some information about you.")
-                                            .setPositiveButton("Proceed", (dialog, which) -> {
-                                                Intent signUpIntent = new Intent(JoinEventDetailsActivity.this, SignUpActivity.class);
-                                                startActivity(signUpIntent);
-                                            })
-                                            .setNegativeButton("Cancel", (dialog, which) -> {
-                                                dialog.dismiss();
-                                            })
-                                            .show();
-                                }
-                            });
-
-                        });
-                    }
-                });
-        // add a listener to the event details back button, go to the last item in the back stack
-        binding.eventDetailsBackButton.setOnClickListener(v -> {
-            onBackPressed();
-        });
-
+                })
+                .show();
     }
 
     /**
@@ -213,64 +143,42 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      * This method shows the registration dialog for the event.
      */
     private void showRegistrationDialog(){
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_registration, null);
         builder.setView(dialogView);
-
         CheckBox declineCheckbox = dialogView.findViewById(R.id.declineCheckbox);
         Button confirmButton = dialogView.findViewById(R.id.confirm_button);
         Button cancelButton = dialogView.findViewById(R.id.cancel_button);
         TextView eventDetailsTextView = dialogView.findViewById(R.id.eventDetails);
         TextView geolocationBadge = dialogView.findViewById(R.id.geolocationBadge);
-
-
         geolocationBadge.setVisibility(usesGeolocation ? View.VISIBLE : View.GONE);
-
         String eventDetailsText = "Date: " + date + "\nTime: " + time + "\nLocation: " + location;
         eventDetailsTextView.setText(eventDetailsText);
-
         AlertDialog dialog = builder.create();
-
-
-
         cancelButton.setOnClickListener(view -> dialog.dismiss());
         confirmButton.setOnClickListener(view -> {
             Boolean isDeclined = declineCheckbox.isChecked();
-            // Get the user's unique device ID
             String userId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-            // Check if the entrant exists in Firestore
             db.collection("entrants").document(userId).get().addOnSuccessListener(task -> {
                 if (task.exists()) {
-                    // Entrant exists, check their events
                     Entrant entrant = task.toObject(Entrant.class);
-
-                    // Check if the entrant is already associated with this event
                     if (entrant.getWaitlistedEvents().contains(qrCodeValue)
                             || entrant.getFinalistEvents().contains(qrCodeValue)
                             || entrant.getInvitedEvents().contains(qrCodeValue)
                             || entrant.getUninvitedEvents().contains(qrCodeValue)) {
-
-                        // Show a toast message and dismiss the dialog
                         Toast.makeText(this, "You are already in the event", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     } else {
-                        // Entrant is not in the event, add them to the event
                         handleEntrantActions(isDeclined, usesGeolocation, dialog);
-
                     }
                 } else {
-                    // Entrant does not exist, create a new one and add them
                     Log.d("JoinEventDetails", "Entrant does not exist. Creating a new entrant...");
                     createNewEntrant(userId);
                     handleEntrantActions(isDeclined, usesGeolocation, dialog);
                 }
             }).addOnFailureListener(e -> {
-                // Handle any errors in fetching the entrant document
                 Log.e("JoinEventDetails", "Error fetching entrant document: " + e.getMessage());
-                // Create a new entrant in case of a failure
                 createNewEntrant(userId);
                 handleEntrantActions(isDeclined, usesGeolocation, dialog);
             });
@@ -280,6 +188,9 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         dialog.show();
 
     }
+
+
+
     /**
      *
      * Retrieves the current location of the device at the time this method is called.
@@ -342,9 +253,151 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     System.err.println("Error fetching event document in storeJoinLocation: " + task);
                 });
     }
+    /**
+     * Intializes varaibles that are needed in order for the rest of the activity to work as intended.
+     *
+     * Variables Initialized:
+     * - `qrCodeValue`: The QR code string passed to the activity via Intent.
+     * - `deviceId`: The unique identifier for the current device.
+     * - `db`: The Firestore database instance used to fetch event details.
+     * */
+    private void initializeVariables(){
+        qrCodeValue = getIntent().getStringExtra("qrCodeValue");
+        deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        db = FirebaseFirestore.getInstance();
+    }
+    /**
+     * Fetches event details from Firestore based on the provided QR code value.
+     * */
+    private void fetcheventDetails(){
+        db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
+                .addOnCompleteListener(task -> {
+                    binding.loadingIndicator.setVisibility(View.GONE);
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        document = task.getResult().getDocuments().get(0);
+                        handleEventDocument(document);
+                    } else {
+                        showInvalidQRCodeDialog();
+                    }
+                });
+    }
+    /**
+     * Processes the event document from the firestore and calls the appropriate functions based upon this event document.
+     * - Shows an invalid QR code dialog if the event is disabled.
+     * - Shows an organizer cannot join own event dialog if the user is the event organizer
+     * - Otherwise displays event details if the above two cases do not occur.
+     * @param document The Firestore document containing event data.
+     * */
+    private void handleEventDocument(DocumentSnapshot document){
+        Boolean isDisabled = document.getBoolean("disabled");
+        String organizerDeviceId = document.getString("deviceId");
+
+        if (isDisabled != null && isDisabled) {
+            showInvalidQRCodeDialog();
+            binding.joinButton.setVisibility(View.GONE);
+        } else if (deviceId.equals(organizerDeviceId)) {
+            showOrganizerCannotJoinDialog();
+            binding.joinButton.setVisibility(View.GONE);
+        } else {
+            displayEventDetails(document);
+        }
+    }
+    /**
+     * Displays event details on the activities UI.
+     * @param document The Firestore document containing event data.
+     * */
+    private void displayEventDetails(DocumentSnapshot document){
+        String date = document.getString("eventDate");
+        String time = document.getString("time");
+        String eventName = document.getString("name");
+        String location = document.getString("location");
+        String description = document.getString("description");
+        String signupDeadline = document.getString("signupDeadline");
+        String eventPosterURL = document.getString("eventPosterURL");
+
+        handleDatesAndCapacity(document, signupDeadline);
+
+        if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
+            Glide.with(this).load(eventPosterURL).into(binding.eventImage);
+        }
 
 
+        binding.eventTitle.setText(eventName);
+        binding.eventDate.setText("Event Date: " + date);
+        binding.signupDate.setText("Sign up deadline: " + signupDeadline);
+        binding.eventLocation.setText(location);
+        binding.eventDescription.setText(description);
 
+
+        setupJoinButton(document);
+    }
+
+    /**
+     * Handles date and capacity logic for the event.
+     * This method checks the signup deadline and capacity details of the event.
+     * It updates the UI to show relevant badges or messages, such as indicating when the waitlist is full or when the signup deadline has passed.
+     *  @param document The Firestore document containing event data.
+     *  @param signupDeadline The signup deadline as a string.
+     * */
+    private void handleDatesAndCapacity(DocumentSnapshot document, String signupDeadline) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            Date currentDate = sdf.parse(sdf.format(new Date()));
+            Date signupDate = signupDeadline != null ? sdf.parse(signupDeadline) : null;
+
+            List<Object> waitlisted = (List<Object>) document.get("waitlisted");
+            Long capacity = document.getLong("eventSlots");
+            Long waitListCapacity = document.getLong("waitListCapacity");
+
+            if (waitListCapacity != null && waitlisted != null) {
+                int spotsRemaining = waitListCapacity.intValue() - waitlisted.size();
+                binding.spotsAvailable.setText("Only " + spotsRemaining + " spot(s) available on waitlist");
+            }
+
+            if (signupDate != null && currentDate.after(signupDate)) {
+                binding.joinButton.setVisibility(View.GONE);
+                binding.waitlistFullBadge.setVisibility(View.VISIBLE);
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     *  Sets up the Join button behavior for the event.
+     * @param document The Firestore document containing event data.
+     * */
+    private void setupJoinButton(DocumentSnapshot document){
+        binding.joinButton.setOnClickListener(view -> {
+            FirestoreProfileUtil.checkIfSignedUp(deviceId, isSignedUp -> {
+                if (isSignedUp) {
+                    Boolean usesGeolocation = document.getBoolean("geoLocation");
+                    if (usesGeolocation != null && usesGeolocation) {
+                        checkAndRequestGeolocation();
+                    } else {
+                        showRegistrationDialog();
+                    }
+                } else {
+                    showSignUpRequiredDialog();
+                }
+            });
+        });
+    }
+    /**
+     * Displays a dialog prompting the user to sign up before joining an event.
+     *
+     * */
+    private void showSignUpRequiredDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Sign-Up Required")
+                .setMessage("In order to join an event, we need to collect some information about you.")
+                .setPositiveButton("Proceed", (dialog, which) -> {
+                    Intent signUpIntent = new Intent(this, SignUpActivity.class);
+                    startActivity(signUpIntent);
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
 
 
 
@@ -376,6 +429,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     /**
      * addEntrantToWaitlist method for the JoinEventDetailsActivity.
      * This method adds the entrant to the waitlist for the event.
+     * @param isReselected if the user wants to be reselected from waitlist if someone else declines a event invitation.
      */
     private void addEntrantToWaitlist(Boolean isReselected){
         db.collection("events").whereEqualTo("eventID",qrCodeValue)
@@ -495,7 +549,12 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         }
 
     }
-
+    /**
+     * Handles the possible Entrant actions that occur in the Event Registration Dialog.
+     * @param isDeclined whether or not the they want to be reselected if someone declines.
+     * @param usesGeolocation whether or not the event uses geolocation.
+     * @param dialog the registration dialog box.
+     * */
     private void handleEntrantActions(boolean isDeclined, boolean usesGeolocation, DialogInterface dialog) {
         addEntrantToWaitlist(isDeclined);
         addEventToEntrant();

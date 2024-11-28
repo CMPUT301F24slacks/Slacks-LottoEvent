@@ -94,6 +94,12 @@ public class Event implements Serializable {
         this.eventPosterURL = eventPosterURL;
 
     }
+    public Boolean getDisabled(){
+        return disabled;
+    }
+    public void setDisabled(Boolean disabled){
+        this.disabled = disabled;
+    }
 
     public String getLocation(){
         return location;
