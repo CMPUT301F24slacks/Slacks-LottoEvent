@@ -94,6 +94,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         if (event.getEventPosterURL() != null && !event.getEventPosterURL().isEmpty()) {
             Glide.with(this.getContext()) // 'this' refers to the activity context
                     .load(event.getEventPosterURL())
+                    .placeholder(R.drawable.placeholder_image)
                     .into(eventPoster);
         } else {
             Log.d("EventDetails", "Event poster URL is empty or null");
