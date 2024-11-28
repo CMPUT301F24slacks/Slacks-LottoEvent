@@ -1,7 +1,10 @@
 package com.example.slacks_lottoevent;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +27,8 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
     private final Context context;
     private final FirebaseFirestore db;
     private final String deviceId;
+    SharedPreferences sharedPreferences;
+
 
     /**
      * Constructor for the ArrayAdapter.
@@ -31,13 +36,14 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
      * @param context The current context.
      * @param events The list of events to display.
      */
-    public EventNotificationsArrayAdapter(@NonNull Context context, ArrayList<UserEventNotifications> events) {
+    public EventNotificationsArrayAdapter(@NonNull Context context, ArrayList<UserEventNotifications> events, SharedPreferences sharedPreferences) {
         super(context, 0, events);
         this.context = context;
         this.db = FirebaseFirestore.getInstance();
 
         // Retrieve device ID for Firestore updates
         this.deviceId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+        this.sharedPreferences = sharedPreferences;
     }
 
     /**
@@ -92,6 +98,7 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
             });
 
             okayButton.setOnClickListener(v->{
+                saveEventAsDisplayed(event.getEventId());
                 showConfirmationDialog(v.getContext(), "You have now got rid of this message.");
                 removeEvent(position);
             });
@@ -162,6 +169,16 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
         remove(getItem(position));
         // Notify the adapter of data change
         notifyDataSetChanged();
+    }
+
+    /**
+     * Save the event ID in SharedPreferences to avoid displaying it again.
+     * @param eventId The ID of the event to save.
+     */
+    private void saveEventAsDisplayed(String eventId) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(eventId, true); // Save event ID with a true value indicating it's displayed
+        editor.apply();
     }
 
 }
