@@ -1,7 +1,9 @@
 package com.example.slacks_lottoevent;
 
-import android.app.AlertDialog;
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,8 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
     private final Context context;
     private final FirebaseFirestore db;
     private final String deviceId;
+    SharedPreferences sharedPreferences;
+
 
     /**
      * Constructor for the ArrayAdapter.
@@ -31,13 +35,14 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
      * @param context The current context.
      * @param events The list of events to display.
      */
-    public EventNotificationsArrayAdapter(@NonNull Context context, ArrayList<UserEventNotifications> events) {
+    public EventNotificationsArrayAdapter(@NonNull Context context, ArrayList<UserEventNotifications> events, SharedPreferences sharedPreferences) {
         super(context, 0, events);
         this.context = context;
         this.db = FirebaseFirestore.getInstance();
 
         // Retrieve device ID for Firestore updates
         this.deviceId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+        this.sharedPreferences = sharedPreferences;
     }
 
     /**
@@ -63,6 +68,7 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
         TextView eventLocation = convertView.findViewById(R.id.user_notification_event_location);
         Button acceptButton = convertView.findViewById(R.id.Accept_Invitation);
         Button declineButton = convertView.findViewById(R.id.Decline_Invitation);
+        Button okayButton = convertView.findViewById(R.id.Okay_Button);
 
         if (event != null) {
             eventName.setText(event.getName());
@@ -70,17 +76,34 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
             eventTime.setText(event.getTime());
             eventLocation.setText(event.getLocation());
 
+            if (!event.getSelected()){
+                acceptButton.setVisibility(View.GONE);
+                declineButton.setVisibility(View.GONE);
+                okayButton.setVisibility(View.VISIBLE);
+            }
+
+
+            //make changes to both events and entrants, not only events
             acceptButton.setOnClickListener(v -> {
-                handleAcceptEvent(event);
-                showConfirmationDialog(v.getContext(), "You have now joined the event.");
+                AdminActivity.showAdminAlertDialog(context, () -> handleAcceptEvent(event), "Enrollment Confirmed",
+                        "You have opted to join the event.", "Note: You can still forfeit your position and leave the event",
+                        "Cancel", "Confirm");
                 removeEvent(position);
-//                TODO: notification here
             });
+            //make changes to both events and entrants, not only events
             declineButton.setOnClickListener(v -> {
-                handleDeclineEvent(event);
-                showConfirmationDialog(v.getContext(), "You have now declined the event.");
+                AdminActivity.showAdminAlertDialog(context, () -> handleDeclineEvent(event), "Declination Confirmed",
+                        "You have opted to decline the event.", "WARNING: You cannot forfeit your invitation",
+                        "Cancel", "Confirm");
                 removeEvent(position);
-//                TODO: notifcation here
+            });
+
+            okayButton.setOnClickListener(v->{
+                AdminActivity.showAdminAlertDialog(context, () -> saveEventAsDisplayed(event.getEventId()), "Don't Give Up!",
+                        "You have opted to rid of this message.",
+                        "WARNING: This notice is meant to remind you of the possible opportunity, reminder cannot be undeleted",
+                        null, "OK");
+                removeEvent(position);
             });
         }
 
@@ -116,27 +139,17 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
         String eventId = event.getEventId();
 
         db.collection("entrants").document(deviceId).update(
-                "invitedEvents", FieldValue.arrayRemove(eventId)).addOnSuccessListener(aVoid -> {
+                "invitedEvents", FieldValue.arrayRemove(eventId),
+                "uninvitedEvents", FieldValue.arrayRemove(eventId)).addOnSuccessListener(aVoid -> {
 
             db.collection("events").document(eventId).update(
                             "selected", FieldValue.arrayRemove(deviceId),
                     "selectedNotificationsList", FieldValue.arrayRemove(deviceId),
                     "cancelled", FieldValue.arrayUnion(deviceId),
-                    "cancelledNotificationsList", FieldValue.arrayUnion(deviceId)
-                    ).addOnSuccessListener(aVoid1 -> Log.d("Firestore", "Event declined: " + eventId))
+                    "cancelledNotificationsList", FieldValue.arrayUnion(deviceId))
+                    .addOnSuccessListener(aVoid1 -> Log.d("Firestore", "Event declined: " + eventId))
                     .addOnFailureListener(e -> Log.e("Firestore", "Error updating event invite list: " + eventId, e));
         }).addOnFailureListener(e -> Log.e("Firestore", "Error declining event: " + eventId, e));
-    }
-
-    /**
-     * Shows confirmation regarding if the user decline or accepted the event.
-     * @param message that will appear whether or not user decline or accepted message
-     */
-    private void showConfirmationDialog(Context context, String message) {
-        new AlertDialog.Builder(context)
-                .setMessage(message)
-                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                .show();
     }
 
     /**
@@ -148,6 +161,16 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
         remove(getItem(position));
         // Notify the adapter of data change
         notifyDataSetChanged();
+    }
+
+    /**
+     * Save the event ID in SharedPreferences to avoid displaying it again.
+     * @param eventId The ID of the event to save.
+     */
+    private void saveEventAsDisplayed(String eventId) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(eventId, true); // Save event ID with a true value indicating it's displayed
+        editor.apply();
     }
 
 }

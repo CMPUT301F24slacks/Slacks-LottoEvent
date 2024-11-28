@@ -42,8 +42,16 @@ public class AdminFacilities extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_facilities, container, false);
         listViewAdminFacilities = view.findViewById(R.id.ListViewAdminFacilities);
 
-        // Initialize adapter with the profile list
-        adapter = new FacilityListArrayAdapter(getContext(), facilitiesList);
+        // Initialize facilities list and event list
+        ArrayList<Event> eventList = new ArrayList<>();
+
+        // Create the events adapter
+        OrganizerEventArrayAdapter eventsAdapter = new OrganizerEventArrayAdapter(getContext(), eventList, true);
+
+        // Create the facilities adapter
+        adapter = new FacilityListArrayAdapter(getContext(), facilitiesList, true, eventsAdapter, eventList);
+
+        // Set the adapter to a ListView or RecyclerView
         listViewAdminFacilities.setAdapter(adapter);
 
         // Fetch profiles from Firestore
@@ -57,24 +65,31 @@ public class AdminFacilities extends Fragment {
      * and populates the profile list.
      */
     private void fetchFacilitiesFromFirestore() {
-        db.collection("profiles")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        facilitiesList.clear(); // Clear the list before adding new data
-                        for (DocumentSnapshot document : task.getResult()) {
-                            // Create Profile object from Firestore data
-                            String name = document.getString("name");
-                            String facilityId = document.getId();
-                            String organizerId = document.getString("organizerID");
-                            Facility facility = new Facility(name," "," "," ",organizerId,facilityId); // Adjust constructor if needed
+        db.collection("facilities").addSnapshotListener((querySnapshot, error) -> {
+            if (error != null) {
+                Log.e("Firestore", "Error listening for facility updates: ", error);
+                return;
+            }
 
-                            facilitiesList.add(facility); // Add to the list
-                        }
-                        adapter.notifyDataSetChanged(); // Notify adapter about data changes
-                    } else {
-                        Log.e("Firestore", "Error fetching profiles: ", task.getException());
-                    }
-                });
+            if (querySnapshot != null) {
+                facilitiesList.clear(); // Clear the list before adding new data
+
+                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                    // Create Facility object from Firestore data
+//                    String deviceId = document.getString("deviceId");
+//                    String name = document.getString("name");
+//                    String streetAddress1 = document.getString("streetAddress1");
+//                    Facility facility = new Facility(name, streetAddress1, deviceId, deviceId);
+                    Facility facility = document.toObject(Facility.class);
+                    facility.setFacilityId(document.getId()); // Set document ID here
+
+                    facilitiesList.add(facility); // Add to the list
+                }
+                adapter.notifyDataSetChanged(); // Notify adapter about data changes
+            } else {
+                Log.d("Firestore", "No facilities found.");
+            }
+        });
     }
+
 }

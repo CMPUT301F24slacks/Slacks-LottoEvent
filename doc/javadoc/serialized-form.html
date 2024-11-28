@@ -80,6 +80,10 @@ loadScripts(document, 'script');</script>
 <pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> deviceId</pre>
 </li>
 <li class="block-list">
+<h5>disabled</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a> disabled</pre>
+</li>
+<li class="block-list">
 <h5>entrantsChosen</h5>
 <pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a> entrantsChosen</pre>
 </li>
@@ -90,6 +94,10 @@ loadScripts(document, 'script');</script>
 <li class="block-list">
 <h5>eventID</h5>
 <pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> eventID</pre>
+</li>
+<li class="block-list">
+<h5>eventPosterURL</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> eventPosterURL</pre>
 </li>
 <li class="block-list">
 <h5>eventSlots</h5>
@@ -109,7 +117,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li class="block-list">
 <h5>joinLocations</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr>double[]&gt;&gt; joinLocations</pre>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&gt;&gt; joinLocations</pre>
 </li>
 <li class="block-list">
 <h5>location</h5>
@@ -130,6 +138,10 @@ loadScripts(document, 'script');</script>
 <li class="block-list">
 <h5>qrHash</h5>
 <pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> qrHash</pre>
+</li>
+<li class="block-list">
+<h5>reselected</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; reselected</pre>
 </li>
 <li class="block-list">
 <h5>selected</h5>
@@ -185,28 +197,12 @@ loadScripts(document, 'script');</script>
 <pre>android.content.Context context</pre>
 </li>
 <li class="block-list">
-<h5>db</h5>
-<pre>com.google.firebase.firestore.FirebaseFirestore db</pre>
-</li>
-<li class="block-list">
-<h5>entrantsRef</h5>
-<pre>com.google.firebase.firestore.DocumentReference entrantsRef</pre>
-</li>
-<li class="block-list">
 <h5>events</h5>
 <pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="com/example/slacks_lottoevent/Event.html" title="class in com.example.slacks_lottoevent">Event</a>&gt; events</pre>
 </li>
 <li class="block-list">
-<h5>eventsRef</h5>
-<pre>com.google.firebase.firestore.CollectionReference eventsRef</pre>
-</li>
-<li class="block-list">
-<h5>facilitiesRef</h5>
-<pre>com.google.firebase.firestore.CollectionReference facilitiesRef</pre>
-</li>
-<li class="block-list">
-<h5>organizersRef</h5>
-<pre>com.google.firebase.firestore.CollectionReference organizersRef</pre>
+<h5>isAdmin</h5>
+<pre>boolean isAdmin</pre>
 </li>
 </ul>
 </section>

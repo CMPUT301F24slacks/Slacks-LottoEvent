@@ -1,12 +1,23 @@
 package com.example.slacks_lottoevent;
 
 import android.content.Intent;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
+import android.util.Log;
+
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
+//testing purposes
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.model.User;
 import com.example.slacks_lottoevent.view.BaseActivity;
@@ -15,14 +26,27 @@ import com.example.slacks_lottoevent.viewmodel.EventViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import com.google.android.libraries.places.api.Places;
+import com.google.firebase.Firebase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Map;
 public class MainActivity extends BaseActivity {
     private EntrantViewModel entrantViewModel;
     private EventViewModel eventViewModel;
     private User user;
     private String deviceId;
+    private FirebaseFirestore db;
+    private CollectionReference usersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        db = FirebaseFirestore.getInstance();
+
+        usersRef = db.collection("profiles");
+
         super.onCreate(savedInstanceState);
 
         // Inflate activity_main layout into content_frame of activity_base
@@ -79,5 +103,4 @@ public class MainActivity extends BaseActivity {
             startActivity(intent);
         });
     }
-
 }

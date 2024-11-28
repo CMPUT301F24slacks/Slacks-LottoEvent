@@ -3,17 +3,21 @@ package com.example.slacks_lottoevent;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.example.slacks_lottoevent.enums.EventParticipationStatus;
 import com.example.slacks_lottoevent.model.User;
+
+import com.bumptech.glide.Glide;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -75,9 +79,11 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         TextView statusWaitlisted = convertView.findViewById(R.id.status_waitlisted);
 
         // Set the name, date, time, and description of the event
+        ImageView eventPoster = convertView.findViewById(R.id.event_image);
         eventName.setText(event.getName());
         eventDate.setText(event.getEventDate());
         eventTime.setText(event.getTime());
+        eventAddress.setText(event.getLocation());
         eventDescription.setText(event.getDescription());
         // Set the address with a newline after removing the first comma
         if (event.getLocation() != null && event.getLocation().contains(",")) {
@@ -86,6 +92,14 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         } else {
             // If no comma is found, display the address as it is
             eventAddress.setText(event.getLocation());
+        }
+
+        if (event.getEventPosterURL() != null && !event.getEventPosterURL().isEmpty()) {
+            Glide.with(this.getContext()) // 'this' refers to the activity context
+                    .load(event.getEventPosterURL())
+                    .into(eventPoster);
+        } else {
+            Log.d("EventDetails", "Event poster URL is empty or null");
         }
 
         User user = User.getInstance(getContext());

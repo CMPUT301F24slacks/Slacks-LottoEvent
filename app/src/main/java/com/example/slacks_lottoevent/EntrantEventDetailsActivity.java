@@ -8,6 +8,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -29,6 +30,7 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
     private String time;
     private Boolean usesGeolocation;
     private String description;
+    private String eventPosterURL;
     FirebaseFirestore db;
     String qrCodeValue;
     Long spotsRemaining;
@@ -58,7 +60,7 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                         location = document.getString("location");
                         description = document.getString("description");
                         signupDate = document.getString("signupDeadline");
-
+                        eventPosterURL = document.getString("eventPosterURL");
 
                         List<Object> waitlisted = (List<Object>) document.get("waitlisted");
 
@@ -76,6 +78,13 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                             spotsRemaining = waitListCapacity - waitlisted.size();
                             spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
                             binding.spotsAvailable.setText(spotsRemainingText);
+                        }
+                        if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
+                            Glide.with(this) // 'this' refers to the activity context
+                                    .load(eventPosterURL)
+                                    .into(binding.eventImage);
+                        } else {
+                            Log.d("EventDetails", "Event poster URL is empty or null");
                         }
 
                         binding.eventTitle.setText(eventName);
@@ -128,41 +137,17 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             List<String> waitlisted = (List<String>) document.get("waitlisted");
-                            List<String> finalists = (List<String>) document.get("finalists");
-                            List<String> invited = (List<String>) document.get("invited");
-                            List<String> cancelled = (List<String>) document.get("cancelled");
+                            List<String> waitlistedNotifications = (List<String>) document.get("waitlistedNotificationsList");
+
                             if (waitlisted != null && waitlisted.contains(userId)) {
                                 waitlisted.remove(userId);
                             }
-                            if (finalists != null && finalists.contains(userId)) {
-                                finalists.remove(userId);
-                            }
-                            if (invited != null && invited.contains(userId)) {
-                                invited.remove(userId);
-                            }
-                            if (cancelled != null && cancelled.contains(userId)) {
-                                cancelled.remove(userId);
-                            }
-                            db.collection("events").document(qrCodeValue).update("waitlisted", waitlisted, "finalists", finalists, "invited", invited, "cancelled", cancelled);
-                        }
-                    }
-                });
 
-        // Remove the entrant from the event's waitlistedNotifications and selectedNotifications
-        db.collection("events").document(qrCodeValue).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            List<String> waitlistedNotifications = (List<String>) document.get("waitlistedNotificationsList");
-                            List<String> selectedNotifications = (List<String>) document.get("selectedNotificationsList");
                             if (waitlistedNotifications != null && waitlistedNotifications.contains(userId)) {
                                 waitlistedNotifications.remove(userId);
                             }
-                            if (selectedNotifications != null && selectedNotifications.contains(userId)) {
-                                selectedNotifications.remove(userId);
-                            }
-                            db.collection("events").document(qrCodeValue).update("waitlistedNotificationsList", waitlistedNotifications, "selectedNotificationsList", selectedNotifications);
+
+                            db.collection("events").document(qrCodeValue).update("waitlisted", waitlisted, "waitlistedNotificationsList", waitlistedNotifications);
                         }
                     }
                 });

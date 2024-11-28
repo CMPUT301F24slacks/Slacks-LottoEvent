@@ -106,8 +106,13 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(android.content.Context,java.util.ArrayList)" class="member-name-link">ProfileListArrayAdapter</a><wbr>(android.content.Context&nbsp;context,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="Profile.html" title="class in com.example.slacks_lottoevent">Profile</a>&gt;&nbsp;profiles)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(android.content.Context,java.util.ArrayList,boolean,java.util.ArrayList,com.example.slacks_lottoevent.FacilityListArrayAdapter,java.util.ArrayList,com.example.slacks_lottoevent.OrganizerEventArrayAdapter)" class="member-name-link">ProfileListArrayAdapter</a><wbr>(android.content.Context&nbsp;context,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="Profile.html" title="class in com.example.slacks_lottoevent">Profile</a>&gt;&nbsp;profiles,
+ boolean&nbsp;isAdmin,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&gt;&nbsp;facilities,
+ <a href="FacilityListArrayAdapter.html" title="class in com.example.slacks_lottoevent">FacilityListArrayAdapter</a>&nbsp;facilitiesAdapter,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="Event.html" title="class in com.example.slacks_lottoevent">Event</a>&gt;&nbsp;eventList,
+ <a href="OrganizerEventArrayAdapter.html" title="class in com.example.slacks_lottoevent">OrganizerEventArrayAdapter</a>&nbsp;eventsAdapter)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructor for the ArrayAdapter.</div>
 </div>
@@ -119,17 +124,46 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>android.view.View</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getView(int,android.view.View,android.view.ViewGroup)" class="member-name-link">getView</a><wbr>(int&nbsp;position,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deleteProfileFromDatabase(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.Profile,com.example.slacks_lottoevent.FacilityListArrayAdapter,com.example.slacks_lottoevent.OrganizerEventArrayAdapter)" class="member-name-link">deleteProfileFromDatabase</a><wbr>(android.content.Context&nbsp;context,
+ com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
+ <a href="Profile.html" title="class in com.example.slacks_lottoevent">Profile</a>&nbsp;profile,
+ <a href="FacilityListArrayAdapter.html" title="class in com.example.slacks_lottoevent">FacilityListArrayAdapter</a>&nbsp;facilitiesAdapter,
+ <a href="OrganizerEventArrayAdapter.html" title="class in com.example.slacks_lottoevent">OrganizerEventArrayAdapter</a>&nbsp;eventsAdapter)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Deletes the profile from Firestore and calls appropriate callbacks.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#EntrantRemovalCancelled(com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList,java.lang.String)" class="member-name-link">EntrantRemovalCancelled</a><wbr>(com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;CancelledEvents,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#EntrantRemovalFinalist(com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList,java.lang.String)" class="member-name-link">EntrantRemovalFinalist</a><wbr>(com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;FinalistEvents,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#EntrantRemovalSelected(com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList,java.lang.String)" class="member-name-link">EntrantRemovalSelected</a><wbr>(com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;SelectedEvents,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#EntrantRemovalWaitlisted(com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList,java.lang.String)" class="member-name-link">EntrantRemovalWaitlisted</a><wbr>(com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;waitlistedEvents,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>android.view.View</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getView(int,android.view.View,android.view.ViewGroup)" class="member-name-link">getView</a><wbr>(int&nbsp;position,
  android.view.View&nbsp;convertView,
  android.view.ViewGroup&nbsp;parent)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the view for a single profile.</div>
 </div>
 </div>
@@ -159,16 +193,26 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(android.content.Context,java.util.ArrayList)">
+<section class="detail" id="&lt;init&gt;(android.content.Context,java.util.ArrayList,boolean,java.util.ArrayList,com.example.slacks_lottoevent.FacilityListArrayAdapter,java.util.ArrayList,com.example.slacks_lottoevent.OrganizerEventArrayAdapter)">
 <h3>ProfileListArrayAdapter</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ProfileListArrayAdapter</span><wbr><span class="parameters">(@NonNull
  android.content.Context&nbsp;context,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="Profile.html" title="class in com.example.slacks_lottoevent">Profile</a>&gt;&nbsp;profiles)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="Profile.html" title="class in com.example.slacks_lottoevent">Profile</a>&gt;&nbsp;profiles,
+ boolean&nbsp;isAdmin,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&gt;&nbsp;facilities,
+ <a href="FacilityListArrayAdapter.html" title="class in com.example.slacks_lottoevent">FacilityListArrayAdapter</a>&nbsp;facilitiesAdapter,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="Event.html" title="class in com.example.slacks_lottoevent">Event</a>&gt;&nbsp;eventList,
+ <a href="OrganizerEventArrayAdapter.html" title="class in com.example.slacks_lottoevent">OrganizerEventArrayAdapter</a>&nbsp;eventsAdapter)</span></div>
 <div class="block">Constructor for the ArrayAdapter.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>context</code> - The current context.</dd>
 <dd><code>profiles</code> - The list of profiles to display.</dd>
+<dd><code>isAdmin</code> - Boolean flag for admin functionality.</dd>
+<dd><code>facilities</code> - Shared list of facilities.</dd>
+<dd><code>facilitiesAdapter</code> - Adapter for facility views.</dd>
+<dd><code>eventList</code> - Shared list of events.</dd>
+<dd><code>eventsAdapter</code> - Adapter for event views.</dd>
 </dl>
 </section>
 </li>
@@ -199,6 +243,55 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>The view for the profile.</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="deleteProfileFromDatabase(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.Profile,com.example.slacks_lottoevent.FacilityListArrayAdapter,com.example.slacks_lottoevent.OrganizerEventArrayAdapter)">
+<h3>deleteProfileFromDatabase</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">deleteProfileFromDatabase</span><wbr><span class="parameters">(android.content.Context&nbsp;context,
+ com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
+ <a href="Profile.html" title="class in com.example.slacks_lottoevent">Profile</a>&nbsp;profile,
+ <a href="FacilityListArrayAdapter.html" title="class in com.example.slacks_lottoevent">FacilityListArrayAdapter</a>&nbsp;facilitiesAdapter,
+ <a href="OrganizerEventArrayAdapter.html" title="class in com.example.slacks_lottoevent">OrganizerEventArrayAdapter</a>&nbsp;eventsAdapter)</span></div>
+<div class="block">Deletes the profile from Firestore and calls appropriate callbacks.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - The context for Toast messages.</dd>
+<dd><code>db</code> - The Firestore instance.
+//     * @param deviceId  The device ID of the profile to delete.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="EntrantRemovalWaitlisted(com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList,java.lang.String)">
+<h3>EntrantRemovalWaitlisted</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">EntrantRemovalWaitlisted</span><wbr><span class="parameters">(com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;waitlistedEvents,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="EntrantRemovalSelected(com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList,java.lang.String)">
+<h3>EntrantRemovalSelected</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">EntrantRemovalSelected</span><wbr><span class="parameters">(com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;SelectedEvents,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="EntrantRemovalFinalist(com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList,java.lang.String)">
+<h3>EntrantRemovalFinalist</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">EntrantRemovalFinalist</span><wbr><span class="parameters">(com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;FinalistEvents,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="EntrantRemovalCancelled(com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList,java.lang.String)">
+<h3>EntrantRemovalCancelled</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">EntrantRemovalCancelled</span><wbr><span class="parameters">(com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;CancelledEvents,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</span></div>
 </section>
 </li>
 </ul>

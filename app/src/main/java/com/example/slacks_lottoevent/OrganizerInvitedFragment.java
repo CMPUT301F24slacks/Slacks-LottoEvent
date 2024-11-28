@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,104 +23,101 @@ import java.util.ArrayList;
  */
 public class OrganizerInvitedFragment extends Fragment {
 
-    private ListView listViewEntrantsInvited;
-    private Event event;
-    private static final String ARG_EVENT = "current_event";
+    private ListView ListViewEntrantsInvited;
+    private String eventId;
+    private static final String ARG_EVENT_ID = "eventID";
     private FirebaseFirestore db;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ArrayList<Profile> profileList;
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     //     * @param param1 Parameter 1.
-     //     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrganizerFirstFragment.
+     * Default constructor
      */
     public OrganizerInvitedFragment() {}
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     //     * @param param1 Parameter 1.
-     //     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrganizerFirstFragment.
+     * Factory method to create a new instance of this fragment using the provided parameters.
+     * @param eventId The current event's ID.
+     * @return A new instance of OrganizerInvitedFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static OrganizerInvitedFragment newInstance(Event event) {
+    public static OrganizerInvitedFragment newInstance(String eventId) {
         OrganizerInvitedFragment fragment = new OrganizerInvitedFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_EVENT, event);
+        args.putString(ARG_EVENT_ID, eventId); // Pass the event ID as a String
         fragment.setArguments(args);
         return fragment;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     //     * @param param1 Parameter 1.
-     //     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrganizerFirstFragment.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
+        profileList = new ArrayList<>(); // Initialize the profile list
+        // Retrieve the event ID from the fragment's arguments
         if (getArguments() != null) {
-            event = (Event) getArguments().getSerializable(ARG_EVENT);
+            eventId = getArguments().getString(ARG_EVENT_ID);
         }
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     //     * @param param1 Parameter 1.
-     //     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrganizerFirstFragment.
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_organizer_invited, container, false);
-        listViewEntrantsInvited = view.findViewById(R.id.listViewEntrantsInvited);
+        ListViewEntrantsInvited = view.findViewById(R.id.listViewEntrantsInvited);
 
-        ArrayList<String> entrantNames = new ArrayList<>(); // List to hold retrieved names
-        EntrantListsArrayAdapter adapter = new EntrantListsArrayAdapter(getContext(), entrantNames);
-        listViewEntrantsInvited.setAdapter(adapter); // Set the adapter once
+        ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false, null, null,
+                null, null);
+        ListViewEntrantsInvited.setAdapter(adapter);
 
-        //test event ID 0c781495-f91e-4648-9bb0-c390f558db10, This is the event!ve
+        Button craftMessageButton = view.findViewById(R.id.craftMessage);
+        Notifications notifications = new Notifications();
 
-        if (event != null) {
-            ArrayList<String> deviceIds = event.getSelected();
+        craftMessageButton.setOnClickListener(v -> DialogHelper.showMessageDialog(getContext(), notifications,eventId, "selectedNotificationsList"));
 
-            for (String deviceId : deviceIds) {
-                // Query Firestore for each profile by device ID
-                db.collection("profiles").document(deviceId).get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document != null && document.exists()) {
-                            String name = document.getString("name"); // Adjust to match your document structure
-                            entrantNames.add(name);
 
-                            // Notify the adapter that the data has changed
-                            adapter.notifyDataSetChanged();                        }
-                    } else {
-                        Log.d("Firestore", "Error getting document: ", task.getException());
-                    }
-                });
+
+        // Listen for real-time updates to the event document
+        db.collection("events").document(eventId).addSnapshotListener((eventDoc, error) -> {
+            if (error != null) {
+                Log.e("Firestore", "Error listening to event document updates", error);
+                return;
             }
-        }
+
+            if (eventDoc != null && eventDoc.exists()) {
+                ArrayList<String> deviceIds = (ArrayList<String>) eventDoc.get("selected");
+
+                if (deviceIds != null && !deviceIds.isEmpty()) {
+                    profileList.clear(); // Clear the list before adding new data
+
+                    // Listen for real-time updates to each profile document
+                    for (String deviceId : deviceIds) {
+                        db.collection("profiles").document(deviceId).addSnapshotListener((profileDoc, profileError) -> {
+                            if (profileError != null) {
+                                Log.e("Firestore", "Error listening to profile document updates", profileError);
+                                return;
+                            }
+
+                            if (profileDoc != null && profileDoc.exists()) {
+                                Profile profile = profileDoc.toObject(Profile.class);
+                                profileList.add(profile); // Add the name if it’s not already in the list
+                                adapter.notifyDataSetChanged(); // Update the adapter
+                            }
+                            else {
+                                Log.d("Firestore", "Profile document does not exist for device ID: " + deviceId);
+                            }
+                        });
+                    }
+                } else {
+                    Log.d("Firestore", "No device IDs found in the waitlisted list.");
+                    profileList.clear();
+                    adapter.notifyDataSetChanged(); // Clear the ListView if no device IDs are found
+                }
+            } else {
+                Log.d("Firestore", "Event document does not exist for ID: " + eventId);
+                profileList.clear();
+                adapter.notifyDataSetChanged(); // Clear the ListView if the event document doesn't exist
+            }
+        });
+
         return view;
     }
 

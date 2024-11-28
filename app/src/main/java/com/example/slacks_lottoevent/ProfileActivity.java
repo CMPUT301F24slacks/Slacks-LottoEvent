@@ -1,5 +1,6 @@
 package com.example.slacks_lottoevent;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,12 +18,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.Glide;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class ProfileActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_PICK_IMAGE = 1001; // Unique request code
@@ -43,9 +55,11 @@ public class ProfileActivity extends AppCompatActivity {
     private Switch notificationsSwitch;
     private Button editProfileButton;
     private Button editPictureButton;
-
     private Button confirmButton;
     private Button cancelButton;
+
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private Uri selectedImageUri;
 
     /**
      * OnCreate method for the ProfileActivity
@@ -72,7 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
         notificationsIcon = findViewById(R.id.notifications_icon);
         notificationsSwitch = findViewById(R.id.switch_notifications);
         editProfileButton = findViewById(R.id.btn_edit_profile);
-        editPictureButton= findViewById(R.id.btn_edit_picture);
+        editPictureButton = findViewById(R.id.btn_edit_picture);
         confirmButton = findViewById(R.id.btn_confirm);
         cancelButton = findViewById(R.id.btn_cancel);
 
@@ -130,7 +144,28 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Edit picture button listener
         // TODO: FIX THE EDIT PICTURE BUTTON
-        //editPictureButton.setOnClickListener(v -> showEditPictureDialog());
+        editPictureButton.setOnClickListener(v -> {
+            selectImage();
+        });
+
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent data = result.getData();
+                            if (data != null && data.getData() != null) {
+                                selectedImageUri = data.getData();
+                            }
+                            if (selectedImageUri != null){
+                                editImage(selectedImageUri);
+                            }
+                        }
+                    }
+
+
+                });
 
         // Confirm button listener
         confirmButton.setOnClickListener(v -> {
@@ -176,22 +211,86 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Method to update the profile picture
-     * @param imageUri
-     */
-    private void updateProfilePicture(Uri imageUri) {
-        String imagePath = imageUri.toString();
-        profile.setProfilePicturePath(imagePath);
-        profilesRef.document(userId).update("profilePicturePath", imagePath)
+    private void refreshUI(String newImageUrl) {
+        Glide.with(this).load(newImageUrl).into(profilePhoto); // Update your ImageView
+        Toast.makeText(this, "Image updated successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateFirestoreWithNewImage(String newImageUrl, Callback<Boolean> callback) {
+        profilesRef.document(profile.getDeviceId()).update("profilePicturePath", newImageUrl)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Profile picture updated!", Toast.LENGTH_SHORT).show();
-                    Log.d("ProfileActivity", "Profile picture updated in Firestore.");
+                    profile.setProfilePicturePath(newImageUrl);
+                    profile.setUsingDefaultPicture(false);
+                    callback.onComplete(true);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("ProfileActivity", "Failed to update profile picture: " + e.getMessage());
-                    Toast.makeText(this, "Failed to save changes. Please try again.", Toast.LENGTH_SHORT).show();
+                    Log.e("ProfileActivity", "Failed to update Firestore with new image URL", e);
+                    callback.onComplete(false);
                 });
+    }
+
+
+    private void editImage(Uri newImageUri) {
+        // Step 1: Delete the old image from Google Cloud Storage
+        deleteOldImage(profile.getProfilePicturePath(), () -> {
+            // Step 2: Upload the new image
+            uploadNewImage(newImageUri, newImageUrl -> {
+                // Step 3: Update Firestore with the new image URL
+                updateFirestoreWithNewImage(newImageUrl, success -> {
+                    if (success) {
+                        refreshUI(newImageUrl); // Update the UI
+                    } else {
+                        Toast.makeText(this, "Failed to update Firestore", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        });
+    }
+
+    private void uploadNewImage(Uri newImageUri, Callback<String> callback) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
+        Date now = new Date();
+        String fileName = formatter.format(now);
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("profile-pictures/" + fileName);
+
+        storageRef.putFile(newImageUri)
+                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
+                        .addOnSuccessListener(uri -> {
+                            String newImageUrl = uri.toString();
+                            callback.onComplete(newImageUrl); // Pass the new URL to the callback
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("ProfileActivity", "Failed to get download URL", e);
+                            callback.onComplete(null);
+                        }))
+                .addOnFailureListener(e -> {
+                    Log.e("ProfileActivity", "Failed to upload file", e);
+                    callback.onComplete(null);
+                });
+    }
+
+
+    private void deleteOldImage(String oldImageUrl, Runnable onSuccess) {
+        if (oldImageUrl != null && (oldImageUrl.startsWith("gs://") || oldImageUrl.startsWith("https://firebasestorage.googleapis.com/"))) {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(oldImageUrl);
+            storageReference.delete()
+                    .addOnSuccessListener(aVoid -> onSuccess.run())
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Failed to delete old image", Toast.LENGTH_SHORT).show();
+                        Log.e("ProfileActivity", "Error deleting old image: ", e);
+                    });
+        } else {
+            Log.w("ProfileActivity", "Old image URL is not a valid Firebase Storage URL. Skipping deletion.");
+            onSuccess.run(); // No valid URL to delete, continue with the operation
+        }
+    }
+
+
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        imagePickerLauncher.launch(intent);
     }
 
     /**
@@ -226,63 +325,6 @@ public class ProfileActivity extends AppCompatActivity {
         // Save the selected ImageView for later use in onActivityResult
         selectedImageView.setTag(R.id.selected_image_view, selectedImageView);
     }
-
-    /**
-     * Method to show the edit picture dialog
-     */
-    private void showEditPictureDialog() {
-        // Create and configure the dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_edit_picture, null);
-        builder.setView(dialogView);
-
-        // Dialog UI elements
-        ImageView selectedImageView = dialogView.findViewById(R.id.selected_image_view);
-        Button uploadButton = dialogView.findViewById(R.id.upload_button);
-        Button confirmButton = dialogView.findViewById(R.id.confirm_button);
-        Button cancelButton = dialogView.findViewById(R.id.cancel_button);
-
-        AlertDialog dialog = builder.create();
-
-        // Upload button logic
-        uploadButton.setOnClickListener(view -> openImagePicker(selectedImageView));
-
-        // Confirm button logic
-        confirmButton.setOnClickListener(v -> {
-            // Validate inputs
-            if (!validateInputs()) return;
-
-            // Update profile object
-            profile.setName(nameEditText.getText().toString().trim(), getApplicationContext());
-            profile.setEmail(emailEditText.getText().toString().trim());
-            profile.setPhone(phoneEditText.getText().toString().trim());
-
-            // Save changes to Firestore
-            profilesRef.document(userId).set(profile)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
-                        updateUIWithProfile(); // Refresh UI
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("ProfileActivity", "Failed to update profile: " + e.getMessage());
-                        Toast.makeText(this, "Failed to save changes. Please try again.", Toast.LENGTH_SHORT).show();
-                    });
-
-            // Reset UI state
-            setFieldsEditable(false);
-            editProfileButton.setVisibility(Button.VISIBLE);
-            confirmButton.setVisibility(Button.GONE);
-            cancelButton.setVisibility(Button.GONE);
-        });
-
-
-        // Cancel button logic
-        cancelButton.setOnClickListener(view -> dialog.dismiss());
-
-        dialog.show();
-    }
-
 
     /**
      * Method to validate the inputs
@@ -322,7 +364,11 @@ public class ProfileActivity extends AppCompatActivity {
         nameEditText.setText(profile.getName());
         emailEditText.setText(profile.getEmail());
         phoneEditText.setText(profile.getPhone());
-        profilePhoto.setImageURI(Uri.parse(profile.getProfilePicturePath()));
+        if (profile.getUsingDefaultPicture()) {
+            profilePhoto.setImageURI(Uri.parse(profile.getProfilePicturePath()));
+        } else {
+            Glide.with(this).load(profile.getProfilePicturePath()).into(profilePhoto);
+        }
         notificationsSwitch.setChecked(profile.getAdminNotifications());
     }
 

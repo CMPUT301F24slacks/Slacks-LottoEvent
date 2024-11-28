@@ -1,5 +1,6 @@
 package com.example.slacks_lottoevent;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AdminProfiles extends Fragment {
 
@@ -42,8 +44,15 @@ public class AdminProfiles extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_profiles, container, false);
         listViewAdminProfiles = view.findViewById(R.id.ListViewAdminProfiles);
 
+        ArrayList<Event> eventList = new ArrayList<>();
+        ArrayList<Facility> facilityList = new ArrayList<>();
+
+        OrganizerEventArrayAdapter eventsAdapter = new OrganizerEventArrayAdapter(getContext(), eventList, true);
+        FacilityListArrayAdapter facilitiesAdapter = new FacilityListArrayAdapter(getContext(), facilityList, true, eventsAdapter, eventList);
+
         // Initialize adapter with the profile list
-        adapter = new ProfileListArrayAdapter(getContext(), profileList);
+        adapter = new ProfileListArrayAdapter(getContext(), profileList, true, facilityList, facilitiesAdapter,
+                eventList, eventsAdapter);
         listViewAdminProfiles.setAdapter(adapter);
 
         // Fetch profiles from Firestore
@@ -57,25 +66,24 @@ public class AdminProfiles extends Fragment {
      * and populates the profile list.
      */
     private void fetchProfilesFromFirestore() {
-        db.collection("profiles")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        profileList.clear(); // Clear the list before adding new data
-                        for (DocumentSnapshot document : task.getResult()) {
-                            // Create Profile object from Firestore data
-                            String name = document.getString("name");
-                            String email = document.getString("email");
-                            String phone = document.getString("phone");
-                            String deviceId = document.getId();
-                            Profile profile = new Profile(name, email, phone, deviceId, null); // Adjust constructor if needed
+        db.collection("profiles").addSnapshotListener((querySnapshot, error) -> {
+            if (error != null) {
+                Log.e("Firestore", "Error listening for profile updates: ", error);
+                return;
+            }
 
-                            profileList.add(profile); // Add to the list
-                        }
-                        adapter.notifyDataSetChanged(); // Notify adapter about data changes
-                    } else {
-                        Log.e("Firestore", "Error fetching profiles: ", task.getException());
-                    }
-                });
+            if (querySnapshot != null) {
+                profileList.clear(); // Clear the list before adding new data
+
+                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                    // Create Profile object from Firestore data
+                    Profile profile = document.toObject(Profile.class);
+                    profileList.add(profile); // Add to the list
+                }
+                adapter.notifyDataSetChanged(); // Notify adapter about data changes
+            } else {
+                Log.d("Firestore", "No profiles found.");
+            }
+        });
     }
 }
