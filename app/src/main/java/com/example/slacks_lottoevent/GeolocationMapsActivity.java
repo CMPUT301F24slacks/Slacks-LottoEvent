@@ -68,7 +68,7 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish(); // Return back to the previous activity 
+                finish(); // Return back to the previous activity
             }
         });
         tabLayout = findViewById(R.id.distance_tab_layout);
