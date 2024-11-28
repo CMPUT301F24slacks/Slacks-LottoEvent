@@ -99,99 +99,107 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         db.collection("events").whereEqualTo("eventID", qrCodeValue).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
-
                         document = task.getResult().getDocuments().get(0);
-                        date = document.getString("eventDate");
-                        time = document.getString("time");
-                        eventName = document.getString("name");
-                        location = document.getString("location");
-                        description = document.getString("description");
-                        signupDeadline = document.getString("signupDeadline");
-                        eventPosterURL = document.getString("eventPosterURL");
-                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                        Date signup = null;
-                        try {
-                            signup = sdf.parse(signupDeadline);
-                        } catch (ParseException e) {}
-                        Date currentDate = new Date();
-                        try {
-                            // Format the current date to "MM/dd/yyyy" and parse it back into a Date object to remove time
-                            currentDate = sdf.parse(sdf.format(currentDate));
-                        } catch (ParseException e) {}
 
-
-                        List<Object> waitlisted = (List<Object>) document.get("waitlisted");
-                        Long capacity = (Long) document.get("eventSlots");
-                        Long waitListCapacity = (Long) document.get("waitListCapacity");
-                        String waitlistCapacityAsString = "";
-                        assert capacity != null;
-                        String capacityAsString = capacity.toString();
-
-                        spotsRemaining = waitListCapacity.intValue() - waitlisted.size();
-//                        Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
-                        if (spotsRemaining <= 0 && waitListCapacity > 0){
-                            binding.waitlistCapacitySection.setVisibility(View.GONE);
-                            binding.spotsAvailableSection.setVisibility(View.GONE);
-                        }
-                        else{
-                            spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
-                            binding.spotsAvailable.setText(spotsRemainingText);
-
-                        }
-
-                        if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
-                            Glide.with(this) // 'this' refers to the activity context
-                                    .load(eventPosterURL)
-                                    .into(binding.eventImage);
-                        }
-
-
-                        if (spotsRemaining <= 0 && waitListCapacity > 0 || currentDate.after(signup)) {
-                            // Capacity is full show we want to show the waitlist badge
+                        Boolean isDisabled = document.getBoolean("disabled");
+                        if (isDisabled){
+                            showInvalidQRCodeDialog();
                             binding.joinButton.setVisibility(View.GONE);
-                            binding.waitlistFullBadge.setVisibility(View.VISIBLE);
                         }
                         else {
-                            binding.joinButton.setVisibility(View.VISIBLE);
-                            binding.waitlistFullBadge.setVisibility(View.GONE);
-                        }
+                            date = document.getString("eventDate");
+                            time = document.getString("time");
+                            eventName = document.getString("name");
+                            location = document.getString("location");
+                            description = document.getString("description");
+                            signupDeadline = document.getString("signupDeadline");
+                            eventPosterURL = document.getString("eventPosterURL");
+                            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                            Date signup = null;
+                            try {
+                                signup = sdf.parse(signupDeadline);
+                            } catch (ParseException e) {
+                            }
+                            Date currentDate = new Date();
+                            try {
+                                // Format the current date to "MM/dd/yyyy" and parse it back into a Date object to remove time
+                                currentDate = sdf.parse(sdf.format(currentDate));
+                            } catch (ParseException e) {
+                            }
 
-                        binding.eventTitle.setText(eventName);
-                        binding.eventDate.setText("Event Date: " + date);
-                        binding.signupDate.setText("Sign up deadline: " + signupDeadline);
-                        binding.eventLocation.setText(location);
-                        binding.eventSlots.setText("Event Slots: " + capacityAsString);
-                        binding.eventDescription.setText(description);
-                        binding.waitlistCapacity.setText("Waitlist Capacity: " + waitlistCapacityAsString);
+
+                            List<Object> waitlisted = (List<Object>) document.get("waitlisted");
+                            Long capacity = (Long) document.get("eventSlots");
+                            Long waitListCapacity = (Long) document.get("waitListCapacity");
+                            String waitlistCapacityAsString = "";
+                            assert capacity != null;
+                            String capacityAsString = capacity.toString();
+
+                            spotsRemaining = waitListCapacity.intValue() - waitlisted.size();
+                            //                        Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
+                            if (spotsRemaining <= 0 && waitListCapacity > 0) {
+                                binding.waitlistCapacitySection.setVisibility(View.GONE);
+                                binding.spotsAvailableSection.setVisibility(View.GONE);
+                            } else {
+                                spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
+                                binding.spotsAvailable.setText(spotsRemainingText);
+
+                            }
+
+                            if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
+                                Glide.with(this) // 'this' refers to the activity context
+                                        .load(eventPosterURL)
+                                        .into(binding.eventImage);
+                            }
 
 
-                        usesGeolocation = (Boolean) document.get("geoLocation");
+                            if (spotsRemaining <= 0 && waitListCapacity > 0 || currentDate.after(signup)) {
+                                // Capacity is full show we want to show the waitlist badge
+                                binding.joinButton.setVisibility(View.GONE);
+                                binding.waitlistFullBadge.setVisibility(View.VISIBLE);
+                            } else {
+                                binding.joinButton.setVisibility(View.VISIBLE);
+                                binding.waitlistFullBadge.setVisibility(View.GONE);
+                            }
 
-                        // The reason to add the onClickListener in here is because we don't want the join button to do anything unless this event actually exists in the firebase
-                        binding.joinButton.setOnClickListener(view -> {
-                            FirestoreProfileUtil.checkIfSignedUp(deviceId, isSignedUp -> {
-                                if (isSignedUp) {
-                                    if (usesGeolocation) {
-                                        checkAndRequestGeolocation();
+                            binding.eventTitle.setText(eventName);
+                            binding.eventDate.setText("Event Date: " + date);
+                            binding.signupDate.setText("Sign up deadline: " + signupDeadline);
+                            binding.eventLocation.setText(location);
+                            binding.eventSlots.setText("Event Slots: " + capacityAsString);
+                            binding.eventDescription.setText(description);
+                            binding.waitlistCapacity.setText("Waitlist Capacity: " + waitlistCapacityAsString);
+
+                            usesGeolocation = (Boolean) document.get("geoLocation");
+                            // The reason to add the onClickListener in here is because we don't want the join button to do anything unless this event actually exists in the firebase
+                            binding.joinButton.setOnClickListener(view -> {
+                                FirestoreProfileUtil.checkIfSignedUp(deviceId, isSignedUp -> {
+                                    if (isSignedUp) {
+                                        if (usesGeolocation) {
+                                            checkAndRequestGeolocation();
+                                        } else {
+                                            showRegistrationDialog();
+                                        }
                                     } else {
-                                        showRegistrationDialog();
+                                        new AlertDialog.Builder(this)
+                                                .setTitle("Sign-Up Required")
+                                                .setMessage("In order to join an event, we need to collect some information about you.")
+                                                .setPositiveButton("Proceed", (dialog, which) -> {
+                                                    Intent signUpIntent = new Intent(JoinEventDetailsActivity.this, SignUpActivity.class);
+                                                    startActivity(signUpIntent);
+                                                })
+                                                .setNegativeButton("Cancel", (dialog, which) -> {
+                                                    dialog.dismiss();
+                                                })
+                                                .show();
                                     }
-                                } else {
-                                    new AlertDialog.Builder(this)
-                                            .setTitle("Sign-Up Required")
-                                            .setMessage("In order to join an event, we need to collect some information about you.")
-                                            .setPositiveButton("Proceed", (dialog, which) -> {
-                                                Intent signUpIntent = new Intent(JoinEventDetailsActivity.this, SignUpActivity.class);
-                                                startActivity(signUpIntent);
-                                            })
-                                            .setNegativeButton("Cancel", (dialog, which) -> {
-                                                dialog.dismiss();
-                                            })
-                                            .show();
-                                }
-                            });
+                                });
 
-                        });
+                            });
+                        }
+                    }
+                    else {
+                        showInvalidQRCodeDialog();
                     }
                 });
         // add a listener to the event details back button, go to the last item in the back stack
@@ -200,34 +208,38 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         });
 
     }
+    private void showInvalidQRCodeDialog(){
+        new AlertDialog.Builder(this) // Apply your custom theme here
+                .setTitle("Event Unavailable")
+                .setMessage("This event either doesn't exist or the QR code has been disabled by a Admin. Please check back later or scan a different Event QR Code!")
+                .setCancelable(false)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    dialog.dismiss();
+                    Intent intent = new Intent(JoinEventDetailsActivity.this, MyEventsFragment.class);
+                    startActivity(intent);
+                    finish();
+                })
+                .show();
+    }
 
     /**
      * showRegistrationDialog method for the JoinEventDetailsActivity.
      * This method shows the registration dialog for the event.
      */
     private void showRegistrationDialog(){
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_registration, null);
         builder.setView(dialogView);
-
         CheckBox declineCheckbox = dialogView.findViewById(R.id.declineCheckbox);
         Button confirmButton = dialogView.findViewById(R.id.confirm_button);
         Button cancelButton = dialogView.findViewById(R.id.cancel_button);
         TextView eventDetailsTextView = dialogView.findViewById(R.id.eventDetails);
         TextView geolocationBadge = dialogView.findViewById(R.id.geolocationBadge);
-
-
         geolocationBadge.setVisibility(usesGeolocation ? View.VISIBLE : View.GONE);
-
         String eventDetailsText = "Date: " + date + "\nTime: " + time + "\nLocation: " + location;
         eventDetailsTextView.setText(eventDetailsText);
-
         AlertDialog dialog = builder.create();
-
-
-
         cancelButton.setOnClickListener(view -> dialog.dismiss());
         confirmButton.setOnClickListener(view -> {
             Boolean isDeclined = declineCheckbox.isChecked();
@@ -273,6 +285,9 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         dialog.show();
 
     }
+
+
+
     /**
      *
      * Retrieves the current location of the device at the time this method is called.
