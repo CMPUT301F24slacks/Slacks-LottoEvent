@@ -12,11 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.slacks_lottoevent.R;
-import com.example.slacks_lottoevent.model.Event;
+import com.example.slacks_lottoevent.Event;
 import com.example.slacks_lottoevent.model.User;
 import com.example.slacks_lottoevent.viewmodel.EntrantViewModel;
 import com.example.slacks_lottoevent.viewmodel.EventViewModel;
-import com.example.slacks_lottoevent.viewmodel.adapter.EventArrayAdapter;
+import com.example.slacks_lottoevent.EventArrayAdapter;
 
 import java.util.ArrayList;
 

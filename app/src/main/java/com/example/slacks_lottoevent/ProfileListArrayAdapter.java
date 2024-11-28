@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
-import com.example.slacks_lottoevent.model.Profile;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;

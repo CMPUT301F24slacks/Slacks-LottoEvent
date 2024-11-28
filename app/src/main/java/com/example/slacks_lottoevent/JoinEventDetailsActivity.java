@@ -21,8 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.slacks_lottoevent.model.Entrant;
-import com.example.slacks_lottoevent.model.Event;
+import com.example.slacks_lottoevent.Entrant;
+import com.example.slacks_lottoevent.Event;
 import com.example.slacks_lottoevent.EventsHomeActivity;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.SignUpActivity;

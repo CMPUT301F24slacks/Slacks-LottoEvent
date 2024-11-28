@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.model;
+package com.example.slacks_lottoevent;
 
 import android.content.Context;
 import android.graphics.Bitmap;

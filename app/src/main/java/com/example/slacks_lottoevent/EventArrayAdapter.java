@@ -1,9 +1,8 @@
-package com.example.slacks_lottoevent.viewmodel.adapter;
+package com.example.slacks_lottoevent;
 
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.example.slacks_lottoevent.EntrantEventDetailsActivity;
-import com.example.slacks_lottoevent.R;
-import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.enums.EventParticipationStatus;
 import com.example.slacks_lottoevent.model.User;
 

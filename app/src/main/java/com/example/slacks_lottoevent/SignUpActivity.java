@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.databinding.SignUpActivityBinding;
 
-import com.example.slacks_lottoevent.model.Profile;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 

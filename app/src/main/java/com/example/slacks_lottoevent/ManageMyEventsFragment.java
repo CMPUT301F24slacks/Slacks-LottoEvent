@@ -19,8 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.slacks_lottoevent.databinding.FragmentManageMyEventsBinding;
-import com.example.slacks_lottoevent.model.Event;
-import com.example.slacks_lottoevent.model.Facility;
 import com.example.slacks_lottoevent.refactor.OrganizerEventArrayAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;

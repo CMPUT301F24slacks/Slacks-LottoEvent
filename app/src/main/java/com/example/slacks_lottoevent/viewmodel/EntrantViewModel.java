@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.slacks_lottoevent.database.EntrantDB;
-import com.example.slacks_lottoevent.model.Entrant;
+import com.example.slacks_lottoevent.Entrant;
 import com.google.firebase.firestore.ListenerRegistration;
 
 public class EntrantViewModel extends ViewModel {

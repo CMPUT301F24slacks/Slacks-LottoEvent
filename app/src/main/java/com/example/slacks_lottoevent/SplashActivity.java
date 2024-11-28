@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.view;
+package com.example.slacks_lottoevent;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,7 +8,6 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.model.User;
 import com.example.slacks_lottoevent.viewmodel.EntrantViewModel;
 import com.example.slacks_lottoevent.viewmodel.EventViewModel;

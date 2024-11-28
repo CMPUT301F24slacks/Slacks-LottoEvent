@@ -7,8 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.slacks_lottoevent.database.FacilityDB;
-import com.example.slacks_lottoevent.model.Facility;
-import com.example.slacks_lottoevent.model.User;
+import com.example.slacks_lottoevent.Facility;
 
 public class FacilityViewModel extends ViewModel {
     private final FacilityDB facilityDB;

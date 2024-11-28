@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.view;
+package com.example.slacks_lottoevent;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +8,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.model.User;
+import com.example.slacks_lottoevent.view.BaseActivity;
 import com.example.slacks_lottoevent.viewmodel.EntrantViewModel;
 import com.example.slacks_lottoevent.viewmodel.EventViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

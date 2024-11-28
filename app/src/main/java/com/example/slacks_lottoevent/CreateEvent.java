@@ -8,20 +8,16 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Button;
 
-import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
-import com.example.slacks_lottoevent.model.Event;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.User;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.WriterException;
@@ -33,7 +29,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;

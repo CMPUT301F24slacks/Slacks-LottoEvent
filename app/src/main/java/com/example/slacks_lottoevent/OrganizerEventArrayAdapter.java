@@ -15,13 +15,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.example.slacks_lottoevent.model.Event;
+import com.example.slacks_lottoevent.Event;
 import com.example.slacks_lottoevent.OrganizerEventDetailsActivity;
 import com.example.slacks_lottoevent.R;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -29,8 +28,6 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Custom ArrayAdapter for displaying events in the OrganizerEventsActivity

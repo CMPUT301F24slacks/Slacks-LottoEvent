@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.slacks_lottoevent.database.EventDB;
-import com.example.slacks_lottoevent.model.Event;
+import com.example.slacks_lottoevent.Event;
 
 import java.util.ArrayList;
 import java.util.List;

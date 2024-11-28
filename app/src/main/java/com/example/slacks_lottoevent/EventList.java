@@ -1,7 +1,5 @@
 package com.example.slacks_lottoevent;
 
-import com.example.slacks_lottoevent.model.Event;
-
 import java.util.ArrayList;
 
 /**

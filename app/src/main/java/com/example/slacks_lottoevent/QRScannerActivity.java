@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.view;
+package com.example.slacks_lottoevent;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,8 +18,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.camera.view.PreviewView;
 
-import com.example.slacks_lottoevent.FullscreenQrScanner;
-import com.example.slacks_lottoevent.R;
+import com.example.slacks_lottoevent.view.BaseActivity;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.google.firebase.firestore.CollectionReference;
