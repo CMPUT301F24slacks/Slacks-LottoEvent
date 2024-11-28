@@ -101,10 +101,14 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
                         document = task.getResult().getDocuments().get(0);
                         Boolean isDisabled = document.getBoolean("disabled");
+                        String organizerDeviceId = document.getString("deviceId");
                         if (isDisabled){
                             showInvalidQRCodeDialog();
                             binding.joinButton.setVisibility(View.GONE);
+                        } else if (deviceId.equals(organizerDeviceId)) {
+
                         }
+
                         else {
                             date = document.getString("eventDate");
                             time = document.getString("time");
@@ -207,6 +211,9 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         });
 
     }
+    /**
+     * Displays a dialog to inform the user that the scanned QR code is invalid or the associated event has been disabled by an admin.
+     * */
     private void showInvalidQRCodeDialog(){
         new AlertDialog.Builder(this) // Apply your custom theme here
                 .setTitle("Event Unavailable")
