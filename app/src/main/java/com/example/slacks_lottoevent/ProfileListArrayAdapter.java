@@ -21,6 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.zxing.WriterException;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Custom ArrayAdapter for displaying profiles in a ListView.
@@ -172,7 +174,6 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
                                                  FacilityListArrayAdapter facilitiesAdapter,
                                                  OrganizerEventArrayAdapter eventsAdapter) {
         // Has Profile Picture
-        // It doesnt delete the associated event poster if i delete the event from Profile, maybe also from facilities
         if (!profile.isUsingDefaultPicture()) {
             AdminImagesAdapter.deleteImageFromStorageAndFirestore(context, db, profile.getProfilePicturePath(), false);
         }
@@ -285,6 +286,7 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
         }
 
         for (String eventID : waitlistedEvents) {
+            // Remove deviceId from "waitlisted", "waitlistedNotificationsList", and "reselected"
             db.collection("events").document(eventID)
                     .update(
                             "waitlisted", FieldValue.arrayRemove(deviceId),
@@ -292,13 +294,35 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
                             "reselected", FieldValue.arrayRemove(deviceId)
                     )
                     .addOnSuccessListener(aVoid -> {
-                        // Successfully removed deviceId from the lists
-                        System.out.println("Device ID removed from event: " + eventID);
+                        System.out.println("Device ID removed from event lists: " + eventID);
+
+                        // Remove deviceId from "joinLocations"
+                        db.collection("events").document(eventID).get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        List<Map<String, List<Double>>> joinLocations =
+                                                (List<Map<String, List<Double>>>) documentSnapshot.get("joinLocations");
+
+                                        if (joinLocations != null) {
+                                            // Filter out entries with the deviceId
+                                            List<Map<String, List<Double>>> updatedJoinLocations = new ArrayList<>();
+                                            for (Map<String, List<Double>> entry : joinLocations) {
+                                                if (!entry.containsKey(deviceId)) {
+                                                    updatedJoinLocations.add(entry); // Keep entries not matching the deviceId
+                                                }
+                                            }
+
+                                            // Update Firestore with the filtered joinLocations
+                                            db.collection("events").document(eventID)
+                                                    .update("joinLocations", updatedJoinLocations)
+                                                    .addOnSuccessListener(aVoid2 -> System.out.println("Device ID removed from joinLocations: " + eventID))
+                                                    .addOnFailureListener(e -> System.err.println("Failed to update joinLocations for event: " + eventID + " - " + e.getMessage()));
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(e -> System.err.println("Failed to fetch joinLocations for event: " + eventID + " - " + e.getMessage()));
                     })
-                    .addOnFailureListener(e -> {
-                        // Log or handle the failure
-                        System.err.println("Failed to remove Device ID from event: " + eventID + " - " + e.getMessage());
-                    });
+                    .addOnFailureListener(e -> System.err.println("Failed to remove Device ID from event lists: " + eventID + " - " + e.getMessage()));
         }
     }
 
@@ -308,20 +332,42 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
         }
 
         for (String eventID : SelectedEvents) {
+            // Remove deviceId from "waitlisted", "waitlistedNotificationsList", and "reselected"
             db.collection("events").document(eventID)
                     .update(
                             "selected", FieldValue.arrayRemove(deviceId),
                             "selectedNotificationsList", FieldValue.arrayRemove(deviceId)
-//                            "reselected", FieldValue.arrayRemove(deviceId)
                     )
                     .addOnSuccessListener(aVoid -> {
-                        // Successfully removed deviceId from the lists
-                        System.out.println("Device ID removed from event: " + eventID);
+                        System.out.println("Device ID removed from event lists: " + eventID);
+
+                        // Remove deviceId from "joinLocations"
+                        db.collection("events").document(eventID).get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        List<Map<String, List<Double>>> joinLocations =
+                                                (List<Map<String, List<Double>>>) documentSnapshot.get("joinLocations");
+
+                                        if (joinLocations != null) {
+                                            // Filter out entries with the deviceId
+                                            List<Map<String, List<Double>>> updatedJoinLocations = new ArrayList<>();
+                                            for (Map<String, List<Double>> entry : joinLocations) {
+                                                if (!entry.containsKey(deviceId)) {
+                                                    updatedJoinLocations.add(entry); // Keep entries not matching the deviceId
+                                                }
+                                            }
+
+                                            // Update Firestore with the filtered joinLocations
+                                            db.collection("events").document(eventID)
+                                                    .update("joinLocations", updatedJoinLocations)
+                                                    .addOnSuccessListener(aVoid2 -> System.out.println("Device ID removed from joinLocations: " + eventID))
+                                                    .addOnFailureListener(e -> System.err.println("Failed to update joinLocations for event: " + eventID + " - " + e.getMessage()));
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(e -> System.err.println("Failed to fetch joinLocations for event: " + eventID + " - " + e.getMessage()));
                     })
-                    .addOnFailureListener(e -> {
-                        // Log or handle the failure
-                        System.err.println("Failed to remove Device ID from event: " + eventID + " - " + e.getMessage());
-                    });
+                    .addOnFailureListener(e -> System.err.println("Failed to remove Device ID from event lists: " + eventID + " - " + e.getMessage()));
         }
     }
 
@@ -331,19 +377,42 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
         }
 
         for (String eventID : FinalistEvents) {
+            // Remove deviceId from "waitlisted", "waitlistedNotificationsList", and "reselected"
             db.collection("events").document(eventID)
                     .update(
                             "finalists", FieldValue.arrayRemove(deviceId),
                             "joinedNotificationsList", FieldValue.arrayRemove(deviceId)
-                    )
+                            )
                     .addOnSuccessListener(aVoid -> {
-                        // Successfully removed deviceId from the lists
-                        System.out.println("Device ID removed from event: " + eventID);
+                        System.out.println("Device ID removed from event lists: " + eventID);
+
+                        // Remove deviceId from "joinLocations"
+                        db.collection("events").document(eventID).get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        List<Map<String, List<Double>>> joinLocations =
+                                                (List<Map<String, List<Double>>>) documentSnapshot.get("joinLocations");
+
+                                        if (joinLocations != null) {
+                                            // Filter out entries with the deviceId
+                                            List<Map<String, List<Double>>> updatedJoinLocations = new ArrayList<>();
+                                            for (Map<String, List<Double>> entry : joinLocations) {
+                                                if (!entry.containsKey(deviceId)) {
+                                                    updatedJoinLocations.add(entry); // Keep entries not matching the deviceId
+                                                }
+                                            }
+
+                                            // Update Firestore with the filtered joinLocations
+                                            db.collection("events").document(eventID)
+                                                    .update("joinLocations", updatedJoinLocations)
+                                                    .addOnSuccessListener(aVoid2 -> System.out.println("Device ID removed from joinLocations: " + eventID))
+                                                    .addOnFailureListener(e -> System.err.println("Failed to update joinLocations for event: " + eventID + " - " + e.getMessage()));
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(e -> System.err.println("Failed to fetch joinLocations for event: " + eventID + " - " + e.getMessage()));
                     })
-                    .addOnFailureListener(e -> {
-                        // Log or handle the failure
-                        System.err.println("Failed to remove Device ID from event: " + eventID + " - " + e.getMessage());
-                    });
+                    .addOnFailureListener(e -> System.err.println("Failed to remove Device ID from event lists: " + eventID + " - " + e.getMessage()));
         }
     }
 
@@ -368,50 +437,4 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
                     });
         }
     }
-
-    //    private void showingProfilePicture(Profile profile) {
-//        LayoutInflater inflater = LayoutInflater.from(context);
-//        View popupView = inflater.inflate(R.layout.dialog_qr_code, null);
-//
-//        // Find the ImageView in the popup layout
-//        ImageView imageView = popupView.findViewById(R.id.qr_code_image);
-//
-//        // Set the Profile Picture
-//        if (!profile.isUsingDefaultPicture() && profile.getProfilePicturePath() != null && !profile.getProfilePicturePath().isEmpty()) {
-//            // Load the custom profile picture using Glide
-//            Glide.with(context)
-//                    .load(profile.getProfilePicturePath()) // Load the image from the URL
-//                    .placeholder(R.drawable.placeholder_image) // Placeholder while loading
-//                    .error(R.drawable.error_image) // Error image if the URL fails to load
-//                    .into(imageView); // Set into the ImageView
-//        } else {
-//            // If qrData is null or empty, set a default or error image
-//            imageView.setImageResource(R.drawable.error_image);
-//        }
-//
-//        // Create the AlertDialog
-//        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
-//        builder.setView(popupView);
-//
-//        // Add the Close button
-//        builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
-//
-//        if (!profile.isUsingDefaultPicture()) {
-//            builder.setNegativeButton("continue to delete profile", (dialog, which) -> {
-//                try {
-//                    // Call method to delete profile
-//                    deleteProfileFromDatabase(context, db, profile);
-////                    Toast.makeText(context, "Profile deleted successfully.", Toast.LENGTH_SHORT).show();
-//                } catch (Exception e) {
-//                    // Notify the user of the failure
-//                    Toast.makeText(context, "Failed to delete profile.", Toast.LENGTH_SHORT).show();
-//                    Log.e("ProfileDeletion", "Error deleting profile: ", e);
-//                }
-//            });
-//        }
-//
-//        // Show the dialog
-//        builder.create().show();
-//    }
-
 }
