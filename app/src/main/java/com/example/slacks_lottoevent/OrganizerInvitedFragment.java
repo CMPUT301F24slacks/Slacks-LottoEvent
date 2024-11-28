@@ -80,11 +80,8 @@ public class OrganizerInvitedFragment extends Fragment {
 
         craftMessageButton.setOnClickListener(v -> DialogHelper.showMessageDialog(getContext(), notifications,eventId, "selectedNotificationsList"));
 
-        //1. get the event day and see if it less than 1/2 a day away -> if so let the user move the entrants that havent responded yet but if not show an alert dialog/toast
-        // remove the entrants from their respective lists
         cancelEntrantsButton.setOnClickListener(v -> {
             // Get the event document from Firestore
-            Log.d("inside", "here in cancel entrants button");
             db.collection("events").document(eventId).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful() && task.getResult() != null) {
                     DocumentSnapshot eventDoc = task.getResult();
@@ -104,39 +101,35 @@ public class OrganizerInvitedFragment extends Fragment {
                         if (diffInHours <= 12) {
                             // Less than half a day remaining: proceed to move entrants
 
-                            ArrayList<Map<String, Object>> invitedList = (ArrayList<Map<String, Object>>) eventDoc.get("selected");
-                            ArrayList<Map<String, Object>> canceledList = (ArrayList<Map<String, Object>>) eventDoc.get("cancelled");
-                            ArrayList<Map<String, Object>> invitedNotificationsList = (ArrayList<Map<String, Object>>) eventDoc.get("selectedNotificationsList");
-                            ArrayList<Map<String, Object>> canceledNotificationsList = (ArrayList<Map<String, Object>>) eventDoc.get("cancelledNotificationsList");
+                            // Retrieve lists from Firestore
+                            ArrayList<String> invitedList = (ArrayList<String>) eventDoc.get("selected");
+                            ArrayList<String> canceledList = (ArrayList<String>) eventDoc.get("cancelled");
+                            ArrayList<String> invitedNotificationsList = (ArrayList<String>) eventDoc.get("selectedNotificationsList");
+                            ArrayList<String> canceledNotificationsList = (ArrayList<String>) eventDoc.get("cancelledNotificationsList");
 
+                            // Ensure lists are initialized
+                            if (invitedList == null) invitedList = new ArrayList<>();
+                            if (canceledList == null) canceledList = new ArrayList<>();
+                            if (invitedNotificationsList == null) invitedNotificationsList = new ArrayList<>();
+                            if (canceledNotificationsList == null) canceledNotificationsList = new ArrayList<>();
 
-                            if (invitedList != null && !invitedList.isEmpty()) {
+                            if (!invitedList.isEmpty()) {
                                 // Move entrants from invitedList to canceledList
-                                for (Map<String, Object> entrant : invitedList) {
-                                    canceledList.add(entrant); // Add to canceled list
-                                }
+                                canceledList.addAll(invitedList);
                                 invitedList.clear(); // Clear the invited list
+
                                 // Move entrants from invitedNotificationsList to canceledNotificationsList
-                                for (Map<String, Object> entrant : invitedNotificationsList) {
-                                    canceledNotificationsList.add(entrant); // Add to canceled list
-                                }
-                                invitedNotificationsList.clear(); // Clear the invited list
+                                canceledNotificationsList.addAll(invitedNotificationsList);
+                                invitedNotificationsList.clear(); // Clear the invited notifications list
 
                                 // Update Firestore
                                 db.collection("events").document(eventId)
-                                        .update("selectedNotificationsList", invitedNotificationsList,
+                                        .update("selected", invitedList,
+                                                "cancelled", canceledList,
+                                                "selectedNotificationsList", invitedNotificationsList,
                                                 "cancelledNotificationsList", canceledNotificationsList)
                                         .addOnSuccessListener(aVoid -> {
-                                            Toast.makeText(getContext(), "Entrants moved to cancelled notifications list!", Toast.LENGTH_SHORT).show();
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Toast.makeText(getContext(), "Error updating event: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        });
-                                db.collection("events").document(eventId)
-                                        .update("selectedList", invitedList,
-                                                "cancelledList", canceledList)
-                                        .addOnSuccessListener(aVoid -> {
-                                            Toast.makeText(getContext(), "Entrants moved to cancelled list!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), "Entrants moved to cancelled lists successfully!", Toast.LENGTH_SHORT).show();
                                         })
                                         .addOnFailureListener(e -> {
                                             Toast.makeText(getContext(), "Error updating event: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -150,14 +143,14 @@ public class OrganizerInvitedFragment extends Fragment {
                         }
                     } catch (ParseException e) {
                         Log.e("DateParsing", "Error parsing event date", e);
+                        Toast.makeText(getContext(), "Error parsing event date.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Log.e("Firestore", "Error fetching event document", task.getException());
+                    Toast.makeText(getContext(), "Error fetching event details.", Toast.LENGTH_SHORT).show();
                 }
             });
         });
-
-
 
         // Listen for real-time updates to the event document
         db.collection("events").document(eventId).addSnapshotListener((eventDoc, error) -> {
