@@ -172,6 +172,7 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
                                                  FacilityListArrayAdapter facilitiesAdapter,
                                                  OrganizerEventArrayAdapter eventsAdapter) {
         // Has Profile Picture
+        // It doesnt delete the associated event poster if i delete the event from Profile, maybe also from facilities
         if (!profile.isUsingDefaultPicture()) {
             AdminImagesAdapter.deleteImageFromStorageAndFirestore(context, db, profile.getProfilePicturePath(), false);
         }
