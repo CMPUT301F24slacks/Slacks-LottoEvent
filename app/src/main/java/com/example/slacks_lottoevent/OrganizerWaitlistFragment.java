@@ -72,7 +72,8 @@ public class OrganizerWaitlistFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_organizer_waitlist, container, false);
         ListViewEntrantsWaitlisted = view.findViewById(R.id.listViewEntrantsWaitlisted);
 
-        ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false);
+        ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false, null, null,
+                null, null);
         ListViewEntrantsWaitlisted.setAdapter(adapter);
 
         Button craftMessageButton = view.findViewById(R.id.craftMessage);

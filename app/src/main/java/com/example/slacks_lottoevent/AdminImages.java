@@ -21,9 +21,9 @@ import java.util.List;
 
 public class AdminImages extends Fragment {
 
-    private RecyclerView recyclerViewEventPosters;
+    private RecyclerView RecyclerViewImages;
     private AdminImagesAdapter adapter;
-    private List<String> posterURLs = new ArrayList<>();
+    private List<ImageMetadata> imageList = new ArrayList<>(); // Updated to use ImageMetadata
 
     public AdminImages() {
         // Required empty public constructor
@@ -40,21 +40,25 @@ public class AdminImages extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_images, container, false);
 
         // Initialize RecyclerView
-        recyclerViewEventPosters = view.findViewById(R.id.recyclerViewEventPosters);
-        recyclerViewEventPosters.setLayoutManager(new LinearLayoutManager(getContext()));
+        RecyclerViewImages = view.findViewById(R.id.recyclerViewImages);
+        RecyclerViewImages.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Initialize Adapter
-        adapter = new AdminImagesAdapter(getContext(), posterURLs);
-        recyclerViewEventPosters.setAdapter(adapter);
+        adapter = new AdminImagesAdapter(getContext(), imageList);
+        RecyclerViewImages.setAdapter(adapter);
+
+        imageList.clear(); // Clear the list to avoid duplicates or stale data
 
         // Fetch Event Posters
-        fetchEventPosters();
-
+        // Fetch Profile Pictures
+        fetchImages();
         return view;
     }
 
-    private void fetchEventPosters() {
+    private void fetchImages() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        List<ImageMetadata> tempEventImages = new ArrayList<>();
+        List<ImageMetadata> tempProfileImages = new ArrayList<>();
 
         db.collection("events").addSnapshotListener((querySnapshot, error) -> {
             if (error != null) {
@@ -63,55 +67,44 @@ public class AdminImages extends Fragment {
             }
 
             if (querySnapshot != null) {
-                for (DocumentChange dc : querySnapshot.getDocumentChanges()) {
-                    switch (dc.getType()) {
-                        case ADDED:
-                            // Add new poster URLs
-                            DocumentSnapshot addedDoc = dc.getDocument();
-                            String addedPosterURL = addedDoc.getString("eventPosterURL");
-                            if (addedPosterURL != null && !addedPosterURL.isEmpty()) {
-                                posterURLs.add(addedPosterURL);
-                            }
-                            break;
-
-                        case MODIFIED:
-                            // Update the poster URL if modified
-                            DocumentSnapshot modifiedDoc = dc.getDocument();
-                            String modifiedPosterURL = modifiedDoc.getString("eventPosterURL");
-                            if (modifiedPosterURL != null && !modifiedPosterURL.isEmpty()) {
-                                int index = findPosterIndex(modifiedDoc.getId());
-                                if (index != -1) {
-                                    posterURLs.set(index, modifiedPosterURL);
-                                }
-                            }
-                            break;
-
-                        case REMOVED:
-                            // Remove the poster URL if the event is deleted
-                            DocumentSnapshot removedDoc = dc.getDocument();
-                            String removedPosterURL = removedDoc.getString("eventPosterURL");
-                            if (removedPosterURL != null) {
-                                posterURLs.remove(removedPosterURL);
-                            }
-                            break;
+                tempEventImages.clear();
+                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                    String posterURL = document.getString("eventPosterURL");
+                    String eventId = document.getId();
+                    if (posterURL != null && !posterURL.trim().isEmpty()) {
+                        tempEventImages.add(new ImageMetadata(posterURL, true, eventId));
                     }
                 }
+                updateImageList(tempEventImages, tempProfileImages);
+            }
+        });
 
-                // Notify Adapter of Changes
-                adapter.notifyDataSetChanged();
+        db.collection("profiles").addSnapshotListener((querySnapshot, error) -> {
+            if (error != null) {
+                Log.e("Firestore", "Error listening for profile updates: ", error);
+                return;
+            }
+
+            if (querySnapshot != null) {
+                tempProfileImages.clear();
+                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                    boolean usingDefaultPicture = Boolean.TRUE.equals(document.getBoolean("usingDefaultPicture"));
+                    String profilePicturePath = document.getString("profilePicturePath");
+                    String deviceId = document.getId();
+                    if (!usingDefaultPicture && profilePicturePath != null && !profilePicturePath.trim().isEmpty()) {
+                        tempProfileImages.add(new ImageMetadata(profilePicturePath, false, deviceId));
+                    }
+                }
+                updateImageList(tempEventImages, tempProfileImages);
             }
         });
     }
 
-    // Helper method to find the index of a poster URL by event ID
-    private int findPosterIndex(String eventId) {
-        for (int i = 0; i < posterURLs.size(); i++) {
-            // Assuming `posterURLs` can be mapped to event IDs if needed
-            if (posterURLs.get(i).contains(eventId)) {
-                return i;
-            }
-        }
-        return -1;
+    private void updateImageList(List<ImageMetadata> tempEventImages, List<ImageMetadata> tempProfileImages) {
+        imageList.clear();
+        imageList.addAll(tempEventImages);
+        imageList.addAll(tempProfileImages);
+        adapter.notifyDataSetChanged();
     }
 
 }

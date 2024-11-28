@@ -1,9 +1,11 @@
 package com.example.slacks_lottoevent;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -11,17 +13,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.ViewHolder> {
-
     private Context context;
-    private List<String> posterURLs;
+    private List<ImageMetadata> imageList;
 
-    public AdminImagesAdapter(Context context, List<String> posterURLs) {
+    public AdminImagesAdapter(Context context, List<ImageMetadata> imageList) {
         this.context = context;
-        this.posterURLs = posterURLs;
+        this.imageList = imageList;
     }
 
     @NonNull
@@ -33,33 +42,212 @@ public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String posterURL = posterURLs.get(position);
-
-        // Use Glide to load the image from the URL
+        ImageMetadata meta = imageList.get(position);
         Glide.with(context)
-                .load(posterURL)
-                .placeholder(R.drawable.placeholder_image) // Replace with your placeholder image
-                .into(holder.imageEventPoster);
+                .load(meta.getImageUrl())
+                .placeholder(R.drawable.placeholder_image)
+                .error(R.drawable.error_image)
+                .into(holder.imageHolder);
 
-        // Handle click on the image
-        holder.imageEventPoster.setOnClickListener(v -> {
-            Toast.makeText(context, "Clicked on: " + posterURL, Toast.LENGTH_SHORT).show();
-            // Define further action here (e.g., open a new screen)
+        holder.imageHolder.setOnClickListener(v -> {
+            if (meta.isEventPoster()) {
+                showImageOptionsDialog(context, FirebaseFirestore.getInstance(), meta.getImageUrl(), true);
+            } else {
+                showImageOptionsDialog(context, FirebaseFirestore.getInstance(), meta.getImageUrl(), false);
+            }
         });
     }
 
     @Override
     public int getItemCount() {
-        return posterURLs.size();
+        return imageList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageEventPoster;
+        ImageView imageHolder;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageEventPoster = itemView.findViewById(R.id.imageEventPoster);
+            imageHolder = itemView.findViewById(R.id.imageHolder);
         }
     }
-}
 
+    /**
+     * Shows a dialog with event name and location, and options to Cancel or Delete the image.
+     */
+    public static void showImageOptionsDialog(Context context, FirebaseFirestore db, String ImageURL, boolean isPoster) {
+        if (isPoster)
+        {
+            db.collection("events")
+                    .whereEqualTo("eventPosterURL", ImageURL)
+                    .addSnapshotListener((querySnapshot, error) -> {
+                        if (error != null) {
+                            Log.e("Firestore", "Error listening for real-time updates: ", error);
+                            Toast.makeText(context, "Error fetching event details.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                            // Fetch the first matching document
+                            String eventName = querySnapshot.getDocuments().get(0).getString("name");
+                            String location = querySnapshot.getDocuments().get(0).getString("location");
+
+                            String message = "Event Name: " + (eventName != null ? eventName : "N/A") + "\n" +
+                                    "Location: " + (location != null ? location : "N/A");
+
+                            AdminActivity.showAdminAlertDialog(context, () -> deleteImageFromFirestore(context, db, ImageURL, isPoster),
+                                    "Event Details", message, "WARNING: DELETION CANNOT BE UNDONE", "Cancel", "Delete");
+
+                        }else {
+                            Log.e("Firestore", "No matching event found.");
+                            Toast.makeText(context, "No matching event found.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        else
+        {
+            db.collection("profiles")
+                    .whereEqualTo("profilePicturePath", ImageURL)
+                    .addSnapshotListener((querySnapshot, error) -> {
+                        if (error != null) {
+                            Log.e("Firestore", "Error listening for real-time updates: ", error);
+                            Toast.makeText(context, "Error fetching event details.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                            // Fetch the first matching document
+                            String name = querySnapshot.getDocuments().get(0).getString("name");
+                            String email = querySnapshot.getDocuments().get(0).getString("email");
+
+                            String message = "Name: " + (name != null ? name : "N/A") + "\n" +
+                                    "Email: " + (email != null ? email : "N/A");
+
+                            AdminActivity.showAdminAlertDialog(context, () -> deleteImageFromFirestore(context, db, ImageURL, false),
+                                    "Profile Details", message, "WARNING: DELETION CANNOT BE UNDONE", "Cancel", "Delete");
+                        } else {
+                            Log.e("Firestore", "No matching event found.");
+                            Toast.makeText(context, "No matching event found.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+        }
+    }
+
+    public static void deleteImageFromFirestore(Context context, FirebaseFirestore db, String ImageURL, boolean isPoster) {
+        if (isPoster)
+        {
+            db.collection("events")
+                    .whereEqualTo("eventPosterURL", ImageURL)
+                    .addSnapshotListener((querySnapshot, error) -> {
+                        if (error != null) {
+                            Log.e("Firestore", "Error listening for real-time updates: ", error);
+                            Toast.makeText(context, "Failed to fetch data.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                            String documentId = querySnapshot.getDocuments().get(0).getId();
+
+                            // Update Firestore to remove the eventPosterURL
+                            db.collection("events").document(documentId).update("eventPosterURL", "")
+                                    .addOnCompleteListener(updateTask -> {
+                                        if (updateTask.isSuccessful()) {
+                                            deleteImageFromStorageAndFirestore(context, ImageURL);
+                                            Toast.makeText(context, "Image deleted successfully.", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Log.e("Firestore", "Error updating database", updateTask.getException());
+                                            Toast.makeText(context, "Failed to delete image from database.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                        else {
+                            Log.e("Firestore", "No matching document found for real-time update.");
+                            Toast.makeText(context, "No matching event found for the given image.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        else
+        {
+            db.collection("profiles")
+                    .whereEqualTo("profilePicturePath", ImageURL)
+                    .addSnapshotListener((querySnapshot, error) -> {
+                        if (error != null) {
+                            Log.e("Firestore", "Error listening for real-time updates: ", error);
+                            Toast.makeText(context, "Failed to fetch data.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                            String documentId = querySnapshot.getDocuments().get(0).getId();
+
+//                            // Update Firestore to remove the profile picture
+//                            db.collection("profiles").document(documentId).update("usingDefaultPicture", false)
+//                                    .addOnCompleteListener(updateTask -> {
+//                                        if (updateTask.isSuccessful()) {
+//                                            Toast.makeText(context, "usingDefaultPicture updated successfully.", Toast.LENGTH_SHORT).show();
+//                                        } else {
+//                                            Log.e("Firestore", "Error updating usingDefaultPicture", updateTask.getException());
+//                                            Toast.makeText(context, "Failed to update usingDefaultPicture from database.", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
+
+                            db.collection("profiles").document(documentId)
+                                    .get()
+                                    .addOnSuccessListener(documentSnapshot -> {
+                                        if (documentSnapshot.exists()) {
+                                            // Convert the document snapshot into a Profile object
+                                            Profile profile = documentSnapshot.toObject(Profile.class);
+
+                                            if (profile != null) {
+                                                // Modify the profile object
+                                                deleteImageFromStorageAndFirestore(context, profile.getProfilePicturePath());
+                                                profile.setUsingDefaultPicture(true);
+                                                profile.setProfilePicturePath(profile.generateProfilePicture(profile.getName(), context));
+                                                // Update the profile object in Firestore
+                                                db.collection("profiles").document(documentId)
+                                                        .set(profile)
+                                                        .addOnSuccessListener(aVoid -> {
+                                                            Log.d("Firestore", "Profile updated successfully.");
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.e("Firestore", "Error updating profile: ", e);
+                                                        });
+
+                                                // Successfully retrieved and updated the Profile object
+                                                Log.d("Firestore", "Profile Name: " + profile.getName());
+                                            } else {
+                                                Log.e("Firestore", "Failed to parse Profile object.");
+                                            }
+                                        } else {
+                                            Log.e("Firestore", "No such document.");
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("Firestore", "Error fetching profile: ", e);
+                                    });
+                        }
+                        else {
+                            Log.e("Firestore", "No matching document found for real-time update.");
+//                            Toast.makeText(context, "No matching profile found for the given image.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    public static void deleteImageFromStorageAndFirestore(Context context, String ImageURL) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl(ImageURL);
+
+        // Delete the image from Firebase Storage
+        storageRef.delete().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // If deletion from storage is successful, delete from Firestore
+                Toast.makeText(context, "Successfully deleted image from storage.", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.e("Storage", "Error deleting image from storage", task.getException());
+                Toast.makeText(context, "Failed to delete image from storage.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}
