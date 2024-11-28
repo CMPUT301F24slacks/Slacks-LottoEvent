@@ -100,7 +100,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
                         document = task.getResult().getDocuments().get(0);
-
                         Boolean isDisabled = document.getBoolean("disabled");
                         if (isDisabled){
                             showInvalidQRCodeDialog();
@@ -215,9 +214,8 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("OK", (dialog, which) -> {
                     dialog.dismiss();
-                    Intent intent = new Intent(JoinEventDetailsActivity.this, MyEventsFragment.class);
-                    startActivity(intent);
-                    finish();
+                    navigateToEventsHome();
+
                 })
                 .show();
     }
