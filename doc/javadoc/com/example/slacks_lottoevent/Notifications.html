@@ -77,6 +77,13 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Notifications</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Handles notification-related operations, including adding notifications
+ to the Firestore database and removing notifications associated with specific users.
+
+ This class interacts with the following Firestore collections:
+ - "events" for retrieving lists of device IDs associated with an event.
+ - "profiles" for fetching user profile details based on device IDs.
+ - "notifications" for storing and managing user-specific notifications.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -89,7 +96,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">Notifications</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructs a new instance of <a href="Notifications.html" title="class in com.example.slacks_lottoevent"><code>Notifications</code></a>.</div>
+</div>
 </div>
 </section>
 </li>
@@ -105,14 +114,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeNotifications(java.lang.String)" class="member-name-link">removeNotifications</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendNotifications(java.lang.String,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">sendNotifications</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;customName,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addNotifications(java.lang.String,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">addNotifications</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;customName,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;customMessage,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;listToGrab,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Adds notifications to the "notifications" Firestore collection for all users
+ listed in a specific group (e.g., waitlist) of an event.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeNotifications(java.lang.String)" class="member-name-link">removeNotifications</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Removes all notifications associated with a specific user ID from the "notifications" Firestore collection.</div>
+</div>
 </div>
 </div>
 </div>
@@ -134,6 +148,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>Notifications</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Notifications</span>()</div>
+<div class="block">Constructs a new instance of <a href="Notifications.html" title="class in com.example.slacks_lottoevent"><code>Notifications</code></a>.
+ Initializes a Firestore database instance for performing database operations.</div>
 </section>
 </li>
 </ul>
@@ -145,18 +161,32 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="sendNotifications(java.lang.String,java.lang.String,java.lang.String,java.lang.String)">
-<h3>sendNotifications</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendNotifications</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;customName,
+<section class="detail" id="addNotifications(java.lang.String,java.lang.String,java.lang.String,java.lang.String)">
+<h3>addNotifications</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addNotifications</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;customName,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;customMessage,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;listToGrab,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId)</span></div>
+<div class="block">Adds notifications to the "notifications" Firestore collection for all users
+ listed in a specific group (e.g., waitlist) of an event.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>customName</code> - The title of the notification.</dd>
+<dd><code>customMessage</code> - The message content of the notification.</dd>
+<dd><code>listToGrab</code> - The key in the event document representing the list of device IDs.</dd>
+<dd><code>eventId</code> - The unique identifier of the event to retrieve the list from.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="removeNotifications(java.lang.String)">
 <h3>removeNotifications</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeNotifications</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</span></div>
+<div class="block">Removes all notifications associated with a specific user ID from the "notifications" Firestore collection.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>deviceId</code> - The unique identifier of the user or device whose notifications should be deleted.</dd>
+</dl>
 </section>
 </li>
 </ul>
