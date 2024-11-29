@@ -31,7 +31,7 @@ public class DialogHelper {
                     // Check if the message and title are not empty
                     if (!message.isEmpty() && !title.isEmpty()) {
                         // Call the method from Notifications class to send the notification
-                        notifications.sendNotifications(title, message, listToUse, eventId);
+                        notifications.addNotifications(title, message, listToUse, eventId);
                     }
                     else {
                         // Show a Toast if either title or message is empty

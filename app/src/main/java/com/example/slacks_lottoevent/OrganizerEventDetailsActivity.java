@@ -66,11 +66,13 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     private String eventID;
     private CollectionReference eventsRef;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+
+    Boolean entrantsChosen;
     Uri selectedImageUri;
     FirebaseFirestore db;
     String qrCodeValue;
+    Integer spotsRemaining;
     boolean isAdmin;
-    Long spotsRemaining;
     String spotsRemainingText;
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     Date currentDate = new Date();
@@ -114,6 +116,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 eventPosterURL = document.getString("eventPosterURL");
                 qrData = document.getString("qrdata");
                 eventID = document.getString("eventID");
+                entrantsChosen = document.getBoolean("entrantsChosen");
+
 
                 try {
                     signup = sdf.parse(signupDate);
@@ -124,13 +128,22 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
                 List<Object> finalists = (List<Object>) document.get("finalists");
 
-                        if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
-                            Glide.with(this) // 'this' refers to the activity context
-                                    .load(eventPosterURL)
-                                    .into(binding.eventImage);
-                        } else {
-                            Log.d("EventDetails", "Event poster URL is empty or null");
-                        }
+                ImageView eventPoster = binding.eventImage;
+
+                // Load event poster or default image
+                String posterURL = event.getEventPosterURL();
+                if (posterURL != null && !posterURL.trim().isEmpty()) {
+                    // Load the image from the posterURL using Glide
+                    Glide.with(this)
+                            .load(posterURL)
+                            .placeholder(R.drawable.event_image) // Set the default placeholder image
+                            .error(R.drawable.error_image) // Set the error image for invalid URLs
+                            .into(eventPoster);
+                } else {
+                    // No posterURL available, use the default placeholder image
+                    eventPoster.setImageResource(R.drawable.event_image);
+                }
+
                         binding.eventTitle.setText(eventName);
                         binding.eventDate.setText(date);
                         List<Object> waitlisted = (List<Object>) document.get("waitlisted");
@@ -139,16 +152,24 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         assert capacity != null;
                         String capacityAsString = capacity.toString();
 
-                        //Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
-                        if (waitListCapacity <= 0){
+                        if (waitListCapacity == 0){
+//                          Does not show badges if there is no waitlistCapacity section
                             binding.eventWaitlistCapacitySection.setVisibility(View.GONE);
                             binding.spotsAvailableSection.setVisibility(View.GONE);
                         }
-                        else{
-                            spotsRemaining = waitListCapacity - waitlisted.size();
+
+                        else if (waitListCapacity > 0){
+                            spotsRemaining = (waitListCapacity.intValue() - waitlisted.size()) > 0 ? (waitListCapacity.intValue() - waitlisted.size()) : 0 ;
                             spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
                             binding.spotsAvailable.setText(spotsRemainingText);
+
+                            if (entrantsChosen){
+                                spotsRemainingText = "Only 0 spots available on waitlist";
+                                binding.spotsAvailable.setText(spotsRemainingText);
+                            }
                         }
+
+
 
                         binding.eventTitle.setText(eventName);
                         binding.eventDate.setText("Event Date: " + date);
@@ -349,7 +370,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                     AdminActivity.showAdminAlertDialog(context, null, "No Poster Available",
                             "There is no event poster to delete.",
                             "TIP: ADD AN EVENT POSTER TO MAKE YOUR EVENT MORE ENTICING!",
-                            null, "OK");
+                            null, "OK", null);
                 }
             }
     }

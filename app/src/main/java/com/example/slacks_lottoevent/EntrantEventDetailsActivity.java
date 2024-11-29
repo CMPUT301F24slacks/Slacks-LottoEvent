@@ -33,9 +33,11 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
     private Boolean usesGeolocation;
     private String description;
     private String eventPosterURL;
+
+    private Boolean entrantsChosen;
     FirebaseFirestore db;
     String qrCodeValue;
-    Long spotsRemaining;
+    Integer spotsRemaining;
     String spotsRemainingText;
     @SuppressLint("HardwareIds") String deviceId;
 
@@ -63,6 +65,7 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                         description = document.getString("description");
                         signupDate = document.getString("signupDeadline");
                         eventPosterURL = document.getString("eventPosterURL");
+                        entrantsChosen = document.getBoolean("entrantsChosen");
 
                         List<Object> waitlisted = (List<Object>) document.get("waitlisted");
 
@@ -71,16 +74,31 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                         assert capacity != null;
                         String capacityAsString = capacity.toString();
 
-                        //Shows the waitlist capacity and calculates the spots left on the waitlist and if there is no waitlist capacity it won't show
-                        if (waitListCapacity <= 0){
+                        spotsRemaining = waitListCapacity.intValue() - waitlisted.size();
+
+
+                        if (waitListCapacity == 0){
+//                            Does not show badge if there is no waitlistCapacity section
                             binding.waitlistCapacitySection.setVisibility(View.GONE);
                             binding.spotsAvailableSection.setVisibility(View.GONE);
                         }
-                        else{
-                            spotsRemaining = waitListCapacity - waitlisted.size();
+
+                        else if (waitListCapacity > 0){
+//                            There is a waitlist capacity and shows the spots left
+                            spotsRemaining = spotsRemaining > 0 ? spotsRemaining : 0;
                             spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
                             binding.spotsAvailable.setText(spotsRemainingText);
+
+                            if (spotsRemaining <= 0){
+                                binding.waitlistFullBadge.setVisibility(View.VISIBLE);
+                            }
+                            else if (entrantsChosen) {
+                                spotsRemainingText = "Only 0 spots available on waitlist";
+                                binding.spotsAvailable.setText(spotsRemainingText);
+                            }
                         }
+
+
                         if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
                             Glide.with(this) // 'this' refers to the activity context
                                     .load(eventPosterURL)

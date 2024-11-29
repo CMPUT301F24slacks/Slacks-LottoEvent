@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.example.slacks_lottoevent.databinding.NotificationsUserBinding;
 import com.google.firebase.firestore.CollectionReference;
@@ -35,7 +36,10 @@ public class UserNotifications extends AppCompatActivity {
     private ArrayList<UserEventNotifications> eventList;
     private EventNotificationsArrayAdapter adapter;
 
+    ImageView organizerNotis;
+
     SharedPreferences sharedPreferences;
+
 
     /**
      * Initialize Firestore and Collections, and set up the adapter.
@@ -67,7 +71,7 @@ public class UserNotifications extends AppCompatActivity {
         Button back_btn = findViewById(R.id.back_btn);
         back_btn.setOnClickListener(v -> onBackPressed());
 
-        ImageView organizerNotis = findViewById(R.id.organizerNotifications);
+        organizerNotis = findViewById(R.id.organizerNotifications);
         boolean notisEnabled = sharedPreferences.getBoolean("notificationsEnabled", false);
 
         organizerNotis.setImageResource(notisEnabled ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
@@ -80,7 +84,7 @@ public class UserNotifications extends AppCompatActivity {
             editor.apply();
             organizerNotis.setImageResource(negation ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
 
-            if (negation) {
+            if (notisEnabled) {
                 Toast.makeText(this, "Notifications are disabled. To fully disable, revoke the permission in app settings.", Toast.LENGTH_LONG).show();
             }
             else{
@@ -93,6 +97,33 @@ public class UserNotifications extends AppCompatActivity {
             startActivityForResult(intent, 100);  // Start activity for result to return back to app
 
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 100) {
+            // Check notification status
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            boolean areNotificationsEnabled = notificationManager.areNotificationsEnabled();
+
+            // Update shared preferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("notificationsEnabled", areNotificationsEnabled);
+            editor.apply();
+
+            // Update the notification bell icon
+            organizerNotis.setImageResource(areNotificationsEnabled ?
+                    R.drawable.baseline_notifications_active_24 :
+                    R.drawable.baseline_circle_notifications_24);
+
+            // Notify user of the current state
+            Toast.makeText(this, areNotificationsEnabled ?
+                            "Notifications are enabled." :
+                            "Notifications are disabled.",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
