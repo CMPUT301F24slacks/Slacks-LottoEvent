@@ -518,19 +518,24 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      * addEventToEntrant method for the JoinEventDetailsActivity and updates the notification preferences for said entrant.
      * This method adds the event to the entrant.
      */
-    private void addEventToEntrant(){
+    private void addEventToEntrant() {
         DocumentReference entrantDocRef = db.collection("entrants").document(deviceId);
         entrantDocRef.get().addOnSuccessListener(task -> {
-            if (task.exists()){
+            if (task.exists()) {
+                // Entrant already in the database
                 Entrant entrant = task.toObject(Entrant.class);
-                entrant.addWaitlistedEvents(qrCodeValue);
-                entrantDocRef.set(entrant);
-            }
-            else {
+                if (entrant != null && !entrant.getWaitlistedEvents().contains(qrCodeValue)) {
+                    // Add only if qrCodeValue is not already in the waitlist
+                    entrant.addWaitlistedEvents(qrCodeValue);
+                    entrantDocRef.set(entrant);
+                }
+            } else {
                 // Entrant not already in the database
                 Entrant newEntrant = new Entrant();
-                newEntrant.getWaitlistedEvents().add(qrCodeValue);
-                entrantDocRef.set(newEntrant);
+                if (!newEntrant.getWaitlistedEvents().contains(qrCodeValue)) {
+                    newEntrant.getWaitlistedEvents().add(qrCodeValue);
+                    entrantDocRef.set(newEntrant);
+                }
             }
         });
     }
