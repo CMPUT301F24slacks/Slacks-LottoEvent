@@ -10,7 +10,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -18,11 +20,13 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.slacks_lottoevent.databinding.ActivityEntrantEventDetailsBinding;
 import com.example.slacks_lottoevent.databinding.ActivityOrganizerEventDetailsBinding;
+import com.example.slacks_lottoevent.view.BaseActivity;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -50,7 +54,7 @@ import java.util.Objects;
  * EntrantEventDetailsActivity is the activity that displays the details of an event for an entrant.
  * The entrant can leave the event from this activity.
  */
-public class OrganizerEventDetailsActivity extends AppCompatActivity {
+public class OrganizerEventDetailsActivity extends BaseActivity {
     private ActivityOrganizerEventDetailsBinding binding;
     private DocumentSnapshot document;
     private String location;
@@ -87,7 +91,14 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityOrganizerEventDetailsBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        FrameLayout contentFrame = findViewById(R.id.content_frame);
+        contentFrame.addView(binding.getRoot());
+
+        // Set up the app bar for back navigation
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Show back button
+            getSupportActionBar().setTitle("Event Details"); // Set a custom title if needed
+        }
 
         qrCodeValue = getIntent().getStringExtra("qrCodeValue");
         isAdmin = getIntent().getBooleanExtra("isAdmin", false); // Default value: false
@@ -196,11 +207,6 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                     }
                 });
         eventsRef = db.collection("events");
-        // add a listener to the event details back button, go to the last item in the back stack
-        binding.eventDetailsBackButton.setOnClickListener(v -> {
-            onBackPressed();
-        });
-
         binding.editEventButton.setVisibility(View.VISIBLE);
 
         binding.editEventButton.setOnClickListener(view -> {
@@ -727,4 +733,13 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // Handle back button click
+            onBackPressed(); // Go back to the previous activity
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

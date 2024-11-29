@@ -39,7 +39,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
     private Context context;
     private ArrayList<Event> events;
     boolean isAdmin;
-    private User user = User.getInstance()
+    private User user = User.getInstance();
 
 //    private FirebaseFirestore db;
 //    private CollectionReference facilitiesRef;

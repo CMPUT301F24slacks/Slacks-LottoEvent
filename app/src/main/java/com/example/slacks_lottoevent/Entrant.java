@@ -9,12 +9,10 @@ import java.util.ArrayList;
  */
 public class Entrant {
 
-    private String deviceId;
     private ArrayList<String> waitlistedEvents;
     private ArrayList<String> finalistEvents;
     private ArrayList<String> invitedEvents;
     private ArrayList<String> uninvitedEvents;
-    private ArrayList<String> invites;
 
     /**
      * Constructs an {@code Entrant} instance with empty event lists.
@@ -24,7 +22,6 @@ public class Entrant {
         this.finalistEvents = new ArrayList<>();
         this.invitedEvents = new ArrayList<>();
         this.uninvitedEvents = new ArrayList<>();
-        this.invites = new ArrayList<>();
     }
 
     /**
@@ -34,6 +31,22 @@ public class Entrant {
      */
     public ArrayList<String> getWaitlistedEvents() {
         return waitlistedEvents;
+    }
+
+    public void setWaitlistedEvents(ArrayList<String> waitlistedEvents) {
+        this.waitlistedEvents = waitlistedEvents;
+    }
+
+    public void setFinalistEvents(ArrayList<String> finalistEvents) {
+        this.finalistEvents = finalistEvents;
+    }
+
+    public void setInvitedEvents(ArrayList<String> invitedEvents) {
+        this.invitedEvents = invitedEvents;
+    }
+
+    public void setUninvitedEvents(ArrayList<String> uninvitedEvents) {
+        this.uninvitedEvents = uninvitedEvents;
     }
 
     /**
@@ -99,25 +112,4 @@ public class Entrant {
         uninvitedEvents.add(eventID);
     }
 
-    /**
-     * Adds an event invite to the invites list.
-     * <p>
-     * This method is private and used internally to manage event invites.
-     *
-     * @param eventID the ID of the event to add to invites.
-     */
-    private void addEventInvite(String eventID) {
-        invites.add(eventID);
-    }
-
-    /**
-     * Removes an event invite from the invites list.
-     * <p>
-     * This method is private and used internally to manage event invites.
-     *
-     * @param eventID the ID of the event to remove from invites.
-     */
-    private void removeEventInvite(String eventID) {
-        invites.remove(eventID);
-    }
 }

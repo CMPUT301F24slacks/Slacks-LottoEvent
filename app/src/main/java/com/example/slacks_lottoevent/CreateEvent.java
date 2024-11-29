@@ -12,9 +12,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -28,6 +30,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
 import com.example.slacks_lottoevent.model.User;
+import com.example.slacks_lottoevent.view.BaseActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
@@ -59,7 +62,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * This class is responsible for creating an event and adding it to the database.
  */
-public class CreateEvent extends AppCompatActivity {
+public class CreateEvent extends BaseActivity {
     private static final int PERMISSION_REQUEST_CODE = 101;
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
@@ -78,9 +81,15 @@ public class CreateEvent extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_event);
         binding = ActivityCreateEventBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        FrameLayout contentFrame = findViewById(R.id.content_frame);
+        contentFrame.addView(binding.getRoot());
+
+        // Set up the app bar for back navigation
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Show back button
+            getSupportActionBar().setTitle("Create Event"); // Set a custom title if needed
+        }
 
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
@@ -636,4 +645,13 @@ private void uploadImageToCloud(Callback<String> callback) {
         return sb.toString();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // Handle back button click
+            onBackPressed(); // Go back to the previous activity
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
