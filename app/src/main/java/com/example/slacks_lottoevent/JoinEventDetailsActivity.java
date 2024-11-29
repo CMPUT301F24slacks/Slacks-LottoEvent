@@ -302,13 +302,13 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      * @param document The Firestore document containing event data.
      * */
     private void displayEventDetails(DocumentSnapshot document){
-        String date = document.getString("eventDate");
-        String time = document.getString("time");
-        String eventName = document.getString("name");
-        String location = document.getString("location");
-        String description = document.getString("description");
-        String signupDeadline = document.getString("signupDeadline");
-        String eventPosterURL = document.getString("eventPosterURL");
+        date = document.getString("eventDate");
+        time = document.getString("time");
+        eventName = document.getString("name");
+        location = document.getString("location");
+        description = document.getString("description");
+        signupDeadline = document.getString("signupDeadline");
+        eventPosterURL = document.getString("eventPosterURL");
         Long eventSlots  = document.getLong("eventSlots");
         Integer waitingListCapacity = document.getLong("waitListCapacity").intValue();
 

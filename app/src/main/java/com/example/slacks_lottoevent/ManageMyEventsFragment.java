@@ -69,7 +69,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 //        This is where we query for organizers for facility name
         facilityCreated.setText(facilityName);
         existingFacility = facility;
-
+        System.out.println("facility" + existingFacility);
         Map<String, Object> facilityData = new HashMap<>();
         facilityData.put("facilityName", facilityName);
         // Add other attributes as needed, like location, type, etc.
