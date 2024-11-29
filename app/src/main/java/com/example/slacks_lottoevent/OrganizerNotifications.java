@@ -1,6 +1,9 @@
 package com.example.slacks_lottoevent;
 
+import static com.example.slacks_lottoevent.AdminActivity.showAdminAlertDialog;
+
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -98,50 +101,32 @@ public class OrganizerNotifications extends AppCompatActivity {
 //              Event has closed - updated final waitlisted entrants (remove and put too cancel)
                 updateUninvitedFinalEntrants(event);
                 updateUninvitedonEvents(event);
-                new AlertDialog.Builder(this)
-                        .setTitle("Cannot Re-Select")
-                        .setMessage("Event slots are full")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                showAdminAlertDialog(this, null, "Cannot Re-Select", "Event slots are full",
+                        null, null, "OK", null);
                 return;
 
             }
 
             if (event.getWaitlisted().size() == 0){
-                new AlertDialog.Builder(this)
-                        .setTitle("Cannot Re-Select.")
-                        .setMessage("There is no one who wants to be reselected.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+
+                showAdminAlertDialog(this, null, "Cannot Re-Select", "There is no one who wants to be reselected.", null, null, "OK", null);
                 return;
             }
 
             if (!event.getEntrantsChosen()) {
-                new AlertDialog.Builder(this)
-                        .setTitle("Cannot Re-Select")
-                        .setMessage("Need to sample entrants first.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                showAdminAlertDialog(this, null, "Cannot Re-Select", "Need to sample entrants first.", null, null, "OK", null);
                 return;
             }
 
             if (event.getSelected().size() + event.getFinalists().size() == event.getEventSlots()){
-                new AlertDialog.Builder(this)
-                        .setTitle("Cannot Re-Select")
-                        .setMessage("No Space right now. Still waiting on responses.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                showAdminAlertDialog(this, null, "Cannot Re-Select", "No Space right now. Still waiting on responses.", null, null, "OK", null);
                 return;
             }
 
 //            everything worked
             if(event.getEntrantsChosen() && event.getWaitlisted().size() > 0 && event.getEventSlots() != event.getFinalists().size() && event.getSelected().size() + event.getFinalists().size() != event.getEventSlots() ){
                 handleReSelect();
-                new AlertDialog.Builder(this)
-                        .setTitle("Entrants Selected")
-                        .setMessage("Entrants were selected for the event.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                showAdminAlertDialog(this, null, "Entrants Selected", "Entrants were selected for the event.", null, null, "OK", null);
             }
         });
 
@@ -214,6 +199,9 @@ public class OrganizerNotifications extends AppCompatActivity {
         });
     }
 
+    /**
+     * Handles the re-selecting logic.
+     */
     private void handleReSelect() {
 
         event.reSelecting();
@@ -223,6 +211,9 @@ public class OrganizerNotifications extends AppCompatActivity {
         updateReselectButtonVisibility();
     }
 
+    /**
+     * Handles updating the entrants who are invited for the event.
+     */
     private void updateSelectedEntrants(Event event) {
         db.collection("events").whereEqualTo("eventID", event.getEventID()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && !task.getResult().isEmpty()) {
@@ -241,6 +232,9 @@ public class OrganizerNotifications extends AppCompatActivity {
         });
     }
 
+    /**
+     * Handles updating the entrants who are invited.
+     */
     private void updateInvitedEntrants(Event event){
         for(String entrant: event.getSelected()) {
             DocumentReference entrantsRef = db.collection("entrants").document(entrant);
@@ -255,8 +249,9 @@ public class OrganizerNotifications extends AppCompatActivity {
         }
     }
 
-
-//    Updating people who are still on waitlisted (wanted to get selected but the event is now full, so move too the other list)
+    /**
+     * Handles updating the entrants who are not invited.
+     */
     private void updateUninvitedFinalEntrants(Event event){
         for(String entrant: event.getWaitlisted()) {
             DocumentReference entrantsRef = db.collection("entrants").document(entrant);
@@ -271,7 +266,9 @@ public class OrganizerNotifications extends AppCompatActivity {
         }
     }
 
-//    Updating event waitlist when full and the entrants cannot be select again as it is full
+    /**
+     * Handles the re-selection logic for entrants in the event.
+     */
     private void updateUninvitedonEvents(Event event) {
         db.collection("events").whereEqualTo("eventID", event.getEventID()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && !task.getResult().isEmpty()) {
@@ -291,6 +288,10 @@ public class OrganizerNotifications extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method is called to update the reselect button so the organizer knows when they can or can't reselect.
+     * It makes sure all the organizer cannot reselect given the conditions.
+     */
     private void updateReselectButtonVisibility() {
         if (event == null) {
             reSelect.setVisibility(View.GONE);

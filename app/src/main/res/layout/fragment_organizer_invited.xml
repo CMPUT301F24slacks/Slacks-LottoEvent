@@ -25,7 +25,14 @@
             android:id="@+id/craftMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
             android:text="Create Message" />
+
+        <Button
+            android:id="@+id/cancel_entrants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel Entrants" />
 
     </LinearLayout>
 </FrameLayout>

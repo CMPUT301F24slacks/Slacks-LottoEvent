@@ -73,9 +73,6 @@ public class QRScannerActivity extends BaseActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             // Request the camera permission
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
-        } else {
-            // User already granted permission is already granted, user can start camera.
-            startCamera();
         }
 
         Button readyButton = findViewById(R.id.readyButton);
