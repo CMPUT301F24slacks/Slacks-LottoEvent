@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -52,7 +53,7 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
     private String eventID;
     private FirebaseFirestore db;
     private ArrayList<Map<String, List<Double>>> joinLocations;
-    private Button backBtn;
+    private ImageView backBtn;
 
     /**
      *
