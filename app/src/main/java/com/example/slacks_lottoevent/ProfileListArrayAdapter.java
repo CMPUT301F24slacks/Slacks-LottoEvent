@@ -125,29 +125,24 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
 
         if (!profile.getUsingDefaultPicture()) {
             // Show the profile picture for custom profiles
-            View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_profile_details, null);
-            ImageView profilePicture = dialogView.findViewById(R.id.profile_picture);
-            Glide.with(context)
-                    .load(profile.getProfilePicturePath())
-                    .placeholder(R.drawable.placeholder_image)
-                    .error(R.drawable.error_image)
-                    .into(profilePicture);
-
-            TextView detailsText = dialogView.findViewById(R.id.profile_details_text);
-            detailsText.setText(message);
-
-            builder.setView(dialogView);
+            AdminActivity.showAdminAlertDialog(context, () ->
+                            AdminActivity.showAdminAlertDialog(context,
+                                    () -> deleteProfileFromDatabase(context, db, profile, facilitiesAdapter, eventsAdapter),
+                                    "Confirm Deletion", "Are you sure you want to delete this profile?",
+                                    "WARNING: DELETION CANNOT BE UNDONE",
+                                    "Cancel", "Confirm", null),
+                    "Profile Details", message, "WARNING: DELETION CANNOT BE UNDONE",
+                    "Cancel", "Delete", profile.getProfilePicturePath());
         } else {
+            // Show the name and email directly for default profiles
             AdminActivity.showAdminAlertDialog(context, () ->
                     AdminActivity.showAdminAlertDialog(context,
                             () -> deleteProfileFromDatabase(context, db, profile, facilitiesAdapter, eventsAdapter),
                             "Confirm Deletion", "Are you sure you want to delete this profile?",
                             "WARNING: DELETION CANNOT BE UNDONE",
-                            "Cancel", "Confirm"),
+                            "Cancel", "Confirm", null),
                     "Profile Details", message, "WARNING: DELETION CANNOT BE UNDONE",
-                    "Cancel", "Delete");
-            // Show the name and email directly for default profiles
-            builder.setMessage(message);
+                    "Cancel", "Delete", null);
         }
     }
 

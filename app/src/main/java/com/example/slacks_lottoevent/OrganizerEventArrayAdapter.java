@@ -70,13 +70,10 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         Event event = getItem(position);
+
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.content_organizer_events, parent, false);
         }
-
-//        db = FirebaseFirestore.getInstance();
-//        facilitiesRef = db.collection("facilities");
-//        organizersRef = db.collection("organizers");
 
         TextView eventName = convertView.findViewById(R.id.event_name);
         TextView eventDate = convertView.findViewById(R.id.event_date);
@@ -84,38 +81,38 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         TextView eventAddress = convertView.findViewById(R.id.event_address);
         TextView eventDescription = convertView.findViewById(R.id.event_description);
         ImageView eventPoster = convertView.findViewById(R.id.event_image);
+        Button eventButton = convertView.findViewById(R.id.event_button);
+
+        // Set event details
         eventName.setText(event.getName());
         eventDate.setText(event.getEventDate());
         eventTime.setText(event.getTime());
-//        eventAddress.setText(event.getLocation());
-
-//        TODO: Can delete the below code once we know that the event location and facility are lined up.
-
-        if (event.getEventPosterURL() != null && !event.getEventPosterURL().isEmpty()) {
-            Glide.with(this.getContext()) // 'this' refers to the activity context
-                    .load(event.getEventPosterURL())
-                    .placeholder(R.drawable.placeholder_image)
-                    .into(eventPoster);
-        } else {
-            Log.d("EventDetails", "Event poster URL is empty or null");
-        }
-
         eventAddress.setText(event.getLocation());
         eventDescription.setText(event.getDescription());
 
-        Button eventButton = convertView.findViewById(R.id.event_button);
+        // Load event poster or default image
+        String posterURL = event.getEventPosterURL();
+        if (posterURL != null && !posterURL.trim().isEmpty()) {
+            // Load the image from the posterURL using Glide
+            Glide.with(getContext())
+                    .load(posterURL)
+                    .placeholder(R.drawable.event_image) // Set the default placeholder image
+                    .error(R.drawable.error_image) // Set the error image for invalid URLs
+                    .into(eventPoster);
+        } else {
+            // No posterURL available, use the default placeholder image
+            eventPoster.setImageResource(R.drawable.event_image);
+        }
+
+        // Set the button click listener
         eventButton.setOnClickListener(v -> {
-            // Create an Intent to navigate to the EventDetailsActivity
             Intent intent = new Intent(getContext(), OrganizerEventDetailsActivity.class);
             String userId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
             intent.putExtra("userId", userId);
             intent.putExtra("qrCodeValue", event.getEventID());
             intent.putExtra("isAdmin", isAdmin);
-
-            // Start the OrganizerDetailsActivity
             getContext().startActivity(intent);
         });
-
 
         return convertView;
     }
