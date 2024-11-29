@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
+import com.example.slacks_lottoevent.model.User;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,6 +39,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
     private Context context;
     private ArrayList<Event> events;
     boolean isAdmin;
+    private User user = User.getInstance()
 
 //    private FirebaseFirestore db;
 //    private CollectionReference facilitiesRef;
@@ -107,8 +109,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         // Set the button click listener
         eventButton.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), OrganizerEventDetailsActivity.class);
-            String userId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-            intent.putExtra("userId", userId);
+            intent.putExtra("userId", user.getDeviceId());
             intent.putExtra("qrCodeValue", event.getEventID());
             intent.putExtra("isAdmin", isAdmin);
             getContext().startActivity(intent);

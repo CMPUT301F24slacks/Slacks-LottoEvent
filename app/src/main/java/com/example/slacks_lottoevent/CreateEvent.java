@@ -12,12 +12,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -27,10 +25,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.navigation.ui.AppBarConfiguration;
 
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
-import com.example.slacks_lottoevent.view.BaseActivity;
+import com.example.slacks_lottoevent.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
@@ -62,7 +59,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * This class is responsible for creating an event and adding it to the database.
  */
-public class CreateEvent extends BaseActivity {
+public class CreateEvent extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 101;
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
@@ -72,6 +69,8 @@ public class CreateEvent extends BaseActivity {
     FirebaseStorage storage;
     StorageReference storageRef;
     Uri selectedImageUri;
+    User user = User.getInstance();
+
     /**
      * This method initializes the CreateEvent activity.
      * @param savedInstanceState the saved instance state
@@ -79,17 +78,9 @@ public class CreateEvent extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Inflate the CreateEvent layout into BaseActivity's content_frame
-        getLayoutInflater().inflate(R.layout.activity_create_event, findViewById(R.id.content_frame), true);
-
-        // Bind the view using View Binding
+        setContentView(R.layout.activity_create_event);
         binding = ActivityCreateEventBinding.inflate(getLayoutInflater());
-
-        // Set up the top app bar with a title and back navigation
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Enable back navigation
-            getSupportActionBar().setTitle("Create Event"); // Set the title
-        }
+        setContentView(binding.getRoot());
 
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
@@ -530,12 +521,12 @@ public class CreateEvent extends BaseActivity {
                     AtomicReference<String> posterURL = new AtomicReference<>(eventPosterURL == null ? "" : eventPosterURL);
 
                     // Proceed after successfully uploading the image
-                    db.collection("facilities").whereEqualTo("deviceID", deviceID)
+                    db.collection("facilities").whereEqualTo("deviceId", deviceID)
                             .get()
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful() && !task.getResult().isEmpty()) {
                                     DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                                    location.set(document.getString("streetAddress1"));
+                                    location.set(document.getString("streetAddress"));
 
                                     // Create the event with the retrieved URL
                                     Event eventData = new Event(name, eventDate, location.get(), time, price, details, eventSlots,
@@ -558,7 +549,7 @@ public class CreateEvent extends BaseActivity {
             });
 
             String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-            DocumentReference organizerRef = organizersRef.document(organizerId);
+            DocumentReference organizerRef = organizersRef.document(user.getDeviceId());
             organizerRef.update("events", FieldValue.arrayUnion(eventId))
                     .addOnSuccessListener(aVoid -> {
                         // Event ID successfully added to the organizer's events array
@@ -643,16 +634,6 @@ private void uploadImageToCloud(Callback<String> callback) {
             sb.append('\n'); // New line for each row
         }
         return sb.toString();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            // Handle back button click
-            onBackPressed(); // Go back to the previous activity
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 }
