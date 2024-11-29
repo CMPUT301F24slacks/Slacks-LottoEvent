@@ -77,6 +77,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">NotificationHelper</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Helper class for managing and sending notifications in the application.
+ This class handles notification permissions, building notification content,
+ and displaying notifications to the user.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -89,7 +92,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(android.app.Activity)" class="member-name-link">NotificationHelper</a><wbr>(android.app.Activity&nbsp;activity)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructs a new instance of <a href="NotificationHelper.html" title="class in com.example.slacks_lottoevent"><code>NotificationHelper</code></a>.</div>
+</div>
 </div>
 </section>
 </li>
@@ -108,7 +113,9 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendNotifications(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">sendNotifications</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;title,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sends a notification with the specified title and message to the user.</div>
+</div>
 </div>
 </div>
 </div>
@@ -130,6 +137,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(android.app.Activity)">
 <h3>NotificationHelper</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">NotificationHelper</span><wbr><span class="parameters">(android.app.Activity&nbsp;activity)</span></div>
+<div class="block">Constructs a new instance of <a href="NotificationHelper.html" title="class in com.example.slacks_lottoevent"><code>NotificationHelper</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>activity</code> - The activity context used for permission checks and notification management.</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -146,6 +158,14 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendNotifications</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;title,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</span></div>
+<div class="block">Sends a notification with the specified title and message to the user.
+ Handles permission requests</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>deviceId</code> - A unique identifier for the device, used to generate unique notification IDs.</dd>
+<dd><code>title</code> - The title of the notification.</dd>
+<dd><code>message</code> - The message content of the notification.</dd>
+</dl>
 </section>
 </li>
 </ul>
