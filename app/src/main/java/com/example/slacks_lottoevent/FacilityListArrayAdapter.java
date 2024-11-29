@@ -113,12 +113,12 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
         deleteFacilityFromDatabase(
                 context,
                 db,
-                facility.getFacilityId(),
-                facility.getOrganizerID(),
+                facility.getDeviceId(),
+                facility.getDeviceId(),
                 eventsAdapter);
 
         // Explicitly delete the facility document
-        db.collection("facilities").document(facility.getFacilityId()).delete()
+        db.collection("facilities").document(facility.getDeviceId()).delete()
                 .addOnSuccessListener(aVoid -> {
                     // Remove the facility from the adapter and notify the dataset change
                     remove(facility);

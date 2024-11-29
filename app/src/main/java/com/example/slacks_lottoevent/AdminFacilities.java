@@ -81,7 +81,6 @@ public class AdminFacilities extends Fragment {
 //                    String streetAddress1 = document.getString("streetAddress1");
 //                    Facility facility = new Facility(name, streetAddress1, deviceId, deviceId);
                     Facility facility = document.toObject(Facility.class);
-                    facility.setFacilityId(document.getId()); // Set document ID here
 
                     facilitiesList.add(facility); // Add to the list
                 }

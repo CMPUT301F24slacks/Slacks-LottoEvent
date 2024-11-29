@@ -73,20 +73,17 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilityData.put("facilityName", facilityName);
         // Add other attributes as needed, like location, type, etc.
         facilityData.put("streetAddress1", facility.getStreetAddress());
-        facilityData.put("organizerID", facility.getOrganizerID());
         facilityData.put("deviceID", facility.getDeviceId());
 
         facilitiesRef.add(facilityData)
                 .addOnSuccessListener(documentReference -> {
-                    existingFacility.setFacilityId(documentReference.getId()); // Set document ID here
-
                     // Now add the facility data to the organizer after the facility ID is set
                     Map<String, Object> organizerData = new HashMap<>();
-                    organizerData.put("userId", facility.getOrganizerID());
-                    organizerData.put("facilityId", existingFacility.getFacilityId());
+                    organizerData.put("userId", facility.getDeviceId());
+                    organizerData.put("facilityId", existingFacility.getDeviceId());
                     organizerData.put("events", null); // Assuming EventList can be serialized
 
-                    organizersRef.document(facility.getOrganizerID()) // Sets userId as the document ID
+                    organizersRef.document(facility.getDeviceId()) // Sets userId as the document ID
                             .set(organizerData)
                             .addOnSuccessListener(aVoid -> {
                                 // Update the ViewModel to reflect the change
@@ -117,7 +114,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
             return;
         }
 
-        String facilityId = existingFacility.getFacilityId();
+        String facilityId = existingFacility.getDeviceId();
         if (facilityId == null || facilityId.isEmpty()) {
             Log.w("updateFacilityAndEvents", "No facility ID provided for update");
             return;
@@ -262,7 +259,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
             facilityCreated.setVisibility(View.VISIBLE);
             Facility existingFacility = facilitySnapshot.toObject(Facility.class);
             if (existingFacility != null) {
-                existingFacility.setFacilityId(facilitySnapshot.getId());
                 existingFacility.setFacilityName(facilityName);
             }
             facilityViewModel.setFacilityStatus(true);
