@@ -165,7 +165,7 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
         deleteProfileFromDatabaseEntrant(context, db, profile.getDeviceId());
 
         // Delete organizer-related data
-        deleteProfileFromDatabaseOrganizer(context, db, profile.getDeviceId(), facilitiesAdapter, eventsAdapter);
+        deleteProfileFromDatabaseOrganizer(context, db, profile.getDeviceId(), true, facilitiesAdapter, eventsAdapter);
 
         // Delete the profile document from the "profiles" collection
         db.collection("profiles").document(profile.getDeviceId())
@@ -222,36 +222,21 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
     /**
      * Deletes data associated with the profile from the "organizers" collection.
      */
-    private static void deleteProfileFromDatabaseOrganizer(Context context, FirebaseFirestore db, String deviceId,
+    private static void deleteProfileFromDatabaseOrganizer(Context context, FirebaseFirestore db, String deviceId, boolean FromProfile,
                                                            FacilityListArrayAdapter facilitiesAdapter,
                                                            OrganizerEventArrayAdapter eventsAdapter) {
         db.collection("organizers").document(deviceId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         // Fetch the facility ID from the organizer document
-                        String facilityId = documentSnapshot.getString("facilityId");
+                        Facility facility = documentSnapshot.toObject(Facility.class);
 
-                        if (facilityId != null && !facilityId.isEmpty()) {
+                        if (facility.getFacilityId() != null && !facility.getFacilityId().isEmpty()) {
                             // Call method to delete the facility
-                            FacilityListArrayAdapter.deleteFacilityFromDatabase(context, db, facilityId, deviceId, eventsAdapter);
+                            FacilityListArrayAdapter.showFacilityOptionsDialog(context, db, facility, eventsAdapter, facilitiesAdapter, FromProfile);
                         } else {
                             Toast.makeText(context, "No associated facility found for organizer.", Toast.LENGTH_SHORT).show();
                         }
-
-                        // Delete the organizer document itself
-                        db.collection("organizers").document(deviceId).delete()
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(context, "Organizer data deleted successfully.", Toast.LENGTH_SHORT).show();
-
-                                    // Notify the adapter to refresh the UI
-                                    if (facilitiesAdapter != null) {
-                                        facilitiesAdapter.notifyDataSetChanged();
-                                    }
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(context, "Failed to delete organizer data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    e.printStackTrace();
-                                });
                     } else {
                         Toast.makeText(context, "Organizer profile not found.", Toast.LENGTH_SHORT).show();
                     }

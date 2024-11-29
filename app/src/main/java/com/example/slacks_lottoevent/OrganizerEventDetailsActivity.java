@@ -310,8 +310,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                                 Toast.makeText(this, "Event deleted successfully.", Toast.LENGTH_SHORT).show();
                                 finish(); // Close the activity or return to the previous screen
                             },
-                            () -> Toast.makeText(this, "Failed to delete event.", Toast.LENGTH_SHORT).show(), false
-                    );
+                            () -> Toast.makeText(this, "Failed to delete event.", Toast.LENGTH_SHORT).show(), false);
 
                     //Go back to the previous page to simulate exiting the event
 //                    finish();
@@ -344,7 +343,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 .document(eventID) // Use the event's unique ID to identify the document
                 .update(
                         "qrdata", "", // Set qrdata to an empty string
-                        "qrhash", ""  // Set qrhash to an empty string
+                        "qrhash", "" , // Set qrhash to an empty string
+                        "disabled", true
                 )
                 .addOnSuccessListener(aVoid -> {
                     Log.d("Firestore", "QR code attributes successfully updated for event: " + eventID);
@@ -383,44 +383,76 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                     if (current_event == null || db == null || current_event.getEventID() == null || current_event.getEventID().isEmpty()) {
                         throw new IllegalArgumentException("Event, Firestore instance, or Event ID cannot be null or empty.");
                     }
-
-                    // Handle entrants associated with the event
-                    ArrayList<String> WaitlistedEntrants = current_event.getWaitlisted();
-                    ArrayList<String> SelectedEntrants = current_event.getSelected();
-                    ArrayList<String> FinalistEntrants = current_event.getFinalists();
-                    ArrayList<String> CancelledEntrants = current_event.getCancelled();
-
-                    // Delete the event poster and QR code
-                    DeletingEventPoster(context, db, current_event.getEventPosterURL(), FromFacility);
-                    DeletingQRCode(context, db, current_event);
-
-                    DeletingAsWaitlisted(current_event.getDeviceId(), current_event.getEventID(), db, WaitlistedEntrants);
-                    DeletingAsSelected(current_event.getDeviceId(), current_event.getEventID(), db, SelectedEntrants);
-                    DeletingAsFinalist(current_event.getDeviceId(), current_event.getEventID(), db, FinalistEntrants);
-                    DeletingAsCancelled(current_event.getDeviceId(), current_event.getEventID(), db, CancelledEntrants);
-
-                    // Remove the event ID from the organizers collection
-                    DeletingEventIDinOrganizers(context, current_event.getDeviceId(), current_event.getEventID(), db);
-
-                    // Delete the event document itself
-                    db.collection("events").document(eventID)
-                            .delete()
-                            .addOnSuccessListener(aVoid -> {
-                                // Call success callback when all operations are complete
-                                onSuccess.run();
-                            })
-                            .addOnFailureListener(e -> {
-                                // Handle failure to delete the event document
-                                onFailure.run();
-                            });
+                    if (!FromFacility) {
+                        AdminActivity.showAdminAlertDialog(
+                                context,
+                                () -> DeleteEvent(context, db, current_event, eventID, onSuccess, onFailure), // Pass the confirmation action
+                                "Delete this event?",
+                                null,
+                                "WARNING: DELETION CANNOT BE UNDONE",
+                                "Cancel",
+                                "Confirm",
+                                null
+                        );
+                    } else {
+                        // Directly delete the event if not from facility
+                        DeleteEvent(context, db, current_event, eventID, onSuccess, onFailure);
+                    }
                 })
                 .addOnFailureListener(e -> {
-                    // Handle failure to fetch the event document
-                    onFailure.run();
+                    // Handle failure to fetch event document
+                    if (onFailure != null) {
+                        onFailure.run();
+                    }
+                    throw new RuntimeException("Failed to fetch event document: " + e.getMessage(), e);
                 });
     }
 
-    public static void DeletingAsWaitlisted(String deviceId, String eventID, FirebaseFirestore db, ArrayList<String> WaitlistedEntrants) {
+
+    public static void DeleteEvent(Context context, FirebaseFirestore db, Event current_event, String eventID, Runnable onSuccess, Runnable onFailure) {
+        if (current_event == null || db == null || eventID == null || eventID.isEmpty()) {
+            throw new IllegalArgumentException("Event, Firestore instance, or Event ID cannot be null or empty.");
+        }
+
+        ArrayList<String> WaitlistedEntrants = current_event.getWaitlisted();
+        ArrayList<String> SelectedEntrants = current_event.getSelected();
+        ArrayList<String> FinalistEntrants = current_event.getFinalists();
+        ArrayList<String> CancelledEntrants = current_event.getCancelled();
+
+        // Delete the event poster and QR code
+        DeletingEventPoster(context, db, current_event.getEventPosterURL(), true);
+        DeletingQRCode(context, db, current_event);
+
+        // Remove the event ID from related collections
+        DeletingAsWaitlisted(current_event.getEventID(), db, WaitlistedEntrants);
+        DeletingAsSelected(current_event.getEventID(), db, SelectedEntrants);
+        DeletingAsFinalist(current_event.getEventID(), db, FinalistEntrants);
+        DeletingAsCancelled(current_event.getEventID(), db, CancelledEntrants);
+
+        // Remove the event ID from the organizers collection
+        DeletingEventIDinOrganizers(context, current_event.getDeviceId(), current_event.getEventID(), db);
+
+        // Delete the event document itself
+        db.collection("events").document(eventID)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    // Call success callback when all operations are complete
+                    if (onSuccess != null) {
+                        onSuccess.run();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure to delete the event document
+                    if (onFailure != null) {
+                        onFailure.run();
+                    }
+                });
+    }
+
+                    // Handle entrants associated with the event
+
+
+    public static void DeletingAsWaitlisted(String eventID, FirebaseFirestore db, ArrayList<String> WaitlistedEntrants) {
         if (WaitlistedEntrants == null || WaitlistedEntrants.isEmpty()) {
             Log.e("Firestore", "WaitlistedEntrants is null or empty");
             return;
@@ -439,7 +471,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         }
     }
 
-    public static void DeletingAsSelected(String deviceId, String eventID, FirebaseFirestore db, ArrayList<String> SelectedEntrants) {
+    public static void DeletingAsSelected(String eventID, FirebaseFirestore db, ArrayList<String> SelectedEntrants) {
         if (SelectedEntrants == null || SelectedEntrants.isEmpty()) {
             Log.e("Firestore", "WaitlistedEntrants is null or empty");
             return;
@@ -458,7 +490,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         }
     }
 
-    public static void DeletingAsFinalist(String deviceId, String eventID, FirebaseFirestore db, ArrayList<String> FinalistEntrants) {
+    public static void DeletingAsFinalist(String eventID, FirebaseFirestore db, ArrayList<String> FinalistEntrants) {
         if (FinalistEntrants == null || FinalistEntrants.isEmpty()) {
             Log.e("Firestore", "FinalistEntrants is null or empty");
             return;
@@ -467,7 +499,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
             // Access each entrant's document
             db.collection("entrants")
                     .document(entrant)
-                    .update("waitlistedEvents", FieldValue.arrayRemove(eventID)) // Remove eventID from the array
+                    .update("finalistEvents", FieldValue.arrayRemove(eventID)) // Remove eventID from the array
                     .addOnSuccessListener(aVoid -> {
                         Log.d("Firestore", "Successfully removed eventID from waitlistedEvents for entrant: " + entrant);
                     })
@@ -476,7 +508,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                     });
         }
     }
-    public static void DeletingAsCancelled(String deviceId, String eventID, FirebaseFirestore db, ArrayList<String> uninvitedEvents) {
+    public static void DeletingAsCancelled(String eventID, FirebaseFirestore db, ArrayList<String> uninvitedEvents) {
         if (uninvitedEvents == null || uninvitedEvents.isEmpty()) {
             Log.e("Firestore", "uninvitedEvents is null or empty");
             return;
@@ -607,27 +639,30 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 } catch (WriterException e) {
                     Log.e("QRCodeError", "Error converting QR code string to BitMatrix", e);
                 }
+                // Create the AlertDialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setView(popupView);
+
+                // Add the Close button
+                builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
+
+                // Add the Delete button if the user is an admin
+                if (isAdmin) {
+                    builder.setNegativeButton("Delete", (dialog, which) -> {
+                        DeletingQRCode(context, db, event); // Call the delete method
+                    });
+                }
+
+                // Show the dialog
+                builder.create().show();
             } else {
-                qrCode.setImageBitmap(null); // Clear the image if QR data is null or empty
+                AdminActivity.showAdminAlertDialog(context, null, "QR Code is non-existent",
+                        "This QR Code has most likely been deleted by an Admin", null, null, "OK", null);
+//                qrCode.setImageBitmap(null); // Clear the image if QR data is null or empty
             }
         }
 
-        // Create the AlertDialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setView(popupView);
 
-        // Add the Close button
-        builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
-
-        // Add the Delete button if the user is an admin
-        if (isAdmin) {
-            builder.setNegativeButton("Delete", (dialog, which) -> {
-                DeletingQRCode(context, db, event); // Call the delete method
-            });
-        }
-
-        // Show the dialog
-        builder.create().show();
     }
 
     public static BitMatrix deserializeBitMatrix(String data) throws WriterException {
