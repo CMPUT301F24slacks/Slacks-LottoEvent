@@ -53,6 +53,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -235,14 +236,25 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
                 .addOnSuccessListener(task -> {
                     DocumentSnapshot eventDocumentSnapshot = task.getDocuments().get(0);
                     DocumentReference eventRef = eventDocumentSnapshot.getReference();
+                    List<Map<String, List<Double>>> existingJoinLocations = (List<Map<String, List<Double>>>) eventDocumentSnapshot.get("joinLocations");
                     HashMap<String, List<Double>> joinLocation = new HashMap<>();
                     joinLocation.put(deviceId, Arrays.asList(latitude, longitude));
-                    System.out.println("joinLocations " + joinLocation);
-                    eventRef.update("joinLocations", FieldValue.arrayUnion(joinLocation))
-                            .addOnSuccessListener(update ->{
-                                System.out.println("Updated join locations");
-                            });
+                    boolean isAlreadyPresent = false;
 
+                    if (existingJoinLocations != null) {
+                        for (Map<String, List<Double>> location : existingJoinLocations) {
+                            if (location.containsKey(deviceId)) {
+                                isAlreadyPresent = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(!isAlreadyPresent) {
+                        eventRef.update("joinLocations", FieldValue.arrayUnion(joinLocation))
+                                .addOnSuccessListener(update -> {
+                                    System.out.println("Updated join locations");
+                                });
+                    }
                 })
                 .addOnFailureListener(task -> {
                     System.err.println("Error fetching event document in storeJoinLocation: " + task);
@@ -302,13 +314,13 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      * @param document The Firestore document containing event data.
      * */
     private void displayEventDetails(DocumentSnapshot document){
-        String date = document.getString("eventDate");
-        String time = document.getString("time");
-        String eventName = document.getString("name");
-        String location = document.getString("location");
-        String description = document.getString("description");
-        String signupDeadline = document.getString("signupDeadline");
-        String eventPosterURL = document.getString("eventPosterURL");
+        date = document.getString("eventDate");
+        time = document.getString("time");
+        eventName = document.getString("name");
+        location = document.getString("location");
+        description = document.getString("description");
+        signupDeadline = document.getString("signupDeadline");
+        eventPosterURL = document.getString("eventPosterURL");
         Long eventSlots  = document.getLong("eventSlots");
         Integer waitingListCapacity = document.getLong("waitListCapacity").intValue();
 

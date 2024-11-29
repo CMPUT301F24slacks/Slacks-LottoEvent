@@ -114,6 +114,7 @@ public class AddFacilityFragment extends DialogFragment {
 
         if (isEdit && facility != null) {
             editFacilityName.setText(facility.getFacilityName());
+
             editStreetAddress1.setText(facility.getStreetAddress1());
         }
 
@@ -217,6 +218,9 @@ public class AddFacilityFragment extends DialogFragment {
         String currentText = autoCompleteTextView.getText().toString().trim();
         String validSelection = validSelections.get(autoCompleteTextView);
         // if the user doesn't select something from the dropdown validSelection will be null and thus return false.
+
+
+
         return validSelection != null && validSelection.equals(currentText);
     }
 
