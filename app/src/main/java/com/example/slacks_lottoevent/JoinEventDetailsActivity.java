@@ -310,6 +310,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         String signupDeadline = document.getString("signupDeadline");
         String eventPosterURL = document.getString("eventPosterURL");
         Long eventSlots  = document.getLong("eventSlots");
+        Integer waitingListCapacity = document.getLong("waitListCapacity").intValue();
 
 
         handleDatesAndCapacity(document, signupDeadline);
@@ -324,7 +325,15 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         binding.signupDate.setText("Sign up deadline: " + signupDeadline);
         binding.eventLocation.setText(location);
         binding.eventDescription.setText(description);
+        binding.waitlistCapacity.setText("Waiting List Capacity: "+ waitingListCapacity);
         binding.eventSlots.setText("Event Slots: " + eventSlots.intValue());
+
+        if (waitingListCapacity <= 0){
+            binding.waitlistCapacity.setVisibility(View.GONE);
+        }
+        else{
+            binding.waitlistCapacity.setText("Waiting List Capacity: "+ waitingListCapacity);
+        }
 
 
         setupJoinButton(document);
@@ -344,21 +353,19 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
             Date signupDate = signupDeadline != null ? sdf.parse(signupDeadline) : null;
 
             List<Object> waitlisted = (List<Object>) document.get("waitlisted");
-            Long capacity = document.getLong("eventSlots");
             Long waitListCapacity = document.getLong("waitListCapacity");
-
-
 
             spotsRemaining = waitListCapacity.intValue() - waitlisted.size();
 
             if (waitListCapacity == 0){
-//                            Does not show badge if there is no waitlistCapacity section
+//             Does not show badge if there is no waitlistCapacity section
                 binding.waitlistCapacitySection.setVisibility(View.GONE);
                 binding.spotsAvailableSection.setVisibility(View.GONE);
             }
 
             else if (waitListCapacity > 0){
-//                            There is a waitlist capacity and shows the spots left
+//         There is a waitlist capacity and shows the spots left
+
                 spotsRemaining = spotsRemaining > 0 ? spotsRemaining : 0;
                 spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
                 binding.spotsAvailable.setText(spotsRemainingText);
