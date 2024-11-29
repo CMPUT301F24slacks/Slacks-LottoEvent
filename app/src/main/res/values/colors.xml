@@ -13,5 +13,7 @@
     <color name="text_buttons">#EF2DE6</color>
     <color name="FAB_background">#c353e3</color>
     <color name="splash_background">#1A1A1A</color>
+    <color name="cancel_button_red">#F44336</color> <!-- Red for Cancel -->
+    <color name="confirm_button_green">#4CAF50</color> <!-- Green for Confirm -->d -->
 
 </resources>

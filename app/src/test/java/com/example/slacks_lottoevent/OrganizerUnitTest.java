@@ -29,7 +29,7 @@ public class OrganizerUnitTest {
     @Test
     public void testGetUserId() {
         // Check if the userId is correctly assigned
-        assertEquals("fe8e1540320d3c3d", organizer.getUserId());
+        assertEquals("fe8e1540320d3c3d", organizer.getDeviceId());
     }
 
     /**

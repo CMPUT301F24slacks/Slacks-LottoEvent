@@ -8,10 +8,7 @@ public class Facility {
     private String streetAddress;
     private String deviceId;
 
-    /**
-     * Default constructor for the Facility class.
-     */
-    public Facility() {}
+    public Facility() {} // Needed for Firestore
 
     /**
      * Constructor for the Facility class.
@@ -44,5 +41,9 @@ public class Facility {
 
     public String getDeviceId() {
         return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 }
