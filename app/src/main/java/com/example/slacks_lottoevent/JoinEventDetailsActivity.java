@@ -286,7 +286,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     private void handleEventDocument(DocumentSnapshot document){
         Boolean isDisabled = document.getBoolean("disabled");
         String organizerDeviceId = document.getString("deviceId");
-
+        entrantsChosen = document.getBoolean("entrantsChosen");
         if (isDisabled != null && isDisabled) {
             showInvalidQRCodeDialog();
             binding.joinButton.setVisibility(View.GONE);
@@ -423,7 +423,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         binding.joinButton.setOnClickListener(view -> {
             FirestoreProfileUtil.checkIfSignedUp(deviceId, isSignedUp -> {
                 if (isSignedUp) {
-                    Boolean usesGeolocation = document.getBoolean("geoLocation");
+                    usesGeolocation = document.getBoolean("geoLocation");
                     if (usesGeolocation != null && usesGeolocation) {
                         checkAndRequestGeolocation();
                     } else {
