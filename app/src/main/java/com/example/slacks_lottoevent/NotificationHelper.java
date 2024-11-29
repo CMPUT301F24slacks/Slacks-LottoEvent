@@ -18,6 +18,11 @@ import androidx.core.content.ContextCompat;
 
 
 
+/**
+ * Helper class for managing and sending notifications in the application.
+ * This class handles notification permissions, building notification content,
+ * and displaying notifications to the user.
+ */
 public class NotificationHelper {
 
     private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1;
@@ -25,10 +30,22 @@ public class NotificationHelper {
 
     private Activity activity;
 
+    /**
+     * Constructs a new instance of {@link NotificationHelper}.
+     *
+     * @param activity The activity context used for permission checks and notification management.
+     */
     public NotificationHelper(Activity activity) {
         this.activity = activity;
     }
 
+    /**
+     * Sends a notification with the specified title and message to the user.
+     * Handles permission requests
+     * @param deviceId A unique identifier for the device, used to generate unique notification IDs.
+     * @param title    The title of the notification.
+     * @param message  The message content of the notification.
+     */
     public void sendNotifications(String deviceId, String title, String message) {
         SharedPreferences sharedPreferences = activity.getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
         Boolean hasAsked = sharedPreferences.getBoolean("hasAskedNotifcations", false);

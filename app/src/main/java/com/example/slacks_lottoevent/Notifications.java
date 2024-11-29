@@ -10,6 +10,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Handles notification-related operations, including adding notifications
+ * to the Firestore database and removing notifications associated with specific users.
+ *
+ * This class interacts with the following Firestore collections:
+ * - "events" for retrieving lists of device IDs associated with an event.
+ * - "profiles" for fetching user profile details based on device IDs.
+ * - "notifications" for storing and managing user-specific notifications.
+ */
 public class Notifications {
     private String title;
     private String content;
@@ -18,10 +27,24 @@ public class Notifications {
 
     private FirebaseFirestore db;
 
+    /**
+     * Constructs a new instance of {@link Notifications}.
+     * Initializes a Firestore database instance for performing database operations.
+     */
+
     public Notifications(){
         db = FirebaseFirestore.getInstance();
     }
 
+    /**
+     * Adds notifications to the "notifications" Firestore collection for all users
+     * listed in a specific group (e.g., waitlist) of an event.
+     * @param customName    The title of the notification.
+     * @param customMessage The message content of the notification.
+     * @param listToGrab    The key in the event document representing the list of device IDs.
+     * @param eventId       The unique identifier of the event to retrieve the list from.
+
+     */
     public void addNotifications(String customName, String customMessage, String listToGrab, String eventId) {
         db.collection("events").document(eventId).get().addOnSuccessListener(eventDoc -> {
             if (eventDoc.exists()) {
@@ -52,6 +75,10 @@ public class Notifications {
         });
     }
 
+    /**
+     * Removes all notifications associated with a specific user ID from the "notifications" Firestore collection.
+     * @param deviceId The unique identifier of the user or device whose notifications should be deleted.
+     */
 
     public void removeNotifications(String deviceId){
         db.collection("notifications")
