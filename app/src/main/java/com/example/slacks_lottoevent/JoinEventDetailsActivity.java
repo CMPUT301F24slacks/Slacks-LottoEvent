@@ -334,6 +334,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
         binding.eventTitle.setText(eventName);
         binding.eventDate.setText("Event Date: " + date);
+        binding.eventTime.setText("Event Time: "+ time);
         binding.signupDate.setText("Sign up deadline: " + signupDeadline);
         binding.eventLocation.setText(location);
         binding.eventDescription.setText(description);
@@ -377,7 +378,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
             else if (waitListCapacity > 0){
 //         There is a waitlist capacity and shows the spots left
-
                 spotsRemaining = spotsRemaining > 0 ? spotsRemaining : 0;
                 spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
                 binding.spotsAvailable.setText(spotsRemainingText);
@@ -518,19 +518,24 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      * addEventToEntrant method for the JoinEventDetailsActivity and updates the notification preferences for said entrant.
      * This method adds the event to the entrant.
      */
-    private void addEventToEntrant(){
+    private void addEventToEntrant() {
         DocumentReference entrantDocRef = db.collection("entrants").document(deviceId);
         entrantDocRef.get().addOnSuccessListener(task -> {
-            if (task.exists()){
+            if (task.exists()) {
+                // Entrant already in the database
                 Entrant entrant = task.toObject(Entrant.class);
-                entrant.addWaitlistedEvents(qrCodeValue);
-                entrantDocRef.set(entrant);
-            }
-            else {
+                if (entrant != null && !entrant.getWaitlistedEvents().contains(qrCodeValue)) {
+                    // Add only if qrCodeValue is not already in the waitlist
+                    entrant.addWaitlistedEvents(qrCodeValue);
+                    entrantDocRef.set(entrant);
+                }
+            } else {
                 // Entrant not already in the database
                 Entrant newEntrant = new Entrant();
-                newEntrant.getWaitlistedEvents().add(qrCodeValue);
-                entrantDocRef.set(newEntrant);
+                if (!newEntrant.getWaitlistedEvents().contains(qrCodeValue)) {
+                    newEntrant.getWaitlistedEvents().add(qrCodeValue);
+                    entrantDocRef.set(newEntrant);
+                }
             }
         });
     }

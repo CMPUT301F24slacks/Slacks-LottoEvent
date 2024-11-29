@@ -1,5 +1,7 @@
 package com.example.slacks_lottoevent;
 
+import static com.example.slacks_lottoevent.AdminActivity.showAdminAlertDialog;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -107,17 +109,18 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 event = document.toObject(Event.class);
 
                 // Extract and update fields
-                date = document.getString("eventDate");
-                signupDate = document.getString("signupDeadline");
-                time = document.getString("time");
-                eventName = document.getString("name");
-                location = document.getString("location");
-                description = document.getString("description");
-                eventPosterURL = document.getString("eventPosterURL");
-                qrData = document.getString("qrdata");
-                eventID = document.getString("eventID");
-                entrantsChosen = document.getBoolean("entrantsChosen");
-
+                if (event != null) {
+                    date = event.getEventDate();  // Get the date from the Event object
+                    signupDate = event.getSignupDeadline();  // Get the signup date
+                    time = event.getTime();  // Get the time
+                    eventName = event.getName();  // Get the name
+                    location = event.getLocation();  // Get the location
+                    description = event.getDescription();  // Get the description
+                    eventPosterURL = event.getEventPosterURL();  // Get the event poster URL
+                    qrData = event.getQRData();  // Get the QR data
+                    eventID = event.getEventID();  // Get the event ID
+                    entrantsChosen = event.getEntrantsChosen();
+                }
 
                 try {
                     signup = sdf.parse(signupDate);
@@ -174,6 +177,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         binding.eventTitle.setText(eventName);
                         binding.eventDate.setText("Event Date: " + date);
                         binding.signupDate.setText("Signup Deadline: " + signupDate);
+                        binding.eventTime.setText("Event Time: "+ time);
                         binding.eventWaitlistCapacity.setText("Waitlist Capacity: " +  waitListCapacity.toString());
                         binding.eventLocation.setText(location);
                         binding.eventSlotsCapacity.setText("Event Slots: " + capacityAsString);
@@ -228,40 +232,25 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
         binding.lotterySystemButton.setOnClickListener(view -> {
             if (event == null) {
+
                 // Show a message that the event data is not available yet
-                new AlertDialog.Builder(this)
-                        .setTitle("Error")
-                        .setMessage("Event data is not loaded yet. Please try again later.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                showAdminAlertDialog(this, null, "Error", "Event data is not loaded yet. Please try again later.", null, null, "OK", null);
                 return;
             }
 
             if (event.getWaitlisted().size() == 0){
-                new AlertDialog.Builder(this)
-                        .setTitle("Cannot Select")
-                        .setMessage("There is no one in the waitlist.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                showAdminAlertDialog(this, null, "Cannot Select", "There is no one in the waitlist.", null, null, "OK", null);
                 return;
 
             }
 
             if (!currentDate.after(signup)){
-                new AlertDialog.Builder(this)
-                        .setTitle("Cannot Select")
-                        .setMessage("Cannot select entrants until after the signup date")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                showAdminAlertDialog(this, null, "Cannot Select", "Cannot select entrants until after the signup date", null, null, "OK", null);
 
             }
 
             if (event.getEntrantsChosen()){
-                new AlertDialog.Builder(this)
-                        .setTitle("Cannot Sample Again")
-                        .setMessage("Cannot sample entrants again. You can reselect them in the List of Entrants tab.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                showAdminAlertDialog(this, null, "Cannot Sample Again", "Cannot sample entrants again. You can reselect them in the List of Entrants tab.", null, null, "OK", null);
             }
 
             if (binding.lotterySystemButton.isEnabled() && !event.getEntrantsChosen() && currentDate.after(signup)) {
@@ -271,11 +260,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 updateInvitedEntrants(event);
                 updateUninvitedEntrants(event);
 
-                new AlertDialog.Builder(this)
-                        .setTitle("Entrants Selected")
-                        .setMessage("Entrants were selected for the event.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                showAdminAlertDialog(this, null, "Entrants Selected", "Entrants were selected for the event.", null, null, "OK", null);
             }
 
             updateLotteryButtonVisibility(isAdmin);

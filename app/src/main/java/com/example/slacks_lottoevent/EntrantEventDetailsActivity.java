@@ -109,6 +109,7 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
 
                         binding.eventTitle.setText(eventName);
                         binding.eventDate.setText("Event Date: " + date);
+                        binding.eventTime.setText("Event Time: "+ time);
                         binding.eventsignupDeadline.setText("Signup Deadline: "+ signupDate);
                         binding.eventLocation.setText(location);
                         binding.eventWaitlistCapacity.setText("Event Slots: " + capacityAsString);
