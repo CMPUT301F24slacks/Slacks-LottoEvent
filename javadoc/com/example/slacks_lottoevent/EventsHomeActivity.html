@@ -165,15 +165,21 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreateOptionsMenu(android.view.Menu)" class="member-name-link">onCreateOptionsMenu</a><wbr>(android.view.Menu&nbsp;menu)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Inflate the menu; this adds items to the action bar if it is present.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onOptionsItemSelected(android.view.MenuItem)" class="member-name-link">onOptionsItemSelected</a><wbr>(android.view.MenuItem&nbsp;item)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Handle action bar item clicks here.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onRequestPermissionsResult(int,java.lang.String%5B%5D,int%5B%5D)" class="member-name-link">onRequestPermissionsResult</a><wbr>(int&nbsp;requestCode,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;permissions,
  int[]&nbsp;grantResults)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Handles the result of a permission request.</div>
+</div>
 </div>
 </div>
 </div>
@@ -250,9 +256,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onCreateOptionsMenu(android.view.Menu)">
 <h3>onCreateOptionsMenu</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">onCreateOptionsMenu</span><wbr><span class="parameters">(android.view.Menu&nbsp;menu)</span></div>
+<div class="block">Inflate the menu; this adds items to the action bar if it is present.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onCreateOptionsMenu</code>&nbsp;in class&nbsp;<code>android.app.Activity</code></dd>
+<dt>Parameters:</dt>
+<dd><code>menu</code> - The menu to inflate</dd>
 </dl>
 </section>
 </li>
@@ -260,9 +269,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onOptionsItemSelected(android.view.MenuItem)">
 <h3>onOptionsItemSelected</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">onOptionsItemSelected</span><wbr><span class="parameters">(android.view.MenuItem&nbsp;item)</span></div>
+<div class="block">Handle action bar item clicks here.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onOptionsItemSelected</code>&nbsp;in class&nbsp;<code>android.app.Activity</code></dd>
+<dt>Parameters:</dt>
+<dd><code>item</code> - The menu item that was clicked</dd>
 </dl>
 </section>
 </li>
@@ -274,11 +286,22 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;permissions,
  @NonNull
  int[]&nbsp;grantResults)</span></div>
+<div class="block">Handles the result of a permission request.
+ This method is called when the user responds to a runtime permission request.
+ It specifically handles the notification permission request, updating shared preferences
+ to indicate whether the user granted or denied the permission.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>onRequestPermissionsResult</code>&nbsp;in interface&nbsp;<code>androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback</code></dd>
 <dt>Overrides:</dt>
 <dd><code>onRequestPermissionsResult</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.FragmentActivity</code></dd>
+<dt>Parameters:</dt>
+<dd><code>requestCode</code> - The integer request code originally supplied to requestPermissions(),
+                     identifying the specific permission request.</dd>
+<dd><code>permissions</code> - The requested permissions. This value is not null.</dd>
+<dd><code>grantResults</code> - The grant results for the corresponding permissions,
+                     either <code>PackageManager.PERMISSION_GRANTED</code> or <code>PackageManager.PERMISSION_DENIED</code>.
+                     This value is not null.</dd>
 </dl>
 </section>
 </li>

@@ -109,6 +109,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/example/slacks_lottoevent/Event.html#addJoinedNotification(java.lang.String)" class="member-name-link">addJoinedNotification(String)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/Event.html" title="class in com.example.slacks_lottoevent">Event</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/example/slacks_lottoevent/Notifications.html#addNotifications(java.lang.String,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">addNotifications(String, String, String, String)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/Notifications.html" title="class in com.example.slacks_lottoevent">Notifications</a></dt>
+<dd>
+<div class="block">Adds notifications to the "notifications" Firestore collection for all users
+ listed in a specific group (e.g., waitlist) of an event.</div>
+</dd>
 <dt><a href="com/example/slacks_lottoevent/Event.html#addReselected(java.lang.String)" class="member-name-link">addReselected(String)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/Event.html" title="class in com.example.slacks_lottoevent">Event</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/Event.html#addSelected(java.lang.String)" class="member-name-link">addSelected(String)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/Event.html" title="class in com.example.slacks_lottoevent">Event</a></dt>
@@ -522,6 +527,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/example/slacks_lottoevent/ProfileListArrayAdapter.html#EntrantRemovalSelected(com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList,java.lang.String)" class="member-name-link">EntrantRemovalSelected(FirebaseFirestore, ArrayList&lt;String&gt;, String)</a> - Static method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/ProfileListArrayAdapter.html" title="class in com.example.slacks_lottoevent">ProfileListArrayAdapter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/ProfileListArrayAdapter.html#EntrantRemovalWaitlisted(com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList,java.lang.String)" class="member-name-link">EntrantRemovalWaitlisted(FirebaseFirestore, ArrayList&lt;String&gt;, String)</a> - Static method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/ProfileListArrayAdapter.html" title="class in com.example.slacks_lottoevent">ProfileListArrayAdapter</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/slacks_lottoevent/OrganizerEventDetailsActivity.html#entrantsChosen" class="member-name-link">entrantsChosen</a> - Variable in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/OrganizerEventDetailsActivity.html" title="class in com.example.slacks_lottoevent">OrganizerEventDetailsActivity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/Event.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/Event.html" title="class in com.example.slacks_lottoevent">Event</a></dt>
 <dd>
@@ -1365,15 +1372,24 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/example/slacks_lottoevent/databinding/ActivityCreateEventBinding.html#noPpAccpt2" class="member-name-link">noPpAccpt2</a> - Variable in class com.example.slacks_lottoevent.databinding.<a href="com/example/slacks_lottoevent/databinding/ActivityCreateEventBinding.html" title="class in com.example.slacks_lottoevent.databinding">ActivityCreateEventBinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/NotificationHelper.html" class="type-name-link" title="class in com.example.slacks_lottoevent">NotificationHelper</a> - Class in <a href="com/example/slacks_lottoevent/package-summary.html">com.example.slacks_lottoevent</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Helper class for managing and sending notifications in the application.</div>
+</dd>
 <dt><a href="com/example/slacks_lottoevent/NotificationHelper.html#%3Cinit%3E(android.app.Activity)" class="member-name-link">NotificationHelper(Activity)</a> - Constructor for class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/NotificationHelper.html" title="class in com.example.slacks_lottoevent">NotificationHelper</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Constructs a new instance of <a href="com/example/slacks_lottoevent/NotificationHelper.html" title="class in com.example.slacks_lottoevent"><code>NotificationHelper</code></a>.</div>
+</dd>
 <dt><a href="com/example/slacks_lottoevent/OrganizerWaitlistFragment.html#notifications" class="member-name-link">notifications</a> - Variable in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/OrganizerWaitlistFragment.html" title="class in com.example.slacks_lottoevent">OrganizerWaitlistFragment</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/Notifications.html" class="type-name-link" title="class in com.example.slacks_lottoevent">Notifications</a> - Class in <a href="com/example/slacks_lottoevent/package-summary.html">com.example.slacks_lottoevent</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Handles notification-related operations, including adding notifications
+ to the Firestore database and removing notifications associated with specific users.</div>
+</dd>
 <dt><a href="com/example/slacks_lottoevent/Notifications.html#%3Cinit%3E()" class="member-name-link">Notifications()</a> - Constructor for class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/Notifications.html" title="class in com.example.slacks_lottoevent">Notifications</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Constructs a new instance of <a href="com/example/slacks_lottoevent/Notifications.html" title="class in com.example.slacks_lottoevent"><code>Notifications</code></a>.</div>
+</dd>
 <dt><a href="com/example/slacks_lottoevent/databinding/ActivityProfileBinding.html#notificationsIcon" class="member-name-link">notificationsIcon</a> - Variable in class com.example.slacks_lottoevent.databinding.<a href="com/example/slacks_lottoevent/databinding/ActivityProfileBinding.html" title="class in com.example.slacks_lottoevent.databinding">ActivityProfileBinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/databinding/NotificationsOrganizerBinding.html" class="type-name-link" title="class in com.example.slacks_lottoevent.databinding">NotificationsOrganizerBinding</a> - Class in <a href="com/example/slacks_lottoevent/databinding/package-summary.html">com.example.slacks_lottoevent.databinding</a></dt>
@@ -1395,6 +1411,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Method to handle the result of the image picker</div>
 </dd>
+<dt><a href="com/example/slacks_lottoevent/UserNotifications.html#onActivityResult(int,int,android.content.Intent)" class="member-name-link">onActivityResult(int, int, Intent)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/UserNotifications.html" title="class in com.example.slacks_lottoevent">UserNotifications</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/AddFacilityFragment.html#onAttach(android.content.Context)" class="member-name-link">onAttach(Context)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/AddFacilityFragment.html" title="class in com.example.slacks_lottoevent">AddFacilityFragment</a></dt>
 <dd>
 <div class="block">onAttach is called when the fragment is associated with an activity.</div>
@@ -1474,7 +1492,9 @@ loadScripts(document, 'script');</script>
 <div class="block">onCreateDialog creates the AlertDialog for the AddFacilityFragment</div>
 </dd>
 <dt><a href="com/example/slacks_lottoevent/EventsHomeActivity.html#onCreateOptionsMenu(android.view.Menu)" class="member-name-link">onCreateOptionsMenu(Menu)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/EventsHomeActivity.html" title="class in com.example.slacks_lottoevent">EventsHomeActivity</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Inflate the menu; this adds items to the action bar if it is present.</div>
+</dd>
 <dt><a href="com/example/slacks_lottoevent/AdminEvents.html#onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)" class="member-name-link">onCreateView(LayoutInflater, ViewGroup, Bundle)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/AdminEvents.html" title="class in com.example.slacks_lottoevent">AdminEvents</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/AdminFacilities.html#onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)" class="member-name-link">onCreateView(LayoutInflater, ViewGroup, Bundle)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/AdminFacilities.html" title="class in com.example.slacks_lottoevent">AdminFacilities</a></dt>
@@ -1518,11 +1538,15 @@ loadScripts(document, 'script');</script>
  https://developers.google.com/android/reference/com/google/android/gms/maps/CameraUpdateFactory#newLatLngZoom(com.google.android.gms.maps.model.LatLng,%20float)</div>
 </dd>
 <dt><a href="com/example/slacks_lottoevent/EventsHomeActivity.html#onOptionsItemSelected(android.view.MenuItem)" class="member-name-link">onOptionsItemSelected(MenuItem)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/EventsHomeActivity.html" title="class in com.example.slacks_lottoevent">EventsHomeActivity</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Handle action bar item clicks here.</div>
+</dd>
 <dt><a href="com/example/slacks_lottoevent/CreateEvent.html#onRequestPermissionsResult(int,java.lang.String%5B%5D,int%5B%5D)" class="member-name-link">onRequestPermissionsResult(int, String[], int[])</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/CreateEvent.html" title="class in com.example.slacks_lottoevent">CreateEvent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/EventsHomeActivity.html#onRequestPermissionsResult(int,java.lang.String%5B%5D,int%5B%5D)" class="member-name-link">onRequestPermissionsResult(int, String[], int[])</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/EventsHomeActivity.html" title="class in com.example.slacks_lottoevent">EventsHomeActivity</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Handles the result of a permission request.</div>
+</dd>
 <dt><a href="com/example/slacks_lottoevent/FirestoreProfileUtil.FirestoreCallback.html#onResult(boolean)" class="member-name-link">onResult(boolean)</a> - Method in interface com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/FirestoreProfileUtil.FirestoreCallback.html" title="interface in com.example.slacks_lottoevent">FirestoreProfileUtil.FirestoreCallback</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/ManageMyEventsFragment.html#onViewCreated(android.view.View,android.os.Bundle)" class="member-name-link">onViewCreated(View, Bundle)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/ManageMyEventsFragment.html" title="class in com.example.slacks_lottoevent">ManageMyEventsFragment</a></dt>
@@ -1589,6 +1613,8 @@ loadScripts(document, 'script');</script>
  This class is used to display the notifications for the organizer.</div>
 </dd>
 <dt><a href="com/example/slacks_lottoevent/OrganizerNotifications.html#%3Cinit%3E()" class="member-name-link">OrganizerNotifications()</a> - Constructor for class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/OrganizerNotifications.html" title="class in com.example.slacks_lottoevent">OrganizerNotifications</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/example/slacks_lottoevent/UserNotifications.html#organizerNotis" class="member-name-link">organizerNotis</a> - Variable in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/UserNotifications.html" title="class in com.example.slacks_lottoevent">UserNotifications</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/databinding/DialogRegistrationBinding.html#organizerNotisText" class="member-name-link">organizerNotisText</a> - Variable in class com.example.slacks_lottoevent.databinding.<a href="com/example/slacks_lottoevent/databinding/DialogRegistrationBinding.html" title="class in com.example.slacks_lottoevent.databinding">DialogRegistrationBinding</a></dt>
 <dd>&nbsp;</dd>
@@ -1679,7 +1705,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/example/slacks_lottoevent/databinding/FragmentAdminImagesBinding.html#recyclerViewImages" class="member-name-link">recyclerViewImages</a> - Variable in class com.example.slacks_lottoevent.databinding.<a href="com/example/slacks_lottoevent/databinding/FragmentAdminImagesBinding.html" title="class in com.example.slacks_lottoevent.databinding">FragmentAdminImagesBinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/Notifications.html#removeNotifications(java.lang.String)" class="member-name-link">removeNotifications(String)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/Notifications.html" title="class in com.example.slacks_lottoevent">Notifications</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes all notifications associated with a specific user ID from the "notifications" Firestore collection.</div>
+</dd>
 <dt><a href="com/example/slacks_lottoevent/OrganizerNotifications.html#reSelect" class="member-name-link">reSelect</a> - Variable in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/OrganizerNotifications.html" title="class in com.example.slacks_lottoevent">OrganizerNotifications</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/databinding/NotificationsOrganizerBinding.html#reselectButton" class="member-name-link">reselectButton</a> - Variable in class com.example.slacks_lottoevent.databinding.<a href="com/example/slacks_lottoevent/databinding/NotificationsOrganizerBinding.html" title="class in com.example.slacks_lottoevent.databinding">NotificationsOrganizerBinding</a></dt>
@@ -1706,9 +1734,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/example/slacks_lottoevent/databinding/DialogEditPictureBinding.html#selectedImageView" class="member-name-link">selectedImageView</a> - Variable in class com.example.slacks_lottoevent.databinding.<a href="com/example/slacks_lottoevent/databinding/DialogEditPictureBinding.html" title="class in com.example.slacks_lottoevent.databinding">DialogEditPictureBinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/NotificationHelper.html#sendNotifications(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">sendNotifications(String, String, String)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/NotificationHelper.html" title="class in com.example.slacks_lottoevent">NotificationHelper</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/example/slacks_lottoevent/Notifications.html#sendNotifications(java.lang.String,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">sendNotifications(String, String, String, String)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/Notifications.html" title="class in com.example.slacks_lottoevent">Notifications</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Sends a notification with the specified title and message to the user.</div>
+</dd>
 <dt><a href="com/example/slacks_lottoevent/Profile.html#setAdminNotifications(boolean)" class="member-name-link">setAdminNotifications(boolean)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/Profile.html" title="class in com.example.slacks_lottoevent">Profile</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/example/slacks_lottoevent/Event.html#setCancelled(java.util.ArrayList)" class="member-name-link">setCancelled(ArrayList&lt;String&gt;)</a> - Method in class com.example.slacks_lottoevent.<a href="com/example/slacks_lottoevent/Event.html" title="class in com.example.slacks_lottoevent">Event</a></dt>
