@@ -56,19 +56,14 @@ public class EventQrScanner extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        db = FirebaseFirestore.getInstance();
 
-        eventsRef = db.collection("events");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_qr_scanner);
-        cameraPreview = findViewById(R.id.cameraPreview);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             // Request the camera permission
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
-        } else {
-            // User already granted permission is already granted, user can start camera.
-            startCamera();
         }
 
         ImageView backArrow = findViewById(R.id.back_arrow);
@@ -111,44 +106,5 @@ public class EventQrScanner extends AppCompatActivity {
         }
     }
 
-    /**
-     * This method is responsible for starting the camera.
-     */
-    private void startCamera(){
-        // Getting an instance of ProcessCameraProvider.
-        com.google.common.util.concurrent.ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
-
-        // Adding a listener to the cameraProviderFuture to execute when the future is complete.
-        cameraProviderFuture.addListener(() -> {
-            try {
-                // getting the camera provider
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                bindPreview(cameraProvider); // Binding the preview to the camera to display camera preview
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        }, ContextCompat.getMainExecutor(this)); // The Executor for the listener is the Main Thread
-
-    }
-
-    /**
-     * This method is responsible for binding the preview to the camera to display the camera preview.
-     * @param cameraProvider The camera provider to bind the preview to.
-     */
-    private void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
-        // Creating a new preview use case.
-        Preview preview = new Preview.Builder().build();
-        CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA; // Selecting to use back camera.
-        // Setting the preview's surface provider to be the cameraPreview UI element, camera frames are sent and displayed at the cameraPreview element.
-        preview.setSurfaceProvider(cameraPreview.getSurfaceProvider());
-
-        try {
-            // Unbinding any use cases of the camera.
-            cameraProvider.unbindAll();
-            // Binding the camera's lifecycle to current actvity
-            // lifecycle Owner is this activity, using the back camera and the use case is the preview cameraPreview of the scanner which is bound to the lifecycle.
-            cameraProvider.bindToLifecycle(this, cameraSelector, preview);
-        } catch (Exception e) {}
-    }
 
 }
