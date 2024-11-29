@@ -286,7 +286,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
     private void handleEventDocument(DocumentSnapshot document){
         Boolean isDisabled = document.getBoolean("disabled");
         String organizerDeviceId = document.getString("deviceId");
-
+        entrantsChosen = document.getBoolean("entrantsChosen");
         if (isDisabled != null && isDisabled) {
             showInvalidQRCodeDialog();
             binding.joinButton.setVisibility(View.GONE);
