@@ -100,5 +100,33 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        // edit profile button click listener
+        editProfileButton.setOnClickListener(v -> {
+            profileViewModel.getCurrentProfileLiveData().observe(getViewLifecycleOwner(), profile -> {
+                if (profile != null) {
+                    // Enable editing of profile information
+                    nameEditText.setEnabled(true);
+                    emailEditText.setEnabled(true);
+                    phoneEditText.setEnabled(true);
+                    confirmButton.setVisibility(View.VISIBLE);
+                    cancelButton.setVisibility(View.VISIBLE);
+                } else {
+                    SnackbarUtils.promptSignUp(requireView(), requireContext(), R.id.bottom_app_bar); // Prompt user to sign up
+                }
+            });
+        });
+
+        // edit picture button click listener
+        editPictureButton.setOnClickListener(v -> {
+            profileViewModel.getCurrentProfileLiveData().observe(getViewLifecycleOwner(), profile -> {
+                if (profile != null) {
+                    // Open gallery to select a new profile picture
+                    // Placeholder for opening gallery
+                } else {
+                    SnackbarUtils.promptSignUp(requireView(), requireContext(), R.id.bottom_app_bar); // Prompt user to sign up
+                }
+            });
+        });
+
     }
 }

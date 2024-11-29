@@ -11,9 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -97,7 +95,7 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
     private void showFacilityOptionsDialog(Facility facility) {
         // Build the message with facility details
         String message = "Name: " + facility.getFacilityName() + "\n" +
-                "Address: " + facility.getStreetAddress1();
+                "Address: " + facility.getStreetAddress();
 
         AdminActivity.showAdminAlertDialog(context, () ->
                         AdminActivity.showAdminAlertDialog(context,

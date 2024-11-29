@@ -70,7 +70,7 @@ public class EntrantDB {
 
     // Interface for notifying entrant changes
     public interface EntrantChangeListener {
-        void onEntrantsChanged(HashMap<String, Entrant> entrants);
+        void onEntrantsChanged(HashMap<String, Entrant> updatedEntrants);
     }
 
 

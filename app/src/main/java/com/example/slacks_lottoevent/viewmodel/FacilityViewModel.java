@@ -1,84 +1,57 @@
 package com.example.slacks_lottoevent.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.slacks_lottoevent.database.FacilityDB;
 import com.example.slacks_lottoevent.Facility;
+import com.example.slacks_lottoevent.model.User;
+
+import java.util.HashMap;
 
 public class FacilityViewModel extends ViewModel {
+    private final MutableLiveData<HashMap<String, Facility>> facilitiesLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Facility> currentFacilityLiveData = new MutableLiveData<>();
     private final FacilityDB facilityDB;
-    private final String deviceId;
-    private static MutableLiveData<Facility> facility = new MutableLiveData<>();
+    private final User user = User.getInstance();
 
-    public FacilityViewModel(String deviceId) {
+    public FacilityViewModel() {
         facilityDB = FacilityDB.getInstance();
-        this.deviceId = deviceId;
+        facilityDB.setFacilityChangeListener(this::updateFacilities);
+    }
+
+    // Update facilities locally when notified by FacilityDB
+    private void updateFacilities(HashMap<String, Facility> updatedFacilities) {
+        facilitiesLiveData.setValue(updatedFacilities);
+        updateCurrentFacility(); // Automatically update the current facility
+    }
+
+    // Expose live data for observing in the UI
+    public LiveData<HashMap<String, Facility>> getFacilitiesLiveData() {
+        return facilitiesLiveData;
+    }
+
+    public LiveData<Facility> getCurrentFacilityLiveData() {
+        return currentFacilityLiveData;
+    }
+
+    // Directly update the current facility based on the device ID
+    private void updateCurrentFacility() {
+        HashMap<String, Facility> facilities = facilitiesLiveData.getValue();
+        if (facilities != null) {
+            Facility currentFacility = facilities.get(user.getDeviceId());
+            currentFacilityLiveData.setValue(currentFacility);
+        }
     }
 
     /**
-     * Set facility to be observed.
+     * Create a new facility in Firestore if it doesn't already exist. Otherwise, update the existing facility.
+     *
+     * @param name The name of the facility
+     * @param streetAddress The first line of the street address
      */
-    public void setFacility(Facility facility) {
-        FacilityViewModel.facility.setValue(facility);
+    public void updateFacility(String name, String streetAddress) {
+        facilityDB.updateFacility(name, streetAddress, user.getDeviceId());
     }
-
-    /**
-     * Adds a facility to the database.
-     * @param facility Facility object to be added to the database.
-     */
-    public void addFacility(Facility facility) {
-        facilityDB.addFacility(facility)
-                .addOnSuccessListener(aVoid -> {
-                    // Facility added successfully
-                    Log.d("FacilityViewModel", "Facility added successfully");
-                })
-                .addOnFailureListener(e -> {
-                    // Handle errors during facility addition
-                    Log.e("FacilityViewModel", "Failed to add facility: " + e.getMessage());
-                });
-    }
-
-    /**
-     * Checks if a facility with the given device ID exists in the database.
-     * @param deviceId Device ID of the facility to check for existence.
-     */
-    public LiveData<Boolean> facilityExists(String deviceId) {
-        MutableLiveData<Boolean> result = new MutableLiveData<>();
-        facilityDB.facilityExists(deviceId)
-                .addOnSuccessListener(exists -> {
-                    // Update LiveData with the result
-                    result.setValue(exists);
-                    Log.d("FacilityViewModel", "Facility with device ID " + deviceId + (exists ? " exists" : " does not exist"));
-                })
-                .addOnFailureListener(e -> {
-                    // Update LiveData with failure state
-                    result.setValue(false);
-                    Log.e("FacilityViewModel", "Failed to check facility existence: " + e.getMessage());
-                });
-        return result;
-    }
-
-    /**
-     * Returns a facility with the matching device ID from the database.
-     */
-    public LiveData<Facility> getFacility() {
-        MutableLiveData<Facility> result = new MutableLiveData<>();
-        facilityDB.getFacility(deviceId)
-                .addOnSuccessListener(facility -> {
-                    // Update LiveData with the facility
-                    result.setValue(facility);
-                    Log.d("FacilityViewModel", "Retrieved facility with device ID " + deviceId);
-                })
-                .addOnFailureListener(e -> {
-                    // Update LiveData with failure state
-                    result.setValue(null);
-                    Log.e("FacilityViewModel", "Failed to retrieve facility: " + e.getMessage());
-                });
-        return result;
-    }
-
 }

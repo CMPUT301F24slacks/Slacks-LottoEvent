@@ -23,7 +23,6 @@ import com.example.slacks_lottoevent.databinding.FragmentManageMyEventsBinding;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.WriteBatch;
@@ -73,7 +72,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         Map<String, Object> facilityData = new HashMap<>();
         facilityData.put("facilityName", facilityName);
         // Add other attributes as needed, like location, type, etc.
-        facilityData.put("streetAddress1", facility.getStreetAddress1());
+        facilityData.put("streetAddress1", facility.getStreetAddress());
         facilityData.put("organizerID", facility.getOrganizerID());
         facilityData.put("deviceID", facility.getDeviceId());
 
@@ -127,7 +126,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         // Prepare the updated facility data
         Map<String, Object> facilityData = new HashMap<>();
         facilityData.put("facilityName", existingFacility.getFacilityName());
-        facilityData.put("streetAddress1", existingFacility.getStreetAddress1());
+        facilityData.put("streetAddress1", existingFacility.getStreetAddress());
 
         // Update the facility and then proceed to update related events
         facilitiesRef.document(facilityId).update(facilityData)
@@ -140,7 +139,7 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                                     // Iterate through all matching events and update their location
                                     for (DocumentSnapshot document : queryDocumentSnapshots) {
                                         DocumentReference eventDocRef = document.getReference();
-                                        batch.update(eventDocRef, "location", existingFacility.getStreetAddress1());
+                                        batch.update(eventDocRef, "location", existingFacility.getStreetAddress());
                                     }
                                     // Commit the batch write
                                     batch.commit()

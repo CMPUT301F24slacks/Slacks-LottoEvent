@@ -26,8 +26,6 @@ import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRe
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +60,7 @@ public class AddFacilityFragment extends DialogFragment {
      * Default constructor for creating a new Facility
      */
     public AddFacilityFragment() {
-        this.facility = new Facility("FacilityName", "StreetAddress1", "OrganizerId", "DeviceId");
+        this.facility = new Facility("FacilityName", "StreetAddress1", "DeviceId");
         this.isEdit = false;
     }
 
@@ -114,7 +112,7 @@ public class AddFacilityFragment extends DialogFragment {
 
         if (isEdit && facility != null) {
             editFacilityName.setText(facility.getFacilityName());
-            editStreetAddress1.setText(facility.getStreetAddress1());
+            editStreetAddress1.setText(facility.getStreetAddress());
         }
 
         setupAutocomplete(editStreetAddress1);
@@ -144,11 +142,11 @@ public class AddFacilityFragment extends DialogFragment {
                 if (isEdit) {
                     Log.d("msg", "updating facility");
                     facility.setFacilityName(facilityName);
-                    facility.setStreetAddress1(streetAddress1);
+                    facility.setStreetAddress(streetAddress1);
                     listener.updateFacility();
 
                 } else {
-                    listener.addFacility(new Facility(facilityName, streetAddress1, deviceId, deviceId));
+                    listener.addFacility(new Facility(facilityName, streetAddress1, deviceId));
                 }
 
                 dialog.dismiss();

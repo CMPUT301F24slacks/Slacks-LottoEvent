@@ -41,6 +41,7 @@ public class MainActivity extends BaseActivity {
     private EntrantViewModel entrantViewModel;
     private EventViewModel eventViewModel;
     private ProfileViewModel profileViewModel;
+    private FacilityViewModel facilityViewModel;
     private User user;
     private String deviceId;
     private FirebaseFirestore db;
@@ -64,6 +65,7 @@ public class MainActivity extends BaseActivity {
         entrantViewModel = new ViewModelProvider(this).get(EntrantViewModel.class);
         eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        facilityViewModel = new ViewModelProvider(this).get(FacilityViewModel.class);
 
         // Observe the events the entrant is involved in
         entrantViewModel.getCurrentEntrantLiveData().observe(this, entrant -> {

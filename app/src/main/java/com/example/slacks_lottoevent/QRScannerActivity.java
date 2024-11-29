@@ -78,9 +78,6 @@ public class QRScannerActivity extends BaseActivity {
             startCamera();
         }
 
-        ImageView backArrow = findViewById(R.id.back_arrow);
-        backArrow.setOnClickListener(v -> finish());
-
         Button readyButton = findViewById(R.id.readyButton);
 
         readyButton.setOnClickListener(v -> {

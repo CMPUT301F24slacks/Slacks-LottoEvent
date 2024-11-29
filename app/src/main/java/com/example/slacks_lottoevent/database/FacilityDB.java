@@ -2,18 +2,25 @@ package com.example.slacks_lottoevent.database;
 
 import com.example.slacks_lottoevent.Facility;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
+
+import java.util.HashMap;
 
 public class FacilityDB {
     private static FacilityDB instance;
-    private static final FirebaseConnection db = FirebaseConnection.getInstance();
-    private static final String COLLECTION_NAME = "facilities";
-    private static final CollectionReference collection = db.getDatabase().collection(COLLECTION_NAME);
+    private final FirebaseFirestore db;
+    private final HashMap<String, Facility> facilitiesCache;
+    private ListenerRegistration listenerRegistration;
+    private FacilityChangeListener facilityChangeListener;
 
     private FacilityDB() {
-        // Private constructor to prevent instantiation
+        db = FirebaseFirestore.getInstance();
+        facilitiesCache = new HashMap<>();
     }
 
+    // Singleton pattern
     public static synchronized FacilityDB getInstance() {
         if (instance == null) {
             instance = new FacilityDB();
@@ -21,25 +28,54 @@ public class FacilityDB {
         return instance;
     }
 
-    /**
-     * Adds a facility to the database asynchronously.
-     */
-    public Task<Void> addFacility(Facility facility) {
-        return collection.document(facility.getDeviceId()).set(facility);
+    // Start listening to the "facilities" collection for changes
+    public void startListening() {
+        if (listenerRegistration == null) {
+            listenerRegistration = db.collection("facilities")
+                    .addSnapshotListener((snapshots, e) -> {
+                        if (e != null) {
+                            e.printStackTrace();
+                            return;
+                        }
+                        if (snapshots != null) {
+                            facilitiesCache.clear();
+                            for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                                facilitiesCache.put(doc.getId(), doc.toObject(Facility.class));
+                            }
+                            notifyFacilityChangeListener();
+                        }
+                    });
+        }
     }
 
-    /**
-     * Returns a boolean whether the facility with the given device ID key exists in the database.
-     * @param deviceId Device ID of the facility to check for existence.
-     */
-    public Task<Boolean> facilityExists(String deviceId) {
-        return collection.document(deviceId).get().continueWith(task -> task.getResult().exists());
+    // Stop listening to Firestore updates
+    public void stopListening() {
+        if (listenerRegistration != null) {
+            listenerRegistration.remove();
+            listenerRegistration = null;
+        }
     }
 
-    /**
-     * Returns a facility with the given device ID key from the database.
-     */
-    public Task<Facility> getFacility(String deviceId) {
-        return collection.document(deviceId).get().continueWith(task -> task.getResult().toObject(Facility.class));
+    // Set a listener to notify when facilities change
+    public void setFacilityChangeListener(FacilityChangeListener listener) {
+        this.facilityChangeListener = listener;
+        startListening();
+    }
+
+    // Notify the listener that the facilities have changed
+    private void notifyFacilityChangeListener() {
+        if (facilityChangeListener != null) {
+            facilityChangeListener.onFacilitiesChanged(new HashMap<>(facilitiesCache));
+        }
+    }
+
+    // Interface for notifying facility changes
+    public interface FacilityChangeListener {
+        void onFacilitiesChanged(HashMap<String, Facility> updatedFacilities);
+    }
+
+    // Create a new facility in Firestore
+    public Task<Void> updateFacility(String name, String streetAddress, String deviceId) {
+        return db.collection("facilities").document(deviceId).set(new Facility(name, streetAddress, deviceId));
     }
 }
