@@ -1,6 +1,7 @@
 package com.example.slacks_lottoevent;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,10 +79,10 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
 
             if (isAdmin) {
                 ImageButton ovalButton = convertView.findViewById(R.id.oval_rectangle);
-                ovalButton.setOnClickListener(v -> showFacilityOptionsDialog(facility));
+                ovalButton.setOnClickListener(v -> showFacilityOptionsDialog(context, db, facility, eventsAdapter, this, false));
 
                 // Set OnClickListener to show profile options in a dialog
-                convertView.setOnClickListener(v -> showFacilityOptionsDialog(facility));
+                convertView.setOnClickListener(v -> showFacilityOptionsDialog(context, db, facility, eventsAdapter, this, false));
             }
         }
 
@@ -94,42 +95,29 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
      * @param facility The profile to display options for.
 //     * @param position The position of the profile in the list.
      */
-    private void showFacilityOptionsDialog(Facility facility) {
-        // Build the message with facility details
-        String message = "Name: " + facility.getFacilityName() + "\n" +
-                "Address: " + facility.getStreetAddress1();
+    public static void showFacilityOptionsDialog(Context context, FirebaseFirestore db, Facility facility,
+                                                  OrganizerEventArrayAdapter eventsAdapter, FacilityListArrayAdapter facilitiesAdapter, boolean FromProfile) {
+        if (!FromProfile){
+            // Build the message with facility details
+            String message = "Name: " + facility.getFacilityName() + "\n" +
+                    "Address: " + facility.getStreetAddress1();
 
-        AdminActivity.showAdminAlertDialog(context, () ->
-                        AdminActivity.showAdminAlertDialog(context,
-                                () -> confirmDeletion(facility), // Reference to the events adapter
-                                "Confirm Deletion", "Are you sure you want to delete this profile?",
-                                "WARNING: DELETION CANNOT BE UNDONE",
-                                "Cancel", "Confirm", null),
-                "Facility Details", message, "WARNING: DELETION CANNOT BE UNDONE",
-                "Cancel", "Delete", null);
+            AdminActivity.showAdminAlertDialog(context, () ->
+                            AdminActivity.showAdminAlertDialog(context,
+                                    () -> deleteFacilityFromDatabase(context, db, facility.getFacilityId(), facility.getDeviceId(),
+                                            eventsAdapter, facilitiesAdapter), // Reference to the events adapter
+                                    "Confirm Deletion", "Are you sure you want to delete this profile?",
+                                    "WARNING: DELETION CANNOT BE UNDONE",
+                                    "Cancel", "Confirm", null),
+                    "Facility Details", message, "WARNING: DELETION CANNOT BE UNDONE",
+                    "Cancel", "Delete", null);
+        }
+        else{
+            deleteFacilityFromDatabase(context, db, facility.getFacilityId(), facility.getDeviceId(),
+                eventsAdapter, facilitiesAdapter);
+        }
 
-    }
 
-    private void confirmDeletion(Facility facility){
-
-        deleteFacilityFromDatabase(
-                context,
-                db,
-                facility.getFacilityId(),
-                facility.getOrganizerID(),
-                eventsAdapter);
-
-        // Explicitly delete the facility document
-        db.collection("facilities").document(facility.getFacilityId()).delete()
-                .addOnSuccessListener(aVoid -> {
-                    // Remove the facility from the adapter and notify the dataset change
-                    remove(facility);
-                    notifyDataSetChanged();
-                    Toast.makeText(context, "Facility deleted successfully.", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(context, "Failed to delete facility: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
     }
 
 
@@ -142,7 +130,7 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
 //     * @param OrganizerId The facility's organizer Id to be deleted.
      */
     public static void deleteFacilityFromDatabase(Context context, FirebaseFirestore db, String facilityId, String organizerId,
-                                                  OrganizerEventArrayAdapter eventsAdapter) {
+                                                  OrganizerEventArrayAdapter eventsAdapter, FacilityListArrayAdapter facilitiesAdapter) {
         db.collection("facilities").document(facilityId)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
@@ -166,12 +154,39 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
                                             );
                                         }
 
+                                        // Delete the organizer document itself
+                                        db.collection("organizers").document(organizerId).delete()
+                                                .addOnSuccessListener(success -> {
+                                                    Toast.makeText(context, "Organizer data deleted successfully.", Toast.LENGTH_SHORT).show();
+
+                                                    // Notify the adapter to refresh the UI
+                                                    if (facilitiesAdapter != null) {
+                                                        facilitiesAdapter.notifyDataSetChanged();
+                                                    }
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(context, "Failed to delete organizer data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    e.printStackTrace();
+                                                });
+
+                                        db.collection("facilities").document(facilityId).delete()
+                                                .addOnSuccessListener(success -> { // Rename 'aVoid' to 'success'
+                                                    // Successfully deleted the facility
+                                                    Toast.makeText(context, "Facility deleted successfully.", Toast.LENGTH_SHORT).show();
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    // Handle failure
+                                                    Toast.makeText(context, "Failed to delete facility: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    Log.e("Firestore", "Error deleting facility: ", e);
+                                                });
+
+
                                         // Notify the adapter to refresh the UI
                                         if (eventsAdapter != null) {
                                             eventsAdapter.notifyDataSetChanged();
                                         }
+                                        }
                                     }
-                                }
                             })
                             .addOnFailureListener(e -> {
                                 Toast.makeText(context, "Failed to fetch organizer details: " + e.getMessage(), Toast.LENGTH_SHORT).show();
