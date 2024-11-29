@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Custom ArrayAdapter for displaying event notifications in a ListView.
@@ -85,29 +86,40 @@ public class EventNotificationsArrayAdapter extends ArrayAdapter<UserEventNotifi
 
             //make changes to both events and entrants, not only events
             acceptButton.setOnClickListener(v -> {
-                AdminActivity.showAdminAlertDialog(context, () -> handleAcceptEvent(event), "Enrollment Confirmed",
+                AdminActivity.showAdminAlertDialog(context, () -> confirmed(event, position, "accept"), "Enrollment Confirmed",
                         "You have opted to join the event.", "Note: You can still forfeit your position and leave the event",
                         "Cancel", "Confirm", null);
-                removeEvent(position);
             });
             //make changes to both events and entrants, not only events
             declineButton.setOnClickListener(v -> {
-                AdminActivity.showAdminAlertDialog(context, () -> handleDeclineEvent(event), "Declination Confirmed",
+                AdminActivity.showAdminAlertDialog(context, () -> confirmed(event, position, "decline"), "Declination Confirmed",
                         "You have opted to decline the event.", "WARNING: You cannot forfeit your invitation",
                         "Cancel", "Confirm", null);
-                removeEvent(position);
             });
 
             okayButton.setOnClickListener(v->{
-                AdminActivity.showAdminAlertDialog(context, () -> saveEventAsDisplayed(event.getEventId()), "Don't Give Up!",
+                AdminActivity.showAdminAlertDialog(context, () -> confirmed(event, position, "okay"), "Don't Give Up!",
                         "You have opted to rid of this message.",
                         "WARNING: This notice is meant to remind you of the possible opportunity, reminder cannot be undeleted",
                         null, "OK", null);
-                removeEvent(position);
             });
         }
 
         return convertView;
+    }
+
+    private void confirmed(UserEventNotifications event, int position, String message){
+        if (Objects.equals(message, "accept"))
+        {
+            handleAcceptEvent(event);
+        }
+        else if (Objects.equals(message, "decline") ){
+            handleDeclineEvent(event);
+        }
+        else{
+            saveEventAsDisplayed(event.getEventId());
+        }
+        removeEvent(position);
     }
 
     /**

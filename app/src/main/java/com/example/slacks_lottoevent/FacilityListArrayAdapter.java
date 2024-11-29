@@ -95,42 +95,43 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
 //     * @param position The position of the profile in the list.
      */
     private void showFacilityOptionsDialog(Facility facility) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
         // Build the message with facility details
         String message = "Name: " + facility.getFacilityName() + "\n" +
                 "Address: " + facility.getStreetAddress1();
-//                + "OrganizerID " + facility.getOrganizerID()
-//                + "FacilityID " + facility.getFacilityId();
 
-        builder.setTitle("Facility Details")
-                .setMessage(message)
-                .setPositiveButton("Delete", (dialog, which) -> {
-                    // Call method to delete facility
-                    deleteFacilityFromDatabase(
-                            context,
-                            db,
-                            facility.getFacilityId(),
-                            facility.getOrganizerID(),
-                            eventsAdapter); // Reference to the events adapter
+        AdminActivity.showAdminAlertDialog(context, () ->
+                        AdminActivity.showAdminAlertDialog(context,
+                                () -> confirmDeletion(facility), // Reference to the events adapter
+                                "Confirm Deletion", "Are you sure you want to delete this profile?",
+                                "WARNING: DELETION CANNOT BE UNDONE",
+                                "Cancel", "Confirm", null),
+                "Facility Details", message, "WARNING: DELETION CANNOT BE UNDONE",
+                "Cancel", "Delete", null);
 
-                    // Explicitly delete the facility document
-                    db.collection("facilities").document(facility.getFacilityId()).delete()
-                            .addOnSuccessListener(aVoid -> {
-                                // Remove the facility from the adapter and notify the dataset change
-                                remove(facility);
-                                notifyDataSetChanged();
-                                Toast.makeText(context, "Facility deleted successfully.", Toast.LENGTH_SHORT).show();
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(context, "Failed to delete facility: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            });
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-        // Show the dialog
-        builder.create().show();
     }
+
+    private void confirmDeletion(Facility facility){
+
+        deleteFacilityFromDatabase(
+                context,
+                db,
+                facility.getFacilityId(),
+                facility.getOrganizerID(),
+                eventsAdapter);
+
+        // Explicitly delete the facility document
+        db.collection("facilities").document(facility.getFacilityId()).delete()
+                .addOnSuccessListener(aVoid -> {
+                    // Remove the facility from the adapter and notify the dataset change
+                    remove(facility);
+                    notifyDataSetChanged();
+                    Toast.makeText(context, "Facility deleted successfully.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Failed to delete facility: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
 
     /**
      * Deletes the facility from Firestore and updates the list.

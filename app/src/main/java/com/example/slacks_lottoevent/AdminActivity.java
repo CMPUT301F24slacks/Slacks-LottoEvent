@@ -106,16 +106,42 @@ public class AdminActivity extends AppCompatActivity {
         Button confirmBtn = dialogView.findViewById(R.id.confirm_button);
         ImageView Picture = dialogView.findViewById(R.id.Picture);
 
-        if (Title != null && !Title.isEmpty()) DialogTitle.setText(Title);
-        if (Message != null && !Message.isEmpty()) DialogMessage.setText(Message);
-        if (Terms != null && !Terms.isEmpty()) DialogTerms.setText(Terms);
-        if (ConfirmText != null && !ConfirmText.isEmpty()) confirmBtn.setText(ConfirmText);
+        if (Title == null || Title.isEmpty()) {
+            DialogTitle.setVisibility(View.GONE);
+        } else {
+            DialogTitle.setText(Title); // Optionally set the text if not null or empty
+        }
+
+        if (Message == null || Message.isEmpty()) {
+            DialogMessage.setVisibility(View.GONE);
+        } else {
+            DialogMessage.setText(Message); // Optionally set the text if not null or empty
+        }
+
+        if (Terms == null || Terms.isEmpty()) {
+            DialogTerms.setVisibility(View.GONE);
+        } else {
+            DialogTerms.setText(Terms); // Optionally set the text if not null or empty
+        }
 
         if (CancelText == null || CancelText.isEmpty()) {
             cancelBtn.setVisibility(View.GONE);
         } else {
             cancelBtn.setText(CancelText); // Optionally set the text if not null or empty
             cancelBtn.setOnClickListener(view -> dialog.dismiss());
+        }
+
+        if (ConfirmText == null || ConfirmText.isEmpty()) {
+            confirmBtn.setVisibility(View.GONE);
+        } else {
+            confirmBtn.setText(ConfirmText); // Optionally set the text if not null or empty
+            confirmBtn.setOnClickListener(view -> {
+                // Execute the confirm action (e.g., request geolocation permission)
+                if (onConfirmAction != null) {
+                    onConfirmAction.run();
+                }
+                dialog.dismiss();
+            });
         }
 
         if (PictureURL != null && !PictureURL.isEmpty()) {
@@ -129,14 +155,6 @@ public class AdminActivity extends AppCompatActivity {
         {
             Picture.setVisibility(View.GONE);
         }
-
-        confirmBtn.setOnClickListener(view -> {
-            // Execute the confirm action (e.g., request geolocation permission)
-            if (onConfirmAction != null) {
-                onConfirmAction.run();
-            }
-            dialog.dismiss();
-        });
 
         dialog.show();
     }
