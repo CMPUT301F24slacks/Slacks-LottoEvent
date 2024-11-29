@@ -23,8 +23,9 @@
                 android:id="@+id/eventImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="Event Image"
-                android:scaleType="centerCrop" />
+                android:background="#D3D3D3"
+                android:scaleType="centerCrop"
+                android:src="@drawable/event_image" />
 
             <ImageView
                 android:id="@+id/event_details_back_button"
