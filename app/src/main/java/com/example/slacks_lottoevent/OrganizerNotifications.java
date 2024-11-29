@@ -102,31 +102,31 @@ public class OrganizerNotifications extends AppCompatActivity {
                 updateUninvitedFinalEntrants(event);
                 updateUninvitedonEvents(event);
                 showAdminAlertDialog(this, null, "Cannot Re-Select", "Event slots are full",
-                        null, null, "OK");
+                        null, null, "OK", null);
                 return;
 
             }
 
             if (event.getWaitlisted().size() == 0){
 
-                showAdminAlertDialog(this, null, "Cannot Re-Select", "There is no one who wants to be reselected.", null, null, "OK");
+                showAdminAlertDialog(this, null, "Cannot Re-Select", "There is no one who wants to be reselected.", null, null, "OK", null);
                 return;
             }
 
             if (!event.getEntrantsChosen()) {
-                showAdminAlertDialog(this, null, "Cannot Re-Select", "Need to sample entrants first.", null, null, "OK");
+                showAdminAlertDialog(this, null, "Cannot Re-Select", "Need to sample entrants first.", null, null, "OK", null);
                 return;
             }
 
             if (event.getSelected().size() + event.getFinalists().size() == event.getEventSlots()){
-                showAdminAlertDialog(this, null, "Cannot Re-Select", "No Space right now. Still waiting on responses.", null, null, "OK");
+                showAdminAlertDialog(this, null, "Cannot Re-Select", "No Space right now. Still waiting on responses.", null, null, "OK", null);
                 return;
             }
 
 //            everything worked
             if(event.getEntrantsChosen() && event.getWaitlisted().size() > 0 && event.getEventSlots() != event.getFinalists().size() && event.getSelected().size() + event.getFinalists().size() != event.getEventSlots() ){
                 handleReSelect();
-                showAdminAlertDialog(this, null, "Entrants Selected", "Entrants were selected for the event.", null, null, "OK");
+                showAdminAlertDialog(this, null, "Entrants Selected", "Entrants were selected for the event.", null, null, "OK", null);
             }
         });
 
