@@ -112,7 +112,7 @@ public class EventsHomeActivity extends AppCompatActivity {
             }
         });
 
-        /*
+        /**
          * QR code scanner button, opens the QR code scanner.
          */
         binding.qrCodeScannerFAB.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +133,7 @@ public class EventsHomeActivity extends AppCompatActivity {
             }
         });
 
-        /*
+        /**
          * Create event button, opens the create event screen upon being clicked.
          */
         binding.createEventFAB.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +169,7 @@ public class EventsHomeActivity extends AppCompatActivity {
 
 
 
-        /*
+        /**
          * Handle app bar title clicks here.
          */
         setSupportActionBar(toolbar);
@@ -181,7 +181,7 @@ public class EventsHomeActivity extends AppCompatActivity {
         });
     }
 
-    /*
+    /**
      * Inflate the menu; this adds items to the action bar if it is present.
      * @param menu The menu to inflate
      */
@@ -192,7 +192,7 @@ public class EventsHomeActivity extends AppCompatActivity {
         return true;
     }
 
-    /*
+    /**
      * Handle action bar item clicks here.
      * @param item The menu item that was clicked
      */
@@ -233,6 +233,9 @@ public class EventsHomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Creates the notification channel so the user can recieve notifications.
+     */
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is not in the Support Library.
@@ -255,6 +258,10 @@ public class EventsHomeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Fetches the notifications from the database
+     * @param deviceId The id for that user's specific device.
+     */
     private void grabbingNotifications(String deviceId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -277,12 +284,21 @@ public class EventsHomeActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Check's if the user has allowed notifications when they first open the app.
+     */
     private void checkAndRequestNotificationPermission() {
+        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Boolean hasAsked = sharedPreferences.getBoolean("hasAskedNotifcations", false);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED && (!hasAsked)) {
                 ActivityCompat.requestPermissions(this,
                         new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
                         NOTIFICATION_PERMISSION_REQUEST_CODE);
+                editor.putBoolean("hasAskedNotifcations", true);
+                editor.apply();
             }
             else {
                 startFetchingNotifications();
@@ -293,6 +309,19 @@ public class EventsHomeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Handles the result of a permission request.
+     * This method is called when the user responds to a runtime permission request.
+     * It specifically handles the notification permission request, updating shared preferences
+     * to indicate whether the user granted or denied the permission.
+     *
+     * @param requestCode  The integer request code originally supplied to requestPermissions(),
+     *                     identifying the specific permission request.
+     * @param permissions  The requested permissions. This value is not null.
+     * @param grantResults The grant results for the corresponding permissions,
+     *                     either {@link PackageManager#PERMISSION_GRANTED} or {@link PackageManager#PERMISSION_DENIED}.
+     *                     This value is not null.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
@@ -302,15 +331,21 @@ public class EventsHomeActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startFetchingNotifications();
                 editor.putBoolean("notificationsEnabled", true);
+                editor.apply();
 
             } else {
                 editor.putBoolean("notificationsEnabled", false);
-                Log.d("EventsHomeActivity", "Notification permission denied.");
-
+                editor.apply();
             }
         }
     }
 
+
+    /**
+     * Initiates the process of fetching notifications for the device.
+     * This method retrieves the device ID, starts the notification fetching process,
+     * and removes old notifications for the device.
+     */
     private void startFetchingNotifications() {
         String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         grabbingNotifications(deviceId);
@@ -318,7 +353,5 @@ public class EventsHomeActivity extends AppCompatActivity {
         Notifications notification = new Notifications();
         notification.removeNotifications(deviceId);
     }
-
-
 
 }
