@@ -13,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
-import com.example.slacks_lottoevent.enums.EventParticipationStatus;
 import com.example.slacks_lottoevent.model.User;
 
 import com.bumptech.glide.Glide;

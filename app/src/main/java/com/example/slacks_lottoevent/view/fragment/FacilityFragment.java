@@ -153,18 +153,21 @@ public class FacilityFragment extends Fragment {
         cancel_button.setOnClickListener(v -> {
             name.setEnabled(false);
             street_address.setEnabled(false);
-            if (facilityViewModel.getCurrentFacilityLiveData().getValue() == null) {
-                name.setText("");
-                street_address.setText("");
-            } else {
-                name.setText(facilityViewModel.getCurrentFacilityLiveData().getValue().getFacilityName());
-                street_address.setText(facilityViewModel.getCurrentFacilityLiveData().getValue().getStreetAddress());
-            }
             name.setHint("");
             street_address.setHint("");
-            create_button.setVisibility(View.VISIBLE);
             confirm_button.setVisibility(View.GONE);
             cancel_button.setVisibility(View.GONE);
+            if (facilityViewModel.getCurrentFacilityLiveData().getValue() == null) {
+                title.setText("Create Facility");
+                name.setText("");
+                street_address.setText("");
+                create_button.setVisibility(View.VISIBLE);
+            } else {
+                title.setText("Facility Information");
+                name.setText(facilityViewModel.getCurrentFacilityLiveData().getValue().getFacilityName());
+                street_address.setText(facilityViewModel.getCurrentFacilityLiveData().getValue().getStreetAddress());
+                edit_button.setVisibility(View.VISIBLE);
+            }
         });
 
         // click listener for confirm button
@@ -216,33 +219,42 @@ public class FacilityFragment extends Fragment {
      * https://developer.android.com/reference/android/text/TextWatcher
      * */
     private void setupAutocomplete(AutoCompleteTextView autoCompleteTextView) {
-        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        // Add focus change listener to trigger autocomplete when the view is focused
+        autoCompleteTextView.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() >= 3) {
-                    FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                            .setSessionToken(sessionToken)
-                            .setQuery(s.toString())
-                            .build();
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (s.length() >= 3) {
+                            FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                                    .setSessionToken(sessionToken)
+                                    .setQuery(s.toString())
+                                    .build();
 
-                    placesClient.findAutocompletePredictions(request).addOnSuccessListener(response -> {
-                        List<String> suggestions = new ArrayList<>();
-                        for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                            suggestions.add(prediction.getFullText(null).toString());
+                            placesClient.findAutocompletePredictions(request).addOnSuccessListener(response -> {
+                                List<String> suggestions = new ArrayList<>();
+                                for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+                                    suggestions.add(prediction.getFullText(null).toString());
+                                }
+                                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                                        android.R.layout.simple_dropdown_item_1line, suggestions);
+                                autoCompleteTextView.setAdapter(adapter);
+                                autoCompleteTextView.showDropDown();
+                            }).addOnFailureListener(e -> e.printStackTrace());
                         }
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                                android.R.layout.simple_dropdown_item_1line, suggestions);
-                        autoCompleteTextView.setAdapter(adapter);
-                        autoCompleteTextView.showDropDown();
-                    }).addOnFailureListener(e -> e.printStackTrace());
-                }
-            }
+                    }
 
-            @Override
-            public void afterTextChanged(Editable s) {}
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
+            } else {
+                // Remove the TextWatcher when focus is lost
+                autoCompleteTextView.clearListSelection();
+                autoCompleteTextView.dismissDropDown();
+            }
         });
 
         // Add OnItemClickListener for the dropdown in order to verify when the user presses confirm that they have selected a
@@ -252,6 +264,7 @@ public class FacilityFragment extends Fragment {
             validSelections.put(autoCompleteTextView, selectedItem); // Store the selected item
         });
     }
+
 
     /**
      * Checks if the current text in the specified AutoCompleteTextView matches a valid selection from the dropdown suggestions.

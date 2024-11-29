@@ -69,7 +69,6 @@ public class QRScannerActivity extends BaseActivity {
             getSupportActionBar().setTitle("QR Scanner"); // Set a custom title if needed
         }
 
-        cameraPreview = findViewById(R.id.cameraPreview);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             // Request the camera permission
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
