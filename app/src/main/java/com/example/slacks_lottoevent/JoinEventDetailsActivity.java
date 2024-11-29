@@ -334,6 +334,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
         binding.eventTitle.setText(eventName);
         binding.eventDate.setText("Event Date: " + date);
+        binding.eventTime.setText("Event Time: "+ time);
         binding.signupDate.setText("Sign up deadline: " + signupDeadline);
         binding.eventLocation.setText(location);
         binding.eventDescription.setText(description);
@@ -377,7 +378,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
 
             else if (waitListCapacity > 0){
 //         There is a waitlist capacity and shows the spots left
-
                 spotsRemaining = spotsRemaining > 0 ? spotsRemaining : 0;
                 spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
                 binding.spotsAvailable.setText(spotsRemainingText);

@@ -107,17 +107,18 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 event = document.toObject(Event.class);
 
                 // Extract and update fields
-                date = document.getString("eventDate");
-                signupDate = document.getString("signupDeadline");
-                time = document.getString("time");
-                eventName = document.getString("name");
-                location = document.getString("location");
-                description = document.getString("description");
-                eventPosterURL = document.getString("eventPosterURL");
-                qrData = document.getString("qrdata");
-                eventID = document.getString("eventID");
-                entrantsChosen = document.getBoolean("entrantsChosen");
-
+                if (event != null) {
+                    date = event.getEventDate();  // Get the date from the Event object
+                    signupDate = event.getSignupDeadline();  // Get the signup date
+                    time = event.getTime();  // Get the time
+                    eventName = event.getName();  // Get the name
+                    location = event.getLocation();  // Get the location
+                    description = event.getDescription();  // Get the description
+                    eventPosterURL = event.getEventPosterURL();  // Get the event poster URL
+                    qrData = event.getQRData();  // Get the QR data
+                    eventID = event.getEventID();  // Get the event ID
+                    entrantsChosen = event.getEntrantsChosen();
+                }
 
                 try {
                     signup = sdf.parse(signupDate);
@@ -174,6 +175,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                         binding.eventTitle.setText(eventName);
                         binding.eventDate.setText("Event Date: " + date);
                         binding.signupDate.setText("Signup Deadline: " + signupDate);
+                        binding.eventTime.setText("Event Time: "+ time);
                         binding.eventWaitlistCapacity.setText("Waitlist Capacity: " +  waitListCapacity.toString());
                         binding.eventLocation.setText(location);
                         binding.eventSlotsCapacity.setText("Event Slots: " + capacityAsString);
