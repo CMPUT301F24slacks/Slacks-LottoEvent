@@ -390,30 +390,31 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
             createFacilitiesButton.setVisibility(View.VISIBLE);
         }
 
-        createFacilitiesButton.setOnClickListener(new Button.OnClickListener(){
-            public void onClick(View v){
-                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
-                boolean isSignedUp = sharedPreferences.getBoolean("isSignedUp", false);
-
-                if (isSignedUp) {
-                    // Referenced ChatGPT with prompt "How to show a dialog within a fragment" on Oct 29, 2024
-                    // License: OpenAI
-                    new AddFacilityFragment().show(getChildFragmentManager(), "Add Facility");
-                } else {
-                    new AlertDialog.Builder(requireContext())
-                            .setTitle("Sign-Up Required")
-                            .setMessage("In order to create a facility, we need to collect some information about you.")
-                            .setPositiveButton("Proceed", (dialog, which) -> {
-                                Intent signUpIntent = new Intent(requireContext(), SignUpActivity.class);
-                                startActivity(signUpIntent);
-                            })
-                            .setNegativeButton("Cancel", (dialog, which) -> {
-                                dialog.dismiss();
-                            })
-                            .show();
-                }
+        createFacilitiesButton.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirestoreProfileUtil.checkIfSignedUp(deviceId, isSignedUp -> {
+                    if (isSignedUp) {
+                        // Referenced ChatGPT with prompt "How to show a dialog within a fragment" on Oct 29, 2024
+                        // License: OpenAI
+                        new AddFacilityFragment().show(getChildFragmentManager(), "Add Facility");
+                    } else {
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle("Sign-Up Required")
+                                .setMessage("In order to create a facility, we need to collect some information about you.")
+                                .setPositiveButton("Proceed", (dialog, which) -> {
+                                    Intent signUpIntent = new Intent(requireContext(), SignUpActivity.class);
+                                    startActivity(signUpIntent);
+                                })
+                                .setNegativeButton("Cancel", (dialog, which) -> {
+                                    dialog.dismiss();
+                                })
+                                .show();
+                    }
+                });
             }
         });
+
 
         facilityCreated.setOnClickListener(v -> {
             new AddFacilityFragment(existingFacility, true).show(getChildFragmentManager(), "Edit Facility");

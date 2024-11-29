@@ -364,7 +364,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         binding.joinButton.setOnClickListener(view -> {
             FirestoreProfileUtil.checkIfSignedUp(deviceId, isSignedUp -> {
                 if (isSignedUp) {
-                    Boolean usesGeolocation = document.getBoolean("geoLocation");
+                    usesGeolocation = document.getBoolean("geoLocation");
                     if (usesGeolocation != null && usesGeolocation) {
                         checkAndRequestGeolocation();
                     } else {
