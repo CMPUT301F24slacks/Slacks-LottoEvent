@@ -128,13 +128,22 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
 
                 List<Object> finalists = (List<Object>) document.get("finalists");
 
-                        if (eventPosterURL != null && !eventPosterURL.isEmpty()) {
-                            Glide.with(this) // 'this' refers to the activity context
-                                    .load(eventPosterURL)
-                                    .into(binding.eventImage);
-                        } else {
-                            Log.d("EventDetails", "Event poster URL is empty or null");
-                        }
+                ImageView eventPoster = binding.eventImage;
+
+                // Load event poster or default image
+                String posterURL = event.getEventPosterURL();
+                if (posterURL != null && !posterURL.trim().isEmpty()) {
+                    // Load the image from the posterURL using Glide
+                    Glide.with(this)
+                            .load(posterURL)
+                            .placeholder(R.drawable.event_image) // Set the default placeholder image
+                            .error(R.drawable.error_image) // Set the error image for invalid URLs
+                            .into(eventPoster);
+                } else {
+                    // No posterURL available, use the default placeholder image
+                    eventPoster.setImageResource(R.drawable.event_image);
+                }
+
                         binding.eventTitle.setText(eventName);
                         binding.eventDate.setText(date);
                         List<Object> waitlisted = (List<Object>) document.get("waitlisted");
@@ -361,7 +370,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                     AdminActivity.showAdminAlertDialog(context, null, "No Poster Available",
                             "There is no event poster to delete.",
                             "TIP: ADD AN EVENT POSTER TO MAKE YOUR EVENT MORE ENTICING!",
-                            null, "OK");
+                            null, "OK", null);
                 }
             }
     }
