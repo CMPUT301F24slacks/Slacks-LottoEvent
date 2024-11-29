@@ -23,7 +23,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+import androidx.appcompat.widget.Toolbar;
 import java.util.concurrent.ExecutionException;
 
 /*

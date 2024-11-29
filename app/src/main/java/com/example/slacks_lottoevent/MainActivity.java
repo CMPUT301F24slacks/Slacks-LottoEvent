@@ -84,6 +84,17 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        // Observe the events the organizer is involved in
+        organizerViewModel.getCurrentOrganizerLiveData().observe(this, organizer -> {
+            if (organizer != null) {
+                List<String> eventIds = organizer.getEvents();
+                eventViewModel.updateOrganizerEvents(eventIds);
+            } else {
+                // Clear all event lists
+                eventViewModel.updateOrganizerEvents(null);
+            }
+        });
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

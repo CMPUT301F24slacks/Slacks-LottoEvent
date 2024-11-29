@@ -21,6 +21,7 @@ public class EventViewModel extends ViewModel {
     private final MutableLiveData<List<Event>> invitedEventsLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<Event>> unselectedEventsLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<Event>> attendingEventsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<Event>> hostingEventsLiveData = new MutableLiveData<>();
 
     private final EventDB eventDB;
     private final User user = User.getInstance();
@@ -56,6 +57,10 @@ public class EventViewModel extends ViewModel {
         return attendingEventsLiveData;
     }
 
+    public LiveData<List<Event>> getHostingEventsLiveData() {
+        return hostingEventsLiveData;
+    }
+
     public void updateEventLists(List<String> waitlistedIds, List<String> unselectedIds, List<String> invitedIds, List<String> attendingIds) {
         HashMap<String, Event> eventsHashMap = eventsLiveData.getValue();
         if (eventsHashMap != null) {
@@ -75,6 +80,14 @@ public class EventViewModel extends ViewModel {
             }
         }
         return events;
+    }
+
+    public void updateOrganizerEvents(List<String> eventIds) {
+        HashMap<String, Event> eventsHashMap = eventsLiveData.getValue();
+        if (eventsHashMap != null) {
+            List<Event> organizerEvents = getEventsByIds(eventsHashMap, eventIds);
+            hostingEventsLiveData.setValue(organizerEvents);
+        }
     }
 
 }

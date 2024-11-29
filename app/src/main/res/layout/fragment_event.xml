@@ -1,21 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.fragment.EventsFragment">
 
-    <TextView
+    <!-- ListView for events -->
+    <ListView
+        android:id="@+id/events_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:dividerHeight="36dp"
+        android:padding="36dp"
+        android:layout_above="@id/button_container"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp" />
 
     <!-- Button Container -->
     <LinearLayout
+        android:id="@+id/button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:background="@color/background"
         android:padding="16dp">
@@ -31,4 +37,4 @@
             app:icon="@drawable/baseline_add_24" />
     </LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>

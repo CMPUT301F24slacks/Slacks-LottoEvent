@@ -98,7 +98,6 @@
             android:text="Cancel"
             android:textColor="#FFFFFF"
             android:visibility="gone"
-            android:padding="12dp"
             android:layout_marginRight="6dp"
             android:textSize="16sp"
             app:icon="@drawable/baseline_cancel_24" />
@@ -110,7 +109,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="@color/confirm_button_green"
-            android:padding="12dp"
             android:layout_marginLeft="6dp"
             android:text="Confirm"
             android:visibility="gone"
@@ -127,7 +125,6 @@
             android:backgroundTint="@color/text_buttons"
             android:text="Create Facility"
             android:textColor="#FFFFFF"
-            android:padding="12dp"
             app:icon="@drawable/baseline_add_24"
             android:textSize="16sp" />
 
@@ -140,7 +137,6 @@
             android:backgroundTint="@color/text_buttons"
             android:text="Edit Facility"
             android:textColor="#FFFFFF"
-            android:padding="12dp"
             android:textSize="16sp"
             app:icon="@drawable/baseline_mode_edit_24"
             android:visibility="gone" />
