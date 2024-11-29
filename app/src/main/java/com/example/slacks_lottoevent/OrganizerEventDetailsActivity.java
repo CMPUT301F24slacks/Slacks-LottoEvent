@@ -332,7 +332,8 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 .document(eventID) // Use the event's unique ID to identify the document
                 .update(
                         "qrdata", "", // Set qrdata to an empty string
-                        "qrhash", ""  // Set qrhash to an empty string
+                        "qrhash", "" , // Set qrhash to an empty string
+                        "disabled", true
                 )
                 .addOnSuccessListener(aVoid -> {
                     Log.d("Firestore", "QR code attributes successfully updated for event: " + eventID);
