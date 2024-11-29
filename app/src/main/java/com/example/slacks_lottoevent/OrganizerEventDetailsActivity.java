@@ -395,10 +395,10 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                     DeletingEventPoster(context, db, current_event.getEventPosterURL(), FromFacility);
                     DeletingQRCode(context, db, current_event);
 
-                    DeletingAsWaitlisted(current_event.getDeviceId(), current_event.getEventID(), db, WaitlistedEntrants);
-                    DeletingAsSelected(current_event.getDeviceId(), current_event.getEventID(), db, SelectedEntrants);
-                    DeletingAsFinalist(current_event.getDeviceId(), current_event.getEventID(), db, FinalistEntrants);
-                    DeletingAsCancelled(current_event.getDeviceId(), current_event.getEventID(), db, CancelledEntrants);
+                    DeletingAsWaitlisted(current_event.getEventID(), db, WaitlistedEntrants);
+                    DeletingAsSelected(current_event.getEventID(), db, SelectedEntrants);
+                    DeletingAsFinalist(current_event.getEventID(), db, FinalistEntrants);
+                    DeletingAsCancelled(current_event.getEventID(), db, CancelledEntrants);
 
                     // Remove the event ID from the organizers collection
                     DeletingEventIDinOrganizers(context, current_event.getDeviceId(), current_event.getEventID(), db);
@@ -421,7 +421,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 });
     }
 
-    public static void DeletingAsWaitlisted(String deviceId, String eventID, FirebaseFirestore db, ArrayList<String> WaitlistedEntrants) {
+    public static void DeletingAsWaitlisted(String eventID, FirebaseFirestore db, ArrayList<String> WaitlistedEntrants) {
         if (WaitlistedEntrants == null || WaitlistedEntrants.isEmpty()) {
             Log.e("Firestore", "WaitlistedEntrants is null or empty");
             return;
@@ -440,7 +440,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         }
     }
 
-    public static void DeletingAsSelected(String deviceId, String eventID, FirebaseFirestore db, ArrayList<String> SelectedEntrants) {
+    public static void DeletingAsSelected(String eventID, FirebaseFirestore db, ArrayList<String> SelectedEntrants) {
         if (SelectedEntrants == null || SelectedEntrants.isEmpty()) {
             Log.e("Firestore", "WaitlistedEntrants is null or empty");
             return;
@@ -459,7 +459,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
         }
     }
 
-    public static void DeletingAsFinalist(String deviceId, String eventID, FirebaseFirestore db, ArrayList<String> FinalistEntrants) {
+    public static void DeletingAsFinalist(String eventID, FirebaseFirestore db, ArrayList<String> FinalistEntrants) {
         if (FinalistEntrants == null || FinalistEntrants.isEmpty()) {
             Log.e("Firestore", "FinalistEntrants is null or empty");
             return;
@@ -468,7 +468,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
             // Access each entrant's document
             db.collection("entrants")
                     .document(entrant)
-                    .update("waitlistedEvents", FieldValue.arrayRemove(eventID)) // Remove eventID from the array
+                    .update("finalistEvents", FieldValue.arrayRemove(eventID)) // Remove eventID from the array
                     .addOnSuccessListener(aVoid -> {
                         Log.d("Firestore", "Successfully removed eventID from waitlistedEvents for entrant: " + entrant);
                     })
@@ -477,7 +477,7 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                     });
         }
     }
-    public static void DeletingAsCancelled(String deviceId, String eventID, FirebaseFirestore db, ArrayList<String> uninvitedEvents) {
+    public static void DeletingAsCancelled(String eventID, FirebaseFirestore db, ArrayList<String> uninvitedEvents) {
         if (uninvitedEvents == null || uninvitedEvents.isEmpty()) {
             Log.e("Firestore", "uninvitedEvents is null or empty");
             return;
@@ -608,27 +608,30 @@ public class OrganizerEventDetailsActivity extends AppCompatActivity {
                 } catch (WriterException e) {
                     Log.e("QRCodeError", "Error converting QR code string to BitMatrix", e);
                 }
+                // Create the AlertDialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setView(popupView);
+
+                // Add the Close button
+                builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
+
+                // Add the Delete button if the user is an admin
+                if (isAdmin) {
+                    builder.setNegativeButton("Delete", (dialog, which) -> {
+                        DeletingQRCode(context, db, event); // Call the delete method
+                    });
+                }
+
+                // Show the dialog
+                builder.create().show();
             } else {
-                qrCode.setImageBitmap(null); // Clear the image if QR data is null or empty
+                AdminActivity.showAdminAlertDialog(context, null, "QR Code is non-existent",
+                        "This QR Code has most likely been deleted by an Admin", null, null, null, null);
+//                qrCode.setImageBitmap(null); // Clear the image if QR data is null or empty
             }
         }
 
-        // Create the AlertDialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setView(popupView);
 
-        // Add the Close button
-        builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
-
-        // Add the Delete button if the user is an admin
-        if (isAdmin) {
-            builder.setNegativeButton("Delete", (dialog, which) -> {
-                DeletingQRCode(context, db, event); // Call the delete method
-            });
-        }
-
-        // Show the dialog
-        builder.create().show();
     }
 
     public static BitMatrix deserializeBitMatrix(String data) throws WriterException {

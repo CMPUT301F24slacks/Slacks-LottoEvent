@@ -13,6 +13,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ListView
+            android:id="@+id/listViewUserInvitations"
+            android:layout_width="346dp"
+            android:layout_height="575dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_Event_Invitations"
+            app:layout_constraintVertical_bias="0.36" />
+
         <TextView
             android:id="@+id/textView_Notifications"
             android:layout_width="wrap_content"
@@ -40,39 +51,25 @@
 
         <ImageView
             android:id="@+id/organizerNotifications"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="35dp"
+            android:layout_height="19dp"
             android:layout_marginStart="45dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="194dp"
             android:clickable="true"
             android:contentDescription="Recieve notifications from organizer"
             android:src="@drawable/baseline_circle_notifications_24"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/organizerNotisText"
             app:layout_constraintTop_toBottomOf="@+id/textView_Notifications"
             app:tint="#BDBDBD" />
 
         <TextView
-            android:id="@+id/textView_Notifying_Privileges"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="sans-serif"
-            android:text="Notifying Privileges:"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.055"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/organizerNotisText"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
             android:id="@+id/textView_Event_Invitations"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="sans-serif"
             android:text="Event Invitations"
             android:textColor="@color/white"
@@ -80,68 +77,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.051"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkBox_Admin" />
-
-        <TextView
-            android:id="@+id/textView_Notes"
-            android:layout_width="213dp"
-            android:layout_height="105dp"
-            android:layout_marginTop="156dp"
-            android:layout_marginEnd="4dp"
-            android:fontFamily="sans-serif"
-            android:text="Note:\n
-            \nIf your account does not possess said privileges,enabling/disabling
-            \nnotifications of said privileges are
-            \nnot possible."
-            android:textColor="#B3B3B3"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <CheckBox
-            android:id="@+id/checkBox_Entrant"
-            android:layout_width="150dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="20dp"
-            android:text="Entrant"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/textView_Notes"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_Notifying_Privileges" />
-
-        <CheckBox
-            android:id="@+id/checkBox_Admin"
-            android:layout_width="150dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="12dp"
-            android:text="Admin"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/textView_Notes"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkBox_Organizer" />
-
-        <CheckBox
-            android:id="@+id/checkBox_Organizer"
-            android:layout_width="150dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="12dp"
-            android:text="Organizer"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/textView_Notes"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkBox_Entrant" />
-
-        <ListView
-            android:id="@+id/listViewUserInvitations"
-            android:layout_width="411dp"
-            android:layout_height="512dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_Notes" />
+            app:layout_constraintTop_toBottomOf="@+id/organizerNotisText" />
 
         <Button
             android:id="@+id/back_btn"
