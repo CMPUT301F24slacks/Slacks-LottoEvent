@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:text="Jane_Doe"
+        android:text="Guest User"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -96,7 +96,6 @@
         android:backgroundTint="#555555"
         android:hint="Name"
         android:padding="12dp"
-        android:text="Jane Doe"
         android:textColor="#FFFFFF"
         android:textColorHint="#AAAAAA" />
 
@@ -106,10 +105,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:backgroundTint="#555555"
-        android:hint="Email *"
+        android:hint="Email"
         android:inputType="textEmailAddress"
         android:padding="12dp"
-        android:text="jane.doe@example.com"
         android:textColor="#FFFFFF"
         android:textColorHint="#AAAAAA" />
 
@@ -122,7 +120,6 @@
         android:hint="Phone (Optional)"
         android:inputType="phone"
         android:padding="12dp"
-        android:text="+1 (555) 123-4567"
         android:textColor="#FFFFFF"
         android:textColorHint="#AAAAAA" />
 

@@ -1,5 +1,6 @@
 package com.example.slacks_lottoevent.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,7 +16,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.slacks_lottoevent.R;
+import com.example.slacks_lottoevent.SignUpActivity;
+import com.example.slacks_lottoevent.Utility.SnackbarUtils;
 import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,7 +33,6 @@ public class ProfileFragment extends Fragment {
     private EditText emailEditText;
     private EditText phoneEditText;
     private ImageView profilePhoto;
-    private ImageView backButton;
     private ImageView notificationsIcon;
     private Switch notificationsSwitch;
     private Button editProfileButton;
@@ -74,7 +77,6 @@ public class ProfileFragment extends Fragment {
         emailEditText = view.findViewById(R.id.edit_email);
         phoneEditText = view.findViewById(R.id.edit_phone);
         profilePhoto = view.findViewById(R.id.profile_image);
-        backButton = view.findViewById(R.id.back_button);
         notificationsIcon = view.findViewById(R.id.notifications_icon);
         notificationsSwitch = view.findViewById(R.id.switch_notifications);
         editProfileButton = view.findViewById(R.id.btn_edit_profile);
@@ -94,10 +96,7 @@ public class ProfileFragment extends Fragment {
                 // Set profile photo
                 // Set notifications switch
             } else {
-                usernameText.setText("Profile not found");
-                nameEditText.setText("");
-                emailEditText.setText("");
-                phoneEditText.setText("");
+                SnackbarUtils.promptSignUp(requireView(), requireContext(), R.id.bottom_app_bar); // Prompt user to sign up
             }
         });
 

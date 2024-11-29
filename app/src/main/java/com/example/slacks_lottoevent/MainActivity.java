@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 
 import androidx.lifecycle.ViewModelProvider;
@@ -33,6 +35,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
 import java.util.Map;
 public class MainActivity extends BaseActivity {
     private EntrantViewModel entrantViewModel;
@@ -61,6 +64,21 @@ public class MainActivity extends BaseActivity {
         entrantViewModel = new ViewModelProvider(this).get(EntrantViewModel.class);
         eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+
+        // Observe the events the entrant is involved in
+        entrantViewModel.getCurrentEntrantLiveData().observe(this, entrant -> {
+            if (entrant != null) {
+                List<String> waitlistedIds = entrant.getWaitlistedEvents();
+                List<String> unselectedIds = entrant.getUninvitedEvents();
+                List<String> invitedIds = entrant.getInvitedEvents();
+                List<String> attendingIds = entrant.getFinalistEvents();
+                eventViewModel.updateEventLists(waitlistedIds, unselectedIds, invitedIds, attendingIds);
+            } else {
+                // Clear all event lists
+                eventViewModel.updateEventLists(null, null, null, null);
+            }
+        });
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -97,4 +115,21 @@ public class MainActivity extends BaseActivity {
             startActivity(intent);
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_base, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // Iterate through all menu items and make them visible
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            item.setVisible(true); // Set visibility to true
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
 }

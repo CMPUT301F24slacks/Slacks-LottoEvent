@@ -6,16 +6,20 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.databinding.SignUpActivityBinding;
 
+import com.example.slacks_lottoevent.view.BaseActivity;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -35,7 +39,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * It takes in the user's name, email, and phone number and validates the inputs.
  * If the inputs are valid, it saves the user's information to the device and to the Firebase Firestore database.
  */
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends BaseActivity {
 
     private FirebaseFirestore db;
     CollectionReference usersRef;
@@ -61,11 +65,22 @@ public class SignUpActivity extends AppCompatActivity {
      * @param savedInstanceState a Bundle object containing the activity's previously saved state.
      */
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Inflate SignUpActivity layout into BaseActivity's content_frame
         binding = SignUpActivityBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        FrameLayout contentFrame = findViewById(R.id.content_frame);
+        contentFrame.addView(binding.getRoot()); // Add SignUpActivity's root layout
+
+        // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
+
+        // Set up the app bar for back navigation
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Show back button
+            getSupportActionBar().setTitle("Sign Up"); // Set a custom title if needed
+        }
 
         usersRef = db.collection("profiles");
 
@@ -74,13 +89,6 @@ public class SignUpActivity extends AppCompatActivity {
         phoneInput = binding.phoneInput;
 
         Button signUpBtn = binding.signUpButton;
-        ImageView backButton = binding.backButton;
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,5 +173,15 @@ public class SignUpActivity extends AppCompatActivity {
                 .addOnFailureListener(nothing -> {
                     System.out.println("failed");
                 });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // Handle back button click
+            onBackPressed(); // Go back to the previous activity
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -56,4 +56,25 @@ public class EventViewModel extends ViewModel {
         return attendingEventsLiveData;
     }
 
+    public void updateEventLists(List<String> waitlistedIds, List<String> unselectedIds, List<String> invitedIds, List<String> attendingIds) {
+        HashMap<String, Event> eventsHashMap = eventsLiveData.getValue();
+        if (eventsHashMap != null) {
+            waitlistedEventsLiveData.setValue(getEventsByIds(eventsHashMap, waitlistedIds));
+            invitedEventsLiveData.setValue(getEventsByIds(eventsHashMap, unselectedIds));
+            unselectedEventsLiveData.setValue(getEventsByIds(eventsHashMap, invitedIds));
+            attendingEventsLiveData.setValue(getEventsByIds(eventsHashMap, attendingIds));
+        }
+    }
+
+    private List<Event> getEventsByIds(HashMap<String, Event> eventsHashMap, List<String> ids) {
+        List<Event> events = new ArrayList<>();
+        for (String id : ids) {
+            Event event = eventsHashMap.get(id);
+            if (event != null) {
+                events.add(event);
+            }
+        }
+        return events;
+    }
+
 }
