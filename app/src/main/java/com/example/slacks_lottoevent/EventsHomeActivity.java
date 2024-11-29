@@ -46,6 +46,7 @@ public class EventsHomeActivity extends AppCompatActivity {
     private MaterialToolbar toolbar;
     private FacilityViewModel facilityViewModel;
     private Boolean hasFacility = null;
+    String deviceId;
 
     private NotificationHelper notificationHelper;
 
@@ -74,6 +75,7 @@ public class EventsHomeActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_events_home); // Get the navigation controller
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build(); // Build the app bar configuration
         facilityViewModel = new ViewModelProvider(this).get(FacilityViewModel.class);
+        deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
 
 
@@ -139,33 +141,30 @@ public class EventsHomeActivity extends AppCompatActivity {
         binding.createEventFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
-                boolean isSignedUp = sharedPreferences.getBoolean("isSignedUp", false);
-                if (!isSignedUp){
-                    new AlertDialog.Builder(EventsHomeActivity.this)
-                            .setTitle("Sign-Up Required")
-                            .setMessage("In order to create an event, we first need to collect some information about you.")
-                            .setPositiveButton("Proceed", (dialog, which) -> {
-                                Intent signUpIntent = new Intent(EventsHomeActivity.this, SignUpActivity.class);
-                                startActivity(signUpIntent);
-                            })
-                            .setNegativeButton("Cancel", (dialog, which) -> {
-                                dialog.dismiss();
-                            })
-                            .show();
-                }
-                else if(hasFacility == null || !hasFacility){
-                    //Toast.makeText(this, "Please create a facility first!", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(EventsHomeActivity.this, "Please create a facility first!", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    // open the create event page
-                    Intent intent = new Intent(EventsHomeActivity.this, CreateEvent.class);
-                    startActivity(intent);
-                }
-
+                FirestoreProfileUtil.checkIfSignedUp(deviceId, isSignedUp -> {
+                    if (!isSignedUp) {
+                        new AlertDialog.Builder(EventsHomeActivity.this)
+                                .setTitle("Sign-Up Required")
+                                .setMessage("In order to create an event, we first need to collect some information about you.")
+                                .setPositiveButton("Proceed", (dialog, which) -> {
+                                    Intent signUpIntent = new Intent(EventsHomeActivity.this, SignUpActivity.class);
+                                    startActivity(signUpIntent);
+                                })
+                                .setNegativeButton("Cancel", (dialog, which) -> {
+                                    dialog.dismiss();
+                                })
+                                .show();
+                    } else if (hasFacility == null || !hasFacility) {
+                        Toast.makeText(EventsHomeActivity.this, "Please create a facility first!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Open the create event page
+                        Intent intent = new Intent(EventsHomeActivity.this, CreateEvent.class);
+                        startActivity(intent);
+                    }
+                });
             }
         });
+
 
 
 
