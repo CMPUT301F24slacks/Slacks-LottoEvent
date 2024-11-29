@@ -225,8 +225,8 @@ public class EventsHomeActivity extends AppCompatActivity {
             }
         }
         if (id == R.id.notifications) {
-            Intent intent = new Intent(EventsHomeActivity.this, UserNotifications.class);
-//            Intent intent = new Intent(EventsHomeActivity.this, AdminActivity.class);
+//            Intent intent = new Intent(EventsHomeActivity.this, UserNotifications.class);
+            Intent intent = new Intent(EventsHomeActivity.this, AdminActivity.class);
             startActivity(intent);
             return true;
         }

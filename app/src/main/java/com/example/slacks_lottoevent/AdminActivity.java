@@ -131,7 +131,7 @@ public class AdminActivity extends AppCompatActivity {
             cancelBtn.setOnClickListener(view -> dialog.dismiss());
         }
 
-        if (ConfirmText.isEmpty()) {
+        if (ConfirmText == null || ConfirmText.isEmpty()) {
             confirmBtn.setVisibility(View.GONE);
         } else {
             if (ConfirmText != null )
