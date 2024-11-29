@@ -78,33 +78,33 @@ public class HomeFragment extends Fragment {
         user = User.getInstance();
         deviceId = user.getDeviceId();
 
-        // Checks if the entrant in entrantViewModel exists
-        if (entrantViewModel.getCurrentEntrant() == null) {
-            // The entrant does not exist
-            Log.d("HomeFragment", "Entrant does not exist.");
-
-            // UI updates
-            instructions.setVisibility(View.VISIBLE);
-            eventsListView.setVisibility(View.GONE);
-        } else {
-            // The entrant exists
-            Log.d("HomeFragment", "Entrant exists.");
-
-            // UI updates
-            instructions.setVisibility(View.GONE);
-            updateEventList();
-        }
+//        // Checks if the entrant in entrantViewModel exists
+//        if (entrantViewModel.getCurrentEntrant() == null) {
+//            // The entrant does not exist
+//            Log.d("HomeFragment", "Entrant does not exist.");
+//
+//            // UI updates
+//            instructions.setVisibility(View.VISIBLE);
+//            eventsListView.setVisibility(View.GONE);
+//        } else {
+//            // The entrant exists
+//            Log.d("HomeFragment", "Entrant exists.");
+//
+//            // UI updates
+//            instructions.setVisibility(View.GONE);
+//            updateEventList();
+//        }
     }
 
-    public void updateEventList() {
-        eventViewModel.getWaitlistedEvents().observe(getViewLifecycleOwner(), waitlistedEvents -> {
-            if (waitlistedEvents != null && !waitlistedEvents.isEmpty()) {
-                eventsList.clear(); // Clear the list before adding new events
-                eventsList.addAll(waitlistedEvents); // Add all events from LiveData
-                eventsListArrayAdapter.notifyDataSetChanged(); // Notify the adapter of the changes
-            }
-        });
-    }
+//    public void updateEventList() {
+//        eventViewModel.getWaitlistedEvents().observe(getViewLifecycleOwner(), waitlistedEvents -> {
+//            if (waitlistedEvents != null && !waitlistedEvents.isEmpty()) {
+//                eventsList.clear(); // Clear the list before adding new events
+//                eventsList.addAll(waitlistedEvents); // Add all events from LiveData
+//                eventsListArrayAdapter.notifyDataSetChanged(); // Notify the adapter of the changes
+//            }
+//        });
+//    }
 
 
 

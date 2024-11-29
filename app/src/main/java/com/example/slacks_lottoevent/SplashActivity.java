@@ -33,20 +33,6 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         User.initialize(this);
-        User user = User.getInstance();
-
-        EntrantViewModel entrantViewModel = new ViewModelProvider(this).get(EntrantViewModel.class);
-        EventViewModel eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
-
-        // Observe the current entrant
-        entrantViewModel.observeEntrant(user.getDeviceId());
-
-        entrantViewModel.getCurrentEntrant().observe(this, currentEntrant -> {
-            if (currentEntrant != null) {
-                eventViewModel.setWaitlistedEvents(currentEntrant.getWaitlistedEvents());
-            }
-        });
-
 
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(),

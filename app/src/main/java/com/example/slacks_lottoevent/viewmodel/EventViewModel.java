@@ -8,93 +8,52 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.slacks_lottoevent.database.EventDB;
 import com.example.slacks_lottoevent.Event;
+import com.example.slacks_lottoevent.model.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class EventViewModel extends ViewModel {
-    public final MutableLiveData<List<Event>> waitlistedEvents = new MutableLiveData<>();
-    public final MutableLiveData<List<Event>> unselectedEvents = new MutableLiveData<>();
-    public final MutableLiveData<List<Event>> invitedEvents = new MutableLiveData<>();
-    public final MutableLiveData<List<Event>> attendingEvents = new MutableLiveData<>();
-    public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-    public final MutableLiveData<String> error = new MutableLiveData<>();
+    // Live data for observing events
+    private final MutableLiveData<HashMap<String, Event>> eventsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<Event>> waitlistedEventsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<Event>> invitedEventsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<Event>> unselectedEventsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<Event>> attendingEventsLiveData = new MutableLiveData<>();
+
     private final EventDB eventDB;
+    private final User user = User.getInstance();
 
     public EventViewModel() {
         eventDB = EventDB.getInstance();
+        eventDB.setEventChangeListener(this::updateEvents);
     }
 
-    /**
-     * Retrieves all events whose document IDs are in the given ArrayList.
-     *
-     * @param eventIds ArrayList of event IDs to retrieve events for.
-     */
-    public LiveData<List<Event>> getEvents(ArrayList<String> eventIds) {
-        isLoading.setValue(true);
-        MutableLiveData<List<Event>> tempEvents = new MutableLiveData<>();
-        eventDB.getEvents(eventIds)
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Event> eventList = queryDocumentSnapshots.toObjects(Event.class);
-                    tempEvents.setValue(eventList);
-                    isLoading.setValue(false);
-                    Log.d("EventViewModel", "Retrieved " + eventList.size() + " events");
-                })
-                .addOnFailureListener(e -> {
-                    error.setValue(e.getMessage());
-                    isLoading.setValue(false);
-                    Log.e("EventViewModel", "Failed to retrieve events: " + e.getMessage());
-                });
-        return tempEvents;
+    // Update events locally when notified by EventDB
+    private void updateEvents(HashMap<String, Event> updatedEvents) {
+        eventsLiveData.setValue(updatedEvents);
     }
 
-
-    /**
-     * Sets waitlisted events LiveData to the events corresponding to the list of event IDs.
-     */
-    public void setWaitlistedEvents(ArrayList<String> eventIds) {
-        isLoading.setValue(true);
-        eventDB.getEvents(eventIds)
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Event> eventList = queryDocumentSnapshots.toObjects(Event.class);
-                    waitlistedEvents.setValue(eventList);
-                    isLoading.setValue(false);
-                    Log.d("EventViewModel", "Retrieved " + eventList.size() + " waitlisted events");
-                })
-                .addOnFailureListener(e -> {
-                    error.setValue(e.getMessage());
-                    isLoading.setValue(false);
-                    Log.e("EventViewModel", "Failed to retrieve waitlisted events: " + e.getMessage());
-                });
-
+    // Expose live data for observing in the UI
+    public LiveData<HashMap<String, Event>> getEventsLiveData() {
+        return eventsLiveData;
     }
 
-    /**
-     * Sets unselected events LiveData to the given list of events.
-     */
-    public void setUnselectedEvents(List<Event> eventList) {
-        unselectedEvents.setValue(eventList);
+    public LiveData<List<Event>> getWaitlistedEventsLiveData() {
+        return waitlistedEventsLiveData;
     }
 
-    /**
-     * Sets invited events LiveData to the given list of events.
-     */
-    public void setInvitedEvents(List<Event> eventList) {
-        invitedEvents.setValue(eventList);
+    public LiveData<List<Event>> getInvitedEventsLiveData() {
+        return invitedEventsLiveData;
     }
 
-    /**
-     * Sets attending events LiveData to the given list of events.
-     */
-    public void setAttendingEvents(List<Event> eventList) {
-        attendingEvents.setValue(eventList);
+    public LiveData<List<Event>> getUnselectedEventsLiveData() {
+        return unselectedEventsLiveData;
     }
 
-    /**
-     * Return LiveData of waitlisted events.
-     */
-    public LiveData<List<Event>> getWaitlistedEvents() {
-        return waitlistedEvents;
+    public LiveData<List<Event>> getAttendingEventsLiveData() {
+        return attendingEventsLiveData;
     }
 
 }

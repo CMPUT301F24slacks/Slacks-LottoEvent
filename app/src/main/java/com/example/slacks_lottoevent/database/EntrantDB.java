@@ -1,22 +1,25 @@
 package com.example.slacks_lottoevent.database;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
+import com.example.slacks_lottoevent.Entrant;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
+import java.util.HashMap;
+
 public class EntrantDB {
-    private static final FirebaseConnection db = FirebaseConnection.getInstance();
-    private static final String COLLECTION_NAME = "entrants";
-    private static final CollectionReference collection = db.getDatabase()
-                                                            .collection(COLLECTION_NAME);
     private static EntrantDB instance;
+    private final FirebaseFirestore db;
+    private final HashMap<String, Entrant> entrantsCache;
+    private ListenerRegistration listenerRegistration;
+    private EntrantChangeListener entrantChangeListener;
 
     private EntrantDB() {
-        // Private constructor to prevent instantiation
+        db = FirebaseFirestore.getInstance();
+        entrantsCache = new HashMap<>();
     }
 
+    // Singleton pattern
     public static synchronized EntrantDB getInstance() {
         if (instance == null) {
             instance = new EntrantDB();
@@ -24,27 +27,51 @@ public class EntrantDB {
         return instance;
     }
 
-    // Add methods to interact with the database here
-
-    public ListenerRegistration getEntrantSnapshotListener(String deviceId, EventListener<DocumentSnapshot> listener) {
-        return collection.document(deviceId).addSnapshotListener(listener);
+    // Start listening to the "entrants" collection for changes
+    public void startListening() {
+        if (listenerRegistration == null) {
+            listenerRegistration = db.collection("entrants")
+                    .addSnapshotListener((snapshots, e) -> {
+                        if (e != null) {
+                            e.printStackTrace();
+                            return;
+                        }
+                        if (snapshots != null) {
+                            entrantsCache.clear();
+                            for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                                entrantsCache.put(doc.getId(), doc.toObject(Entrant.class));
+                            }
+                            notifyEntrantChangeListener();
+                        }
+                    });
+        }
     }
 
-    /**
-     * Returns if the entrant with the given device ID exists in the database.
-     *
-     * @param deviceId Device ID of the entrant to check for existence.
-     */
-    public Task<Boolean> entrantExists(String deviceId) {
-        return collection.document(deviceId).get().continueWith(task -> task.getResult().exists());
+    // Stop listening to Firestore updates
+    public void stopListening() {
+        if (listenerRegistration != null) {
+            listenerRegistration.remove();
+            listenerRegistration = null;
+        }
     }
 
-    /**
-     * Returns the entrant object with the given device ID from the database.
-     *
-     * @param deviceId Device ID of the entrant to retrieve.
-     */
-    public Task<DocumentSnapshot> getEntrant(String deviceId) {
-        return collection.document(deviceId).get();
+    // Set a listener to notify when entrants change
+    public void setEntrantChangeListener(EntrantChangeListener listener) {
+        this.entrantChangeListener = listener;
+        startListening();
     }
+
+    // Notify the listener that entrants have changed
+    private void notifyEntrantChangeListener() {
+        if (entrantChangeListener != null) {
+            entrantChangeListener.onEntrantsChanged(new HashMap<>(entrantsCache));
+        }
+    }
+
+    // Interface for notifying entrant changes
+    public interface EntrantChangeListener {
+        void onEntrantsChanged(HashMap<String, Entrant> entrants);
+    }
+
+
 }

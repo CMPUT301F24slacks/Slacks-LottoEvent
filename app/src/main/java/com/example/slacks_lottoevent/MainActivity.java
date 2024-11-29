@@ -62,15 +62,6 @@ public class MainActivity extends BaseActivity {
         eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
-        // Observe the current entrant
-        entrantViewModel.observeEntrant(deviceId);
-
-        entrantViewModel.getCurrentEntrant().observe(this, currentEntrant -> {
-            if (currentEntrant != null) {
-                eventViewModel.setWaitlistedEvents(currentEntrant.getWaitlistedEvents());
-            }
-        });
-
         FloatingActionButton fab = findViewById(R.id.fab);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
