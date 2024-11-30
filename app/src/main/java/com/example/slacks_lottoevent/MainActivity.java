@@ -60,6 +60,7 @@ public class MainActivity extends BaseActivity {
         // Inflate activity_main layout into content_frame of activity_base
         getLayoutInflater().inflate(R.layout.activity_main, findViewById(R.id.content_frame), true);
 
+        User.initialize(this);
         user = User.getInstance();
         deviceId = user.getDeviceId();
 

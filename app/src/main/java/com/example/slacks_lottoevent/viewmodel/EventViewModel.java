@@ -1,7 +1,5 @@
 package com.example.slacks_lottoevent.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -17,10 +15,7 @@ import java.util.List;
 public class EventViewModel extends ViewModel {
     // Live data for observing events
     private final MutableLiveData<HashMap<String, Event>> eventsLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<Event>> waitlistedEventsLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<Event>> invitedEventsLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<Event>> unselectedEventsLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<Event>> attendingEventsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<Event>> entrantEventsLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<Event>> hostingEventsLiveData = new MutableLiveData<>();
 
     private final EventDB eventDB;
@@ -41,20 +36,8 @@ public class EventViewModel extends ViewModel {
         return eventsLiveData;
     }
 
-    public LiveData<List<Event>> getWaitlistedEventsLiveData() {
-        return waitlistedEventsLiveData;
-    }
-
-    public LiveData<List<Event>> getInvitedEventsLiveData() {
-        return invitedEventsLiveData;
-    }
-
-    public LiveData<List<Event>> getUnselectedEventsLiveData() {
-        return unselectedEventsLiveData;
-    }
-
-    public LiveData<List<Event>> getAttendingEventsLiveData() {
-        return attendingEventsLiveData;
+    public LiveData<List<Event>> getEntrantEventsLiveData() {
+        return entrantEventsLiveData;
     }
 
     public LiveData<List<Event>> getHostingEventsLiveData() {
@@ -64,10 +47,12 @@ public class EventViewModel extends ViewModel {
     public void updateEventLists(List<String> waitlistedIds, List<String> unselectedIds, List<String> invitedIds, List<String> attendingIds) {
         HashMap<String, Event> eventsHashMap = eventsLiveData.getValue();
         if (eventsHashMap != null) {
-            waitlistedEventsLiveData.setValue(getEventsByIds(eventsHashMap, waitlistedIds));
-            invitedEventsLiveData.setValue(getEventsByIds(eventsHashMap, unselectedIds));
-            unselectedEventsLiveData.setValue(getEventsByIds(eventsHashMap, invitedIds));
-            attendingEventsLiveData.setValue(getEventsByIds(eventsHashMap, attendingIds));
+            List<Event> tempEvents = new ArrayList<>();
+            tempEvents.addAll(getEventsByIds(eventsHashMap, waitlistedIds));
+            tempEvents.addAll(getEventsByIds(eventsHashMap, unselectedIds));
+            tempEvents.addAll(getEventsByIds(eventsHashMap, invitedIds));
+            tempEvents.addAll(getEventsByIds(eventsHashMap, attendingIds));
+            entrantEventsLiveData.setValue(tempEvents);
         }
     }
 

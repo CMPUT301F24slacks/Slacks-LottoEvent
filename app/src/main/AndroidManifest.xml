@@ -90,6 +90,11 @@
             android:name=".GeolocationMapsActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent"/>
+        <activity
+            android:name=".JoinEventDetailsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SlacksLottoEvent" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />

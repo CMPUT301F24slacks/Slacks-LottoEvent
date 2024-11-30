@@ -99,7 +99,7 @@ public class QRScannerActivity extends BaseActivity {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null && result.getContents() != null) {
             String qrCodeValue = result.getContents();
-            Intent intent = new Intent(QRScannerActivity.this, com.example.slacks_lottoevent.refactor.JoinEventDetailsActivity.class);
+            Intent intent = new Intent(QRScannerActivity.this, com.example.slacks_lottoevent.JoinEventDetailsActivity.class);
             String userId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
             intent.putExtra("userId", userId);
             intent.putExtra("qrCodeValue", qrCodeValue);

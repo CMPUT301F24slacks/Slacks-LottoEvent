@@ -1,5 +1,7 @@
 package com.example.slacks_lottoevent;
 
+import com.example.slacks_lottoevent.model.User;
+
 import java.util.ArrayList;
 
 import java.io.Serializable;
@@ -364,5 +366,18 @@ public class Event implements Serializable {
 
     public void setJoinLocations(ArrayList<HashMap<String, List<Double>>> joinLocations) {
         this.joinLocations = joinLocations;
+    }
+
+    public void removeEntrant(String entrant) {
+        this.waitlisted.remove(entrant);
+        this.selected.remove(entrant);
+        this.finalists.remove(entrant);
+        this.cancelled.remove(entrant);
+        this.reselected.remove(entrant);
+        this.cancelledNotificationsList.remove(entrant);
+        this.selectedNotificationsList.remove(entrant);
+        this.waitlistedNotificationsList.remove(entrant);
+        this.joinedNotificationsList.remove(entrant);
+        this.joinLocations.removeIf(map -> map.containsKey(User.getInstance().getDeviceId()));
     }
 }

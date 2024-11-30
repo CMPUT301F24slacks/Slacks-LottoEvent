@@ -134,7 +134,7 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                         entrantLeaveEvent(); // Call the method to remove the user from the event
 
                         // Return to the events home activity
-                        Intent intent = new Intent(this, EventsHomeActivity.class);
+                        Intent intent = new Intent(this, MainActivity.class);
                         startActivity(intent);
                     })
                     .setNegativeButton("No", (dialog, which) -> {
@@ -151,26 +151,17 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
     private void entrantLeaveEvent() {
         String userId = getIntent().getStringExtra("userId");
         // Remove the entrant from the event's list of entrants
-        db.collection("events").document(qrCodeValue).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            List<String> waitlisted = (List<String>) document.get("waitlisted");
-                            List<String> waitlistedNotifications = (List<String>) document.get("waitlistedNotificationsList");
-
-                            if (waitlisted != null && waitlisted.contains(userId)) {
-                                waitlisted.remove(userId);
-                            }
-
-                            if (waitlistedNotifications != null && waitlistedNotifications.contains(userId)) {
-                                waitlistedNotifications.remove(userId);
-                            }
-
-                            db.collection("events").document(qrCodeValue).update("waitlisted", waitlisted, "waitlistedNotificationsList", waitlistedNotifications);
-                        }
-                    }
-                });
+        db.collection("events").document(qrCodeValue).get().addOnSuccessListener(task -> {
+            if (task.exists()) {
+                Event event = task.toObject(Event.class);
+                if (userId != null && event != null) {
+                    event.removeEntrant(userId);
+                    // print the event joinLocations
+                    Log.d("EntrantEventDetails", "EntrantEventDetails: " + event.getJoinLocations());
+                    db.collection("events").document(qrCodeValue).set(event);
+                }
+            }
+        });
 
         // Remove the event from the user's list of events
         db.collection("entrants").document(userId).get().addOnSuccessListener(task -> {

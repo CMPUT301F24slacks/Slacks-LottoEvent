@@ -21,7 +21,7 @@ public class EntrantViewModel extends ViewModel {
 
     public EntrantViewModel() {
         entrantDB = EntrantDB.getInstance();
-        entrantDB.startListening();
+        entrantDB.setEntrantChangeListener(this::updateEntrants);
     }
 
     private void updateEntrants(HashMap<String, Entrant> updatedEntrants) {

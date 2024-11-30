@@ -97,9 +97,7 @@ public class EventsFragment extends Fragment {
         eventViewModel.getEventsLiveData().observe(getViewLifecycleOwner(), events -> {
             if (events != null && organizerViewModel.getCurrentOrganizerLiveData().getValue() != null) {
                 List<String> eventIds = organizerViewModel.getCurrentOrganizerLiveData().getValue().getEvents();
-                if (eventIds != null) {
-                    eventViewModel.updateOrganizerEvents(eventIds);
-                }
+                eventViewModel.updateOrganizerEvents(eventIds);
             }
         });
 

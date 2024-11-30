@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent.refactor;
+package com.example.slacks_lottoevent;
 
 import static androidx.core.content.ContentProviderCompat.requireContext;
 
@@ -493,7 +493,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      * This method navigates to the Events Home screen.
      */
     private void navigateToEventsHome() {
-        Intent intent = new Intent(JoinEventDetailsActivity.this, EventsHomeActivity.class);
+        Intent intent = new Intent(JoinEventDetailsActivity.this, MainActivity.class);
         startActivity(intent);
     }
 

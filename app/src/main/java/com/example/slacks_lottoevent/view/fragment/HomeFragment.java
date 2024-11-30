@@ -6,11 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.slacks_lottoevent.Entrant;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.Event;
 import com.example.slacks_lottoevent.model.User;
@@ -19,6 +19,7 @@ import com.example.slacks_lottoevent.viewmodel.EventViewModel;
 import com.example.slacks_lottoevent.EventArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,12 +33,14 @@ public class HomeFragment extends Fragment {
     private ArrayList<Event> eventsList = new ArrayList<>();
     private EventArrayAdapter eventsListArrayAdapter;
 
-    private User user;
-    private String deviceId;
-
     // Ui elements
-    private TextView instructions;
     private ListView eventsListView;
+
+    // Event IDs
+    private List<String> waitlistedIds;
+    private List<String> unselectedIds;
+    private List<String> invitedIds;
+    private List<String> attendingIds;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -71,42 +74,48 @@ public class HomeFragment extends Fragment {
         eventsListArrayAdapter = new EventArrayAdapter(getContext(), eventsList);
 
         // Initialize UI elements
-        instructions = view.findViewById(R.id.instructions_textview);
         eventsListView = view.findViewById(R.id.events_listview);
         eventsListView.setAdapter(eventsListArrayAdapter);
 
-        user = User.getInstance();
-        deviceId = user.getDeviceId();
+        // Observe the events the entrant is involved in
+        entrantViewModel.getCurrentEntrantLiveData().observe(getViewLifecycleOwner(), entrant -> {
+            if (entrant != null) {
+                updateEventIDs(entrant);
+                eventViewModel.updateEventLists(waitlistedIds, unselectedIds, invitedIds, attendingIds);
+            } else {
+                // Clear all event lists
+                eventViewModel.updateEventLists(null, null, null, null);
+            }
+        });
 
-//        // Checks if the entrant in entrantViewModel exists
-//        if (entrantViewModel.getCurrentEntrant() == null) {
-//            // The entrant does not exist
-//            Log.d("HomeFragment", "Entrant does not exist.");
-//
-//            // UI updates
-//            instructions.setVisibility(View.VISIBLE);
-//            eventsListView.setVisibility(View.GONE);
-//        } else {
-//            // The entrant exists
-//            Log.d("HomeFragment", "Entrant exists.");
-//
-//            // UI updates
-//            instructions.setVisibility(View.GONE);
-//            updateEventList();
-//        }
+        // Observe any changes to the events list
+        eventViewModel.getEventsLiveData().observe(getViewLifecycleOwner(), events -> {
+            if (events != null && entrantViewModel.getCurrentEntrantLiveData().getValue() != null) {
+                updateEventIDs(entrantViewModel.getCurrentEntrantLiveData().getValue());
+                eventViewModel.updateEventLists(waitlistedIds, unselectedIds, invitedIds, attendingIds);
+            }
+        });
+
+        // Observe any changes to the entrant events list livedata
+        eventViewModel.getEntrantEventsLiveData().observe(getViewLifecycleOwner(), entrantEvents -> {
+            if (entrantEvents != null) {
+                 Log.d("HomeFragment", "Entrant Events: " + entrantEvents.toString());
+                eventsList.clear();
+                eventsList.addAll(entrantEvents);
+                eventsListArrayAdapter.notifyDataSetChanged();
+            } else {
+                Log.d("HomeFragment", "Entrant Events: null");
+                eventsList.clear();
+                eventsListArrayAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
-//    public void updateEventList() {
-//        eventViewModel.getWaitlistedEvents().observe(getViewLifecycleOwner(), waitlistedEvents -> {
-//            if (waitlistedEvents != null && !waitlistedEvents.isEmpty()) {
-//                eventsList.clear(); // Clear the list before adding new events
-//                eventsList.addAll(waitlistedEvents); // Add all events from LiveData
-//                eventsListArrayAdapter.notifyDataSetChanged(); // Notify the adapter of the changes
-//            }
-//        });
-//    }
-
-
-
+    private void updateEventIDs(Entrant entrant) {
+        waitlistedIds = entrant.getWaitlistedEvents();
+        unselectedIds = entrant.getUninvitedEvents();
+        invitedIds = entrant.getInvitedEvents();
+        attendingIds = entrant.getFinalistEvents();
+    }
 
 }
