@@ -79,7 +79,7 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">androidx.activity.ComponentActivity
 <div class="inheritance">androidx.fragment.app.FragmentActivity
 <div class="inheritance">androidx.appcompat.app.AppCompatActivity
-<div class="inheritance">com.example.slacks_lottoevent.OrganizerEventDetailsActivity</div>
+<div class="inheritance">com.example.slacks_lottoevent.view.OrganizerEventDetailsActivity</div>
 </div>
 </div>
 </div>
@@ -199,7 +199,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#DeleteEvent(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.Event,java.lang.String,java.lang.Runnable,java.lang.Runnable)" class="member-name-link">DeleteEvent</a><wbr>(android.content.Context&nbsp;context,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#DeleteEvent(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.model.Event,java.lang.String,java.lang.Runnable,java.lang.Runnable)" class="member-name-link">DeleteEvent</a><wbr>(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="Event.html" title="class in com.example.slacks_lottoevent">Event</a>&nbsp;current_event,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
@@ -247,7 +247,7 @@ loadScripts(document, 'script');</script>
  boolean&nbsp;FromFacility)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#DeletingQRCode(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.Event)" class="member-name-link">DeletingQRCode</a><wbr>(android.content.Context&nbsp;context,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#DeletingQRCode(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.model.Event)" class="member-name-link">DeletingQRCode</a><wbr>(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="Event.html" title="class in com.example.slacks_lottoevent">Event</a>&nbsp;event)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -260,7 +260,7 @@ loadScripts(document, 'script');</script>
 <div class="block">onCreate method for EntrantEventDetailsActivity</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#showQRCodePopup(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.Event,java.lang.String,boolean)" class="member-name-link">showQRCodePopup</a><wbr>(android.content.Context&nbsp;context,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#showQRCodePopup(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.model.Event,java.lang.String,boolean)" class="member-name-link">showQRCodePopup</a><wbr>(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="Event.html" title="class in com.example.slacks_lottoevent">Event</a>&nbsp;event,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qrData,
@@ -412,7 +412,7 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="DeletingQRCode(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.Event)">
+<section class="detail" id="DeletingQRCode(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.model.Event)">
 <h3>DeletingQRCode</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">DeletingQRCode</span><wbr><span class="parameters">(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
@@ -440,7 +440,7 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="DeleteEvent(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.Event,java.lang.String,java.lang.Runnable,java.lang.Runnable)">
+<section class="detail" id="DeleteEvent(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.model.Event,java.lang.String,java.lang.Runnable,java.lang.Runnable)">
 <h3>DeleteEvent</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">DeleteEvent</span><wbr><span class="parameters">(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
@@ -492,7 +492,7 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="showQRCodePopup(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.Event,java.lang.String,boolean)">
+<section class="detail" id="showQRCodePopup(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.model.Event,java.lang.String,boolean)">
 <h3>showQRCodePopup</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">showQRCodePopup</span><wbr><span class="parameters">(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,

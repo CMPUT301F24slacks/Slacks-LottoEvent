@@ -16,7 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.slacks_lottoevent.Utility.FirestoreProfileUtil;
 import com.example.slacks_lottoevent.databinding.FragmentManageMyEventsBinding;
+import com.example.slacks_lottoevent.model.Event;
+import com.example.slacks_lottoevent.model.Facility;
+import com.example.slacks_lottoevent.view.SignUpActivity;
+import com.example.slacks_lottoevent.viewmodel.adapter.OrganizerEventArrayAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;

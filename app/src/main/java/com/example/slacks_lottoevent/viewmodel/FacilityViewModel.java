@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.slacks_lottoevent.Facility;
+import com.example.slacks_lottoevent.model.Facility;
 import com.example.slacks_lottoevent.database.FacilityDB;
 import com.example.slacks_lottoevent.model.User;
 

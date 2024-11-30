@@ -3,7 +3,7 @@ package com.example.slacks_lottoevent.viewmodel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.slacks_lottoevent.Organizer;
+import com.example.slacks_lottoevent.model.Organizer;
 import com.example.slacks_lottoevent.database.OrganizerDB;
 import com.example.slacks_lottoevent.model.User;
 

@@ -17,7 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.slacks_lottoevent.EventNotificationsArrayAdapter;
+import com.example.slacks_lottoevent.viewmodel.adapter.EventNotificationsArrayAdapter;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.UserEventNotifications;
 import com.google.firebase.firestore.CollectionReference;

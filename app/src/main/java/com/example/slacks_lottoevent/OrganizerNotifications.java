@@ -1,6 +1,6 @@
 package com.example.slacks_lottoevent;
 
-import static com.example.slacks_lottoevent.AdminActivity.showAdminAlertDialog;
+import static com.example.slacks_lottoevent.view.AdminActivity.showAdminAlertDialog;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.slacks_lottoevent.model.Event;
+import com.example.slacks_lottoevent.view.GeolocationMapsActivity;
+import com.example.slacks_lottoevent.view.fragment.OrganizerCancelledFragment;
+import com.example.slacks_lottoevent.view.fragment.OrganizerEnrolledFragment;
+import com.example.slacks_lottoevent.view.fragment.OrganizerInvitedFragment;
+import com.example.slacks_lottoevent.view.fragment.OrganizerWaitlistFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;

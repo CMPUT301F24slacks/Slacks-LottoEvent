@@ -23,7 +23,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import com.example.slacks_lottoevent.Utility.FirestoreProfileUtil;
+import com.example.slacks_lottoevent.Utility.NotificationHelper;
+import com.example.slacks_lottoevent.Utility.Notifications;
 import com.example.slacks_lottoevent.databinding.ActivityEventsHomeBinding;
+import com.example.slacks_lottoevent.view.AdminActivity;
+import com.example.slacks_lottoevent.view.QRScannerActivity;
+import com.example.slacks_lottoevent.view.SignUpActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.DocumentSnapshot;

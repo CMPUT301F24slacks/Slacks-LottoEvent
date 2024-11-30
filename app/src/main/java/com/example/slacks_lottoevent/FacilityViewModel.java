@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.slacks_lottoevent.model.Facility;
+
 public class FacilityViewModel extends ViewModel {
     private final MutableLiveData<Boolean> hasFacility = new MutableLiveData<>(false);
     private final MutableLiveData<Facility> currentFacility = new MutableLiveData<>();

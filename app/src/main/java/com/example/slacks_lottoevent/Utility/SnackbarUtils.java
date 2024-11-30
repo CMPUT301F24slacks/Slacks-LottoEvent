@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
-import com.example.slacks_lottoevent.SignUpActivity;
+import com.example.slacks_lottoevent.view.SignUpActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 public class SnackbarUtils {

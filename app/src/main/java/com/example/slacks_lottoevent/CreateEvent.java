@@ -26,7 +26,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.slacks_lottoevent.Utility.Callback;
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
+import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.model.User;
 import com.example.slacks_lottoevent.view.BaseActivity;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;

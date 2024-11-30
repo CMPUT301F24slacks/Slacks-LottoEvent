@@ -13,8 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.slacks_lottoevent.CreateEvent;
-import com.example.slacks_lottoevent.Event;
-import com.example.slacks_lottoevent.OrganizerEventArrayAdapter;
+import com.example.slacks_lottoevent.model.Event;
+import com.example.slacks_lottoevent.viewmodel.adapter.OrganizerEventArrayAdapter;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.Utility.SnackbarUtils;
 import com.example.slacks_lottoevent.viewmodel.EventViewModel;

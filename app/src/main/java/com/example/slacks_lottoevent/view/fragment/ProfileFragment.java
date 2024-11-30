@@ -23,8 +23,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
-import com.example.slacks_lottoevent.Callback;
-import com.example.slacks_lottoevent.Profile;
+import com.example.slacks_lottoevent.Utility.Callback;
+import com.example.slacks_lottoevent.model.Profile;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.Utility.SnackbarUtils;
 import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;

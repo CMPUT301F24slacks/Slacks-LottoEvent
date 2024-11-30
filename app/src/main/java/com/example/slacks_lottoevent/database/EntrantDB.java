@@ -1,6 +1,6 @@
 package com.example.slacks_lottoevent.database;
 
-import com.example.slacks_lottoevent.Entrant;
+import com.example.slacks_lottoevent.model.Entrant;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
