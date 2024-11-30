@@ -73,6 +73,9 @@ public class EventViewModel extends ViewModel {
 
     private List<Event> getEventsByIds(HashMap<String, Event> eventsHashMap, List<String> ids) {
         List<Event> events = new ArrayList<>();
+        if (ids == null) {
+            return events;
+        }
         for (String id : ids) {
             Event event = eventsHashMap.get(id);
             if (event != null) {

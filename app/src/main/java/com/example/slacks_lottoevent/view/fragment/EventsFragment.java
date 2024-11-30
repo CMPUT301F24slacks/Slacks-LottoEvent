@@ -20,6 +20,7 @@ import com.example.slacks_lottoevent.Utility.SnackbarUtils;
 import com.example.slacks_lottoevent.viewmodel.EventViewModel;
 import com.example.slacks_lottoevent.viewmodel.FacilityViewModel;
 import com.example.slacks_lottoevent.viewmodel.OrganizerViewModel;
+import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,8 @@ public class EventsFragment extends Fragment {
 
     // ViewModels
     private EventViewModel eventViewModel;
-    private FacilityViewModel facilityViewModel;
     private OrganizerViewModel organizerViewModel;
+    private ProfileViewModel profileViewModel;
 
     public EventsFragment() {
         // Required empty public constructor
@@ -64,13 +65,15 @@ public class EventsFragment extends Fragment {
 
         // Initialize ViewModels
         eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
-        facilityViewModel = new ViewModelProvider(requireActivity()).get(FacilityViewModel.class);
         organizerViewModel = new ViewModelProvider(requireActivity()).get(OrganizerViewModel.class);
+        profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
 
         // Set a click listener for the create event button
         create_event_button.setOnClickListener(v -> {
-            if (facilityViewModel.getCurrentFacilityLiveData().getValue() == null) {
+            if (profileViewModel.getCurrentProfileLiveData().getValue() == null) { // Check if the user has a profile
                 SnackbarUtils.promptSignUp(view, requireContext(), R.id.create_event_button);
+            } else if (organizerViewModel.getCurrentOrganizerLiveData().getValue() == null) { // Check if the user is an organizer
+                SnackbarUtils.promptCreateFacility(view, requireContext(), R.id.create_event_button);
             } else {
                 // Navigate to CreateEventActivity
                 Intent intent = new Intent(getActivity(), CreateEvent.class);
@@ -90,8 +93,14 @@ public class EventsFragment extends Fragment {
             }
         });
 
+        // Observe any changes in the events list
         eventViewModel.getEventsLiveData().observe(getViewLifecycleOwner(), events -> {
-            eventViewModel.updateOrganizerEvents(organizerViewModel.getCurrentOrganizerLiveData().getValue().getEvents());
+            if (events != null && organizerViewModel.getCurrentOrganizerLiveData().getValue() != null) {
+                List<String> eventIds = organizerViewModel.getCurrentOrganizerLiveData().getValue().getEvents();
+                if (eventIds != null) {
+                    eventViewModel.updateOrganizerEvents(eventIds);
+                }
+            }
         });
 
         // Observe the events the organizer is hosting

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.example.slacks_lottoevent.SignUpActivity;
+import com.example.slacks_lottoevent.view.fragment.FacilityFragment;
 import com.google.android.material.snackbar.Snackbar;
 
 public class SnackbarUtils {
@@ -23,6 +24,12 @@ public class SnackbarUtils {
                     Intent intent = new Intent(context, SignUpActivity.class);
                     context.startActivity(intent);
                 })
+                .setAnchorView(anchorViewId) // Anchor to the specified view
+                .show();
+    }
+
+    public static void promptCreateFacility(View view, Context context, int anchorViewId) {
+        Snackbar.make(view, "Please create a facility first.", Snackbar.LENGTH_LONG)
                 .setAnchorView(anchorViewId) // Anchor to the specified view
                 .show();
     }
