@@ -4,6 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:visibility="gone"
     tools:context="com.example.slacks_lottoevent.view.BaseActivity">
+
+    <item
+        android:id="@+id/action_admin"
+        android:icon="@drawable/baseline_admin_panel_settings_24"
+        android:title="Admin"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_notifications"
         android:icon="@drawable/baseline_notifications_24"

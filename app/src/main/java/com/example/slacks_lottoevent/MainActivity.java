@@ -2,6 +2,7 @@ package com.example.slacks_lottoevent;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 //testing purposes
 
@@ -84,9 +86,14 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        // Set up the Toolbar
+        setSupportActionBar(findViewById(R.id.top_app_bar));
+
+        // Set up the BottomNavigationView and FloatingActionButton
         FloatingActionButton fab = findViewById(R.id.fab);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
+        // Set up the NavController
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_main);
         NavController navController = navHostFragment.getNavController();
@@ -131,9 +138,58 @@ public class MainActivity extends BaseActivity {
         // Iterate through all menu items and make them visible
         for (int i = 0; i < menu.size(); i++) {
             MenuItem item = menu.getItem(i);
-            item.setVisible(true); // Set visibility to true
+            // if the item is not the admin item, make it visible
+            if (item.getItemId() != R.id.action_admin)
+                item.setVisible(true); // Set visibility to tru
+            profileViewModel.getCurrentProfileLiveData().observe(this, profile -> {
+                if (profile != null) {
+                    if (profile.getAdmin()) {
+                        item.setVisible(true);
+                    }
+                    if (item.getItemId() != R.id.action_admin) {
+                        if (profile.getAdminNotifications()) {
+                            item.setIcon(R.drawable.baseline_notifications_active_24);
+                        } else {
+                            item.setIcon(R.drawable.baseline_notifications_off_24);
+                        }
+                    }
+                }
+            });
         }
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d("MainActivity", "Menu item selected: " + item.getItemId());
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_notifications) {
+            Profile profile = profileViewModel.getCurrentProfileLiveData().getValue();
+            if (profile != null) {
+                profile.setAdminNotifications(!profile.getAdminNotifications());
+                profileViewModel.updateProfile(profile);
+                if (profile.getAdminNotifications()) {
+                    item.setIcon(R.drawable.baseline_notifications_active_24);
+                } else {
+                    item.setIcon(R.drawable.baseline_notifications_off_24);
+                }
+            }
+            return true;
+        } else if (itemId == R.id.action_admin) {
+            // Handle Admin click
+            Log.d("MainActivity", "Admin clicked");
+            Intent intent = new Intent(this, AdminActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = ((NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_main))
+                .getNavController();
+        return NavigationUI.navigateUp(navController, (AppBarConfiguration) null) || super.onSupportNavigateUp();
+    }
 }
