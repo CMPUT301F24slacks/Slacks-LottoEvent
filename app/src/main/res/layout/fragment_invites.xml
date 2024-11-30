@@ -1,14 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#18181B"
+    android:fillViewport="true"
+    app:layout_editor_absoluteX="1dp"
+    app:layout_editor_absoluteY="1dp"
     tools:context=".view.fragment.InboxFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content">
 
-</FrameLayout>
+        <ListView
+            android:id="@+id/listViewUserInvitations"
+            android:layout_width="380dp"
+            android:layout_height="545dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.516"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_Event_Invitations"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/organizerNotisText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:text="Recieve Notifications: "
+            android:textColor="#FFFFFF"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/organizerNotifications"
+            android:layout_width="35dp"
+            android:layout_height="19dp"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="194dp"
+            android:clickable="true"
+            android:contentDescription="Recieve notifications from organizer"
+            android:src="@drawable/baseline_circle_notifications_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/organizerNotisText"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#BDBDBD" />
+
+        <TextView
+            android:id="@+id/textView_Event_Invitations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif"
+            android:text="Event Invitations"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.051"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/organizerNotisText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
