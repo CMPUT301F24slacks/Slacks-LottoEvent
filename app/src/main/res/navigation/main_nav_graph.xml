@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/invitesFragment"
-        android:name="com.example.slacks_lottoevent.view.fragment.InvitesFragment"
+        android:name="com.example.slacks_lottoevent.view.fragment.InboxFragment"
         android:label="Invites Fragment"
         tools:layout="@layout/fragment_invites">
     </fragment>

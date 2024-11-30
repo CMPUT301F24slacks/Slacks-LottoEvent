@@ -1,15 +1,7 @@
 package com.example.slacks_lottoevent;
 
 import android.content.Intent;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,7 +11,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 //testing purposes
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.model.User;
 import com.example.slacks_lottoevent.view.BaseActivity;
@@ -30,14 +21,11 @@ import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import com.google.android.libraries.places.api.Places;
-import com.google.firebase.Firebase;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
-import java.util.Map;
+
 public class MainActivity extends BaseActivity {
     private EntrantViewModel entrantViewModel;
     private EventViewModel eventViewModel;
@@ -96,7 +84,6 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-
         FloatingActionButton fab = findViewById(R.id.fab);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -116,7 +103,7 @@ public class MainActivity extends BaseActivity {
             } else if (itemId == R.id.nav_manage) {
                 navController.navigate(R.id.manageFragment);
                 return true;
-            } else if (itemId == R.id.nav_invites) {
+            } else if (itemId == R.id.nav_inbox) {
                 navController.navigate(R.id.invitesFragment);
                 return true;
             } else if (itemId == R.id.nav_profile) {
