@@ -40,7 +40,7 @@ public class DialogHelper {
 
             if (!message.isEmpty() && !title.isEmpty()) {
                 // Call the method to send the notification
-                notifications.addNotifications(title, message, listToUse, eventId);
+                notifications.addNotifications(title, message, listToUse, eventId, false);
                 dialog.dismiss(); // Close the dialog after sending
             } else {
                 // Show a Toast if inputs are empty
@@ -51,27 +51,5 @@ public class DialogHelper {
 
         // Show the dialog
         dialog.show();
-
-        // Create and show the dialog
-//        new AlertDialog.Builder(context)
-//                .setTitle("Craft Message")
-//                .setView(dialogView)  // Set the custom dialog layout here
-//                .setPositiveButton("Send", (dialog, which) -> {
-//                    // Get the input values
-//                    String message = inputMessage.getText().toString();
-//                    String title = inputTitle.getText().toString();
-//
-//                    // Check if the message and title are not empty
-//                    if (!message.isEmpty() && !title.isEmpty()) {
-//                        // Call the method from Notifications class to send the notification
-//                        notifications.addNotifications(title, message, listToUse, eventId);
-//                    }
-//                    else {
-//                        // Show a Toast if either title or message is empty
-//                        Toast.makeText(context, "Message and title cannot be empty", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .setNegativeButton("Cancel", null)
-//                .show();
     }
 }
