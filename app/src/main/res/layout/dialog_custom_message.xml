@@ -7,6 +7,17 @@
     android:background="#333333"
     android:layout_gravity="center">
 
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Craft Your Message"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
+
     <EditText
         android:id="@+id/dialogMessageTitle"
         android:layout_width="match_parent"
@@ -28,5 +39,30 @@
         android:inputType="textMultiLine"
         android:minLines="3"
         android:backgroundTint="#BDBDBD" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <!-- Cancel Button -->
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textColor="#FFFFFF"
+            android:layout_marginEnd="8dp" />
+
+        <!-- OK Button -->
+        <Button
+            android:id="@+id/confirm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:backgroundTint="#8E24AA"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
 
 </LinearLayout>

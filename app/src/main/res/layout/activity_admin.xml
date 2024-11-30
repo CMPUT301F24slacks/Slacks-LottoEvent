@@ -25,20 +25,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/oval_rectangle_input"
-        android:layout_width="404dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="92dp"
-        android:background="@drawable/rectangle_shape"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.01"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tab_Layout_Admin"
-        app:srcCompat="@drawable/rectangle_background" />
-
     <ImageView
         android:id="@+id/back_button2"
         android:layout_width="48dp"
@@ -94,31 +80,15 @@
     </com.google.android.material.tabs.TabLayout>
 
     <FrameLayout
-    android:id="@+id/FrameLayoutAdmin"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    app:layout_constraintTop_toBottomOf="@+id/oval_rectangle_input"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent" />
+        android:id="@+id/FrameLayoutAdmin"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tab_Layout_Admin"
+        app:layout_constraintVertical_bias="0.0" />
 
 
-    <ImageView
-        android:id="@+id/search_Icon"
-        android:layout_width="46dp"
-        android:layout_height="35dp"
-        app:layout_constraintBottom_toBottomOf="@+id/oval_rectangle_input"
-        app:layout_constraintStart_toStartOf="@+id/oval_rectangle_input"
-        app:layout_constraintTop_toTopOf="@+id/oval_rectangle_input"
-        app:srcCompat="?android:attr/actionModeWebSearchDrawable" />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:layout_width="347dp"
-        android:layout_height="35dp"
-        android:hint="search by username or event name"
-        android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/oval_rectangle_input"
-        app:layout_constraintEnd_toEndOf="@+id/oval_rectangle_input"
-        app:layout_constraintStart_toEndOf="@+id/search_Icon"
-        app:layout_constraintTop_toTopOf="@+id/oval_rectangle_input" />
 </androidx.constraintlayout.widget.ConstraintLayout>

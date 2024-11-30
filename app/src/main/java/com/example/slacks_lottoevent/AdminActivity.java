@@ -134,7 +134,10 @@ public class AdminActivity extends AppCompatActivity {
         if (ConfirmText == null || ConfirmText.isEmpty()) {
             confirmBtn.setVisibility(View.GONE);
         } else {
-            confirmBtn.setText(ConfirmText); // Optionally set the text if not null or empty
+            if (ConfirmText != null )
+            {
+                confirmBtn.setText(ConfirmText); // Optionally set the text if not null or empty
+            }
             confirmBtn.setOnClickListener(view -> {
                 // Execute the confirm action (e.g., request geolocation permission)
                 if (onConfirmAction != null) {
