@@ -27,7 +27,6 @@ import androidx.annotation.NonNull;
 import com.bumptech.glide.Glide;
 import com.example.slacks_lottoevent.Utility.Callback;
 import com.example.slacks_lottoevent.model.Event;
-import com.example.slacks_lottoevent.OrganizerNotifications;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.databinding.ActivityOrganizerEventDetailsBinding;
 import com.example.slacks_lottoevent.viewmodel.adapter.AdminImagesAdapter;
@@ -592,7 +591,7 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         binding.entrantListButton.setVisibility(View.VISIBLE);
         binding.entrantListButton.setOnClickListener(view -> {
             // get the event object corresponding to the qr code - huh is this not the wrong value?
-            Intent intent = new Intent(this, OrganizerNotifications.class);
+            Intent intent = new Intent(this, OrganizerNotificationsActivity.class);
             intent.putExtra("eventID", qrCodeValue);
             startActivity(intent);
         });

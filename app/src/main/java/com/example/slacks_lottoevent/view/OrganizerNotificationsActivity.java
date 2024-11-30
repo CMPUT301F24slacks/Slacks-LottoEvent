@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.view;
 
 import static com.example.slacks_lottoevent.view.AdminActivity.showAdminAlertDialog;
 
@@ -14,8 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.model.Event;
-import com.example.slacks_lottoevent.view.GeolocationMapsActivity;
 import com.example.slacks_lottoevent.view.fragment.OrganizerCancelledFragment;
 import com.example.slacks_lottoevent.view.fragment.OrganizerEnrolledFragment;
 import com.example.slacks_lottoevent.view.fragment.OrganizerInvitedFragment;
@@ -30,12 +30,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 /**
- * OrganizerNotifications.java
+ * OrganizerNotificationsActivity.java
  * This class is used to display the notifications for the organizer.
  * The organizer can view the waitlist, invited, cancelled, and enrolled users for their event.
  * The organizer can also view the details of the users in each category.
  */
-public class OrganizerNotifications extends AppCompatActivity {
+public class OrganizerNotificationsActivity extends AppCompatActivity {
 
     Button reSelect;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();

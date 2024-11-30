@@ -12,7 +12,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.slacks_lottoevent.FacilityViewModel;
+import com.example.slacks_lottoevent.TempFacilityViewModel;
 import com.example.slacks_lottoevent.model.Profile;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.model.User;
@@ -31,7 +31,7 @@ public class MainActivity extends BaseActivity {
     private EntrantViewModel entrantViewModel;
     private EventViewModel eventViewModel;
     private ProfileViewModel profileViewModel;
-    private FacilityViewModel facilityViewModel;
+    private TempFacilityViewModel tempFacilityViewModel;
     private OrganizerViewModel organizerViewModel;
     private User user;
     private String deviceId;
@@ -57,7 +57,7 @@ public class MainActivity extends BaseActivity {
         entrantViewModel = new ViewModelProvider(this).get(EntrantViewModel.class);
         eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        facilityViewModel = new ViewModelProvider(this).get(FacilityViewModel.class);
+        tempFacilityViewModel = new ViewModelProvider(this).get(TempFacilityViewModel.class);
         organizerViewModel = new ViewModelProvider(this).get(OrganizerViewModel.class);
 
         // Observe the events the entrant is involved in

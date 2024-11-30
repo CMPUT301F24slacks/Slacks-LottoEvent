@@ -17,7 +17,6 @@ import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.slacks_lottoevent.FullscreenQrScanner;
 import com.example.slacks_lottoevent.R;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -82,7 +81,7 @@ public class QRScannerActivity extends BaseActivity {
 
         readyButton.setOnClickListener(v -> {
             IntentIntegrator integrator = new IntentIntegrator(this);
-            integrator.setCaptureActivity(FullscreenQrScanner.class);
+            integrator.setCaptureActivity(FullscreenQrScannerActivity.class);
             integrator.setPrompt("");
             integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
             integrator.setOrientationLocked(true);

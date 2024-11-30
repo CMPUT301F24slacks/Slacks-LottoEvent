@@ -12,7 +12,7 @@ import android.widget.ListView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.slacks_lottoevent.CreateEvent;
+import com.example.slacks_lottoevent.view.CreateEventActivity;
 import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.viewmodel.adapter.OrganizerEventArrayAdapter;
 import com.example.slacks_lottoevent.R;
@@ -79,7 +79,7 @@ public class EventsFragment extends Fragment {
                                                    R.id.create_event_button);
             } else {
                 // Navigate to CreateEventActivity
-                Intent intent = new Intent(getActivity(), CreateEvent.class);
+                Intent intent = new Intent(getActivity(), CreateEventActivity.class);
                 startActivity(intent);
             }
         });

@@ -96,8 +96,6 @@ public class ProfileFragment extends Fragment {
         emailEditText = view.findViewById(R.id.edit_email);
         phoneEditText = view.findViewById(R.id.edit_phone);
         profilePhoto = view.findViewById(R.id.profile_image);
-        notificationsIcon = view.findViewById(R.id.notifications_icon);
-        notificationsSwitch = view.findViewById(R.id.switch_notifications);
         editProfileButton = view.findViewById(R.id.btn_edit_profile);
         uploadButton = view.findViewById(R.id.btn_upload);
         removeButton = view.findViewById(R.id.btn_remove);

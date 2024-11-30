@@ -50,13 +50,9 @@
             android:name=".view.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent"></activity>
-        <activity
-            android:name=".EventsHomeActivity"
-            android:exported="true"
-            android:theme="@style/Theme.SlacksLottoEvent" />
         <activity android:name=".view.SignUpActivity" />
         <activity
-            android:name=".FullscreenQrScanner"
+            android:name=".view.FullscreenQrScannerActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
@@ -68,7 +64,7 @@
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
-            android:name=".CreateEvent"
+            android:name=".view.CreateEventActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
@@ -76,11 +72,7 @@
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
-            android:name=".OrganizerNotifications"
-            android:exported="true"
-            android:theme="@style/Theme.SlacksLottoEvent" />
-        <activity
-            android:name=".ProfileActivity"
+            android:name=".view.OrganizerNotificationsActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity

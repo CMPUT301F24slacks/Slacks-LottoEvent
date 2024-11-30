@@ -1,18 +1,19 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.view;
 
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.example.slacks_lottoevent.R;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
 /**
- * FullscreenQrScanner is a custom Activity that extends CaptureActivity from the ZXing library.
+ * FullscreenQrScannerActivity is a custom Activity that extends CaptureActivity from the ZXing library.
  * It is used to display a fullscreen QR code scanner with a back arrow button.
  */
-public class FullscreenQrScanner extends com.journeyapps.barcodescanner.CaptureActivity {
+public class FullscreenQrScannerActivity extends com.journeyapps.barcodescanner.CaptureActivity {
 
     /**
-     * Initialize the content of the FullscreenQrScanner activity.
+     * Initialize the content of the FullscreenQrScannerActivity activity.
      * Set the custom layout for the scanner and return the DecoratedBarcodeView from the custom layout.
      *
      * @return The DecoratedBarcodeView from the custom layout
@@ -27,7 +28,7 @@ public class FullscreenQrScanner extends com.journeyapps.barcodescanner.CaptureA
     }
 
     /**
-     * onCreate method for the FullscreenQrScanner activity.
+     * onCreate method for the FullscreenQrScannerActivity activity.
      * This method initializes the activity and sets up the back arrow button.
      *
      * @param savedInstanceState The saved instance state

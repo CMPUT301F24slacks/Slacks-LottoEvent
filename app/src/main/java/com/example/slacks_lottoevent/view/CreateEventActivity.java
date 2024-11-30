@@ -1,4 +1,4 @@
-package com.example.slacks_lottoevent;
+package com.example.slacks_lottoevent.view;
 
 import android.Manifest;
 import android.app.Activity;
@@ -26,11 +26,11 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.Utility.Callback;
 import com.example.slacks_lottoevent.databinding.ActivityCreateEventBinding;
 import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.model.User;
-import com.example.slacks_lottoevent.view.BaseActivity;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -57,7 +57,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * This class is responsible for creating an event and adding it to the database.
  */
-public class CreateEvent extends BaseActivity {
+public class CreateEventActivity extends BaseActivity {
     private static final int PERMISSION_REQUEST_CODE = 101;
     FirebaseStorage storage;
     StorageReference storageRef;
@@ -70,7 +70,7 @@ public class CreateEvent extends BaseActivity {
     private ActivityResultLauncher<Intent> imagePickerLauncher;
 
     /**
-     * This method initializes the CreateEvent activity.
+     * This method initializes the CreateEventActivity activity.
      *
      * @param savedInstanceState the saved instance state
      */
@@ -111,7 +111,7 @@ public class CreateEvent extends BaseActivity {
                                                                              binding.eventDate.setError(
                                                                                      "Date must be in the future.");
                                                                              Toast.makeText(
-                                                                                          CreateEvent.this,
+                                                                                          CreateEventActivity.this,
                                                                                           "Date Must be In the future",
                                                                                           Toast.LENGTH_SHORT)
                                                                                   .show();
@@ -146,7 +146,7 @@ public class CreateEvent extends BaseActivity {
                                                                              binding.signupDeadline.setError(
                                                                                      "Date must be in the future.");
                                                                              Toast.makeText(
-                                                                                          CreateEvent.this,
+                                                                                          CreateEventActivity.this,
                                                                                           "Date Must be In the future",
                                                                                           Toast.LENGTH_SHORT)
                                                                                   .show();
@@ -291,13 +291,13 @@ public class CreateEvent extends BaseActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     // Check for READ_MEDIA_IMAGES permission
                     if (ContextCompat.checkSelfPermission(
-                            CreateEvent.this,
+                            CreateEventActivity.this,
                             Manifest.permission.READ_MEDIA_IMAGES)
                         != PackageManager.PERMISSION_GRANTED) {
 
                         // Request READ_MEDIA_IMAGES permission
                         ActivityCompat.requestPermissions(
-                                CreateEvent.this,
+                                CreateEventActivity.this,
                                 new String[]{Manifest.permission.READ_MEDIA_IMAGES},
                                 PERMISSION_REQUEST_CODE
                         );
@@ -308,13 +308,13 @@ public class CreateEvent extends BaseActivity {
                 } else {
                     // Check for READ_EXTERNAL_STORAGE permission for older Android versions
                     if (ContextCompat.checkSelfPermission(
-                            CreateEvent.this,
+                            CreateEventActivity.this,
                             Manifest.permission.READ_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
 
                         // Request READ_EXTERNAL_STORAGE permission
                         ActivityCompat.requestPermissions(
-                                CreateEvent.this,
+                                CreateEventActivity.this,
                                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                                 PERMISSION_REQUEST_CODE
                         );
@@ -375,7 +375,7 @@ public class CreateEvent extends BaseActivity {
 //        Event Date validation
         if (date.equals("Select Date")) {
             binding.eventDate.setError("Event date is required");
-            Toast.makeText(CreateEvent.this, "Event Date must be selected", Toast.LENGTH_SHORT)
+            Toast.makeText(CreateEventActivity.this, "Event Date must be selected", Toast.LENGTH_SHORT)
                  .show();
             binding.eventDate.requestFocus();
             return false;
@@ -383,7 +383,7 @@ public class CreateEvent extends BaseActivity {
 
         if (signUpDeadline.equals("Select Date")) {
             binding.signupDeadline.setError("Sign up deadline is required");
-            Toast.makeText(CreateEvent.this, "Sign up Deadline must be selected",
+            Toast.makeText(CreateEventActivity.this, "Sign up Deadline must be selected",
                            Toast.LENGTH_SHORT).show();
             binding.signupDeadline.requestFocus();
             return false;
@@ -509,7 +509,7 @@ public class CreateEvent extends BaseActivity {
                 // If eventDate is before signupDeadline, set an error
                 binding.eventDate.setError("Event date must be after the signup deadline");
                 binding.signupDeadline.setError("Signup Deadline must be before the eventDate");
-                Toast.makeText(CreateEvent.this,
+                Toast.makeText(CreateEventActivity.this,
                                "Signup deadline must be before the eventDate, event date must be after signup date.",
                                Toast.LENGTH_SHORT).show();
 
@@ -582,19 +582,19 @@ public class CreateEvent extends BaseActivity {
 
                               eventsRef.document(eventId).set(eventData)
                                        .addOnSuccessListener(nothing -> {
-                                           Toast.makeText(CreateEvent.this,
+                                           Toast.makeText(CreateEventActivity.this,
                                                           "Event created successfully",
                                                           Toast.LENGTH_SHORT).show();
                                        })
                                        .addOnFailureListener(nothing -> {
-                                           Toast.makeText(CreateEvent.this,
+                                           Toast.makeText(CreateEventActivity.this,
                                                           "Failed to create event",
                                                           Toast.LENGTH_SHORT).show();
                                        });
                           } else {
-                              Log.e("CreateEvent",
+                              Log.e("CreateEventActivity",
                                     "Failed to retrieve facility information or no matching facility found.");
-                              Toast.makeText(CreateEvent.this,
+                              Toast.makeText(CreateEventActivity.this,
                                              "Facility information is missing. Please create a facility first.",
                                              Toast.LENGTH_SHORT).show();
                           }
@@ -622,7 +622,7 @@ public class CreateEvent extends BaseActivity {
 
     private void uploadImageToCloud(Callback<String> callback) {
         if (selectedImageUri == null) {
-            Log.d("CreateEvent", "No image selected, skipping upload.");
+            Log.d("CreateEventActivity", "No image selected, skipping upload.");
             callback.onComplete(null); // Return null to indicate no image
             return;
         }
