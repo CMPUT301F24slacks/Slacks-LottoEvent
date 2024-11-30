@@ -42,8 +42,7 @@ public class NotificationHelper {
      * @param message  The message content of the notification.
      */
     public void sendNotifications(String deviceId, String title, String message) {
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(
-                "SlacksLottoEventUserInfo", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = activity.getSharedPreferences( "SlacksLottoEventUserInfo", MODE_PRIVATE);
         Boolean hasAsked = sharedPreferences.getBoolean("hasAskedNotifcations", false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             // Check if the POST_NOTIFICATIONS permission is granted

@@ -1,11 +1,19 @@
 package com.example.slacks_lottoevent.view;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -13,6 +21,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.slacks_lottoevent.TempFacilityViewModel;
+import com.example.slacks_lottoevent.Utility.NotificationHelper;
+import com.example.slacks_lottoevent.Utility.Notifications;
 import com.example.slacks_lottoevent.model.Profile;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.model.User;
@@ -23,6 +33,7 @@ import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -38,6 +49,10 @@ public class MainActivity extends BaseActivity {
     private FirebaseFirestore db;
     private CollectionReference usersRef;
 
+    private NotificationHelper notificationHelper;
+
+    private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
@@ -48,6 +63,11 @@ public class MainActivity extends BaseActivity {
 
         // Inflate activity_main layout into content_frame of activity_base
         getLayoutInflater().inflate(R.layout.activity_main, findViewById(R.id.content_frame), true);
+
+//        Notifications for the entrant
+        createNotificationChannel();
+        notificationHelper = new NotificationHelper(this);
+        checkAndRequestNotificationPermission();
 
         User.initialize(this);
         user = User.getInstance();
@@ -192,5 +212,97 @@ public class MainActivity extends BaseActivity {
                 .getNavController();
         return NavigationUI.navigateUp(navController, (AppBarConfiguration) null) ||
                super.onSupportNavigateUp();
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is not in the Support Library.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Use the appropriate context method
+            String channelId = getString(R.string.channel_id); // ensure channel ID is properly defined in strings.xml
+            CharSequence name = getString(R.string.channel_name); // name of the channel
+            String description = getString(R.string.channel_description); // description of the channel
+            int importance = NotificationManager.IMPORTANCE_DEFAULT; // adjust as necessary
+
+            // Create the NotificationChannel
+            NotificationChannel channel = new NotificationChannel(channelId, name, importance);
+            channel.setDescription(description);
+
+            // Register the channel with the system
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+    }
+
+    private void grabbingNotifications(String deviceId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("notifications").whereEqualTo("userId", deviceId)
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        Log.e("Firestore", "Error listening for notifications", e);
+                        return;
+                    }
+
+                    if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
+                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                            String title = document.getString("title");
+                            String messageContent = document.getString("message");
+                            notificationHelper.sendNotifications(deviceId, title, messageContent);
+                        }
+                    }
+                    new Notifications().removeNotifications(deviceId);
+                });
+    }
+
+    private void checkAndRequestNotificationPermission() {
+        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Boolean hasAsked = sharedPreferences.getBoolean("hasAskedNotifcations", false);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED && (!hasAsked)) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                        NOTIFICATION_PERMISSION_REQUEST_CODE);
+                editor.putBoolean("hasAskedNotifcations", true);
+                editor.apply();
+            }
+            else {
+                startFetchingNotifications();
+            }
+        }
+        else {
+            startFetchingNotifications();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startFetchingNotifications();
+                editor.putBoolean("notificationsEnabled", true);
+                editor.apply();
+
+            } else {
+                editor.putBoolean("notificationsEnabled", false);
+                editor.apply();
+
+            }
+        }
+    }
+
+    private void startFetchingNotifications() {
+        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        grabbingNotifications(deviceId);
+
+        Notifications notification = new Notifications();
+        notification.removeNotifications(deviceId);
     }
 }
