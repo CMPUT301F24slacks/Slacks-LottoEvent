@@ -73,7 +73,7 @@ loadScripts(document, 'script');</script>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">android.widget.BaseAdapter
 <div class="inheritance">android.widget.ArrayAdapter&lt;<a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&gt;
-<div class="inheritance">com.example.slacks_lottoevent.FacilityListArrayAdapter</div>
+<div class="inheritance">com.example.slacks_lottoevent.viewmodel.adapter.FacilityListArrayAdapter</div>
 </div>
 </div>
 </div>
@@ -106,7 +106,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(android.content.Context,java.util.ArrayList,boolean,com.example.slacks_lottoevent.OrganizerEventArrayAdapter,java.util.ArrayList)" class="member-name-link">FacilityListArrayAdapter</a><wbr>(android.content.Context&nbsp;context,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(android.content.Context,java.util.ArrayList,boolean,com.example.slacks_lottoevent.viewmodel.adapter.OrganizerEventArrayAdapter,java.util.ArrayList)" class="member-name-link">FacilityListArrayAdapter</a><wbr>(android.content.Context&nbsp;context,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&gt;&nbsp;facilities,
  boolean&nbsp;isAdmin,
  <a href="OrganizerEventArrayAdapter.html" title="class in com.example.slacks_lottoevent">OrganizerEventArrayAdapter</a>&nbsp;eventsAdapter,
@@ -129,7 +129,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deleteFacilityFromDatabase(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,java.lang.String,java.lang.String,com.example.slacks_lottoevent.OrganizerEventArrayAdapter,com.example.slacks_lottoevent.FacilityListArrayAdapter)" class="member-name-link">deleteFacilityFromDatabase</a><wbr>(android.content.Context&nbsp;context,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deleteFacilityFromDatabase(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,java.lang.String,java.lang.String,com.example.slacks_lottoevent.viewmodel.adapter.OrganizerEventArrayAdapter,com.example.slacks_lottoevent.viewmodel.adapter.FacilityListArrayAdapter)" class="member-name-link">deleteFacilityFromDatabase</a><wbr>(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;facilityId,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;organizerId,
@@ -146,7 +146,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Get the view for a single profile.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#showFacilityOptionsDialog(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.Facility,com.example.slacks_lottoevent.OrganizerEventArrayAdapter,com.example.slacks_lottoevent.FacilityListArrayAdapter,boolean)" class="member-name-link">showFacilityOptionsDialog</a><wbr>(android.content.Context&nbsp;context,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#showFacilityOptionsDialog(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.model.Facility,com.example.slacks_lottoevent.viewmodel.adapter.OrganizerEventArrayAdapter,com.example.slacks_lottoevent.viewmodel.adapter.FacilityListArrayAdapter,boolean)" class="member-name-link">showFacilityOptionsDialog</a><wbr>(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="Facility.html" title="class in com.example.slacks_lottoevent">Facility</a>&nbsp;facility,
  <a href="OrganizerEventArrayAdapter.html" title="class in com.example.slacks_lottoevent">OrganizerEventArrayAdapter</a>&nbsp;eventsAdapter,
@@ -182,7 +182,7 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(android.content.Context,java.util.ArrayList,boolean,com.example.slacks_lottoevent.OrganizerEventArrayAdapter,java.util.ArrayList)">
+<section class="detail" id="&lt;init&gt;(android.content.Context,java.util.ArrayList,boolean,com.example.slacks_lottoevent.viewmodel.adapter.OrganizerEventArrayAdapter,java.util.ArrayList)">
 <h3>FacilityListArrayAdapter</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">FacilityListArrayAdapter</span><wbr><span class="parameters">(@NonNull
  android.content.Context&nbsp;context,
@@ -228,7 +228,7 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="showFacilityOptionsDialog(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.Facility,com.example.slacks_lottoevent.OrganizerEventArrayAdapter,com.example.slacks_lottoevent.FacilityListArrayAdapter,boolean)">
+<section class="detail" id="showFacilityOptionsDialog(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.model.Facility,com.example.slacks_lottoevent.viewmodel.adapter.OrganizerEventArrayAdapter,com.example.slacks_lottoevent.viewmodel.adapter.FacilityListArrayAdapter,boolean)">
 <h3>showFacilityOptionsDialog</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">showFacilityOptionsDialog</span><wbr><span class="parameters">(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
@@ -245,7 +245,7 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="deleteFacilityFromDatabase(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,java.lang.String,java.lang.String,com.example.slacks_lottoevent.OrganizerEventArrayAdapter,com.example.slacks_lottoevent.FacilityListArrayAdapter)">
+<section class="detail" id="deleteFacilityFromDatabase(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,java.lang.String,java.lang.String,com.example.slacks_lottoevent.viewmodel.adapter.OrganizerEventArrayAdapter,com.example.slacks_lottoevent.viewmodel.adapter.FacilityListArrayAdapter)">
 <h3>deleteFacilityFromDatabase</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">deleteFacilityFromDatabase</span><wbr><span class="parameters">(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
