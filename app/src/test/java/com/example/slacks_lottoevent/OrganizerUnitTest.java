@@ -22,7 +22,7 @@ public class OrganizerUnitTest {
      */
     @BeforeEach
     public void setUp(){
-        organizer = new Organizer("fe8e1540320d3c3d");
+        organizer = new Organizer("fe8e1540320d3c3d", new ArrayList<>());
     }
 
     /**
@@ -32,25 +32,6 @@ public class OrganizerUnitTest {
     public void testGetUserId() {
         // Check if the userId is correctly assigned
         assertEquals("fe8e1540320d3c3d", organizer.getDeviceId());
-    }
-
-    /**
-     * Test the Organizer constructor with a null userId.
-     */
-    @Test
-    public void testGetFacilityIdInitiallyNull() {
-        // Facility ID should be null upon initialization
-        assertNull(organizer.getFacilityId());
-    }
-
-    /**
-     * Test the Organizer constructor with a null userId.
-     */
-    @Test
-    public void testSetFacilityId() {
-        // Set facility ID and verify the change
-        organizer.setFacilityId("hP1lDlL04Kv8icJKbS2P");
-        assertEquals("hP1lDlL04Kv8icJKbS2P", organizer.getFacilityId());
     }
 
     /**
