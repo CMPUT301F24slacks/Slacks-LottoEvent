@@ -74,23 +74,23 @@ public class UserNotifications extends AppCompatActivity {
                 notisEnabled ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
 
         organizerNotis.setOnClickListener(v -> {
-            boolean negation = !notisEnabled;
-
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("notificationsEnabled", negation);
-            editor.apply();
-            organizerNotis.setImageResource(
-                    negation ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
-
-            if (notisEnabled) {
-                Toast.makeText(this,
-                               "Notifications are disabled. To fully disable, revoke the permission in app settings.",
-                               Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this,
-                               "Notifications are enabled. To fully disable, revoke the permission in app settings.",
-                               Toast.LENGTH_LONG).show();
-            }
+//            boolean negation = !notisEnabled;
+//
+//            SharedPreferences.Editor editor = sharedPreferences.edit();
+//            editor.putBoolean("notificationsEnabled", negation);
+//            editor.apply();
+//            organizerNotis.setImageResource(
+//                    negation ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
+//
+//            if (notisEnabled) {
+//                Toast.makeText(this,
+//                               "Notifications are disabled. To fully disable, revoke the permission in app settings.",
+//                               Toast.LENGTH_LONG).show();
+//            } else {
+//                Toast.makeText(this,
+//                               "Notifications are enabled. To fully disable, revoke the permission in app settings.",
+//                               Toast.LENGTH_LONG).show();
+//            }
 
             // Redirect to the app's notification settings
             Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
@@ -98,6 +98,7 @@ public class UserNotifications extends AppCompatActivity {
             startActivityForResult(intent, 100);  // Start activity for result to return back to app
 
         });
+
     }
 
     @Override
@@ -108,31 +109,33 @@ public class UserNotifications extends AppCompatActivity {
             // Check notification status
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             boolean areNotificationsEnabled = notificationManager.areNotificationsEnabled();
+            Log.d("NotisEnables", String.valueOf(areNotificationsEnabled));
 
-            // Update shared preferences
+            // Update shared preferences with the correct notification status
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("notificationsEnabled", areNotificationsEnabled);
             editor.apply();
 
-            // Update the notification bell icon
+            // Update the notification bell icon based on the new status
             organizerNotis.setImageResource(areNotificationsEnabled ?
-                                                    R.drawable.baseline_notifications_active_24 :
-                                                    R.drawable.baseline_circle_notifications_24);
+                    R.drawable.baseline_notifications_active_24 :
+                    R.drawable.baseline_circle_notifications_24);
 
             // Notify user of the current state
             Toast.makeText(this, areNotificationsEnabled ?
-                                   "Notifications are enabled." :
-                                   "Notifications are disabled.",
-                           Toast.LENGTH_SHORT).show();
+                            "Notifications are enabled." :
+                            "Notifications are disabled.",
+                    Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
     /**
      * Fetch the invited events for the current user and facility location.
      */
     private void fetchInvitedEvents(String eventTypes, Boolean selected) {
-        String deviceId = Settings.Secure.getString(getContentResolver(),
-                                                    Settings.Secure.ANDROID_ID);
+        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         entrantRef.document(deviceId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 DocumentSnapshot entrantDoc = task.getResult();

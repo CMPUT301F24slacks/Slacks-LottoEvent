@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity {
         // Inflate activity_main layout into content_frame of activity_base
         getLayoutInflater().inflate(R.layout.activity_main, findViewById(R.id.content_frame), true);
 
-//        Notifications for the entrant
+//      Notifications for the entrant
         createNotificationChannel();
         notificationHelper = new NotificationHelper(this);
         checkAndRequestNotificationPermission();
@@ -264,9 +264,7 @@ public class MainActivity extends BaseActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED && (!hasAsked)) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
-                        NOTIFICATION_PERMISSION_REQUEST_CODE);
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, NOTIFICATION_PERMISSION_REQUEST_CODE);
                 editor.putBoolean("hasAskedNotifcations", true);
                 editor.apply();
             }

@@ -46,14 +46,9 @@ public class NotificationHelper {
         Boolean hasAsked = sharedPreferences.getBoolean("hasAskedNotifcations", false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             // Check if the POST_NOTIFICATIONS permission is granted
-            if (ActivityCompat.checkSelfPermission(activity,
-                                                   android.Manifest.permission.POST_NOTIFICATIONS) !=
-                PackageManager.PERMISSION_GRANTED && (!hasAsked)) {
+            if (ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED && (!hasAsked)) {
                 // Request the permission
-                ActivityCompat.requestPermissions(activity,
-                                                  new String[]{
-                                                          android.Manifest.permission.POST_NOTIFICATIONS},
-                                                  100); // 100 is the request code (can be any number)
+                ActivityCompat.requestPermissions(activity, new String[]{ android.Manifest.permission.POST_NOTIFICATIONS}, 100); // 100 is the request code (can be any number)
                 // Return early to avoid sending the notification before permission is granted
                 return;
             }

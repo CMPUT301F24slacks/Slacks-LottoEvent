@@ -26,7 +26,7 @@ android {
         properties.load(rootProject.file("local.properties").inputStream())
         val mapsApiKey: String = properties.getProperty("MAPS_API_KEY") ?: ""
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
-        buildConfigField("String", "MAPS_API_KEY", properties.getProperty("MAPS_API_KEY"))
+        buildConfigField("String", "MAPS_API_KEY", "\"${mapsApiKey}\"")
 
     }
 
