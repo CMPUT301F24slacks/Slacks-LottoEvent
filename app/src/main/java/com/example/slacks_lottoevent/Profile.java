@@ -21,7 +21,7 @@ public class Profile {
     private String profilePicturePath; // Path to the profile picture image
     private boolean usingDefaultPicture;
     private boolean adminNotifications;
-    private boolean isAdmin;
+    private boolean admin;
 
     /**
      * Default constructor for Firestore serialization.
@@ -197,5 +197,13 @@ public class Profile {
         }
 
         return imageFile.getAbsolutePath();
+    }
+
+    public boolean getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

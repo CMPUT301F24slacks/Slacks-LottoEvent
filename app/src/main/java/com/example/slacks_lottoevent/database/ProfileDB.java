@@ -72,4 +72,9 @@ public class ProfileDB {
     public interface ProfileChangeListener {
         void onProfilesChanged(HashMap<String, Profile> updatedProfiles);
     }
+
+    // Update a profile in Firestore
+    public void updateProfile(Profile profile) {
+        db.collection("profiles").document(profile.getDeviceId()).set(profile);
+    }
 }

@@ -46,5 +46,10 @@ public class ProfileViewModel extends ViewModel {
             currentProfileLiveData.setValue(currentProfile);
         }
     }
+
+    // Update the current profile in Firestore
+    public void updateProfile(Profile profile) {
+        profileDB.updateProfile(profile);
+    }
 }
 
