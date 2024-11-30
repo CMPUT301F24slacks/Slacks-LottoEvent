@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.example.slacks_lottoevent.Utility.Callback;
+import com.example.slacks_lottoevent.Utility.Notifications;
 import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.databinding.ActivityOrganizerEventDetailsBinding;
@@ -80,6 +81,8 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
     private String eventID;
     private CollectionReference eventsRef;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+
+    private static Notifications notifications = new Notifications();
 
     public static void DeletingQRCode(Context context, FirebaseFirestore db, Event event) {
         // Validate inputs
@@ -150,6 +153,10 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
                           "Confirm",
                           null
                   );
+
+//                  TODO: ADD EVENT NAME
+                  notifications.addNotifications( "Event Deleted", "This event was deleted by admin, sorry for the inconvienience", null, eventID, true);
+
               } else {
                   // Directly delete the event if not from facility
                   DeleteEvent(context, db, current_event, eventID, onSuccess, onFailure);

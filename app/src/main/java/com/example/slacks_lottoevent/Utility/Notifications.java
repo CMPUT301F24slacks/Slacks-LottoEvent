@@ -48,7 +48,7 @@ public class Notifications {
             if (eventDoc.exists()) {
                 ArrayList<String> deviceIds = null;
 //                Grabbing people who want these notifications
-                if (allLists) {
+                if (allLists && listToGrab == null) {
                     deviceIds.addAll((ArrayList<String>) eventDoc.get("waitlistedNotificationsList"));
                     deviceIds.addAll((ArrayList<String>) eventDoc.get("selectedNotificationsList"));
                     deviceIds.addAll((ArrayList<String>) eventDoc.get("joinedNotificationsList"));
