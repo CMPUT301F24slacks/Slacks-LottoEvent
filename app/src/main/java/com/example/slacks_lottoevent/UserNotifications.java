@@ -74,13 +74,29 @@ public class UserNotifications extends AppCompatActivity {
                 notisEnabled ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
 
         organizerNotis.setOnClickListener(v -> {
+//            boolean negation = !notisEnabled;
+//
+//            SharedPreferences.Editor editor = sharedPreferences.edit();
+//            editor.putBoolean("notificationsEnabled", negation);
+//            editor.apply();
+//            organizerNotis.setImageResource(
+//                    negation ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
+//
+//            if (notisEnabled) {
+//                Toast.makeText(this,
+//                               "Notifications are disabled. To fully disable, revoke the permission in app settings.",
+//                               Toast.LENGTH_LONG).show();
+//            } else {
+//                Toast.makeText(this,
+//                               "Notifications are enabled. To fully disable, revoke the permission in app settings.",
+//                               Toast.LENGTH_LONG).show();
+//            }
 
             // Redirect to the app's notification settings
             Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
             intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-            startActivityForResult(intent, 100);  // Start activity for result to return back to app
-
         });
+
 
     }
 
@@ -112,25 +128,7 @@ public class UserNotifications extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-        // Check notification status when the activity resumes
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        boolean areNotificationsEnabled = notificationManager.areNotificationsEnabled();
-        Log.d("NotisEnables", String.valueOf(areNotificationsEnabled));
-
-        // Update shared preferences with the correct notification status
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("notificationsEnabled", areNotificationsEnabled);
-        editor.apply();
-
-        // Update the notification bell icon based on the new status
-        organizerNotis.setImageResource(areNotificationsEnabled ?
-                R.drawable.baseline_notifications_active_24 :
-                R.drawable.baseline_circle_notifications_24);
-    }
 
     /**
      * Fetch the invited events for the current user and facility location.
