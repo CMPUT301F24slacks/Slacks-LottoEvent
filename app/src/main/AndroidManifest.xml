@@ -16,10 +16,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -34,37 +35,36 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".OrganizerEventDetailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".EntrantEventDetailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".view.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".EventsHomeActivity"
-            android:exported="true"
-            android:theme="@style/Theme.SlacksLottoEvent" />
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".JoinEventDetailsActivity" />
+            android:name=".view.EntrantEventDetailsActivity"
+            android:exported="false" />
         <activity
-            android:name=".EventQrScanner"
+            android:name=".view.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.SlacksLottoEvent" />
+            android:theme="@style/Theme.SlacksLottoEvent"></activity>
+        <activity android:name=".view.SignUpActivity" />
         <activity
-            android:name=".FullscreenQrScanner"
+            android:name=".view.FullscreenQrScannerActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
-            android:name=".CreateEvent"
+            android:name=".view.QRScannerActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SlacksLottoEvent" />
+        <activity
+            android:name=".view.OrganizerEventDetailsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SlacksLottoEvent" />
+        <activity
+            android:name=".view.CreateEventActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
@@ -72,21 +72,22 @@
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
-            android:name=".OrganizerNotifications"
+            android:name=".view.OrganizerNotificationsActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
-            android:name=".ProfileActivity"
+            android:name=".view.AdminActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
-            android:name=".AdminActivity"
+            android:name=".view.GeolocationMapsActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
-            android:name=".GeolocationMapsActivity"
+            android:name=".view.JoinEventDetailsActivity"
             android:exported="true"
-            android:theme="@style/Theme.SlacksLottoEvent"/>
+            android:theme="@style/Theme.SlacksLottoEvent" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />

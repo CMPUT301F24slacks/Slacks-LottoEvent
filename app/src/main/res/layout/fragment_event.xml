@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.fragment.EventsFragment">
+
+    <!-- ListView for events -->
+    <ListView
+        android:id="@+id/organizer_events_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/button_container"
+        android:dividerHeight="36dp"
+        android:paddingHorizontal="36dp"
+        android:paddingVertical="12dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp" />
+
+    <!-- Button Container -->
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/background"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Create Event Button -->
+        <Button
+            android:id="@+id/create_event_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/text_buttons"
+            android:text="Create Event"
+            android:textColor="#FFFFFF"
+            app:icon="@drawable/baseline_add_24" />
+    </LinearLayout>
+
+</RelativeLayout>

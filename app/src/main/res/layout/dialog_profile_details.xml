@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#333333"
-    >
+    android:background="#333333">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -22,12 +20,12 @@
             android:id="@+id/dialog_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Profile Details"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
             android:gravity="center"
-            android:paddingBottom="8dp" />
+            android:paddingBottom="8dp"
+            android:text="Profile Details"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/Picture"
@@ -40,11 +38,12 @@
             android:id="@+id/dialog_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="4dp"
             android:paddingBottom="16dp"
             android:text="Name, etc here"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:paddingTop="4dp"/>
+            android:textSize="16sp" />
+
         <TextView
             android:id="@+id/dialog_terms"
             android:layout_width="match_parent"

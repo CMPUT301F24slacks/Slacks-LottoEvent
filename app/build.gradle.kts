@@ -1,5 +1,3 @@
-import org.gradle.api.tasks.javadoc.Javadoc
-import org.gradle.external.javadoc.StandardJavadocDocletOptions
 import java.util.Properties
 
 plugins {
@@ -58,16 +56,24 @@ androidComponents {
         tasks.register("generate${variant.name.capitalize()}Javadoc", Javadoc::class) {
             description = "Generate ${variant.name} Javadoc"
 
-            val javaCompileTask = tasks.named("compile${variant.name.capitalize()}JavaWithJavac", JavaCompile::class.java)
+            val javaCompileTask = tasks.named(
+                "compile${variant.name.capitalize()}JavaWithJavac",
+                JavaCompile::class.java
+            )
             source = javaCompileTask.get().source
             setDestinationDir(file("$rootDir/doc/javadoc"))
 
             isFailOnError = false
 
             doFirst {
-                val androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+                val androidJar =
+                    "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+
                 classpath = files(variant.compileClasspath) + files(androidJar)
-                (options as StandardJavadocDocletOptions).addStringOption("-show-members", "package")
+                (options as StandardJavadocDocletOptions).addStringOption(
+                    "-show-members",
+                    "package"
+                )
             }
         }
     }
@@ -100,12 +106,16 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.test:rules:1.5.0")
     androidTestImplementation("androidx.test:core:1.5.0")
+    implementation(libs.preference)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
     implementation ("com.google.firebase:firebase-storage:20.2.1")
     implementation("com.google.firebase:firebase-firestore")
     implementation("androidx.camera:camera-core:1.3.4")
     implementation("androidx.camera:camera-camera2:1.3.4")
-    implementation("androidx.camera:camera-lifecycle:1.4.0")
+    implementation("androidx.camera:camera-lifecycle:1.2.0")
     implementation("androidx.camera:camera-view:1.2.0")
     implementation(libs.zxing.android.embedded.v410)
     implementation(libs.core)

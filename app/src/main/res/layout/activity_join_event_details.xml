@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF">
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -11,8 +12,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="#333333">
+            android:background="#333333"
+            android:orientation="vertical">
 
 
             <FrameLayout
@@ -185,6 +186,7 @@
                         android:text="Event Slots: 1000"
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/waitlistCapacitySection"
                     android:layout_width="match_parent"
@@ -207,6 +209,7 @@
                         android:text="Waitlist Capacity: **"
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/spotsAvailableSection"
                     android:layout_width="match_parent"
@@ -222,13 +225,13 @@
                         android:src="@drawable/baseline_access_time_24"
                         app:tint="#7B24EB" />
 
-                <TextView
-                    android:id="@+id/spotsAvailable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Only ** spots available on waitlist"
-                    android:textColor="#BDBDBD" />
+                    <TextView
+                        android:id="@+id/spotsAvailable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Only ** spots available on waitlist"
+                        android:textColor="#BDBDBD" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -243,25 +246,26 @@
                 android:paddingEnd="24dp"
                 android:text="Join"
                 android:textColor="#FFFFFF" />
+
             <TextView
                 android:id="@+id/waitlistFullBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Waitlist Full, Check Back Later"
                 android:backgroundTint="#7B24EB"
                 android:padding="8dp"
+                android:text="Waitlist Full, Check Back Later"
                 android:textColor="#FFFFFF"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/signupPassed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SignUp deadline has passed."
                 android:backgroundTint="#7B24EB"
                 android:padding="8dp"
+                android:text="SignUp deadline has passed."
                 android:textColor="#FFFFFF"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
         <ProgressBar
@@ -269,8 +273,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone"
             android:indeterminate="true"
-            android:theme="@style/Widget.AppCompat.ProgressBar" />
+            android:theme="@style/Widget.AppCompat.ProgressBar"
+            android:visibility="gone" />
     </FrameLayout>
 </LinearLayout>

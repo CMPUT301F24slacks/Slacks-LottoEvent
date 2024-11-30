@@ -1,10 +1,26 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.slacks_lottoevent.MainActivity">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/nav_home"
+        android:icon="@drawable/outline_home_24"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/nav_manage"
+        android:icon="@drawable/outline_edit_calendar_24"
+        android:title="Manage" />
+
+    <item
+        android:id="@id/fab"
+        android:enabled="false"
+        android:title="" />
+
+    <item
+        android:id="@+id/nav_inbox"
+        android:icon="@drawable/outline_invite_24"
+        android:title="Inbox" />
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/outline_account_circle_24"
+        android:title="Profile" />
 </menu>

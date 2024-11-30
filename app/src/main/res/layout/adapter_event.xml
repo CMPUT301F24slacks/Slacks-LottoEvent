@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#2B2B2B"
+    android:paddingBottom="16dp">
+
+    <!-- Image -->
+    <ImageView
+        android:id="@+id/event_image"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="#D3D3D3"
+        android:scaleType="centerCrop"
+        android:src="@drawable/event_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Event Name -->
+    <TextView
+        android:id="@+id/event_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
+        android:text="Violin Lessons"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/event_image" />
+
+    <!-- Date -->
+    <TextView
+        android:id="@+id/event_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/baseline_calendar_today_20"
+        android:drawablePadding="8dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:text="2024-06-15"
+        android:textColor="#D3D3D3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/event_name" />
+
+    <!-- Status -->
+    <!-- Waitlisted -->
+    <TextView
+        android:id="@+id/status_waitlisted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:drawableTint="#FFA500"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        android:text="Waitlisted"
+        android:textColor="#FFA500"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:drawableStartCompat="@drawable/baseline_access_time_20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/event_name" />
+
+    <!-- Invited -->
+    <TextView
+        android:id="@+id/status_invited"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:drawableTint="#FFEB3B"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        android:text="Invited"
+        android:textColor="#FFEB3B"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:drawableStartCompat="@drawable/baseline_bookmark_border_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/event_name" />
+
+    <!-- Attending -->
+    <TextView
+        android:id="@+id/status_attending"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:drawableTint="#4CAF50"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        android:text="Attending"
+        android:textColor="#4CAF50"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:drawableStartCompat="@drawable/baseline_check_circle_outline_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/event_name" />
+
+    <!-- Unselected -->
+    <TextView
+        android:id="@+id/status_unselected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:drawableTint="#F44336"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        android:text="Unselected"
+        android:textColor="#F44336"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:drawableStartCompat="@drawable/baseline_cancel_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/event_name" />
+
+    <!-- Time -->
+    <TextView
+        android:id="@+id/event_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/baseline_access_time_20"
+        android:drawablePadding="8dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:text="14:00 - 15:00"
+        android:textColor="#D3D3D3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/event_date" />
+
+    <!-- Address -->
+    <TextView
+        android:id="@+id/event_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/baseline_location_pin_20"
+        android:drawablePadding="8dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:text="Edmonton, Canada"
+        android:textColor="#D3D3D3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/event_time" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/event_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
+        android:text="Join us for the UAlberta career fair, featuring workshops and hiring positions."
+        android:textColor="#D3D3D3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/event_address" />
+
+    <!-- Button -->
+    <Button
+        android:id="@+id/event_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="16dp"
+        android:backgroundTint="#A020F0"
+        android:text="View"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/event_description" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
