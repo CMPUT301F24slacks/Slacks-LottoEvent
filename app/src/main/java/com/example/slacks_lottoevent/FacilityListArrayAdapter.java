@@ -79,10 +79,10 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
 
             if (isAdmin) {
                 ImageButton ovalButton = convertView.findViewById(R.id.oval_rectangle);
-                ovalButton.setOnClickListener(v -> showFacilityOptionsDialog(facility));
+                ovalButton.setOnClickListener(v -> showFacilityOptionsDialog(context, db, facility, eventsAdapter, this, false));
 
                 // Set OnClickListener to show profile options in a dialog
-                convertView.setOnClickListener(v -> showFacilityOptionsDialog(facility));
+                convertView.setOnClickListener(v -> showFacilityOptionsDialog(context, db, facility, eventsAdapter, this, false));
             }
         }
 
@@ -93,10 +93,10 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
      * Shows a dialog with "Cancel" and "Delete" options for a profile.
      *
      * @param facility The profile to display options for.
-//     * @param position The position of the profile in the list.
+    //     * @param position The position of the profile in the list.
      */
     public static void showFacilityOptionsDialog(Context context, FirebaseFirestore db, Facility facility,
-                                                  OrganizerEventArrayAdapter eventsAdapter, FacilityListArrayAdapter facilitiesAdapter, boolean FromProfile) {
+                                                 OrganizerEventArrayAdapter eventsAdapter, FacilityListArrayAdapter facilitiesAdapter, boolean FromProfile) {
         if (!FromProfile){
             // Build the message with facility details
             String message = "Name: " + facility.getFacilityName() + "\n" +
@@ -114,28 +114,10 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
         }
         else{
             deleteFacilityFromDatabase(context, db, facility.getDeviceId(),
-                eventsAdapter, facilitiesAdapter);
+                    eventsAdapter, facilitiesAdapter);
         }
 
-    private void confirmDeletion(Facility facility){
 
-        deleteFacilityFromDatabase(
-                context,
-                db,
-                facility.getOrganizerID(),
-                eventsAdapter);
-
-        // Explicitly delete the facility document
-        db.collection("facilities").document(facility.getDeviceId()).delete()
-                .addOnSuccessListener(aVoid -> {
-                    // Remove the facility from the adapter and notify the dataset change
-                    remove(facility);
-                    notifyDataSetChanged();
-                    Toast.makeText(context, "Facility deleted successfully.", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(context, "Failed to delete facility: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
     }
 
 
@@ -144,11 +126,11 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
      *
      * @param context  The context for Toast messages.
      * @param db       The Firestore database instance.
-//     * @param FacilityId The facility Id to delete.
-//     * @param OrganizerId The facility's organizer Id to be deleted.
+    //     * @param FacilityId The facility Id to delete.
+    //     * @param OrganizerId The facility's organizer Id to be deleted.
      */
     public static void deleteFacilityFromDatabase(Context context, FirebaseFirestore db, String deviceId,
-                                                  OrganizerEventArrayAdapter eventsAdapter) {
+                                                  OrganizerEventArrayAdapter eventsAdapter, FacilityListArrayAdapter facilitiesAdapter) {
         db.collection("facilities").document(deviceId)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
@@ -166,8 +148,8 @@ public class FacilityListArrayAdapter extends ArrayAdapter<Facility> {
 //                                            eventList.removeIf(event -> event.getEventID().equals(eventId));
 //                                          Delete each event document explicitly
                                             OrganizerEventDetailsActivity.DeletingEvent(context, eventId, db,
-                                                () -> Toast.makeText(context, "Event deleted successfully.", Toast.LENGTH_SHORT).show(),
-                                                () -> Toast.makeText(context, "Failed to delete event.", Toast.LENGTH_SHORT).show(),
+                                                    () -> Toast.makeText(context, "Event deleted successfully.", Toast.LENGTH_SHORT).show(),
+                                                    () -> Toast.makeText(context, "Failed to delete event.", Toast.LENGTH_SHORT).show(),
                                                     true
                                             );
                                         }

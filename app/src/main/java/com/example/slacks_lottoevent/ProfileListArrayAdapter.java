@@ -231,7 +231,7 @@ public class ProfileListArrayAdapter extends ArrayAdapter<Profile> {
                         // Fetch the facility ID from the organizer document
                         Facility facility = documentSnapshot.toObject(Facility.class);
 
-                        if (facility.getFacilityId() != null && !facility.getFacilityId().isEmpty()) {
+                        if (facility.getDeviceId() != null && !facility.getDeviceId().isEmpty()) {
                             // Call method to delete the facility
                             FacilityListArrayAdapter.showFacilityOptionsDialog(context, db, facility, eventsAdapter, facilitiesAdapter, FromProfile);
                         } else {
