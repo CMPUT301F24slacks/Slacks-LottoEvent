@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -23,7 +22,7 @@ public class AdminImages extends Fragment {
 
     private RecyclerView RecyclerViewImages;
     private AdminImagesAdapter adapter;
-    private List<ImageMetadata> imageList = new ArrayList<>(); // Updated to use ImageMetadata
+    private final List<ImageMetadata> imageList = new ArrayList<>(); // Updated to use ImageMetadata
 
     public AdminImages() {
         // Required empty public constructor
@@ -35,7 +34,8 @@ public class AdminImages extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin_images, container, false);
 
@@ -88,11 +88,14 @@ public class AdminImages extends Fragment {
             if (querySnapshot != null) {
                 tempProfileImages.clear();
                 for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                    boolean usingDefaultPicture = Boolean.TRUE.equals(document.getBoolean("usingDefaultPicture"));
+                    boolean usingDefaultPicture = Boolean.TRUE.equals(
+                            document.getBoolean("usingDefaultPicture"));
                     String profilePicturePath = document.getString("profilePicturePath");
                     String deviceId = document.getId();
-                    if (!usingDefaultPicture && profilePicturePath != null && !profilePicturePath.trim().isEmpty()) {
-                        tempProfileImages.add(new ImageMetadata(profilePicturePath, false, deviceId));
+                    if (!usingDefaultPicture && profilePicturePath != null &&
+                        !profilePicturePath.trim().isEmpty()) {
+                        tempProfileImages.add(
+                                new ImageMetadata(profilePicturePath, false, deviceId));
                     }
                 }
                 updateImageList(tempEventImages, tempProfileImages);
@@ -100,7 +103,8 @@ public class AdminImages extends Fragment {
         });
     }
 
-    private void updateImageList(List<ImageMetadata> tempEventImages, List<ImageMetadata> tempProfileImages) {
+    private void updateImageList(List<ImageMetadata> tempEventImages,
+                                 List<ImageMetadata> tempProfileImages) {
         imageList.clear();
         imageList.addAll(tempEventImages);
         imageList.addAll(tempProfileImages);

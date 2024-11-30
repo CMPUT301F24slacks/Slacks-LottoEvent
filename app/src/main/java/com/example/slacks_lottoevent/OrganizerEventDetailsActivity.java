@@ -23,10 +23,8 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.slacks_lottoevent.databinding.ActivityEntrantEventDetailsBinding;
 import com.example.slacks_lottoevent.databinding.ActivityOrganizerEventDetailsBinding;
 import com.example.slacks_lottoevent.view.BaseActivity;
 import com.google.firebase.firestore.CollectionReference;
@@ -38,25 +36,32 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.encoder.QRCode;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-import org.checkerframework.checker.units.qual.A;
-
-import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 /**
  * EntrantEventDetailsActivity is the activity that displays the details of an event for an entrant.
  * The entrant can leave the event from this activity.
  */
 public class OrganizerEventDetailsActivity extends BaseActivity {
+    Boolean entrantsChosen;
+    Uri selectedImageUri;
+    FirebaseFirestore db;
+    String qrCodeValue;
+    Integer spotsRemaining;
+    boolean isAdmin;
+    String spotsRemainingText;
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    Date currentDate = new Date();
+    Date signup = null;
+    @SuppressLint("HardwareIds")
+    String deviceId;
     private ActivityOrganizerEventDetailsBinding binding;
     private DocumentSnapshot document;
     private String location;
@@ -73,257 +78,12 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
     private CollectionReference eventsRef;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
 
-    Boolean entrantsChosen;
-    Uri selectedImageUri;
-    FirebaseFirestore db;
-    String qrCodeValue;
-    Integer spotsRemaining;
-    boolean isAdmin;
-    String spotsRemainingText;
-    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    Date currentDate = new Date();
-    Date signup = null;
-    @SuppressLint("HardwareIds") String deviceId;
-
-    /**
-     * onCreate method for EntrantEventDetailsActivity
-     * @param savedInstanceState the saved instance state
-     */
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityOrganizerEventDetailsBinding.inflate(getLayoutInflater());
-        FrameLayout contentFrame = findViewById(R.id.content_frame);
-        contentFrame.addView(binding.getRoot());
-
-        // Set up the app bar for back navigation
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Show back button
-            getSupportActionBar().setTitle("Event Details"); // Set a custom title if needed
-        }
-
-        qrCodeValue = getIntent().getStringExtra("qrCodeValue");
-        isAdmin = getIntent().getBooleanExtra("isAdmin", false); // Default value: false
-
-        db = FirebaseFirestore.getInstance();
-
-        // Use addSnapshotListener for real-time updates
-        db.collection("events").whereEqualTo("eventID", qrCodeValue).addSnapshotListener((querySnapshot, error) -> {
-            if (error != null) {
-                Log.e("Firestore", "Error listening to event updates", error);
-                return;
-            }
-
-            if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                // Get the document snapshot
-                document = querySnapshot.getDocuments().get(0);
-                event = document.toObject(Event.class);
-
-                // Extract and update fields
-                if (event != null) {
-                    date = event.getEventDate();  // Get the date from the Event object
-                    signupDate = event.getSignupDeadline();  // Get the signup date
-                    time = event.getTime();  // Get the time
-                    eventName = event.getName();  // Get the name
-                    location = event.getLocation();  // Get the location
-                    description = event.getDescription();  // Get the description
-                    eventPosterURL = event.getEventPosterURL();  // Get the event poster URL
-                    qrData = event.getQRData();  // Get the QR data
-                    eventID = event.getEventID();  // Get the event ID
-                    entrantsChosen = event.getEntrantsChosen();
-                }
-
-                try {
-                    signup = sdf.parse(signupDate);
-                    currentDate = sdf.parse(sdf.format(new Date())); // Truncate current date
-                } catch (ParseException e) {
-                    Log.e("ParseError", "Error parsing dates", e);
-                }
-
-                List<Object> finalists = (List<Object>) document.get("finalists");
-
-                ImageView eventPoster = binding.eventImage;
-
-                // Load event poster or default image
-                String posterURL = event.getEventPosterURL();
-                if (posterURL != null && !posterURL.trim().isEmpty()) {
-                    // Load the image from the posterURL using Glide
-                    Glide.with(this)
-                            .load(posterURL)
-                            .placeholder(R.drawable.event_image) // Set the default placeholder image
-                            .error(R.drawable.error_image) // Set the error image for invalid URLs
-                            .into(eventPoster);
-                } else {
-                    // No posterURL available, use the default placeholder image
-                    eventPoster.setImageResource(R.drawable.event_image);
-                }
-
-                        binding.eventTitle.setText(eventName);
-                        binding.eventDate.setText(date);
-                        List<Object> waitlisted = (List<Object>) document.get("waitlisted");
-                        Long capacity = (Long) document.get("eventSlots");
-                        Long waitListCapacity = (Long) document.get("waitListCapacity");
-                        assert capacity != null;
-                        String capacityAsString = capacity.toString();
-
-                        if (waitListCapacity == 0){
-//                          Does not show badges if there is no waitlistCapacity section
-                            binding.eventWaitlistCapacitySection.setVisibility(View.GONE);
-                            binding.spotsAvailableSection.setVisibility(View.GONE);
-                        }
-
-                        else if (waitListCapacity > 0){
-                            spotsRemaining = (waitListCapacity.intValue() - waitlisted.size()) > 0 ? (waitListCapacity.intValue() - waitlisted.size()) : 0 ;
-                            spotsRemainingText = "Only " + spotsRemaining.toString() + " spot(s) available on waitlist";
-                            binding.spotsAvailable.setText(spotsRemainingText);
-
-                            if (entrantsChosen){
-                                spotsRemainingText = "Only 0 spots available on waitlist";
-                                binding.spotsAvailable.setText(spotsRemainingText);
-                            }
-                        }
-
-
-
-                        binding.eventTitle.setText(eventName);
-                        binding.eventDate.setText("Event Date: " + date);
-                        binding.signupDate.setText("Signup Deadline: " + signupDate);
-                        binding.eventTime.setText("Event Time: "+ time);
-                        binding.eventWaitlistCapacity.setText("Waitlist Capacity: " +  waitListCapacity.toString());
-                        binding.eventLocation.setText(location);
-                        binding.eventSlotsCapacity.setText("Event Slots: " + capacityAsString);
-                        binding.eventDescription.setText(description);
-                        usesGeolocation = (Boolean) document.get("geoLocation");
-
-                        event.setFinalists((ArrayList<String>) document.get("finalists"));
-                        event.setWaitlisted((ArrayList<String>) document.get("waitlisted"));
-                        event.setSelected((ArrayList<String>) document.get("selected"));
-                        event.setCancelled((ArrayList<String>) document.get("cancelled"));
-                        event.setReselected((ArrayList<String>) document.get("reselected"));
-
-                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("waitlistedNotificationsList"));
-                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("joinedNotificationsList"));
-                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("cancelledNotificationsList"));
-                        event.setWaitlistedNotificationsList((ArrayList<String>) document.get("selectedNotificationsList"));
-
-                        updateLotteryButtonVisibility(isAdmin);
-
-                    }
-                });
-        eventsRef = db.collection("events");
-        binding.editEventButton.setVisibility(View.VISIBLE);
-
-        binding.editEventButton.setOnClickListener(view -> {
-            selectImage();
-        });
-
-        imagePickerLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            Intent data = result.getData();
-                            if (data != null && data.getData() != null) {
-                                selectedImageUri = data.getData();
-                            }
-                            if (selectedImageUri != null){
-                                editImage(selectedImageUri);
-                            }
-                        }
-                    }
-
-
-                });
-
-        binding.lotterySystemButton.setOnClickListener(view -> {
-            if (event == null) {
-
-                // Show a message that the event data is not available yet
-                showAdminAlertDialog(this, null, "Error", "Event data is not loaded yet. Please try again later.", null, null, "OK", null);
-                return;
-            }
-
-            if (event.getWaitlisted().size() == 0){
-                showAdminAlertDialog(this, null, "Cannot Select", "There is no one in the waitlist.", null, null, "OK", null);
-                return;
-
-            }
-
-            if (!currentDate.after(signup)){
-                showAdminAlertDialog(this, null, "Cannot Select", "Cannot select entrants until after the signup date", null, null, "OK", null);
-
-            }
-
-            if (event.getEntrantsChosen()){
-                showAdminAlertDialog(this, null, "Cannot Sample Again", "Cannot sample entrants again. You can reselect them in the List of Entrants tab.", null, null, "OK", null);
-            }
-
-            if (binding.lotterySystemButton.isEnabled() && !event.getEntrantsChosen() && currentDate.after(signup)) {
-                event.lotterySystem();
-                updateUnSelectedEntrants(event);
-                updateSelectedEntrants(event);
-                updateInvitedEntrants(event);
-                updateUninvitedEntrants(event);
-
-                showAdminAlertDialog(this, null, "Entrants Selected", "Entrants were selected for the event.", null, null, "OK", null);
-            }
-
-            updateLotteryButtonVisibility(isAdmin);
-        });
-
-
-        binding.entrantListButton.setVisibility(View.VISIBLE);
-        binding.entrantListButton.setOnClickListener(view -> {
-            // get the event object corresponding to the qr code - huh is this not the wrong value?
-            Intent intent = new Intent(this, OrganizerNotifications.class);
-            intent.putExtra("eventID", qrCodeValue);
-            startActivity(intent);
-        });
-
-        binding.showQrCodeButton.setOnClickListener(view -> {
-            showQRCodePopup(this, db, event, qrData, isAdmin);
-        });
-
-        if (isAdmin){
-            binding.lotterySystemButton.setVisibility(View.GONE);
-
-            binding.editEventButton.setText("Delete Event Poster");
-            binding.editEventButton.setOnClickListener(view -> {
-                DeletingEventPoster(this, db, event.getEventPosterURL(), false);});
-
-            binding.entrantListButton.setVisibility(View.VISIBLE);
-            binding.entrantListButton.setText("Delete Event");
-            binding.entrantListButton.setOnClickListener(view ->
-                {
-                    DeletingEvent(this, event.getEventID(), db,
-                            () -> {
-                                Toast.makeText(this, "Event deleted successfully.", Toast.LENGTH_SHORT).show();
-                                finish(); // Close the activity or return to the previous screen
-                            },
-                            () -> Toast.makeText(this, "Failed to delete event.", Toast.LENGTH_SHORT).show(), false);
-
-                    //Go back to the previous page to simulate exiting the event
-//                    finish();
-//                    onBackPressed();
-                });
-
-            binding.showQrCodeButton.setText("Delete QR Code");
-            if (event != null && event.getQRData() != null && !event.getQRData().isEmpty()) {
-                binding.showQrCodeButton.setOnClickListener(view -> {
-                    showQRCodePopup(this, db, event, event.getQRData(), isAdmin);
-                });
-            } else {
-//                Toast.makeText(this, "QR code has already been deleted.", Toast.LENGTH_SHORT).show();
-            }
-
-            }
-    }
-
     public static void DeletingQRCode(Context context, FirebaseFirestore db, Event event) {
         // Validate inputs
-        if (event == null || db == null || event.getEventID() == null || event.getEventID().isEmpty()) {
-            throw new IllegalArgumentException("Event, Firestore instance, or Event ID cannot be null or empty.");
+        if (event == null || db == null || event.getEventID() == null ||
+            event.getEventID().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Event, Firestore instance, or Event ID cannot be null or empty.");
         }
 
         // Reference the event document
@@ -331,78 +91,81 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
 
         // Update the attributes in Firestore
         db.collection("events")
-                .document(eventID) // Use the event's unique ID to identify the document
-                .update(
-                        "qrdata", "", // Set qrdata to an empty string
-                        "qrhash", "" , // Set qrhash to an empty string
-                        "disabled", true
-                )
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("Firestore", "QR code attributes successfully updated for event: " + eventID);
-                    Toast.makeText(context, "QR code deleted successfully.", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error updating QR code attributes for event: " + eventID, e);
-                    Toast.makeText(context, "Failed to delete QR code.", Toast.LENGTH_SHORT).show();
-                });
+          .document(eventID) // Use the event's unique ID to identify the document
+          .update(
+                  "qrdata", "", // Set qrdata to an empty string
+                  "qrhash", "", // Set qrhash to an empty string
+                  "disabled", true
+          )
+          .addOnSuccessListener(aVoid -> {
+              Log.d("Firestore", "QR code attributes successfully updated for event: " + eventID);
+              Toast.makeText(context, "QR code deleted successfully.", Toast.LENGTH_SHORT).show();
+          })
+          .addOnFailureListener(e -> {
+              Log.e("Firestore", "Error updating QR code attributes for event: " + eventID, e);
+              Toast.makeText(context, "Failed to delete QR code.", Toast.LENGTH_SHORT).show();
+          });
     }
 
-    public static void DeletingEventPoster(Context context, FirebaseFirestore db, String posterURL, boolean FromFacility){
-            if (posterURL != null && !posterURL.isEmpty() && !FromFacility) {
-                // Call the method if the URL is not empty
-                AdminImagesAdapter.showImageOptionsDialog(context, db, posterURL, true);
-            } else if (posterURL != null && !posterURL.isEmpty() && FromFacility)
-                {
-                    AdminImagesAdapter.deleteImageFromFirestore(context, db, posterURL, true);
-                }
-             else {
-                if (!FromFacility)
-                {
-                    AdminActivity.showAdminAlertDialog(context, null, "No Poster Available",
-                            "There is no event poster to delete.",
-                            "TIP: ADD AN EVENT POSTER TO MAKE YOUR EVENT MORE ENTICING!",
-                            null, "OK", null);
-                }
+    public static void DeletingEventPoster(Context context, FirebaseFirestore db, String posterURL,
+                                           boolean FromFacility) {
+        if (posterURL != null && !posterURL.isEmpty() && !FromFacility) {
+            // Call the method if the URL is not empty
+            AdminImagesAdapter.showImageOptionsDialog(context, db, posterURL, true);
+        } else if (posterURL != null && !posterURL.isEmpty() && FromFacility) {
+            AdminImagesAdapter.deleteImageFromFirestore(context, db, posterURL, true);
+        } else {
+            if (!FromFacility) {
+                AdminActivity.showAdminAlertDialog(context, null, "No Poster Available",
+                                                   "There is no event poster to delete.",
+                                                   "TIP: ADD AN EVENT POSTER TO MAKE YOUR EVENT MORE ENTICING!",
+                                                   null, "OK", null);
             }
+        }
     }
 
-    public static void DeletingEvent(Context context, String eventID, FirebaseFirestore db, Runnable onSuccess, Runnable onFailure, boolean FromFacility) {
+    public static void DeletingEvent(Context context, String eventID, FirebaseFirestore db,
+                                     Runnable onSuccess, Runnable onFailure, boolean FromFacility) {
         // Fetch the event document from Firestore
         db.collection("events").document(eventID).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    Event current_event = documentSnapshot.toObject(Event.class);
-                    if (current_event == null || db == null || current_event.getEventID() == null || current_event.getEventID().isEmpty()) {
-                        throw new IllegalArgumentException("Event, Firestore instance, or Event ID cannot be null or empty.");
-                    }
-                    if (!FromFacility) {
-                        AdminActivity.showAdminAlertDialog(
-                                context,
-                                () -> DeleteEvent(context, db, current_event, eventID, onSuccess, onFailure), // Pass the confirmation action
-                                "Delete this event?",
-                                null,
-                                "WARNING: DELETION CANNOT BE UNDONE",
-                                "Cancel",
-                                "Confirm",
-                                null
-                        );
-                    } else {
-                        // Directly delete the event if not from facility
-                        DeleteEvent(context, db, current_event, eventID, onSuccess, onFailure);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    // Handle failure to fetch event document
-                    if (onFailure != null) {
-                        onFailure.run();
-                    }
-                    throw new RuntimeException("Failed to fetch event document: " + e.getMessage(), e);
-                });
+          .addOnSuccessListener(documentSnapshot -> {
+              Event current_event = documentSnapshot.toObject(Event.class);
+              if (current_event == null || db == null || current_event.getEventID() == null ||
+                  current_event.getEventID().isEmpty()) {
+                  throw new IllegalArgumentException(
+                          "Event, Firestore instance, or Event ID cannot be null or empty.");
+              }
+              if (!FromFacility) {
+                  AdminActivity.showAdminAlertDialog(
+                          context,
+                          () -> DeleteEvent(context, db, current_event, eventID, onSuccess,
+                                            onFailure), // Pass the confirmation action
+                          "Delete this event?",
+                          null,
+                          "WARNING: DELETION CANNOT BE UNDONE",
+                          "Cancel",
+                          "Confirm",
+                          null
+                  );
+              } else {
+                  // Directly delete the event if not from facility
+                  DeleteEvent(context, db, current_event, eventID, onSuccess, onFailure);
+              }
+          })
+          .addOnFailureListener(e -> {
+              // Handle failure to fetch event document
+              if (onFailure != null) {
+                  onFailure.run();
+              }
+              throw new RuntimeException("Failed to fetch event document: " + e.getMessage(), e);
+          });
     }
 
-
-    public static void DeleteEvent(Context context, FirebaseFirestore db, Event current_event, String eventID, Runnable onSuccess, Runnable onFailure) {
+    public static void DeleteEvent(Context context, FirebaseFirestore db, Event current_event,
+                                   String eventID, Runnable onSuccess, Runnable onFailure) {
         if (current_event == null || db == null || eventID == null || eventID.isEmpty()) {
-            throw new IllegalArgumentException("Event, Firestore instance, or Event ID cannot be null or empty.");
+            throw new IllegalArgumentException(
+                    "Event, Firestore instance, or Event ID cannot be null or empty.");
         }
 
         ArrayList<String> WaitlistedEntrants = current_event.getWaitlisted();
@@ -421,29 +184,28 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         DeletingAsCancelled(current_event.getEventID(), db, CancelledEntrants);
 
         // Remove the event ID from the organizers collection
-        DeletingEventIDinOrganizers(context, current_event.getDeviceId(), current_event.getEventID(), db);
+        DeletingEventIDinOrganizers(context, current_event.getDeviceId(),
+                                    current_event.getEventID(), db);
 
         // Delete the event document itself
         db.collection("events").document(eventID)
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    // Call success callback when all operations are complete
-                    if (onSuccess != null) {
-                        onSuccess.run();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    // Handle failure to delete the event document
-                    if (onFailure != null) {
-                        onFailure.run();
-                    }
-                });
+          .delete()
+          .addOnSuccessListener(aVoid -> {
+              // Call success callback when all operations are complete
+              if (onSuccess != null) {
+                  onSuccess.run();
+              }
+          })
+          .addOnFailureListener(e -> {
+              // Handle failure to delete the event document
+              if (onFailure != null) {
+                  onFailure.run();
+              }
+          });
     }
 
-                    // Handle entrants associated with the event
-
-
-    public static void DeletingAsWaitlisted(String eventID, FirebaseFirestore db, ArrayList<String> WaitlistedEntrants) {
+    public static void DeletingAsWaitlisted(String eventID, FirebaseFirestore db,
+                                            ArrayList<String> WaitlistedEntrants) {
         if (WaitlistedEntrants == null || WaitlistedEntrants.isEmpty()) {
             Log.e("Firestore", "WaitlistedEntrants is null or empty");
             return;
@@ -451,18 +213,26 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         for (String entrant : WaitlistedEntrants) {
             // Access each entrant's document
             db.collection("entrants")
-                    .document(entrant)
-                    .update("waitlistedEvents", FieldValue.arrayRemove(eventID)) // Remove eventID from the array
-                    .addOnSuccessListener(aVoid -> {
-                        Log.d("Firestore", "Successfully removed eventID from waitlistedEvents for entrant: " + entrant);
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("Firestore", "Failed to remove eventID from waitlistedEvents for entrant: " + entrant, e);
-                    });
+              .document(entrant)
+              .update("waitlistedEvents",
+                      FieldValue.arrayRemove(eventID)) // Remove eventID from the array
+              .addOnSuccessListener(aVoid -> {
+                  Log.d("Firestore",
+                        "Successfully removed eventID from waitlistedEvents for entrant: " +
+                        entrant);
+              })
+              .addOnFailureListener(e -> {
+                  Log.e("Firestore",
+                        "Failed to remove eventID from waitlistedEvents for entrant: " + entrant,
+                        e);
+              });
         }
     }
 
-    public static void DeletingAsSelected(String eventID, FirebaseFirestore db, ArrayList<String> SelectedEntrants) {
+    // Handle entrants associated with the event
+
+    public static void DeletingAsSelected(String eventID, FirebaseFirestore db,
+                                          ArrayList<String> SelectedEntrants) {
         if (SelectedEntrants == null || SelectedEntrants.isEmpty()) {
             Log.e("Firestore", "WaitlistedEntrants is null or empty");
             return;
@@ -470,18 +240,24 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         for (String entrant : SelectedEntrants) {
             // Access each entrant's document
             db.collection("entrants")
-                    .document(entrant)
-                    .update("invitedEvents", FieldValue.arrayRemove(eventID)) // Remove eventID from the array
-                    .addOnSuccessListener(aVoid -> {
-                        Log.d("Firestore", "Successfully removed eventID from waitlistedEvents for entrant: " + entrant);
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("Firestore", "Failed to remove eventID from waitlistedEvents for entrant: " + entrant, e);
-                    });
+              .document(entrant)
+              .update("invitedEvents",
+                      FieldValue.arrayRemove(eventID)) // Remove eventID from the array
+              .addOnSuccessListener(aVoid -> {
+                  Log.d("Firestore",
+                        "Successfully removed eventID from waitlistedEvents for entrant: " +
+                        entrant);
+              })
+              .addOnFailureListener(e -> {
+                  Log.e("Firestore",
+                        "Failed to remove eventID from waitlistedEvents for entrant: " + entrant,
+                        e);
+              });
         }
     }
 
-    public static void DeletingAsFinalist(String eventID, FirebaseFirestore db, ArrayList<String> FinalistEntrants) {
+    public static void DeletingAsFinalist(String eventID, FirebaseFirestore db,
+                                          ArrayList<String> FinalistEntrants) {
         if (FinalistEntrants == null || FinalistEntrants.isEmpty()) {
             Log.e("Firestore", "FinalistEntrants is null or empty");
             return;
@@ -489,17 +265,24 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         for (String entrant : FinalistEntrants) {
             // Access each entrant's document
             db.collection("entrants")
-                    .document(entrant)
-                    .update("finalistEvents", FieldValue.arrayRemove(eventID)) // Remove eventID from the array
-                    .addOnSuccessListener(aVoid -> {
-                        Log.d("Firestore", "Successfully removed eventID from waitlistedEvents for entrant: " + entrant);
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("Firestore", "Failed to remove eventID from waitlistedEvents for entrant: " + entrant, e);
-                    });
+              .document(entrant)
+              .update("finalistEvents",
+                      FieldValue.arrayRemove(eventID)) // Remove eventID from the array
+              .addOnSuccessListener(aVoid -> {
+                  Log.d("Firestore",
+                        "Successfully removed eventID from waitlistedEvents for entrant: " +
+                        entrant);
+              })
+              .addOnFailureListener(e -> {
+                  Log.e("Firestore",
+                        "Failed to remove eventID from waitlistedEvents for entrant: " + entrant,
+                        e);
+              });
         }
     }
-    public static void DeletingAsCancelled(String eventID, FirebaseFirestore db, ArrayList<String> uninvitedEvents) {
+
+    public static void DeletingAsCancelled(String eventID, FirebaseFirestore db,
+                                           ArrayList<String> uninvitedEvents) {
         if (uninvitedEvents == null || uninvitedEvents.isEmpty()) {
             Log.e("Firestore", "uninvitedEvents is null or empty");
             return;
@@ -507,112 +290,40 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         for (String entrant : uninvitedEvents) {
             // Access each entrant's document
             db.collection("entrants")
-                    .document(entrant)
-                    .update("uninvitedEvents", FieldValue.arrayRemove(eventID)) // Remove eventID from the array
-                    .addOnSuccessListener(aVoid -> {
-                        Log.d("Firestore", "Successfully removed eventID from waitlistedEvents for entrant: " + entrant);
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("Firestore", "Failed to remove eventID from waitlistedEvents for entrant: " + entrant, e);
-                    });
+              .document(entrant)
+              .update("uninvitedEvents",
+                      FieldValue.arrayRemove(eventID)) // Remove eventID from the array
+              .addOnSuccessListener(aVoid -> {
+                  Log.d("Firestore",
+                        "Successfully removed eventID from waitlistedEvents for entrant: " +
+                        entrant);
+              })
+              .addOnFailureListener(e -> {
+                  Log.e("Firestore",
+                        "Failed to remove eventID from waitlistedEvents for entrant: " + entrant,
+                        e);
+              });
         }
     }
 
-    public static void DeletingEventIDinOrganizers(Context context, String deviceId, String eventID, FirebaseFirestore db) {
+    public static void DeletingEventIDinOrganizers(Context context, String deviceId, String eventID,
+                                                   FirebaseFirestore db) {
         db.collection("organizers")
-                .document(deviceId)
-                .update("events", FieldValue.arrayRemove(eventID))
-                .addOnSuccessListener(aVoid -> {
-                    // Log success or notify the user if needed
-                    Toast.makeText(context, "Event ID removed successfully.", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    // Handle failure (e.g., log the error or show a message to the user)
-                    Toast.makeText(context, "Failed to remove Event ID: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+          .document(deviceId)
+          .update("events", FieldValue.arrayRemove(eventID))
+          .addOnSuccessListener(aVoid -> {
+              // Log success or notify the user if needed
+              Toast.makeText(context, "Event ID removed successfully.", Toast.LENGTH_SHORT).show();
+          })
+          .addOnFailureListener(e -> {
+              // Handle failure (e.g., log the error or show a message to the user)
+              Toast.makeText(context, "Failed to remove Event ID: " + e.getMessage(),
+                             Toast.LENGTH_SHORT).show();
+          });
     }
 
-    private void editImage(Uri newImageUri) {
-        // Step 1: Delete the old image from Google Cloud Storage
-        deleteOldImage(eventPosterURL, () -> {
-            // Step 2: Upload the new image
-            uploadNewImage(newImageUri, newImageUrl -> {
-                // Step 3: Update Firestore with the new image URL
-                updateFirestoreWithNewImage(newImageUrl, success -> {
-                    if (success) {
-                        refreshUI(newImageUrl); // Update the UI
-                    } else {
-                        Toast.makeText(this, "Failed to update Firestore", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            });
-        });
-    }
-
-    private void refreshUI(String newImageUrl) {
-        Glide.with(this).load(newImageUrl).into(binding.eventImage); // Update your ImageView
-        Toast.makeText(this, "Image updated successfully", Toast.LENGTH_SHORT).show();
-    }
-
-    private void updateFirestoreWithNewImage(String newImageUrl, Callback<Boolean> callback) {
-        eventsRef.document(eventID).update("eventPosterURL", newImageUrl)
-                .addOnSuccessListener(aVoid -> {
-                    callback.onComplete(true); // Notify success
-                })
-                .addOnFailureListener(e -> {
-                    callback.onComplete(false); // Notify failure
-                });
-    }
-
-
-    private void uploadNewImage(Uri newImageUri, Callback<String> callback) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
-        Date now = new Date();
-        String fileName = formatter.format(now);
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference("event_posters/" + fileName);
-
-        storageRef.putFile(newImageUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    Log.d("Storage", "Successfully uploaded");
-
-                    // Retrieve the download URL
-                    storageRef.getDownloadUrl()
-                            .addOnSuccessListener(uri -> {
-                                String eventPosterURL = uri.toString();
-                                callback.onComplete(eventPosterURL); // Pass the URL to the callback
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("Error", "Failed to get download URL", e);
-                                callback.onComplete(null); // Return null to indicate failure
-                            });
-                })
-                .addOnFailureListener(e -> {
-                    Log.d("Storage", "Failed to upload");
-                    callback.onComplete(null); // Return null to indicate failure
-                });
-    }
-
-    private void deleteOldImage(String oldImageUrl, Runnable onSuccess) {
-        if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
-            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(oldImageUrl);
-            storageReference.delete()
-                    .addOnSuccessListener(aVoid -> onSuccess.run())
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(this, "Failed to delete old image", Toast.LENGTH_SHORT).show();
-                    });
-        } else {
-            onSuccess.run(); // No old image to delete, continue
-        }
-    }
-
-    private void selectImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        imagePickerLauncher.launch(intent);
-    }
-
-    public static void showQRCodePopup(Context context, FirebaseFirestore db, Event event, String qrData, boolean isAdmin) {
+    public static void showQRCodePopup(Context context, FirebaseFirestore db, Event event,
+                                       String qrData, boolean isAdmin) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View popupView = inflater.inflate(R.layout.dialog_qr_code, null);
 
@@ -648,11 +359,11 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
                 builder.create().show();
             } else {
                 AdminActivity.showAdminAlertDialog(context, null, "QR Code is non-existent",
-                        "This QR Code has most likely been deleted by an Admin", null, null, "OK", null);
+                                                   "This QR Code has most likely been deleted by an Admin",
+                                                   null, null, "OK", null);
 //                qrCode.setImageBitmap(null); // Clear the image if QR data is null or empty
             }
         }
-
 
     }
 
@@ -673,65 +384,417 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         return bitMatrix;
     }
 
+    /**
+     * onCreate method for EntrantEventDetailsActivity
+     *
+     * @param savedInstanceState the saved instance state
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityOrganizerEventDetailsBinding.inflate(getLayoutInflater());
+        FrameLayout contentFrame = findViewById(R.id.content_frame);
+        contentFrame.addView(binding.getRoot());
+
+        // Set up the app bar for back navigation
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Show back button
+            getSupportActionBar().setTitle("Event Details"); // Set a custom title if needed
+        }
+
+        qrCodeValue = getIntent().getStringExtra("qrCodeValue");
+        isAdmin = getIntent().getBooleanExtra("isAdmin", false); // Default value: false
+
+        db = FirebaseFirestore.getInstance();
+
+        // Use addSnapshotListener for real-time updates
+        db.collection("events").whereEqualTo("eventID", qrCodeValue)
+          .addSnapshotListener((querySnapshot, error) -> {
+              if (error != null) {
+                  Log.e("Firestore", "Error listening to event updates", error);
+                  return;
+              }
+
+              if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                  // Get the document snapshot
+                  document = querySnapshot.getDocuments().get(0);
+                  event = document.toObject(Event.class);
+
+                  // Extract and update fields
+                  if (event != null) {
+                      date = event.getEventDate();  // Get the date from the Event object
+                      signupDate = event.getSignupDeadline();  // Get the signup date
+                      time = event.getTime();  // Get the time
+                      eventName = event.getName();  // Get the name
+                      location = event.getLocation();  // Get the location
+                      description = event.getDescription();  // Get the description
+                      eventPosterURL = event.getEventPosterURL();  // Get the event poster URL
+                      qrData = event.getQRData();  // Get the QR data
+                      eventID = event.getEventID();  // Get the event ID
+                      entrantsChosen = event.getEntrantsChosen();
+                  }
+
+                  try {
+                      signup = sdf.parse(signupDate);
+                      currentDate = sdf.parse(sdf.format(new Date())); // Truncate current date
+                  } catch (ParseException e) {
+                      Log.e("ParseError", "Error parsing dates", e);
+                  }
+
+                  List<Object> finalists = (List<Object>) document.get("finalists");
+
+                  ImageView eventPoster = binding.eventImage;
+
+                  // Load event poster or default image
+                  String posterURL = event.getEventPosterURL();
+                  if (posterURL != null && !posterURL.trim().isEmpty()) {
+                      // Load the image from the posterURL using Glide
+                      Glide.with(this)
+                           .load(posterURL)
+                           .placeholder(R.drawable.event_image) // Set the default placeholder image
+                           .error(R.drawable.error_image) // Set the error image for invalid URLs
+                           .into(eventPoster);
+                  } else {
+                      // No posterURL available, use the default placeholder image
+                      eventPoster.setImageResource(R.drawable.event_image);
+                  }
+
+                  binding.eventTitle.setText(eventName);
+                  binding.eventDate.setText(date);
+                  List<Object> waitlisted = (List<Object>) document.get("waitlisted");
+                  Long capacity = (Long) document.get("eventSlots");
+                  Long waitListCapacity = (Long) document.get("waitListCapacity");
+                  assert capacity != null;
+                  String capacityAsString = capacity.toString();
+
+                  if (waitListCapacity == 0) {
+//                          Does not show badges if there is no waitlistCapacity section
+                      binding.eventWaitlistCapacitySection.setVisibility(View.GONE);
+                      binding.spotsAvailableSection.setVisibility(View.GONE);
+                  } else if (waitListCapacity > 0) {
+                      spotsRemaining = (waitListCapacity.intValue() - waitlisted.size()) > 0 ? (
+                              waitListCapacity.intValue() - waitlisted.size()) : 0;
+                      spotsRemainingText = "Only " + spotsRemaining +
+                                           " spot(s) available on waitlist";
+                      binding.spotsAvailable.setText(spotsRemainingText);
+
+                      if (entrantsChosen) {
+                          spotsRemainingText = "Only 0 spots available on waitlist";
+                          binding.spotsAvailable.setText(spotsRemainingText);
+                      }
+                  }
+
+                  binding.eventTitle.setText(eventName);
+                  binding.eventDate.setText("Event Date: " + date);
+                  binding.signupDate.setText("Signup Deadline: " + signupDate);
+                  binding.eventTime.setText("Event Time: " + time);
+                  binding.eventWaitlistCapacity.setText(
+                          "Waitlist Capacity: " + waitListCapacity);
+                  binding.eventLocation.setText(location);
+                  binding.eventSlotsCapacity.setText("Event Slots: " + capacityAsString);
+                  binding.eventDescription.setText(description);
+                  usesGeolocation = (Boolean) document.get("geoLocation");
+
+                  event.setFinalists((ArrayList<String>) document.get("finalists"));
+                  event.setWaitlisted((ArrayList<String>) document.get("waitlisted"));
+                  event.setSelected((ArrayList<String>) document.get("selected"));
+                  event.setCancelled((ArrayList<String>) document.get("cancelled"));
+                  event.setReselected((ArrayList<String>) document.get("reselected"));
+
+                  event.setWaitlistedNotificationsList(
+                          (ArrayList<String>) document.get("waitlistedNotificationsList"));
+                  event.setWaitlistedNotificationsList(
+                          (ArrayList<String>) document.get("joinedNotificationsList"));
+                  event.setWaitlistedNotificationsList(
+                          (ArrayList<String>) document.get("cancelledNotificationsList"));
+                  event.setWaitlistedNotificationsList(
+                          (ArrayList<String>) document.get("selectedNotificationsList"));
+
+                  updateLotteryButtonVisibility(isAdmin);
+
+              }
+          });
+        eventsRef = db.collection("events");
+        binding.editEventButton.setVisibility(View.VISIBLE);
+
+        binding.editEventButton.setOnClickListener(view -> {
+            selectImage();
+        });
+
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent data = result.getData();
+                            if (data != null && data.getData() != null) {
+                                selectedImageUri = data.getData();
+                            }
+                            if (selectedImageUri != null) {
+                                editImage(selectedImageUri);
+                            }
+                        }
+                    }
+
+                });
+
+        binding.lotterySystemButton.setOnClickListener(view -> {
+            if (event == null) {
+
+                // Show a message that the event data is not available yet
+                showAdminAlertDialog(this, null, "Error",
+                                     "Event data is not loaded yet. Please try again later.", null,
+                                     null, "OK", null);
+                return;
+            }
+
+            if (event.getWaitlisted().size() == 0) {
+                showAdminAlertDialog(this, null, "Cannot Select",
+                                     "There is no one in the waitlist.", null, null, "OK", null);
+                return;
+
+            }
+
+            if (!currentDate.after(signup)) {
+                showAdminAlertDialog(this, null, "Cannot Select",
+                                     "Cannot select entrants until after the signup date", null,
+                                     null, "OK", null);
+
+            }
+
+            if (event.getEntrantsChosen()) {
+                showAdminAlertDialog(this, null, "Cannot Sample Again",
+                                     "Cannot sample entrants again. You can reselect them in the List of Entrants tab.",
+                                     null, null, "OK", null);
+            }
+
+            if (binding.lotterySystemButton.isEnabled() && !event.getEntrantsChosen() &&
+                currentDate.after(signup)) {
+                event.lotterySystem();
+                updateUnSelectedEntrants(event);
+                updateSelectedEntrants(event);
+                updateInvitedEntrants(event);
+                updateUninvitedEntrants(event);
+
+                showAdminAlertDialog(this, null, "Entrants Selected",
+                                     "Entrants were selected for the event.", null, null, "OK",
+                                     null);
+            }
+
+            updateLotteryButtonVisibility(isAdmin);
+        });
+
+        binding.entrantListButton.setVisibility(View.VISIBLE);
+        binding.entrantListButton.setOnClickListener(view -> {
+            // get the event object corresponding to the qr code - huh is this not the wrong value?
+            Intent intent = new Intent(this, OrganizerNotifications.class);
+            intent.putExtra("eventID", qrCodeValue);
+            startActivity(intent);
+        });
+
+        binding.showQrCodeButton.setOnClickListener(view -> {
+            showQRCodePopup(this, db, event, qrData, isAdmin);
+        });
+
+        if (isAdmin) {
+            binding.lotterySystemButton.setVisibility(View.GONE);
+
+            binding.editEventButton.setText("Delete Event Poster");
+            binding.editEventButton.setOnClickListener(view -> {
+                DeletingEventPoster(this, db, event.getEventPosterURL(), false);
+            });
+
+            binding.entrantListButton.setVisibility(View.VISIBLE);
+            binding.entrantListButton.setText("Delete Event");
+            binding.entrantListButton.setOnClickListener(view ->
+                                                         {
+                                                             DeletingEvent(this, event.getEventID(),
+                                                                           db,
+                                                                           () -> {
+                                                                               Toast.makeText(this,
+                                                                                              "Event deleted successfully.",
+                                                                                              Toast.LENGTH_SHORT)
+                                                                                    .show();
+                                                                               finish(); // Close the activity or return to the previous screen
+                                                                           },
+                                                                           () -> Toast.makeText(
+                                                                                              this,
+                                                                                              "Failed to delete event.",
+                                                                                              Toast.LENGTH_SHORT)
+                                                                                      .show(),
+                                                                           false);
+
+                                                             //Go back to the previous page to simulate exiting the event
+//                    finish();
+//                    onBackPressed();
+                                                         });
+
+            binding.showQrCodeButton.setText("Delete QR Code");
+            if (event != null && event.getQRData() != null && !event.getQRData().isEmpty()) {
+                binding.showQrCodeButton.setOnClickListener(view -> {
+                    showQRCodePopup(this, db, event, event.getQRData(), isAdmin);
+                });
+            } else {
+//                Toast.makeText(this, "QR code has already been deleted.", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
+    private void editImage(Uri newImageUri) {
+        // Step 1: Delete the old image from Google Cloud Storage
+        deleteOldImage(eventPosterURL, () -> {
+            // Step 2: Upload the new image
+            uploadNewImage(newImageUri, newImageUrl -> {
+                // Step 3: Update Firestore with the new image URL
+                updateFirestoreWithNewImage(newImageUrl, success -> {
+                    if (success) {
+                        refreshUI(newImageUrl); // Update the UI
+                    } else {
+                        Toast.makeText(this, "Failed to update Firestore", Toast.LENGTH_SHORT)
+                             .show();
+                    }
+                });
+            });
+        });
+    }
+
+    private void refreshUI(String newImageUrl) {
+        Glide.with(this).load(newImageUrl).into(binding.eventImage); // Update your ImageView
+        Toast.makeText(this, "Image updated successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateFirestoreWithNewImage(String newImageUrl, Callback<Boolean> callback) {
+        eventsRef.document(eventID).update("eventPosterURL", newImageUrl)
+                 .addOnSuccessListener(aVoid -> {
+                     callback.onComplete(true); // Notify success
+                 })
+                 .addOnFailureListener(e -> {
+                     callback.onComplete(false); // Notify failure
+                 });
+    }
+
+    private void uploadNewImage(Uri newImageUri, Callback<String> callback) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
+        Date now = new Date();
+        String fileName = formatter.format(now);
+        StorageReference storageRef = FirebaseStorage.getInstance()
+                                                     .getReference("event_posters/" + fileName);
+
+        storageRef.putFile(newImageUri)
+                  .addOnSuccessListener(taskSnapshot -> {
+                      Log.d("Storage", "Successfully uploaded");
+
+                      // Retrieve the download URL
+                      storageRef.getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    String eventPosterURL = uri.toString();
+                                    callback.onComplete(
+                                            eventPosterURL); // Pass the URL to the callback
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Error", "Failed to get download URL", e);
+                                    callback.onComplete(null); // Return null to indicate failure
+                                });
+                  })
+                  .addOnFailureListener(e -> {
+                      Log.d("Storage", "Failed to upload");
+                      callback.onComplete(null); // Return null to indicate failure
+                  });
+    }
+
+    private void deleteOldImage(String oldImageUrl, Runnable onSuccess) {
+        if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
+            StorageReference storageReference = FirebaseStorage.getInstance()
+                                                               .getReferenceFromUrl(oldImageUrl);
+            storageReference.delete()
+                            .addOnSuccessListener(aVoid -> onSuccess.run())
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(this, "Failed to delete old image",
+                                               Toast.LENGTH_SHORT).show();
+                            });
+        } else {
+            onSuccess.run(); // No old image to delete, continue
+        }
+    }
+
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        imagePickerLauncher.launch(intent);
+    }
+
     private void updateSelectedEntrants(Event event) {
-        db.collection("events").whereEqualTo("eventID", event.getEventID()).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                DocumentReference eventRef = db.collection("events").document(document.getId());
+        db.collection("events").whereEqualTo("eventID", event.getEventID()).get()
+          .addOnCompleteListener(task -> {
+              if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                  DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                  DocumentReference eventRef = db.collection("events").document(document.getId());
 
-                for (String entrant : event.getSelected()) {
-                    eventRef.update("selected", FieldValue.arrayUnion(entrant),
-                            "selectedNotificationsList", FieldValue.arrayUnion(entrant),
-                            "waitlistedNotificationsList", FieldValue.arrayRemove(entrant));
-                }
+                  for (String entrant : event.getSelected()) {
+                      eventRef.update("selected", FieldValue.arrayUnion(entrant),
+                                      "selectedNotificationsList", FieldValue.arrayUnion(entrant),
+                                      "waitlistedNotificationsList",
+                                      FieldValue.arrayRemove(entrant));
+                  }
 
-                eventRef.update("waitlisted", event.getReselected()); // DB update
-                eventRef.update("reselected", event.getReselected());
-                eventRef.update("entrantsChosen", event.getEntrantsChosen());
-            }
-        });
+                  eventRef.update("waitlisted", event.getReselected()); // DB update
+                  eventRef.update("reselected", event.getReselected());
+                  eventRef.update("entrantsChosen", event.getEntrantsChosen());
+              }
+          });
     }
 
-    private void updateUnSelectedEntrants(Event event){
-        db.collection("events").whereEqualTo("eventID", event.getEventID()).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                DocumentReference eventRef = db.collection("events").document(document.getId());
+    private void updateUnSelectedEntrants(Event event) {
+        db.collection("events").whereEqualTo("eventID", event.getEventID()).get()
+          .addOnCompleteListener(task -> {
+              if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                  DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                  DocumentReference eventRef = db.collection("events").document(document.getId());
 
-                for (String entrant : event.getCancelled()) {
-                    eventRef.update("cancelled", FieldValue.arrayUnion(entrant),
-                            "cancelledNotificationsList", FieldValue.arrayUnion(entrant),
-                            "waitlistedNotificationsList", FieldValue.arrayRemove(entrant));
-                }
-            }
-        });
+                  for (String entrant : event.getCancelled()) {
+                      eventRef.update("cancelled", FieldValue.arrayUnion(entrant),
+                                      "cancelledNotificationsList", FieldValue.arrayUnion(entrant),
+                                      "waitlistedNotificationsList",
+                                      FieldValue.arrayRemove(entrant));
+                  }
+              }
+          });
     }
 
-    private void updateInvitedEntrants(Event event){
-        for(String entrant: event.getSelected()) {
+    private void updateInvitedEntrants(Event event) {
+        for (String entrant : event.getSelected()) {
             DocumentReference entrantsRef = db.collection("entrants").document(entrant);
             entrantsRef.get().addOnSuccessListener(entrantDoc -> {
                 if (entrantDoc.exists()) {
                     entrantsRef.update("invitedEvents", FieldValue.arrayUnion(event.getEventID()),
-                                    "waitlistedEvents", FieldValue.arrayRemove(event.getEventID()))
-                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "Event added for entrant"))
-                            .addOnFailureListener(e -> Log.e("Firestore", "Error updating invitedEvents for entrant"));
+                                       "waitlistedEvents",
+                                       FieldValue.arrayRemove(event.getEventID()))
+                               .addOnSuccessListener(
+                                       aVoid -> Log.d("Firestore", "Event added for entrant"))
+                               .addOnFailureListener(e -> Log.e("Firestore",
+                                                                "Error updating invitedEvents for entrant"));
                 }
             });
         }
     }
 
-//    Updating everyone who did not get selected and who do not want too be reselected
-    private void updateUninvitedEntrants(Event event){
-        for(String entrant: event.getWaitlisted()) {
+    //    Updating everyone who did not get selected and who do not want too be reselected
+    private void updateUninvitedEntrants(Event event) {
+        for (String entrant : event.getWaitlisted()) {
             DocumentReference entrantsRef = db.collection("entrants").document(entrant);
             entrantsRef.get().addOnSuccessListener(entrantDoc -> {
                 if (entrantDoc.exists()) {
                     // Assuming `notifications` is an array field in the entrant document
                     entrantsRef.update("uninvitedEvents", FieldValue.arrayUnion(event.getEventID()),
-                                    "waitlistedEvents", FieldValue.arrayRemove(event.getEventID()))
-                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "Notification added for entrant"))
-                            .addOnFailureListener(e -> Log.e("Firestore", "Error updating uninvitedEvents for entrant"));
+                                       "waitlistedEvents",
+                                       FieldValue.arrayRemove(event.getEventID()))
+                               .addOnSuccessListener(aVoid -> Log.d("Firestore",
+                                                                    "Notification added for entrant"))
+                               .addOnFailureListener(e -> Log.e("Firestore",
+                                                                "Error updating uninvitedEvents for entrant"));
 
                 }
 

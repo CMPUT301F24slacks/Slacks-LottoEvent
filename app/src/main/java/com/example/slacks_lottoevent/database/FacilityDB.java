@@ -32,19 +32,20 @@ public class FacilityDB {
     public void startListening() {
         if (listenerRegistration == null) {
             listenerRegistration = db.collection("facilities")
-                    .addSnapshotListener((snapshots, e) -> {
-                        if (e != null) {
-                            e.printStackTrace();
-                            return;
-                        }
-                        if (snapshots != null) {
-                            facilitiesCache.clear();
-                            for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                                facilitiesCache.put(doc.getId(), doc.toObject(Facility.class));
-                            }
-                            notifyFacilityChangeListener();
-                        }
-                    });
+                                     .addSnapshotListener((snapshots, e) -> {
+                                         if (e != null) {
+                                             e.printStackTrace();
+                                             return;
+                                         }
+                                         if (snapshots != null) {
+                                             facilitiesCache.clear();
+                                             for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                                                 facilitiesCache.put(doc.getId(),
+                                                                     doc.toObject(Facility.class));
+                                             }
+                                             notifyFacilityChangeListener();
+                                         }
+                                     });
         }
     }
 
@@ -69,13 +70,14 @@ public class FacilityDB {
         }
     }
 
+    // Create a new facility in Firestore
+    public Task<Void> updateFacility(String name, String streetAddress, String deviceId) {
+        return db.collection("facilities").document(deviceId)
+                 .set(new Facility(name, streetAddress, deviceId));
+    }
+
     // Interface for notifying facility changes
     public interface FacilityChangeListener {
         void onFacilitiesChanged(HashMap<String, Facility> updatedFacilities);
-    }
-
-    // Create a new facility in Firestore
-    public Task<Void> updateFacility(String name, String streetAddress, String deviceId) {
-        return db.collection("facilities").document(deviceId).set(new Facility(name, streetAddress, deviceId));
     }
 }

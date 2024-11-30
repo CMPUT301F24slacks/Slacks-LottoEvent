@@ -2,10 +2,6 @@ package com.example.slacks_lottoevent;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.Image;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,28 +14,18 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.example.slacks_lottoevent.model.User;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Custom ArrayAdapter for displaying events in the OrganizerEventsActivity
  */
 public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
-    private Context context;
-    private ArrayList<Event> events;
     boolean isAdmin;
-    private User user = User.getInstance();
+    private final Context context;
+    private final ArrayList<Event> events;
+    private final User user = User.getInstance();
 
 //    private FirebaseFirestore db;
 //    private CollectionReference facilitiesRef;
@@ -53,7 +39,8 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
      * @param context The context of the activity
      * @param events  The list of events to display
      */
-    public OrganizerEventArrayAdapter(@NonNull Context context, ArrayList<Event> events, boolean isAdmin) {
+    public OrganizerEventArrayAdapter(@NonNull Context context, ArrayList<Event> events,
+                                      boolean isAdmin) {
         super(context, 0, events);
         this.context = context;
         this.events = events;
@@ -74,7 +61,8 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         Event event = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.content_organizer_events, parent, false);
+            convertView = LayoutInflater.from(getContext())
+                                        .inflate(R.layout.content_organizer_events, parent, false);
         }
 
         TextView eventName = convertView.findViewById(R.id.event_name);
@@ -97,10 +85,10 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         if (posterURL != null && !posterURL.trim().isEmpty()) {
             // Load the image from the posterURL using Glide
             Glide.with(getContext())
-                    .load(posterURL)
-                    .placeholder(R.drawable.event_image) // Set the default placeholder image
-                    .error(R.drawable.error_image) // Set the error image for invalid URLs
-                    .into(eventPoster);
+                 .load(posterURL)
+                 .placeholder(R.drawable.event_image) // Set the default placeholder image
+                 .error(R.drawable.error_image) // Set the error image for invalid URLs
+                 .into(eventPoster);
         } else {
             // No posterURL available, use the default placeholder image
             eventPoster.setImageResource(R.drawable.event_image);

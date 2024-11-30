@@ -1,19 +1,20 @@
 package com.example.slacks_lottoevent;
 
 public class UserEventNotifications {
-    private String name;
-    private String date;
-    private String time;
-    private String location;
-    private String eventId; // Add event ID field
+    private final String name;
+    private final String date;
+    private final String time;
+    private final String location;
+    private final String eventId; // Add event ID field
 
-    private Boolean selected;
+    private final Boolean selected;
 
     /**
      * UserEventNotifications is a class that represents the user's event notifications.
      * It takes in the event's name, date, time, location, and event ID.
      */
-    public UserEventNotifications(String name, String date, String time, String location, String eventId, Boolean selected) {
+    public UserEventNotifications(String name, String date, String time, String location,
+                                  String eventId, Boolean selected) {
         this.name = name;
         this.date = date;
         this.time = time;
@@ -43,5 +44,7 @@ public class UserEventNotifications {
         return eventId; // Provide access to event ID
     }
 
-    public Boolean getSelected() { return selected;}
+    public Boolean getSelected() {
+        return selected;
+    }
 }

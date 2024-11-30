@@ -24,8 +24,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:contentDescription="Back Button"
-            app:tint="#FFFFFF"
-            app:srcCompat="@drawable/arrow_left_solid" />
+            app:srcCompat="@drawable/arrow_left_solid"
+            app:tint="#FFFFFF" />
     </RelativeLayout>
 
     <!-- Profile Image with Edit Icon -->

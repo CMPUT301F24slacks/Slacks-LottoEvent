@@ -18,7 +18,6 @@ import com.example.slacks_lottoevent.OrganizerEventArrayAdapter;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.Utility.SnackbarUtils;
 import com.example.slacks_lottoevent.viewmodel.EventViewModel;
-import com.example.slacks_lottoevent.viewmodel.FacilityViewModel;
 import com.example.slacks_lottoevent.viewmodel.OrganizerViewModel;
 import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;
 
@@ -30,7 +29,7 @@ public class EventsFragment extends Fragment {
     private Button create_event_button;
     private ListView eventsListView;
     private OrganizerEventArrayAdapter organizerEventArrayAdapter;
-    private ArrayList<Event> eventsList = new ArrayList<>();
+    private final ArrayList<Event> eventsList = new ArrayList<>();
 
     // ViewModels
     private EventViewModel eventViewModel;
@@ -60,7 +59,8 @@ public class EventsFragment extends Fragment {
         // Initialize UI elements
         create_event_button = view.findViewById(R.id.create_event_button);
         eventsListView = view.findViewById(R.id.organizer_events_listview);
-        organizerEventArrayAdapter = new OrganizerEventArrayAdapter(requireContext(), eventsList, false);
+        organizerEventArrayAdapter = new OrganizerEventArrayAdapter(requireContext(), eventsList,
+                                                                    false);
         eventsListView.setAdapter(organizerEventArrayAdapter);
 
         // Initialize ViewModels
@@ -70,10 +70,13 @@ public class EventsFragment extends Fragment {
 
         // Set a click listener for the create event button
         create_event_button.setOnClickListener(v -> {
-            if (profileViewModel.getCurrentProfileLiveData().getValue() == null) { // Check if the user has a profile
+            if (profileViewModel.getCurrentProfileLiveData().getValue() ==
+                null) { // Check if the user has a profile
                 SnackbarUtils.promptSignUp(view, requireContext(), R.id.create_event_button);
-            } else if (organizerViewModel.getCurrentOrganizerLiveData().getValue() == null) { // Check if the user is an organizer
-                SnackbarUtils.promptCreateFacility(view, requireContext(), R.id.create_event_button);
+            } else if (organizerViewModel.getCurrentOrganizerLiveData().getValue() ==
+                       null) { // Check if the user is an organizer
+                SnackbarUtils.promptCreateFacility(view, requireContext(),
+                                                   R.id.create_event_button);
             } else {
                 // Navigate to CreateEventActivity
                 Intent intent = new Intent(getActivity(), CreateEvent.class);
@@ -82,34 +85,39 @@ public class EventsFragment extends Fragment {
         });
 
         // Observe the organizer object
-        organizerViewModel.getCurrentOrganizerLiveData().observe(getViewLifecycleOwner(), organizer -> {
-            if (organizer != null) {
-                List<String> eventIds = organizer.getEvents();
-                // Log all eventIds
-                eventViewModel.updateOrganizerEvents(eventIds);
-            } else {
-                // Clear all event lists
-                eventViewModel.updateOrganizerEvents(null);
-            }
-        });
+        organizerViewModel.getCurrentOrganizerLiveData()
+                          .observe(getViewLifecycleOwner(), organizer -> {
+                              if (organizer != null) {
+                                  List<String> eventIds = organizer.getEvents();
+                                  // Log all eventIds
+                                  eventViewModel.updateOrganizerEvents(eventIds);
+                              } else {
+                                  // Clear all event lists
+                                  eventViewModel.updateOrganizerEvents(null);
+                              }
+                          });
 
         // Observe any changes in the events list
         eventViewModel.getEventsLiveData().observe(getViewLifecycleOwner(), events -> {
-            if (events != null && organizerViewModel.getCurrentOrganizerLiveData().getValue() != null) {
-                List<String> eventIds = organizerViewModel.getCurrentOrganizerLiveData().getValue().getEvents();
+            if (events != null &&
+                organizerViewModel.getCurrentOrganizerLiveData().getValue() != null) {
+                List<String> eventIds = organizerViewModel.getCurrentOrganizerLiveData().getValue()
+                                                          .getEvents();
                 eventViewModel.updateOrganizerEvents(eventIds);
             }
         });
 
         // Observe the events the organizer is hosting
-        eventViewModel.getHostingEventsLiveData().observe(getViewLifecycleOwner(), hostingEvents -> {
-            if (hostingEvents != null) {
-                eventsList.clear(); // Clear the current list
-                eventsList.addAll(hostingEvents); // Add new events
-                organizerEventArrayAdapter.notifyDataSetChanged(); // Notify adapter of changes
-                Log.d("EventsFragment", "List updated: " + hostingEvents.size() + " events");
-            }
-        });
+        eventViewModel.getHostingEventsLiveData()
+                      .observe(getViewLifecycleOwner(), hostingEvents -> {
+                          if (hostingEvents != null) {
+                              eventsList.clear(); // Clear the current list
+                              eventsList.addAll(hostingEvents); // Add new events
+                              organizerEventArrayAdapter.notifyDataSetChanged(); // Notify adapter of changes
+                              Log.d("EventsFragment",
+                                    "List updated: " + hostingEvents.size() + " events");
+                          }
+                      });
     }
 
 }

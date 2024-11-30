@@ -11,28 +11,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.slacks_lottoevent.databinding.SignUpActivityBinding;
-
 import com.example.slacks_lottoevent.view.BaseActivity;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /*
-*
-*
-* Relevant Documentation
-* https://developer.android.com/reference/android/util/Patterns#EMAIL_ADDRESS
-* https://developer.android.com/reference/android/util/Patterns#PHONE
-* https://developer.android.com/reference/java/util/regex/Pattern
-* https://stackoverflow.com/questions/48705124/how-can-i-create-a-unique-key-and-use-it-to-send-data-in-firebase
-* https://github.com/google/gson
-* */
+ *
+ *
+ * Relevant Documentation
+ * https://developer.android.com/reference/android/util/Patterns#EMAIL_ADDRESS
+ * https://developer.android.com/reference/android/util/Patterns#PHONE
+ * https://developer.android.com/reference/java/util/regex/Pattern
+ * https://stackoverflow.com/questions/48705124/how-can-i-create-a-unique-key-and-use-it-to-send-data-in-firebase
+ * https://github.com/google/gson
+ * */
 
 /**
  * SignUpActivity is the Activity that allows the user to sign up for the.
@@ -41,14 +38,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
  */
 public class SignUpActivity extends BaseActivity {
 
-    private FirebaseFirestore db;
     CollectionReference usersRef;
-
-    private SignUpActivityBinding binding;
     EditText nameInput;
     EditText emailInput;
     EditText phoneInput;
-
+    private FirebaseFirestore db;
+    private SignUpActivityBinding binding;
     private String name;
     private String email;
     private String phoneNumber;
@@ -62,6 +57,7 @@ public class SignUpActivity extends BaseActivity {
      * When the signUpButton is clicked, it validates the user's inputs.
      * If the inputs are valid, it saves the user's information to the device and to the Firebase Firestore database.
      * It then displays a toast message saying "Sign-Up Successful" and finishes the activity.
+     *
      * @param savedInstanceState a Bundle object containing the activity's previously saved state.
      */
     @Override
@@ -92,8 +88,9 @@ public class SignUpActivity extends BaseActivity {
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(validateInputs()){
-                    Toast.makeText(SignUpActivity.this,"Sign-Up Successful",Toast.LENGTH_SHORT).show();
+                if (validateInputs()) {
+                    Toast.makeText(SignUpActivity.this, "Sign-Up Successful", Toast.LENGTH_SHORT)
+                         .show();
 
                     // Inserting the info Device and DB
                     saveUserInfoToDevice();
@@ -108,9 +105,10 @@ public class SignUpActivity extends BaseActivity {
     /**
      * Validates the user's input for name, email, and phone number.
      * If the input is invalid, it sets an error message on the input field.
+     *
      * @return true if the input is valid, false otherwise.
      */
-    private boolean validateInputs(){
+    private boolean validateInputs() {
         name = binding.nameInput.getText().toString().trim();
         email = binding.emailInput.getText().toString().trim();
         phoneNumber = binding.phoneInput.getText().toString().trim();
@@ -145,26 +143,29 @@ public class SignUpActivity extends BaseActivity {
      * Saves the user's information to the device's SharedPreferences.
      */
     private void saveUserInfoToDevice() {
-        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo",
+                                                                   MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putString("userName", nameInput.getText().toString().trim());
         editor.putString("userEmail", emailInput.getText().toString().trim());
         editor.putString("userPhone", phoneInput.getText().toString().trim());
-        editor.putBoolean("isSignedUp", true); // Mark the user as signed up so MainActivity can check this.
+        editor.putBoolean("isSignedUp",
+                          true); // Mark the user as signed up so MainActivity can check this.
         editor.apply(); // Saving changes to sharedPreferences
     }
 
     /**
      * Saves the user's information to the Firebase Firestore database.
      */
-    void saveUserInfoToFirebase(){
+    void saveUserInfoToFirebase() {
         String name = nameInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
         String phone = phoneInput.getText().toString().trim();
 
-        @SuppressLint("HardwareIds") String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        Profile userInfo = new Profile(name,phone,email, deviceId, getApplicationContext());
+        @SuppressLint("HardwareIds") String deviceId = Settings.Secure.getString(
+                getContentResolver(), Settings.Secure.ANDROID_ID);
+        Profile userInfo = new Profile(name, phone, email, deviceId, getApplicationContext());
         System.out.println(usersRef);
         usersRef.document(deviceId).set(userInfo)
                 .addOnSuccessListener(nothing -> {

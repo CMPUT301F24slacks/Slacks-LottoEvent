@@ -1,6 +1,5 @@
 package com.example.slacks_lottoevent;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class AdminProfiles extends Fragment {
 
@@ -39,7 +37,8 @@ public class AdminProfiles extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin_profiles, container, false);
         listViewAdminProfiles = view.findViewById(R.id.ListViewAdminProfiles);
@@ -47,12 +46,18 @@ public class AdminProfiles extends Fragment {
         ArrayList<Event> eventList = new ArrayList<>();
         ArrayList<Facility> facilityList = new ArrayList<>();
 
-        OrganizerEventArrayAdapter eventsAdapter = new OrganizerEventArrayAdapter(getContext(), eventList, true);
-        FacilityListArrayAdapter facilitiesAdapter = new FacilityListArrayAdapter(getContext(), facilityList, true, eventsAdapter, eventList);
+        OrganizerEventArrayAdapter eventsAdapter = new OrganizerEventArrayAdapter(getContext(),
+                                                                                  eventList, true);
+        FacilityListArrayAdapter facilitiesAdapter = new FacilityListArrayAdapter(getContext(),
+                                                                                  facilityList,
+                                                                                  true,
+                                                                                  eventsAdapter,
+                                                                                  eventList);
 
         // Initialize adapter with the profile list
-        adapter = new ProfileListArrayAdapter(getContext(), profileList, true, facilityList, facilitiesAdapter,
-                eventList, eventsAdapter);
+        adapter = new ProfileListArrayAdapter(getContext(), profileList, true, facilityList,
+                                              facilitiesAdapter,
+                                              eventList, eventsAdapter);
         listViewAdminProfiles.setAdapter(adapter);
 
         // Fetch profiles from Firestore

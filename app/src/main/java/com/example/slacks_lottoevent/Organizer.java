@@ -1,7 +1,5 @@
 package com.example.slacks_lottoevent;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.util.ArrayList;
 
 /**
@@ -13,7 +11,8 @@ public class Organizer {
     private String deviceId;
     private ArrayList<String> events;
 
-    public Organizer() {} // Empty constructor needed for Firestore
+    public Organizer() {
+    } // Empty constructor needed for Firestore
 
     /**
      * Constructor for Organizer class.

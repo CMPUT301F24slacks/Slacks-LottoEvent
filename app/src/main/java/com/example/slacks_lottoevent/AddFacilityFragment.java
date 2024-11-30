@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,30 +30,23 @@ import java.util.List;
 import java.util.Map;
 
 /*
-*
-* AddFacilityFragment is a DialogFragment that allows the user to create or edit a Facility.
-*
-* Relevant Documentation:
-* https://developers.google.com/maps/documentation/places/android-sdk/autocomplete-tutorial
-*
-* */
+ *
+ * AddFacilityFragment is a DialogFragment that allows the user to create or edit a Facility.
+ *
+ * Relevant Documentation:
+ * https://developers.google.com/maps/documentation/places/android-sdk/autocomplete-tutorial
+ *
+ * */
 public class AddFacilityFragment extends DialogFragment {
 
     public Facility facility;
-    private Boolean isEdit;
+    private final Boolean isEdit;
     private PlacesClient placesClient;
     private AutocompleteSessionToken sessionToken;
     private AddFacilityDialogListener listener;
-    private Map<AutoCompleteTextView, String> validSelections = new HashMap<>();
-    private boolean userSelectedFromDropdown = false;
-    /**
-     * AddFacilityDialogListener is an interface that must be implemented by the parent Fragment or Activity
-     * to handle the user's input when adding or editing a Facility.
-     */
-    interface AddFacilityDialogListener {
-        void addFacility(Facility facility);
-        void updateFacility();
-    }
+    private final Map<AutoCompleteTextView, String> validSelections = new HashMap<>();
+    private final boolean userSelectedFromDropdown = false;
+
     /**
      * Constructor for AddFacilityFragment
      * Default constructor for creating a new Facility
@@ -66,15 +58,18 @@ public class AddFacilityFragment extends DialogFragment {
 
     /**
      * Constructor for AddFacilityFragment
+     *
      * @param facility The Facility object to edit
-     * @param isEdit Boolean flag to determine if the dialog is for editing an existing Facility
+     * @param isEdit   Boolean flag to determine if the dialog is for editing an existing Facility
      */
     public AddFacilityFragment(Facility facility, Boolean isEdit) {
         this.facility = facility;
         this.isEdit = isEdit;
     }
+
     /**
      * onAttach is called when the fragment is associated with an activity.
+     *
      * @param context Context object
      */
     @Override
@@ -85,19 +80,22 @@ public class AddFacilityFragment extends DialogFragment {
         } else if (context instanceof AddFacilityDialogListener) {
             listener = (AddFacilityDialogListener) context;
         } else {
-            throw new ClassCastException("Parent fragment or activity must implement AddFacilityDialogListener");
+            throw new ClassCastException(
+                    "Parent fragment or activity must implement AddFacilityDialogListener");
         }
     }
+
     /**
      * onCreateDialog creates the AlertDialog for the AddFacilityFragment
+     *
      * @param savedInstanceState Bundle object containing the saved state
      * @return Dialog object
      */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_add_facility, null);
-
+        View view = LayoutInflater.from(requireContext())
+                                  .inflate(R.layout.fragment_add_facility, null);
 
         if (!Places.isInitialized()) {
             Places.initialize(requireContext(), BuildConfig.MAPS_API_KEY);
@@ -105,10 +103,8 @@ public class AddFacilityFragment extends DialogFragment {
         placesClient = Places.createClient(requireContext());
         sessionToken = AutocompleteSessionToken.newInstance();
 
-
         EditText editFacilityName = view.findViewById(R.id.facility_name_input);
         AutoCompleteTextView editStreetAddress1 = view.findViewById(R.id.street_address_1);
-
 
         if (isEdit && facility != null) {
             editFacilityName.setText(facility.getFacilityName());
@@ -119,9 +115,9 @@ public class AddFacilityFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(view)
-                .setTitle(isEdit ? "Edit Facility" : "Create Facility")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Confirm", null);
+               .setTitle(isEdit ? "Edit Facility" : "Create Facility")
+               .setNegativeButton("Cancel", null)
+               .setPositiveButton("Confirm", null);
 
         AlertDialog dialog = builder.create();
         dialog.setOnShowListener(dlg -> {
@@ -134,11 +130,13 @@ public class AddFacilityFragment extends DialogFragment {
                     return;
                 }
                 if (streetAddress1.isEmpty() || !isUserSelectedFromDropdown(editStreetAddress1)) {
-                    editStreetAddress1.setError("Street Address 1 is required. Please choose an option from the dropdown suggestions.");
+                    editStreetAddress1.setError(
+                            "Street Address 1 is required. Please choose an option from the dropdown suggestions.");
                     return;
                 }
 
-                String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+                String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(),
+                                                            Settings.Secure.ANDROID_ID);
                 if (isEdit) {
                     Log.d("msg", "updating facility");
                     facility.setFacilityName(facilityName);
@@ -157,44 +155,50 @@ public class AddFacilityFragment extends DialogFragment {
     }
 
     /**
-    * Sets up Google Places Autocomplete functionality for the AutoCompleteTextView's
-    * This method adds a text change listener that triggers autocomplete suggestons when the user types.
-    * Uses the google places API to fetch the location suggestions based on the current input.
-    *
-    * @param autoCompleteTextView The AutoCompleteTextView to attach autocomplete suggestions to.
-    * Relevant Documentation
-    * https://developers.google.com/maps/documentation/places/android-sdk/autocomplete#maps_places_autocomplete_support_fragment-java
-    * https://developer.android.com/reference/android/widget/AutoCompleteTextView
-    * https://developer.android.com/reference/android/text/TextWatcher
-    * */
+     * Sets up Google Places Autocomplete functionality for the AutoCompleteTextView's
+     * This method adds a text change listener that triggers autocomplete suggestons when the user types.
+     * Uses the google places API to fetch the location suggestions based on the current input.
+     *
+     * @param autoCompleteTextView The AutoCompleteTextView to attach autocomplete suggestions to.
+     *                             Relevant Documentation
+     *                             https://developers.google.com/maps/documentation/places/android-sdk/autocomplete#maps_places_autocomplete_support_fragment-java
+     *                             https://developer.android.com/reference/android/widget/AutoCompleteTextView
+     *                             https://developer.android.com/reference/android/text/TextWatcher
+     */
     private void setupAutocomplete(AutoCompleteTextView autoCompleteTextView) {
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() >= 3) {
                     FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                            .setSessionToken(sessionToken)
-                            .setQuery(s.toString())
-                            .build();
+                                                                                                   .setSessionToken(
+                                                                                                           sessionToken)
+                                                                                                   .setQuery(
+                                                                                                           s.toString())
+                                                                                                   .build();
 
-                    placesClient.findAutocompletePredictions(request).addOnSuccessListener(response -> {
-                        List<String> suggestions = new ArrayList<>();
-                        for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                            suggestions.add(prediction.getFullText(null).toString());
-                        }
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                                android.R.layout.simple_dropdown_item_1line, suggestions);
-                        autoCompleteTextView.setAdapter(adapter);
-                        autoCompleteTextView.showDropDown();
-                    }).addOnFailureListener(e -> e.printStackTrace());
+                    placesClient.findAutocompletePredictions(request)
+                                .addOnSuccessListener(response -> {
+                                    List<String> suggestions = new ArrayList<>();
+                                    for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+                                        suggestions.add(prediction.getFullText(null).toString());
+                                    }
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                                                                                      android.R.layout.simple_dropdown_item_1line,
+                                                                                      suggestions);
+                                    autoCompleteTextView.setAdapter(adapter);
+                                    autoCompleteTextView.showDropDown();
+                                }).addOnFailureListener(e -> e.printStackTrace());
                 }
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         // Add OnItemClickListener for the dropdown in order to verify when the user presses confirm that they have selected a
@@ -210,13 +214,22 @@ public class AddFacilityFragment extends DialogFragment {
      * This method compares the current text with a stored valid selection. Ensures the input is a valid option from the dropdown.
      *
      * @param autoCompleteTextView The AutoCompleteTextView to check for a valid selection.
-     * */
-    private boolean isUserSelectedFromDropdown(AutoCompleteTextView autoCompleteTextView){
+     */
+    private boolean isUserSelectedFromDropdown(AutoCompleteTextView autoCompleteTextView) {
         String currentText = autoCompleteTextView.getText().toString().trim();
         String validSelection = validSelections.get(autoCompleteTextView);
         // if the user doesn't select something from the dropdown validSelection will be null and thus return false.
         return validSelection != null && validSelection.equals(currentText);
     }
 
+    /**
+     * AddFacilityDialogListener is an interface that must be implemented by the parent Fragment or Activity
+     * to handle the user's input when adding or editing a Facility.
+     */
+    interface AddFacilityDialogListener {
+        void addFacility(Facility facility);
+
+        void updateFacility();
+    }
 
 }

@@ -11,8 +11,8 @@
 
     <item
         android:id="@id/fab"
-        android:title=""
-        android:enabled="false"/>
+        android:enabled="false"
+        android:title="" />
 
     <item
         android:id="@+id/nav_inbox"

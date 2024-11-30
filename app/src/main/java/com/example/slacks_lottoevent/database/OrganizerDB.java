@@ -32,19 +32,20 @@ public class OrganizerDB {
     public void startListening() {
         if (listenerRegistration == null) {
             listenerRegistration = db.collection("organizers")
-                    .addSnapshotListener((snapshots, e) -> {
-                        if (e != null) {
-                            e.printStackTrace();
-                            return;
-                        }
-                        if (snapshots != null) {
-                            organizersCache.clear();
-                            for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                                organizersCache.put(doc.getId(), doc.toObject(Organizer.class));
-                            }
-                            notifyOrganizerChangeListener();
-                        }
-                    });
+                                     .addSnapshotListener((snapshots, e) -> {
+                                         if (e != null) {
+                                             e.printStackTrace();
+                                             return;
+                                         }
+                                         if (snapshots != null) {
+                                             organizersCache.clear();
+                                             for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                                                 organizersCache.put(doc.getId(),
+                                                                     doc.toObject(Organizer.class));
+                                             }
+                                             notifyOrganizerChangeListener();
+                                         }
+                                     });
         }
     }
 
@@ -69,13 +70,13 @@ public class OrganizerDB {
         }
     }
 
-    // Interface for listening to changes in the organizers collection
-    public interface OrganizerChangeListener {
-        void onOrganizersChanged(HashMap<String, Organizer> organizers);
-    }
-
     // Update the organizer in Firestore
     public void updateOrganizer(String deviceId, ArrayList<String> eventIds) {
         db.collection("organizers").document(deviceId).set(new Organizer(deviceId, eventIds));
+    }
+
+    // Interface for listening to changes in the organizers collection
+    public interface OrganizerChangeListener {
+        void onOrganizersChanged(HashMap<String, Organizer> organizers);
     }
 }

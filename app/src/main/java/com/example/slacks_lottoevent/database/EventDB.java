@@ -29,19 +29,20 @@ public class EventDB {
     public void startListening() {
         if (listenerRegistration == null) {
             listenerRegistration = db.collection("events")
-                    .addSnapshotListener((snapshots, e) -> {
-                        if (e != null) {
-                            e.printStackTrace();
-                            return;
-                        }
-                        if (snapshots != null) {
-                            eventsCache.clear();
-                            for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                                eventsCache.put(doc.getId(), doc.toObject(Event.class));
-                            }
-                            notifyEventChangeListener();
-                        }
-                    });
+                                     .addSnapshotListener((snapshots, e) -> {
+                                         if (e != null) {
+                                             e.printStackTrace();
+                                             return;
+                                         }
+                                         if (snapshots != null) {
+                                             eventsCache.clear();
+                                             for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                                                 eventsCache.put(doc.getId(),
+                                                                 doc.toObject(Event.class));
+                                             }
+                                             notifyEventChangeListener();
+                                         }
+                                     });
         }
     }
 

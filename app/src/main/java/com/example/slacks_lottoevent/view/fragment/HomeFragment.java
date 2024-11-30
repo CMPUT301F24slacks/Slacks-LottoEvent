@@ -11,12 +11,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.slacks_lottoevent.Entrant;
-import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.Event;
-import com.example.slacks_lottoevent.model.User;
+import com.example.slacks_lottoevent.EventArrayAdapter;
+import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.viewmodel.EntrantViewModel;
 import com.example.slacks_lottoevent.viewmodel.EventViewModel;
-import com.example.slacks_lottoevent.EventArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ public class HomeFragment extends Fragment {
 
     private EntrantViewModel entrantViewModel;
     private EventViewModel eventViewModel;
-    private ArrayList<Event> eventsList = new ArrayList<>();
+    private final ArrayList<Event> eventsList = new ArrayList<>();
     private EventArrayAdapter eventsListArrayAdapter;
 
     // Ui elements
@@ -81,7 +80,8 @@ public class HomeFragment extends Fragment {
         entrantViewModel.getCurrentEntrantLiveData().observe(getViewLifecycleOwner(), entrant -> {
             if (entrant != null) {
                 updateEventIDs(entrant);
-                eventViewModel.updateEventLists(waitlistedIds, unselectedIds, invitedIds, attendingIds);
+                eventViewModel.updateEventLists(waitlistedIds, unselectedIds, invitedIds,
+                                                attendingIds);
             } else {
                 // Clear all event lists
                 eventViewModel.updateEventLists(null, null, null, null);
@@ -92,23 +92,25 @@ public class HomeFragment extends Fragment {
         eventViewModel.getEventsLiveData().observe(getViewLifecycleOwner(), events -> {
             if (events != null && entrantViewModel.getCurrentEntrantLiveData().getValue() != null) {
                 updateEventIDs(entrantViewModel.getCurrentEntrantLiveData().getValue());
-                eventViewModel.updateEventLists(waitlistedIds, unselectedIds, invitedIds, attendingIds);
+                eventViewModel.updateEventLists(waitlistedIds, unselectedIds, invitedIds,
+                                                attendingIds);
             }
         });
 
         // Observe any changes to the entrant events list livedata
-        eventViewModel.getEntrantEventsLiveData().observe(getViewLifecycleOwner(), entrantEvents -> {
-            if (entrantEvents != null) {
-                 Log.d("HomeFragment", "Entrant Events: " + entrantEvents.toString());
-                eventsList.clear();
-                eventsList.addAll(entrantEvents);
-                eventsListArrayAdapter.notifyDataSetChanged();
-            } else {
-                Log.d("HomeFragment", "Entrant Events: null");
-                eventsList.clear();
-                eventsListArrayAdapter.notifyDataSetChanged();
-            }
-        });
+        eventViewModel.getEntrantEventsLiveData()
+                      .observe(getViewLifecycleOwner(), entrantEvents -> {
+                          if (entrantEvents != null) {
+                              Log.d("HomeFragment", "Entrant Events: " + entrantEvents);
+                              eventsList.clear();
+                              eventsList.addAll(entrantEvents);
+                              eventsListArrayAdapter.notifyDataSetChanged();
+                          } else {
+                              Log.d("HomeFragment", "Entrant Events: null");
+                              eventsList.clear();
+                              eventsListArrayAdapter.notifyDataSetChanged();
+                          }
+                      });
     }
 
     private void updateEventIDs(Entrant entrant) {

@@ -13,9 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import com.example.slacks_lottoevent.model.User;
 
 import com.bumptech.glide.Glide;
+import com.example.slacks_lottoevent.model.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -45,7 +45,8 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         Event event = getItem(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_event, parent, false);
+            convertView = LayoutInflater.from(getContext())
+                                        .inflate(R.layout.adapter_event, parent, false);
         }
 
         // Initialize the main TextViews and Button
@@ -80,8 +81,8 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
 
         if (event.getEventPosterURL() != null && !event.getEventPosterURL().isEmpty()) {
             Glide.with(this.getContext()) // 'this' refers to the activity context
-                    .load(event.getEventPosterURL())
-                    .into(eventPoster);
+                 .load(event.getEventPosterURL())
+                 .into(eventPoster);
         } else {
             Log.d("EventDetails", "Event poster URL is empty or null");
         }
@@ -102,7 +103,8 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         eventButton.setOnClickListener(v -> {
             // Create an Intent to navigate to the EventDetailsActivity
             Intent intent = new Intent(getContext(), EntrantEventDetailsActivity.class);
-            String userId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+            String userId = Settings.Secure.getString(getContext().getContentResolver(),
+                                                      Settings.Secure.ANDROID_ID);
             intent.putExtra("userId", userId);
             intent.putExtra("qrCodeValue", event.getEventID());
 

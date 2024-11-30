@@ -1,10 +1,7 @@
 package com.example.slacks_lottoevent;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -35,24 +32,23 @@ import java.util.Map;
 /**
  * This activity is responsible for managing the events created by the organizer.
  */
-public class ManageMyEventsFragment extends Fragment implements AddFacilityFragment.AddFacilityDialogListener{
+public class ManageMyEventsFragment extends Fragment
+        implements AddFacilityFragment.AddFacilityDialogListener {
 
+    String deviceId;
+    FacilityViewModel facilityViewModel;
     private OrganizerEventArrayAdapter organizerEventArrayAdapter;
     private ListView myEventsListView;
     private FragmentManageMyEventsBinding binding;
     private TextView facilityCreated;
     private Facility existingFacility;
     private Button createFacilitiesButton;
-
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private ArrayList<Event> eventList;
     private CollectionReference facilitiesRef;
     private CollectionReference organizersRef;
-    String deviceId;
-    FacilityViewModel facilityViewModel;
-    private List<ListenerRegistration> eventListeners = new ArrayList<>();
-
+    private final List<ListenerRegistration> eventListeners = new ArrayList<>();
 
     /**
      * This method is called when the user creates a new facility.
@@ -76,26 +72,26 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilityData.put("deviceID", facility.getDeviceId());
 
         facilitiesRef.add(facilityData)
-                .addOnSuccessListener(documentReference -> {
-                    // Now add the facility data to the organizer after the facility ID is set
-                    Map<String, Object> organizerData = new HashMap<>();
-                    organizerData.put("userId", facility.getDeviceId());
-                    organizerData.put("facilityId", existingFacility.getDeviceId());
-                    organizerData.put("events", null); // Assuming EventList can be serialized
+                     .addOnSuccessListener(documentReference -> {
+                         // Now add the facility data to the organizer after the facility ID is set
+                         Map<String, Object> organizerData = new HashMap<>();
+                         organizerData.put("userId", facility.getDeviceId());
+                         organizerData.put("facilityId", existingFacility.getDeviceId());
+                         organizerData.put("events", null); // Assuming EventList can be serialized
 
-                    organizersRef.document(facility.getDeviceId()) // Sets userId as the document ID
-                            .set(organizerData)
-                            .addOnSuccessListener(aVoid -> {
-                                // Update the ViewModel to reflect the change
-                                facilityViewModel.setFacilityStatus(true);
-                                facilityViewModel.setCurrentFacility(existingFacility);
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.w("addFacility", "Error adding organizer", e);
-                            });
-                })
-                .addOnFailureListener(e -> Log.w("addFacility", "Error adding facility", e));
-
+                         organizersRef.document(
+                                              facility.getDeviceId()) // Sets userId as the document ID
+                                      .set(organizerData)
+                                      .addOnSuccessListener(aVoid -> {
+                                          // Update the ViewModel to reflect the change
+                                          facilityViewModel.setFacilityStatus(true);
+                                          facilityViewModel.setCurrentFacility(existingFacility);
+                                      })
+                                      .addOnFailureListener(e -> {
+                                          Log.w("addFacility", "Error adding organizer", e);
+                                      });
+                     })
+                     .addOnFailureListener(e -> Log.w("addFacility", "Error adding facility", e));
 
         // Hide the create facility button
         createFacilitiesButton.setVisibility(View.GONE);
@@ -127,28 +123,37 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
         // Update the facility and then proceed to update related events
         facilitiesRef.document(facilityId).update(facilityData)
-                .addOnSuccessListener(aVoid -> {
-                    // Query to fetch all events associated with this facility
-                    eventsRef.whereEqualTo("deviceId", deviceId).get()
-                            .addOnSuccessListener(queryDocumentSnapshots -> {
-                                if (!queryDocumentSnapshots.isEmpty()) {
-                                    WriteBatch batch = db.batch(); // Create a batch for atomic updates
-                                    // Iterate through all matching events and update their location
-                                    for (DocumentSnapshot document : queryDocumentSnapshots) {
-                                        DocumentReference eventDocRef = document.getReference();
-                                        batch.update(eventDocRef, "location", existingFacility.getStreetAddress());
-                                    }
-                                    // Commit the batch write
-                                    batch.commit()
-                                            .addOnSuccessListener(aVoid1 -> Log.d("updateFacilityAndEvents", "Event locations updated successfully"))
-                                            .addOnFailureListener(e -> Log.w("updateFacilityAndEvents", "Error updating event locations", e));
-                                } else {
-                                    Log.d("updateFacilityAndEvents", "No events found for this facility");
-                                }
-                            })
-                            .addOnFailureListener(e -> Log.w("updateFacilityAndEvents", "Error fetching events", e));
-                })
-                .addOnFailureListener(e -> Log.w("updateFacilityAndEvents", "Error updating facility", e));
+                     .addOnSuccessListener(aVoid -> {
+                         // Query to fetch all events associated with this facility
+                         eventsRef.whereEqualTo("deviceId", deviceId).get()
+                                  .addOnSuccessListener(queryDocumentSnapshots -> {
+                                      if (!queryDocumentSnapshots.isEmpty()) {
+                                          WriteBatch batch = db.batch(); // Create a batch for atomic updates
+                                          // Iterate through all matching events and update their location
+                                          for (DocumentSnapshot document : queryDocumentSnapshots) {
+                                              DocumentReference eventDocRef = document.getReference();
+                                              batch.update(eventDocRef, "location",
+                                                           existingFacility.getStreetAddress());
+                                          }
+                                          // Commit the batch write
+                                          batch.commit()
+                                               .addOnSuccessListener(
+                                                       aVoid1 -> Log.d("updateFacilityAndEvents",
+                                                                       "Event locations updated successfully"))
+                                               .addOnFailureListener(
+                                                       e -> Log.w("updateFacilityAndEvents",
+                                                                  "Error updating event locations",
+                                                                  e));
+                                      } else {
+                                          Log.d("updateFacilityAndEvents",
+                                                "No events found for this facility");
+                                      }
+                                  })
+                                  .addOnFailureListener(e -> Log.w("updateFacilityAndEvents",
+                                                                   "Error fetching events", e));
+                     })
+                     .addOnFailureListener(
+                             e -> Log.w("updateFacilityAndEvents", "Error updating facility", e));
     }
 
     private void fetchOrganizerEvents(String deviceId) {
@@ -189,7 +194,8 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                         Log.w("Firestore", "Event document not found: " + eventID);
                     }
                 } else {
-                    Log.w("Firestore", "Failed to retrieve event document.", eventTask.getException());
+                    Log.w("Firestore", "Failed to retrieve event document.",
+                          eventTask.getException());
                 }
             });
         }
@@ -282,7 +288,6 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         facilityViewModel.setFacilityStatus(false);
     }
 
-
     /**
      * This method is called when the user deletes an existing facility.
      * It deletes the facility from the Firestore database.
@@ -314,7 +319,8 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
         createFacilitiesButton = view.findViewById(R.id.create_facility_button);
         facilityCreated = view.findViewById(R.id.facility_created);
 
-        deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+        deviceId = Settings.Secure.getString(requireActivity().getContentResolver(),
+                                             Settings.Secure.ANDROID_ID);
         facilityViewModel = new ViewModelProvider(requireActivity()).get(FacilityViewModel.class);
 
 //        /// Listen for real-time updates to the organizer's document so we can get the events in real-time
@@ -332,37 +338,41 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
 
                     for (String eventID : eventIDs) {
                         // Add a real-time listener for each event document
-                        eventsRef.document(eventID).addSnapshotListener((eventSnapshot, eventError) -> {
-                            if (eventError != null) {
-                                Log.w("Firestore", "Listen failed for event: " + eventID, eventError);
-                                return;
-                            }
+                        eventsRef.document(eventID)
+                                 .addSnapshotListener((eventSnapshot, eventError) -> {
+                                     if (eventError != null) {
+                                         Log.w("Firestore", "Listen failed for event: " + eventID,
+                                               eventError);
+                                         return;
+                                     }
 
-                            if (eventSnapshot != null && eventSnapshot.exists()) {
-                                Event updatedEvent = eventSnapshot.toObject(Event.class);
-                                if (updatedEvent != null) {
-                                    // Check if the event already exists in the list
-                                    boolean eventExists = false;
-                                    for (int i = 0; i < eventList.size(); i++) {
-                                        if (eventList.get(i).getEventID().equals(updatedEvent.getEventID())) {
-                                            // Update the existing event in the list
-                                            eventList.set(i, updatedEvent);
-                                            eventExists = true;
-                                            break;
-                                        }
-                                    }
-                                    // If the event is new, add it to the list
-                                    if (!eventExists) {
-                                        eventList.add(updatedEvent);
-                                    }
+                                     if (eventSnapshot != null && eventSnapshot.exists()) {
+                                         Event updatedEvent = eventSnapshot.toObject(Event.class);
+                                         if (updatedEvent != null) {
+                                             // Check if the event already exists in the list
+                                             boolean eventExists = false;
+                                             for (int i = 0; i < eventList.size(); i++) {
+                                                 if (eventList.get(i).getEventID()
+                                                              .equals(updatedEvent.getEventID())) {
+                                                     // Update the existing event in the list
+                                                     eventList.set(i, updatedEvent);
+                                                     eventExists = true;
+                                                     break;
+                                                 }
+                                             }
+                                             // If the event is new, add it to the list
+                                             if (!eventExists) {
+                                                 eventList.add(updatedEvent);
+                                             }
 
-                                    // Notify the adapter of the changes
-                                    organizerEventArrayAdapter.notifyDataSetChanged();
-                                }
-                            } else {
-                                Log.w("Firestore", "Event document does not exist: " + eventID);
-                            }
-                        });
+                                             // Notify the adapter of the changes
+                                             organizerEventArrayAdapter.notifyDataSetChanged();
+                                         }
+                                     } else {
+                                         Log.w("Firestore",
+                                               "Event document does not exist: " + eventID);
+                                     }
+                                 });
                     }
                 } else {
                     // Handle the case where no events are associated with this organizer
@@ -396,9 +406,11 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
                     } else {
                         new AlertDialog.Builder(requireContext())
                                 .setTitle("Sign-Up Required")
-                                .setMessage("In order to create a facility, we need to collect some information about you.")
+                                .setMessage(
+                                        "In order to create a facility, we need to collect some information about you.")
                                 .setPositiveButton("Proceed", (dialog, which) -> {
-                                    Intent signUpIntent = new Intent(requireContext(), SignUpActivity.class);
+                                    Intent signUpIntent = new Intent(requireContext(),
+                                                                     SignUpActivity.class);
                                     startActivity(signUpIntent);
                                 })
                                 .setNegativeButton("Cancel", (dialog, which) -> {
@@ -410,11 +422,12 @@ public class ManageMyEventsFragment extends Fragment implements AddFacilityFragm
             }
         });
 
-
         facilityCreated.setOnClickListener(v -> {
-            new AddFacilityFragment(existingFacility, true).show(getChildFragmentManager(), "Edit Facility");
+            new AddFacilityFragment(existingFacility, true).show(getChildFragmentManager(),
+                                                                 "Edit Facility");
         });
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

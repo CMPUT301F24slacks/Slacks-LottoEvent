@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,7 +12,7 @@
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize" >
+        android:layout_marginBottom="?attr/actionBarSize">
 
         <!-- Include content_main -->
         <include layout="@layout/content_main" />
@@ -28,8 +27,8 @@
         android:layout_marginBottom="12dp"
         android:contentDescription="Add"
         android:src="@drawable/baseline_qr_code_scanner_24"
-        app:tint="@color/white"
-        app:backgroundTint="@color/FAB_background" />
+        app:backgroundTint="@color/FAB_background"
+        app:tint="@color/white" />
 
     <!-- Bottom App Bar -->
     <com.google.android.material.bottomappbar.BottomAppBar
@@ -37,20 +36,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:fabAlignmentMode="center"
+        android:background="@color/background"
         app:backgroundTint="@color/background"
-        android:background="@color/background">
+        app:fabAlignmentMode="center">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
-            app:menu="@menu/menu_main"
-            app:labelVisibilityMode="labeled"
+            android:background="@color/background"
             app:itemIconTint="@drawable/bottom_nav_color_selector"
             app:itemTextColor="@drawable/bottom_nav_color_selector"
-            android:background="@color/background"/>
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/menu_main" />
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 

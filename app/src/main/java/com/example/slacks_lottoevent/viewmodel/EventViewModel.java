@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.slacks_lottoevent.database.EventDB;
 import com.example.slacks_lottoevent.Event;
+import com.example.slacks_lottoevent.database.EventDB;
 import com.example.slacks_lottoevent.model.User;
 
 import java.util.ArrayList;
@@ -44,7 +44,8 @@ public class EventViewModel extends ViewModel {
         return hostingEventsLiveData;
     }
 
-    public void updateEventLists(List<String> waitlistedIds, List<String> unselectedIds, List<String> invitedIds, List<String> attendingIds) {
+    public void updateEventLists(List<String> waitlistedIds, List<String> unselectedIds,
+                                 List<String> invitedIds, List<String> attendingIds) {
         HashMap<String, Event> eventsHashMap = eventsLiveData.getValue();
         if (eventsHashMap != null) {
             List<Event> tempEvents = new ArrayList<>();
@@ -77,6 +78,5 @@ public class EventViewModel extends ViewModel {
             hostingEventsLiveData.setValue(organizerEvents);
         }
     }
-
 
 }

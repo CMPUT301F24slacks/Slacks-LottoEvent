@@ -8,16 +8,17 @@ public class Facility {
     private String streetAddress;
     private String deviceId;
 
-    public Facility() {} // Needed for Firestore
+    public Facility() {
+    } // Needed for Firestore
 
     /**
      * Constructor for the Facility class.
      *
-     * @param facilityName The name of the facility
+     * @param facilityName  The name of the facility
      * @param streetAddress The first line of the street address
-     * @param deviceId The ID of the device that created the facility
+     * @param deviceId      The ID of the device that created the facility
      */
-    public Facility(String facilityName, String streetAddress, String deviceId){
+    public Facility(String facilityName, String streetAddress, String deviceId) {
         this.facilityName = facilityName;
         this.streetAddress = streetAddress;
         this.deviceId = deviceId;

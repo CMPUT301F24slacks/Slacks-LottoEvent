@@ -9,7 +9,8 @@ public class User {
 
     private User(Context context) {
         // Initialize deviceId using the provided Context
-        deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        deviceId = Settings.Secure.getString(context.getContentResolver(),
+                                             Settings.Secure.ANDROID_ID);
     }
 
     // Initialize the User instance once with context

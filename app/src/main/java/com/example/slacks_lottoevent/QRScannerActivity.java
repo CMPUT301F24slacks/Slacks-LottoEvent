@@ -1,58 +1,58 @@
 package com.example.slacks_lottoevent;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.Manifest;
 import android.provider.Settings;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.camera.view.PreviewView;
 
 import com.example.slacks_lottoevent.view.BaseActivity;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import androidx.appcompat.widget.Toolbar;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import java.util.concurrent.ExecutionException;
 
 /*
-*
-*
-*
-* Relevant Documentation and Resources
-* https://medium.com/deuk/android-camera-permission-essentials-streamlining-with-baseactivity-13be6d296224
-* https://developer.android.com/media/camera/camerax/architecture
-* https://developer.android.com/reference/androidx/camera/lifecycle/ProcessCameraProvider
-* https://github.com/google/guava/wiki/ListenableFutureExplained
-*
-*
-* QR Code Using Zxing
-* https://reintech.io/blog/implementing-android-app-qr-code-scanner Implementing The QR Code Scanner
-* https://stackoverflow.com/questions/54513936/how-to-change-zxingscannerview-default-appearance Custom Layout
-* */
+ *
+ *
+ *
+ * Relevant Documentation and Resources
+ * https://medium.com/deuk/android-camera-permission-essentials-streamlining-with-baseactivity-13be6d296224
+ * https://developer.android.com/media/camera/camerax/architecture
+ * https://developer.android.com/reference/androidx/camera/lifecycle/ProcessCameraProvider
+ * https://github.com/google/guava/wiki/ListenableFutureExplained
+ *
+ *
+ * QR Code Using Zxing
+ * https://reintech.io/blog/implementing-android-app-qr-code-scanner Implementing The QR Code Scanner
+ * https://stackoverflow.com/questions/54513936/how-to-change-zxingscannerview-default-appearance Custom Layout
+ * */
 
 /**
  * This class is responsible for scanning the QR code of the event.
  */
 public class QRScannerActivity extends BaseActivity {
+    private static final int CAMERA_REQUEST_CODE = 100;
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private PreviewView cameraPreview;
-    private static final int CAMERA_REQUEST_CODE = 100;
 
     /**
      * This method is responsible for creating the activity.
+     *
      * @param savedInstanceState The saved instance state.
      */
     @Override
@@ -61,7 +61,8 @@ public class QRScannerActivity extends BaseActivity {
         eventsRef = db.collection("events");
         EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.activity_qr_scanner, findViewById(R.id.content_frame), true);
+        getLayoutInflater().inflate(R.layout.activity_qr_scanner, findViewById(R.id.content_frame),
+                                    true);
 
         // Set up the app bar for back navigation
         if (getSupportActionBar() != null) {
@@ -69,9 +70,11 @@ public class QRScannerActivity extends BaseActivity {
             getSupportActionBar().setTitle("QR Scanner"); // Set a custom title if needed
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
+            PackageManager.PERMISSION_GRANTED) {
             // Request the camera permission
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                                              CAMERA_REQUEST_CODE);
         }
 
         Button readyButton = findViewById(R.id.readyButton);
@@ -90,21 +93,23 @@ public class QRScannerActivity extends BaseActivity {
 
     /**
      * This method is responsible for handling the camera permission request result.
+     *
      * @param requestCode The request code.
-     * @param resultCode The permissions requested.
-     * @param data The results of the permission requests.
+     * @param resultCode  The permissions requested.
+     * @param data        The results of the permission requests.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null && result.getContents() != null) {
             String qrCodeValue = result.getContents();
-            Intent intent = new Intent(QRScannerActivity.this, com.example.slacks_lottoevent.JoinEventDetailsActivity.class);
-            String userId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            Intent intent = new Intent(QRScannerActivity.this,
+                                       com.example.slacks_lottoevent.JoinEventDetailsActivity.class);
+            String userId = Settings.Secure.getString(getContentResolver(),
+                                                      Settings.Secure.ANDROID_ID);
             intent.putExtra("userId", userId);
             intent.putExtra("qrCodeValue", qrCodeValue);
             startActivity(intent);
-
 
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -114,16 +119,18 @@ public class QRScannerActivity extends BaseActivity {
     /**
      * This method is responsible for starting the camera.
      */
-    private void startCamera(){
+    private void startCamera() {
         // Getting an instance of ProcessCameraProvider.
-        com.google.common.util.concurrent.ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
+        com.google.common.util.concurrent.ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(
+                this);
 
         // Adding a listener to the cameraProviderFuture to execute when the future is complete.
         cameraProviderFuture.addListener(() -> {
             try {
                 // getting the camera provider
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                bindPreview(cameraProvider); // Binding the preview to the camera to display camera preview
+                bindPreview(
+                        cameraProvider); // Binding the preview to the camera to display camera preview
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -133,6 +140,7 @@ public class QRScannerActivity extends BaseActivity {
 
     /**
      * This method is responsible for binding the preview to the camera to display the camera preview.
+     *
      * @param cameraProvider The camera provider to bind the preview to.
      */
     private void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
@@ -148,7 +156,8 @@ public class QRScannerActivity extends BaseActivity {
             // Binding the camera's lifecycle to current actvity
             // lifecycle Owner is this activity, using the back camera and the use case is the preview cameraPreview of the scanner which is bound to the lifecycle.
             cameraProvider.bindToLifecycle(this, cameraSelector, preview);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     @Override

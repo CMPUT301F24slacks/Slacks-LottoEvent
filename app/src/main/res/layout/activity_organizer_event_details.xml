@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="#FFFFFF"
     tools:context=".EntrantEventDetailsActivity">
 
@@ -262,7 +262,7 @@
                 android:backgroundTint="#7B24EB"
                 android:text="Lottery System"
                 android:textColor="#FFFFFF"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/entrantListButton"
@@ -279,9 +279,9 @@
             android:id="@+id/waitlistFullBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Waitlist Full, Check Back Later"
             android:backgroundTint="#7B24EB"
             android:padding="8dp"
+            android:text="Waitlist Full, Check Back Later"
             android:textColor="#FFFFFF"
             android:visibility="gone" />
     </LinearLayout>

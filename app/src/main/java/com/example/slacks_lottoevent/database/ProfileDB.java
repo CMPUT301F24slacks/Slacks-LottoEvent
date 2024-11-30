@@ -31,19 +31,20 @@ public class ProfileDB {
     public void startListening() {
         if (listenerRegistration == null) {
             listenerRegistration = db.collection("profiles")
-                    .addSnapshotListener((snapshots, e) -> {
-                        if (e != null) {
-                            e.printStackTrace();
-                            return;
-                        }
-                        if (snapshots != null) {
-                            profilesCache.clear();
-                            for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                                profilesCache.put(doc.getId(), doc.toObject(Profile.class));
-                            }
-                            notifyProfileChangeListener();
-                        }
-                    });
+                                     .addSnapshotListener((snapshots, e) -> {
+                                         if (e != null) {
+                                             e.printStackTrace();
+                                             return;
+                                         }
+                                         if (snapshots != null) {
+                                             profilesCache.clear();
+                                             for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                                                 profilesCache.put(doc.getId(),
+                                                                   doc.toObject(Profile.class));
+                                             }
+                                             notifyProfileChangeListener();
+                                         }
+                                     });
         }
     }
 
@@ -68,13 +69,13 @@ public class ProfileDB {
         }
     }
 
-    // Interface for notifying profile changes
-    public interface ProfileChangeListener {
-        void onProfilesChanged(HashMap<String, Profile> updatedProfiles);
-    }
-
     // Update a profile in Firestore
     public void updateProfile(Profile profile) {
         db.collection("profiles").document(profile.getDeviceId()).set(profile);
+    }
+
+    // Interface for notifying profile changes
+    public interface ProfileChangeListener {
+        void onProfilesChanged(HashMap<String, Profile> updatedProfiles);
     }
 }

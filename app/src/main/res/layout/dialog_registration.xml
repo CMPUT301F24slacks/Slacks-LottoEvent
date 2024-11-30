@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#333333"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#333333">
+    android:padding="16dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Confirm Registration For Waiting List"
-        android:textSize="18sp"
         android:textColor="#FFFFFF"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
@@ -26,16 +25,16 @@
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:orientation="vertical">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
             android:gravity="center_vertical"
-            android:layout_marginBottom="4dp">
+            android:orientation="horizontal">
 
 
             <TextView
@@ -50,15 +49,15 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:text="Selected if Someone Declines"
-                android:textColor="#BDBDBD"
-                android:layout_marginEnd="8dp" />
+                android:textColor="#BDBDBD" />
 
             <CheckBox
                 android:id="@+id/declineCheckbox"
@@ -74,19 +73,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Warning: This event uses geolocation"
-        android:textColor="#FFFFFF"
         android:background="#FF0000"
         android:padding="8dp"
+        android:text="Warning: This event uses geolocation"
+        android:textColor="#FFFFFF"
         android:visibility="gone" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="16dp"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/cancel_button"
@@ -98,9 +97,9 @@
             android:id="@+id/confirm_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Confirm"
+            android:layout_marginStart="8dp"
             android:backgroundTint="#8E24AA"
-            android:textColor="#FFFFFF"
-            android:layout_marginStart="8dp" />
+            android:text="Confirm"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 </LinearLayout>

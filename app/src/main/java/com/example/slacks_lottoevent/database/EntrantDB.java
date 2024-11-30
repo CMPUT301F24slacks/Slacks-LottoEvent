@@ -31,19 +31,20 @@ public class EntrantDB {
     public void startListening() {
         if (listenerRegistration == null) {
             listenerRegistration = db.collection("entrants")
-                    .addSnapshotListener((snapshots, e) -> {
-                        if (e != null) {
-                            e.printStackTrace();
-                            return;
-                        }
-                        if (snapshots != null) {
-                            entrantsCache.clear();
-                            for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                                entrantsCache.put(doc.getId(), doc.toObject(Entrant.class));
-                            }
-                            notifyEntrantChangeListener();
-                        }
-                    });
+                                     .addSnapshotListener((snapshots, e) -> {
+                                         if (e != null) {
+                                             e.printStackTrace();
+                                             return;
+                                         }
+                                         if (snapshots != null) {
+                                             entrantsCache.clear();
+                                             for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                                                 entrantsCache.put(doc.getId(),
+                                                                   doc.toObject(Entrant.class));
+                                             }
+                                             notifyEntrantChangeListener();
+                                         }
+                                     });
         }
     }
 
@@ -72,6 +73,5 @@ public class EntrantDB {
     public interface EntrantChangeListener {
         void onEntrantsChanged(HashMap<String, Entrant> updatedEntrants);
     }
-
 
 }

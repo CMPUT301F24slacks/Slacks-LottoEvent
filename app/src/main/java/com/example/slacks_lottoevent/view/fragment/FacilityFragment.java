@@ -3,10 +3,7 @@ package com.example.slacks_lottoevent.view.fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -15,14 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.slacks_lottoevent.BuildConfig;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.Utility.SnackbarUtils;
-import com.example.slacks_lottoevent.model.User;
 import com.example.slacks_lottoevent.viewmodel.FacilityViewModel;
 import com.example.slacks_lottoevent.viewmodel.OrganizerViewModel;
 import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;
@@ -36,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,7 +54,7 @@ public class FacilityFragment extends Fragment {
     // Places API
     private PlacesClient placesClient;
     private AutocompleteSessionToken sessionToken;
-    private Map<AutoCompleteTextView, String> validSelections = new HashMap<>();
+    private final Map<AutoCompleteTextView, String> validSelections = new HashMap<>();
 
     public FacilityFragment() {
         // Required empty public constructor
@@ -106,25 +100,26 @@ public class FacilityFragment extends Fragment {
 
         // Initialize facilityViewModel
         facilityViewModel = new ViewModelProvider(requireActivity()).get(FacilityViewModel.class);
-        facilityViewModel.getCurrentFacilityLiveData().observe(getViewLifecycleOwner(), facility -> {
-            if (facility != null) {
-                // Facility object is set
-                title.setText("Facility Information");
-                create_button.setVisibility(View.GONE);
-                edit_button.setVisibility(View.VISIBLE);
-                name.setText(facility.getFacilityName());
-                street_address.setText(facility.getStreetAddress());
-            } else {
-                // Facility object is not set
-                title.setText("Create Facility");
-                create_button.setVisibility(View.VISIBLE);
-                edit_button.setVisibility(View.GONE);
-                name.setText("");
-                street_address.setText("");
-                name.setHint("");
-                street_address.setHint("");
-            }
-        });
+        facilityViewModel.getCurrentFacilityLiveData()
+                         .observe(getViewLifecycleOwner(), facility -> {
+                             if (facility != null) {
+                                 // Facility object is set
+                                 title.setText("Facility Information");
+                                 create_button.setVisibility(View.GONE);
+                                 edit_button.setVisibility(View.VISIBLE);
+                                 name.setText(facility.getFacilityName());
+                                 street_address.setText(facility.getStreetAddress());
+                             } else {
+                                 // Facility object is not set
+                                 title.setText("Create Facility");
+                                 create_button.setVisibility(View.VISIBLE);
+                                 edit_button.setVisibility(View.GONE);
+                                 name.setText("");
+                                 street_address.setText("");
+                                 name.setHint("");
+                                 street_address.setHint("");
+                             }
+                         });
 
         // Initialize organizerViewModel
         organizerViewModel = new ViewModelProvider(requireActivity()).get(OrganizerViewModel.class);
@@ -164,8 +159,10 @@ public class FacilityFragment extends Fragment {
                 create_button.setVisibility(View.VISIBLE);
             } else {
                 title.setText("Facility Information");
-                name.setText(facilityViewModel.getCurrentFacilityLiveData().getValue().getFacilityName());
-                street_address.setText(facilityViewModel.getCurrentFacilityLiveData().getValue().getStreetAddress());
+                name.setText(facilityViewModel.getCurrentFacilityLiveData().getValue()
+                                              .getFacilityName());
+                street_address.setText(facilityViewModel.getCurrentFacilityLiveData().getValue()
+                                                        .getStreetAddress());
                 edit_button.setVisibility(View.VISIBLE);
             }
         });
@@ -213,42 +210,50 @@ public class FacilityFragment extends Fragment {
      * Uses the google places API to fetch the location suggestions based on the current input.
      *
      * @param autoCompleteTextView The AutoCompleteTextView to attach autocomplete suggestions to.
-     * Relevant Documentation
-     * https://developers.google.com/maps/documentation/places/android-sdk/autocomplete#maps_places_autocomplete_support_fragment-java
-     * https://developer.android.com/reference/android/widget/AutoCompleteTextView
-     * https://developer.android.com/reference/android/text/TextWatcher
-     * */
+     *                             Relevant Documentation
+     *                             https://developers.google.com/maps/documentation/places/android-sdk/autocomplete#maps_places_autocomplete_support_fragment-java
+     *                             https://developer.android.com/reference/android/widget/AutoCompleteTextView
+     *                             https://developer.android.com/reference/android/text/TextWatcher
+     */
     private void setupAutocomplete(AutoCompleteTextView autoCompleteTextView) {
         // Add focus change listener to trigger autocomplete when the view is focused
         autoCompleteTextView.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 autoCompleteTextView.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (s.length() >= 3) {
                             FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                                    .setSessionToken(sessionToken)
-                                    .setQuery(s.toString())
-                                    .build();
+                                                                                                           .setSessionToken(
+                                                                                                                   sessionToken)
+                                                                                                           .setQuery(
+                                                                                                                   s.toString())
+                                                                                                           .build();
 
-                            placesClient.findAutocompletePredictions(request).addOnSuccessListener(response -> {
-                                List<String> suggestions = new ArrayList<>();
-                                for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                                    suggestions.add(prediction.getFullText(null).toString());
-                                }
-                                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                                        android.R.layout.simple_dropdown_item_1line, suggestions);
-                                autoCompleteTextView.setAdapter(adapter);
-                                autoCompleteTextView.showDropDown();
-                            }).addOnFailureListener(e -> e.printStackTrace());
+                            placesClient.findAutocompletePredictions(request)
+                                        .addOnSuccessListener(response -> {
+                                            List<String> suggestions = new ArrayList<>();
+                                            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+                                                suggestions.add(
+                                                        prediction.getFullText(null).toString());
+                                            }
+                                            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                                                    getContext(),
+                                                    android.R.layout.simple_dropdown_item_1line,
+                                                    suggestions);
+                                            autoCompleteTextView.setAdapter(adapter);
+                                            autoCompleteTextView.showDropDown();
+                                        }).addOnFailureListener(e -> e.printStackTrace());
                         }
                     }
 
                     @Override
-                    public void afterTextChanged(Editable s) {}
+                    public void afterTextChanged(Editable s) {
+                    }
                 });
             } else {
                 // Remove the TextWatcher when focus is lost
@@ -265,14 +270,13 @@ public class FacilityFragment extends Fragment {
         });
     }
 
-
     /**
      * Checks if the current text in the specified AutoCompleteTextView matches a valid selection from the dropdown suggestions.
      * This method compares the current text with a stored valid selection. Ensures the input is a valid option from the dropdown.
      *
      * @param autoCompleteTextView The AutoCompleteTextView to check for a valid selection.
-     * */
-    private boolean isUserSelectedFromDropdown(AutoCompleteTextView autoCompleteTextView){
+     */
+    private boolean isUserSelectedFromDropdown(AutoCompleteTextView autoCompleteTextView) {
         String currentText = autoCompleteTextView.getText().toString().trim();
         String validSelection = validSelections.get(autoCompleteTextView);
         // if the user doesn't select something from the dropdown validSelection will be null and thus return false.
@@ -288,7 +292,8 @@ public class FacilityFragment extends Fragment {
             return false;
         }
         if (facilityAddress.isEmpty() || !isUserSelectedFromDropdown(street_address)) {
-            street_address.setError("Street Address is required. Please choose an option from the dropdown suggestions.");
+            street_address.setError(
+                    "Street Address is required. Please choose an option from the dropdown suggestions.");
             name.requestFocus();
             return false;
         }
@@ -304,7 +309,8 @@ public class FacilityFragment extends Fragment {
     private void profileObserver() {
         profileViewModel.getCurrentProfileLiveData().observe(getViewLifecycleOwner(), profile -> {
             if (profile == null) {
-                SnackbarUtils.promptSignUp(requireView(), requireContext(), R.id.bottom_app_bar); // Prompt user to sign up
+                SnackbarUtils.promptSignUp(requireView(), requireContext(),
+                                           R.id.bottom_app_bar); // Prompt user to sign up
             }
         });
     }

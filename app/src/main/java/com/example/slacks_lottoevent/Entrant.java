@@ -37,18 +37,6 @@ public class Entrant {
         this.waitlistedEvents = waitlistedEvents;
     }
 
-    public void setFinalistEvents(ArrayList<String> finalistEvents) {
-        this.finalistEvents = finalistEvents;
-    }
-
-    public void setInvitedEvents(ArrayList<String> invitedEvents) {
-        this.invitedEvents = invitedEvents;
-    }
-
-    public void setUninvitedEvents(ArrayList<String> uninvitedEvents) {
-        this.uninvitedEvents = uninvitedEvents;
-    }
-
     /**
      * Retrieves the list of events where the entrant is a finalist.
      *
@@ -56,6 +44,10 @@ public class Entrant {
      */
     public ArrayList<String> getFinalistEvents() {
         return finalistEvents;
+    }
+
+    public void setFinalistEvents(ArrayList<String> finalistEvents) {
+        this.finalistEvents = finalistEvents;
     }
 
     /**
@@ -67,6 +59,10 @@ public class Entrant {
         return invitedEvents;
     }
 
+    public void setInvitedEvents(ArrayList<String> invitedEvents) {
+        this.invitedEvents = invitedEvents;
+    }
+
     /**
      * Retrieves the list of events the entrant has not been invited to.
      *
@@ -74,6 +70,10 @@ public class Entrant {
      */
     public ArrayList<String> getUninvitedEvents() {
         return uninvitedEvents;
+    }
+
+    public void setUninvitedEvents(ArrayList<String> uninvitedEvents) {
+        this.uninvitedEvents = uninvitedEvents;
     }
 
     /**

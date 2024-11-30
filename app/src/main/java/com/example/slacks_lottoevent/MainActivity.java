@@ -6,13 +6,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-//testing purposes
 
 import com.example.slacks_lottoevent.model.User;
 import com.example.slacks_lottoevent.view.BaseActivity;
@@ -22,7 +20,6 @@ import com.example.slacks_lottoevent.viewmodel.OrganizerViewModel;
 import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -68,7 +65,8 @@ public class MainActivity extends BaseActivity {
                 List<String> unselectedIds = entrant.getUninvitedEvents();
                 List<String> invitedIds = entrant.getInvitedEvents();
                 List<String> attendingIds = entrant.getFinalistEvents();
-                eventViewModel.updateEventLists(waitlistedIds, unselectedIds, invitedIds, attendingIds);
+                eventViewModel.updateEventLists(waitlistedIds, unselectedIds, invitedIds,
+                                                attendingIds);
             } else {
                 // Clear all event lists
                 eventViewModel.updateEventLists(null, null, null, null);
@@ -190,6 +188,7 @@ public class MainActivity extends BaseActivity {
         NavController navController = ((NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_main))
                 .getNavController();
-        return NavigationUI.navigateUp(navController, (AppBarConfiguration) null) || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, (AppBarConfiguration) null) ||
+               super.onSupportNavigateUp();
     }
 }

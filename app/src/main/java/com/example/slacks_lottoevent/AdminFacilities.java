@@ -37,7 +37,8 @@ public class AdminFacilities extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin_facilities, container, false);
         listViewAdminFacilities = view.findViewById(R.id.ListViewAdminFacilities);
@@ -46,10 +47,12 @@ public class AdminFacilities extends Fragment {
         ArrayList<Event> eventList = new ArrayList<>();
 
         // Create the events adapter
-        OrganizerEventArrayAdapter eventsAdapter = new OrganizerEventArrayAdapter(getContext(), eventList, true);
+        OrganizerEventArrayAdapter eventsAdapter = new OrganizerEventArrayAdapter(getContext(),
+                                                                                  eventList, true);
 
         // Create the facilities adapter
-        adapter = new FacilityListArrayAdapter(getContext(), facilitiesList, true, eventsAdapter, eventList);
+        adapter = new FacilityListArrayAdapter(getContext(), facilitiesList, true, eventsAdapter,
+                                               eventList);
 
         // Set the adapter to a ListView or RecyclerView
         listViewAdminFacilities.setAdapter(adapter);

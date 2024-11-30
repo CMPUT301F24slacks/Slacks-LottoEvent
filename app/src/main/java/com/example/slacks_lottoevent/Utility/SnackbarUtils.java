@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.View;
 
 import com.example.slacks_lottoevent.SignUpActivity;
-import com.example.slacks_lottoevent.view.fragment.FacilityFragment;
 import com.google.android.material.snackbar.Snackbar;
 
 public class SnackbarUtils {
@@ -13,8 +12,8 @@ public class SnackbarUtils {
     /**
      * Display a snackbar prompting the user to sign up.
      *
-     * @param view       The view to anchor the snackbar.
-     * @param context    The context to start the activity.
+     * @param view         The view to anchor the snackbar.
+     * @param context      The context to start the activity.
      * @param anchorViewId The ID of the view to anchor the snackbar.
      */
     public static void promptSignUp(View view, Context context, int anchorViewId) {

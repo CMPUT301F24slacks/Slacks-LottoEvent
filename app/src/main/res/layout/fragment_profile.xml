@@ -51,7 +51,7 @@
             android:layout_marginStart="8dp"
             android:backgroundTint="#E91E63"
             android:text="Remove Picture"
-            android:textColor="#FFFFFF"/>
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
     <!-- Username -->

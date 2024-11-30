@@ -1,6 +1,5 @@
 package com.example.slacks_lottoevent;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,11 +13,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.example.slacks_lottoevent.databinding.NotificationsUserBinding;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,18 +25,15 @@ import java.util.List;
  * It fetches the user's facility ID, location, and invited events from Firestore.
  */
 public class UserNotifications extends AppCompatActivity {
+    ImageView organizerNotis;
+    SharedPreferences sharedPreferences;
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private CollectionReference entrantRef;
-//    private CollectionReference organizersRef;
+    //    private CollectionReference organizersRef;
 //    private CollectionReference facilitiesRef;
     private ArrayList<UserEventNotifications> eventList;
     private EventNotificationsArrayAdapter adapter;
-
-    ImageView organizerNotis;
-
-    SharedPreferences sharedPreferences;
-
 
     /**
      * Initialize Firestore and Collections, and set up the adapter.
@@ -60,7 +54,8 @@ public class UserNotifications extends AppCompatActivity {
         eventList = new ArrayList<>();
 
         // Set up the adapter
-        adapter = new EventNotificationsArrayAdapter(this, eventList, getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE));
+        adapter = new EventNotificationsArrayAdapter(this, eventList, getSharedPreferences(
+                "SlacksLottoEventUserInfo", MODE_PRIVATE));
         ListView listView = findViewById(R.id.listViewUserInvitations);
         listView.setAdapter(adapter);
 
@@ -74,7 +69,8 @@ public class UserNotifications extends AppCompatActivity {
         organizerNotis = findViewById(R.id.organizerNotifications);
         boolean notisEnabled = sharedPreferences.getBoolean("notificationsEnabled", false);
 
-        organizerNotis.setImageResource(notisEnabled ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
+        organizerNotis.setImageResource(
+                notisEnabled ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
 
         organizerNotis.setOnClickListener(v -> {
             boolean negation = !notisEnabled;
@@ -82,13 +78,17 @@ public class UserNotifications extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("notificationsEnabled", negation);
             editor.apply();
-            organizerNotis.setImageResource(negation ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
+            organizerNotis.setImageResource(
+                    negation ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
 
             if (notisEnabled) {
-                Toast.makeText(this, "Notifications are disabled. To fully disable, revoke the permission in app settings.", Toast.LENGTH_LONG).show();
-            }
-            else{
-                Toast.makeText(this, "Notifications are enabled. To fully disable, revoke the permission in app settings.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this,
+                               "Notifications are disabled. To fully disable, revoke the permission in app settings.",
+                               Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this,
+                               "Notifications are enabled. To fully disable, revoke the permission in app settings.",
+                               Toast.LENGTH_LONG).show();
             }
 
             // Redirect to the app's notification settings
@@ -115,14 +115,14 @@ public class UserNotifications extends AppCompatActivity {
 
             // Update the notification bell icon
             organizerNotis.setImageResource(areNotificationsEnabled ?
-                    R.drawable.baseline_notifications_active_24 :
-                    R.drawable.baseline_circle_notifications_24);
+                                                    R.drawable.baseline_notifications_active_24 :
+                                                    R.drawable.baseline_circle_notifications_24);
 
             // Notify user of the current state
             Toast.makeText(this, areNotificationsEnabled ?
-                            "Notifications are enabled." :
-                            "Notifications are disabled.",
-                    Toast.LENGTH_SHORT).show();
+                                   "Notifications are enabled." :
+                                   "Notifications are disabled.",
+                           Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -130,7 +130,8 @@ public class UserNotifications extends AppCompatActivity {
      * Fetch the invited events for the current user and facility location.
      */
     private void fetchInvitedEvents(String eventTypes, Boolean selected) {
-        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        String deviceId = Settings.Secure.getString(getContentResolver(),
+                                                    Settings.Secure.ANDROID_ID);
         entrantRef.document(deviceId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 DocumentSnapshot entrantDoc = task.getResult();
@@ -154,6 +155,7 @@ public class UserNotifications extends AppCompatActivity {
 
     /**
      * Fetch the event details from the events collection.
+     *
      * @param eventIds the list of event IDs to fetch details for
      */
     private void fetchEventDetails(List<String> eventIds, Boolean invited) {
@@ -178,22 +180,22 @@ public class UserNotifications extends AppCompatActivity {
                         String time = eventDoc.getString("time");
                         String location = eventDoc.getString("location");
 
-                        UserEventNotifications event = new UserEventNotifications(name + ": Selected", date, time, location, eventId, true);
+                        UserEventNotifications event = new UserEventNotifications(
+                                name + ": Selected", date, time, location, eventId, true);
                         eventList.add(event);
 
 //                        saveEventAsDisplayed(eventId);
 
                         // Notify adapter of data changes
                         adapter.notifyDataSetChanged();
-                    }
-
-                    else if(eventDoc.exists() && !invited){
+                    } else if (eventDoc.exists() && !invited) {
                         String name = eventDoc.getString("name");
                         String date = eventDoc.getString("eventDate");
                         String time = eventDoc.getString("time");
                         String location = eventDoc.getString("location");
 
-                        UserEventNotifications event = new UserEventNotifications(name + ": Unselected", date, time, location, eventId, false);
+                        UserEventNotifications event = new UserEventNotifications(
+                                name + ": Unselected", date, time, location, eventId, false);
                         eventList.add(event);
 
 //                        saveEventAsDisplayed(eventId);
@@ -201,13 +203,12 @@ public class UserNotifications extends AppCompatActivity {
                         // Notify adapter of data changes
                         adapter.notifyDataSetChanged();
 
-                    }
-
-                    else {
+                    } else {
                         Log.d("Firestore", "Event document does not exist for ID: " + eventId);
                     }
                 } else {
-                    Log.e("Firestore", "Error fetching event data for ID: " + eventId, task.getException());
+                    Log.e("Firestore", "Error fetching event data for ID: " + eventId,
+                          task.getException());
                 }
             });
         }
@@ -215,6 +216,7 @@ public class UserNotifications extends AppCompatActivity {
 
     /**
      * Check if the event has already been displayed using SharedPreferences.
+     *
      * @param eventId The ID of the event to check.
      * @return True if the event was already displayed, false otherwise.
      */

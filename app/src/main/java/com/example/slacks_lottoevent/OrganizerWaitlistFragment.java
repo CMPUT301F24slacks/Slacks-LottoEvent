@@ -1,26 +1,18 @@
 package com.example.slacks_lottoevent;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.google.firebase.firestore.DocumentSnapshot;
+import androidx.fragment.app.Fragment;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,21 +21,22 @@ import java.util.Map;
  */
 public class OrganizerWaitlistFragment extends Fragment {
 
+    private static final String ARG_EVENT_ID = "eventID";
+    Notifications notifications;
     private ListView ListViewEntrantsWaitlisted;
     private String eventId;
-    private static final String ARG_EVENT_ID = "eventID";
     private FirebaseFirestore db;
     private ArrayList<Profile> profileList;
-
-    Notifications notifications;
 
     /**
      * Default constructor
      */
-    public OrganizerWaitlistFragment() {}
+    public OrganizerWaitlistFragment() {
+    }
 
     /**
      * Factory method to create a new instance of this fragment using the provided parameters.
+     *
      * @param eventId The current event's ID.
      * @return A new instance of OrganizerWaitlistFragment.
      */
@@ -67,20 +60,23 @@ public class OrganizerWaitlistFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_organizer_waitlist, container, false);
         ListViewEntrantsWaitlisted = view.findViewById(R.id.listViewEntrantsWaitlisted);
 
-        ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList, false, null, null,
-                null, null);
+        ProfileListArrayAdapter adapter = new ProfileListArrayAdapter(getContext(), profileList,
+                                                                      false, null, null,
+                                                                      null, null);
         ListViewEntrantsWaitlisted.setAdapter(adapter);
 
         Button craftMessageButton = view.findViewById(R.id.craftMessage);
         notifications = new Notifications();
 
-        craftMessageButton.setOnClickListener(v -> DialogHelper.showMessageDialog(getContext(), notifications, eventId, "waitlistedNotificationsList")); // Button to show the dialog
-
+        craftMessageButton.setOnClickListener(
+                v -> DialogHelper.showMessageDialog(getContext(), notifications, eventId,
+                                                    "waitlistedNotificationsList")); // Button to show the dialog
 
         // Listen for real-time updates to the event document
         db.collection("events").document(eventId).addSnapshotListener((eventDoc, error) -> {
@@ -97,21 +93,25 @@ public class OrganizerWaitlistFragment extends Fragment {
 
                     // Listen for real-time updates to each profile document
                     for (String deviceId : deviceIds) {
-                        db.collection("profiles").document(deviceId).addSnapshotListener((profileDoc, profileError) -> {
-                            if (profileError != null) {
-                                Log.e("Firestore", "Error listening to profile document updates", profileError);
-                                return;
-                            }
+                        db.collection("profiles").document(deviceId)
+                          .addSnapshotListener((profileDoc, profileError) -> {
+                              if (profileError != null) {
+                                  Log.e("Firestore", "Error listening to profile document updates",
+                                        profileError);
+                                  return;
+                              }
 
-                            if (profileDoc != null && profileDoc.exists()) {
-                                Profile profile = profileDoc.toObject(Profile.class);
-                                profileList.add(profile); // Add the name if it’s not already in the list
-                                adapter.notifyDataSetChanged(); // Update the adapter
-                            }
-                            else {
-                                Log.d("Firestore", "Profile document does not exist for device ID: " + deviceId);
-                            }
-                        });
+                              if (profileDoc != null && profileDoc.exists()) {
+                                  Profile profile = profileDoc.toObject(Profile.class);
+                                  profileList.add(
+                                          profile); // Add the name if it’s not already in the list
+                                  adapter.notifyDataSetChanged(); // Update the adapter
+                              } else {
+                                  Log.d("Firestore",
+                                        "Profile document does not exist for device ID: " +
+                                        deviceId);
+                              }
+                          });
                     }
 
 //                    notificationHelper.sendNotificationsW(1"Waitlist Updated");

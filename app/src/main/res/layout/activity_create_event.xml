@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -26,7 +25,6 @@
             android:focusable="true"
             android:src="@drawable/event_uploader_button"
             app:layout_constraintTop_toTopOf="parent" />
-
 
 
         <!--       Event Picture     -->
@@ -70,11 +68,11 @@
             android:layout_marginEnd="20dp"
             android:background="@drawable/rounded_borders"
             android:ems="10"
+            android:hint="Beach Cleanup"
             android:inputType="text"
-            android:textColor="@android:color/white"
             android:maxLength="50"
             android:padding="8dp"
-            android:hint="Beach Cleanup"
+            android:textColor="@android:color/white"
             android:textColorHint="@android:color/darker_gray"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -130,14 +128,14 @@
             android:layout_marginEnd="48dp"
             android:background="@drawable/rounded_borders"
             android:ems="10"
+            android:hint="13:00-15:00"
             android:inputType="none"
             android:maxLength="50"
             android:padding="8dp"
             android:singleLine="true"
             android:textColor="@android:color/white"
-            android:hint="13:00-15:00"
-            android:textSize="15sp"
             android:textColorHint="@android:color/darker_gray"
+            android:textSize="15sp"
             app:layout_constraintEnd_toStartOf="@+id/event_price"
             app:layout_constraintTop_toBottomOf="@+id/time" />
 
@@ -200,13 +198,13 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="48dp"
             android:background="@drawable/rounded_borders"
-            android:textColor="@android:color/white"
             android:ems="10"
+            android:hint="Provide a brief description about the event.."
             android:inputType="textMultiLine"
+            android:maxLength="250"
             android:maxLines="5"
             android:padding="8dp"
-            android:maxLength="250"
-            android:hint="Provide a brief description about the event.."
+            android:textColor="@android:color/white"
             android:textColorHint="@android:color/darker_gray"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -216,8 +214,7 @@
             tools:ignore="MissingConstraints" />
 
 
-
-<!--        Event Slots-->
+        <!--        Event Slots-->
 
         <TextView
             android:id="@+id/no_pp_accpt"
@@ -321,7 +318,7 @@
             tools:ignore="MissingConstraints" />
 
 
-<!--        Geo location-->
+        <!--        Geo location-->
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"

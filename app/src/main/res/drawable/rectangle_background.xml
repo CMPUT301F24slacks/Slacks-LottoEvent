@@ -1,6 +1,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="#D3D3D3" /> <!-- Gray background -->
     <corners android:radius="14dp" /> <!-- Minimal rounding -->
-    <stroke
-        android:width="2dp" /> <!-- Purple border -->
+    <stroke android:width="2dp" /> <!-- Purple border -->
 </shape>

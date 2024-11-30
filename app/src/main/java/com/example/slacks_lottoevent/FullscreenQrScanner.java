@@ -1,6 +1,5 @@
 package com.example.slacks_lottoevent;
 
-
 import android.os.Bundle;
 import android.widget.ImageView;
 

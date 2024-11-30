@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.slacks_lottoevent.database.FacilityDB;
 import com.example.slacks_lottoevent.Facility;
+import com.example.slacks_lottoevent.database.FacilityDB;
 import com.example.slacks_lottoevent.model.User;
 
 import java.util.HashMap;
@@ -48,7 +48,7 @@ public class FacilityViewModel extends ViewModel {
     /**
      * Create a new facility in Firestore if it doesn't already exist. Otherwise, update the existing facility.
      *
-     * @param name The name of the facility
+     * @param name          The name of the facility
      * @param streetAddress The first line of the street address
      */
     public void updateFacility(String name, String streetAddress) {

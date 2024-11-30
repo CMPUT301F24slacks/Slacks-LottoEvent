@@ -1,6 +1,5 @@
 package com.example.slacks_lottoevent;
 
-
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -66,7 +65,8 @@ public class MyEventsFragment extends Fragment {
         eventsRef = db.collection("events"); // Reference to events collection
 
         // Get the current user's ID
-        String userId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String userId = Settings.Secure.getString(requireActivity().getContentResolver(),
+                                                  Settings.Secure.ANDROID_ID);
 
         // Check if the entrant exists in the database
         entrantExists(userId, exists -> {
@@ -79,7 +79,8 @@ public class MyEventsFragment extends Fragment {
                         Log.d("MyEventsFragment", "Fetched entrant: " + entrant);
                         // Proceed with using the entrant object (e.g., populate UI or data structures)
                     } else {
-                        Log.e("MyEventsFragment", "Entrant document does not exist for userId: " + userId);
+                        Log.e("MyEventsFragment",
+                              "Entrant document does not exist for userId: " + userId);
                     }
                 }).addOnFailureListener(e -> {
                     Log.e("MyEventsFragment", "Error fetching entrant for userId: " + userId, e);
@@ -88,7 +89,6 @@ public class MyEventsFragment extends Fragment {
                 Log.d("MyEventsFragment", "No entrant found for userId: " + userId);
             }
         });
-
 
         ArrayList<Event> eventList = new ArrayList<>();
         myEventsListView = binding.myEventsListView;
@@ -106,15 +106,16 @@ public class MyEventsFragment extends Fragment {
                         ArrayList<String> eventIds = entrant.getWaitlistedEvents();
                         if (eventIds != null) {
                             for (String eventId : eventIds) {
-                                eventsRef.document(eventId).get().addOnSuccessListener(eventSnapshot -> {
-                                    if (eventSnapshot.exists()) {
-                                        Event event = eventSnapshot.toObject(Event.class);
-                                        if (event != null && !eventList.contains(event)) {
-                                            eventList.add(event);
-                                            eventArrayAdapter.notifyDataSetChanged();
-                                        }
-                                    }
-                                });
+                                eventsRef.document(eventId).get()
+                                         .addOnSuccessListener(eventSnapshot -> {
+                                             if (eventSnapshot.exists()) {
+                                                 Event event = eventSnapshot.toObject(Event.class);
+                                                 if (event != null && !eventList.contains(event)) {
+                                                     eventList.add(event);
+                                                     eventArrayAdapter.notifyDataSetChanged();
+                                                 }
+                                             }
+                                         });
                             }
                         }
                     }
@@ -143,19 +144,21 @@ public class MyEventsFragment extends Fragment {
      */
     public void entrantExists(String userId, Callback<Boolean> callback) {
         entrantRef.document(userId).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        boolean exists = task.getResult().exists();
-                        Log.d("EntrantsDB", "Entrant exists for userId: " + userId + " -> " + exists);
-                        callback.onComplete(exists);
-                    } else {
-                        Log.e("EntrantsDB", "Failed to fetch entrant for userId: " + userId, task.getException());
-                        callback.onComplete(false);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("EntrantsDB", "Error fetching entrant for userId: " + userId, e);
-                    callback.onComplete(false);
-                });
+                  .addOnCompleteListener(task -> {
+                      if (task.isSuccessful() && task.getResult() != null) {
+                          boolean exists = task.getResult().exists();
+                          Log.d("EntrantsDB",
+                                "Entrant exists for userId: " + userId + " -> " + exists);
+                          callback.onComplete(exists);
+                      } else {
+                          Log.e("EntrantsDB", "Failed to fetch entrant for userId: " + userId,
+                                task.getException());
+                          callback.onComplete(false);
+                      }
+                  })
+                  .addOnFailureListener(e -> {
+                      Log.e("EntrantsDB", "Error fetching entrant for userId: " + userId, e);
+                      callback.onComplete(false);
+                  });
     }
 }

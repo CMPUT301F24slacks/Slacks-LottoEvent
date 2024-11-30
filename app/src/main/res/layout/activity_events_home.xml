@@ -9,10 +9,10 @@
     tools:context=".EventsHomeActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
+        android:clickable="true"
         android:fitsSystemWindows="true">
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -27,9 +27,9 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
         app:backgroundTint="@color/button_background"
-        app:tint="@color/white"
         app:maxImageSize="36dp"
-        app:srcCompat="@drawable/baseline_qr_code_scanner_36" />
+        app:srcCompat="@drawable/baseline_qr_code_scanner_36"
+        app:tint="@color/white" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_event_FAB"
@@ -38,10 +38,10 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
+        android:visibility="gone"
         app:backgroundTint="@color/button_background"
         app:maxImageSize="36dp"
         app:srcCompat="@drawable/baseline_add_box_36"
-        android:visibility="gone"
         app:tint="@color/white" />
 
     <com.google.android.material.appbar.MaterialToolbar

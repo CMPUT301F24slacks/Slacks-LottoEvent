@@ -1,8 +1,5 @@
 package com.example.slacks_lottoevent;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -21,8 +18,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -33,26 +28,20 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
-
 
 /**
  * EventsHomeActivity is the main activity for the Events Home screen.
  */
 public class EventsHomeActivity extends AppCompatActivity {
 
+    private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1;
+    String deviceId;
     private ActivityEventsHomeBinding binding;
     private AppBarConfiguration appBarConfiguration;
     private MaterialToolbar toolbar;
     private FacilityViewModel facilityViewModel;
     private Boolean hasFacility = null;
-    String deviceId;
-
     private NotificationHelper notificationHelper;
-
-    private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1;
-
-
 
     /**
      * onCreate method for the EventsHomeActivity.
@@ -70,19 +59,19 @@ public class EventsHomeActivity extends AppCompatActivity {
         toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
 
-        TabLayout eventsTabs = findViewById(R.id.events_home_tab_layout); // Get the tab layout in EventsHomeActivity
+        TabLayout eventsTabs = findViewById(
+                R.id.events_home_tab_layout); // Get the tab layout in EventsHomeActivity
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_events_home); // Get the navigation controller
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build(); // Build the app bar configuration
+        NavController navController = Navigation.findNavController(this,
+                                                                   R.id.nav_host_fragment_content_events_home); // Get the navigation controller
+        appBarConfiguration = new AppBarConfiguration.Builder(
+                navController.getGraph()).build(); // Build the app bar configuration
         facilityViewModel = new ViewModelProvider(this).get(FacilityViewModel.class);
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-
 
         createNotificationChannel();
         notificationHelper = new NotificationHelper(this);
         checkAndRequestNotificationPermission();
-
 
         eventsTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -145,9 +134,11 @@ public class EventsHomeActivity extends AppCompatActivity {
                     if (!isSignedUp) {
                         new AlertDialog.Builder(EventsHomeActivity.this)
                                 .setTitle("Sign-Up Required")
-                                .setMessage("In order to create an event, we first need to collect some information about you.")
+                                .setMessage(
+                                        "In order to create an event, we first need to collect some information about you.")
                                 .setPositiveButton("Proceed", (dialog, which) -> {
-                                    Intent signUpIntent = new Intent(EventsHomeActivity.this, SignUpActivity.class);
+                                    Intent signUpIntent = new Intent(EventsHomeActivity.this,
+                                                                     SignUpActivity.class);
                                     startActivity(signUpIntent);
                                 })
                                 .setNegativeButton("Cancel", (dialog, which) -> {
@@ -155,7 +146,8 @@ public class EventsHomeActivity extends AppCompatActivity {
                                 })
                                 .show();
                     } else if (hasFacility == null || !hasFacility) {
-                        Toast.makeText(EventsHomeActivity.this, "Please create a facility first!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EventsHomeActivity.this, "Please create a facility first!",
+                                       Toast.LENGTH_SHORT).show();
                     } else {
                         // Open the create event page
                         Intent intent = new Intent(EventsHomeActivity.this, CreateEvent.class);
@@ -165,9 +157,6 @@ public class EventsHomeActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         /**
          * Handle app bar title clicks here.
          */
@@ -175,13 +164,15 @@ public class EventsHomeActivity extends AppCompatActivity {
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(EventsHomeActivity.this, "Toolbar title clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventsHomeActivity.this, "Toolbar title clicked", Toast.LENGTH_SHORT)
+                     .show();
             }
         });
     }
 
     /**
      * Inflate the menu; this adds items to the action bar if it is present.
+     *
      * @param menu The menu to inflate
      */
     @Override
@@ -193,6 +184,7 @@ public class EventsHomeActivity extends AppCompatActivity {
 
     /**
      * Handle action bar item clicks here.
+     *
      * @param item The menu item that was clicked
      */
     @Override
@@ -203,11 +195,13 @@ public class EventsHomeActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.profile) {
             // if the user is not signed up, redirect to the sign up page
-            SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo",
+                                                                       MODE_PRIVATE);
             if (!sharedPreferences.getBoolean("isSignedUp", false)) {
                 new AlertDialog.Builder(this)
                         .setTitle("Sign-Up Required")
-                        .setMessage("In order to join an event, we need to collect some information about you.")
+                        .setMessage(
+                                "In order to join an event, we need to collect some information about you.")
                         .setPositiveButton("Proceed", (dialog, which) -> {
                             Intent signUpIntent = new Intent(this, SignUpActivity.class);
                             startActivity(signUpIntent);
@@ -240,9 +234,11 @@ public class EventsHomeActivity extends AppCompatActivity {
         // the NotificationChannel class is not in the Support Library.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Use the appropriate context method
-            String channelId = getString(R.string.channel_id); // ensure channel ID is properly defined in strings.xml
+            String channelId = getString(
+                    R.string.channel_id); // ensure channel ID is properly defined in strings.xml
             CharSequence name = getString(R.string.channel_name); // name of the channel
-            String description = getString(R.string.channel_description); // description of the channel
+            String description = getString(
+                    R.string.channel_description); // description of the channel
             int importance = NotificationManager.IMPORTANCE_DEFAULT; // adjust as necessary
 
             // Create the NotificationChannel
@@ -259,51 +255,54 @@ public class EventsHomeActivity extends AppCompatActivity {
 
     /**
      * Fetches the notifications from the database
+     *
      * @param deviceId The id for that user's specific device.
      */
     private void grabbingNotifications(String deviceId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("notifications")
-                .whereEqualTo("userId", deviceId)
-                .addSnapshotListener((queryDocumentSnapshots, e) -> {
-                    if (e != null) {
-                        Log.e("Firestore", "Error listening for notifications", e);
-                        return;
-                    }
+          .whereEqualTo("userId", deviceId)
+          .addSnapshotListener((queryDocumentSnapshots, e) -> {
+              if (e != null) {
+                  Log.e("Firestore", "Error listening for notifications", e);
+                  return;
+              }
 
-                    if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
-                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                            String title = document.getString("title");
-                            String messageContent = document.getString("message");
-                            notificationHelper.sendNotifications(deviceId, title, messageContent);
-                        }
-                    }
-                    new Notifications().removeNotifications(deviceId);
-                });
+              if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
+                  for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                      String title = document.getString("title");
+                      String messageContent = document.getString("message");
+                      notificationHelper.sendNotifications(deviceId, title, messageContent);
+                  }
+              }
+              new Notifications().removeNotifications(deviceId);
+          });
     }
 
     /**
      * Check's if the user has allowed notifications when they first open the app.
      */
     private void checkAndRequestNotificationPermission() {
-        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo",
+                                                                   MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Boolean hasAsked = sharedPreferences.getBoolean("hasAskedNotifcations", false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED && (!hasAsked)) {
+            if (ActivityCompat.checkSelfPermission(this,
+                                                   android.Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED && (!hasAsked)) {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
-                        NOTIFICATION_PERMISSION_REQUEST_CODE);
+                                                  new String[]{
+                                                          android.Manifest.permission.POST_NOTIFICATIONS},
+                                                  NOTIFICATION_PERMISSION_REQUEST_CODE);
                 editor.putBoolean("hasAskedNotifcations", true);
                 editor.apply();
-            }
-            else {
+            } else {
                 startFetchingNotifications();
             }
-        }
-        else {
+        } else {
             startFetchingNotifications();
         }
     }
@@ -322,8 +321,10 @@ public class EventsHomeActivity extends AppCompatActivity {
      *                     This value is not null.
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo",
+                                                                   MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
@@ -339,14 +340,14 @@ public class EventsHomeActivity extends AppCompatActivity {
         }
     }
 
-
     /**
      * Initiates the process of fetching notifications for the device.
      * This method retrieves the device ID, starts the notification fetching process,
      * and removes old notifications for the device.
      */
     private void startFetchingNotifications() {
-        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        String deviceId = Settings.Secure.getString(getContentResolver(),
+                                                    Settings.Secure.ANDROID_ID);
         grabbingNotifications(deviceId);
 
         Notifications notification = new Notifications();

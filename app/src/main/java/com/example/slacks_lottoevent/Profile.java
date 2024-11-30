@@ -26,14 +26,15 @@ public class Profile {
     /**
      * Default constructor for Firestore serialization.
      */
-    public Profile() {}
+    public Profile() {
+    }
 
     /**
      * Constructor for creating a new profile.
      *
-     * @param name The name of the user.
-     * @param phone The phone number of the user.
-     * @param email The email address of the user.
+     * @param name    The name of the user.
+     * @param phone   The phone number of the user.
+     * @param email   The email address of the user.
      * @param context The application context for file access.
      */
     public Profile(String name, String phone, String email, String deviceId, Context context) {
@@ -53,7 +54,6 @@ public class Profile {
         this.adminNotifications = true;
     }
 
-
     public String getName() {
         return name;
     }
@@ -61,7 +61,7 @@ public class Profile {
     /**
      * Sets the name of the user and updates the profile picture if using the default picture.
      *
-     * @param name The name of the user.
+     * @param name    The name of the user.
      * @param context The application context for file access.
      */
     public void setName(String name, Context context) {
@@ -85,7 +85,13 @@ public class Profile {
         return phone;
     }
 
-    public String getDeviceId() {return deviceId;}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
 
     public boolean getAdminNotifications() {
         return adminNotifications;
@@ -93,10 +99,6 @@ public class Profile {
 
     public void setAdminNotifications(boolean adminNotifications) {
         this.adminNotifications = adminNotifications;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public boolean getUsingDefaultPicture() {
@@ -118,7 +120,7 @@ public class Profile {
     /**
      * Generates and saves a profile picture image with the initials of the name.
      *
-     * @param name The name to extract initials from.
+     * @param name    The name to extract initials from.
      * @param context The application context for accessing file storage.
      * @return The file path of the saved profile picture.
      */
@@ -165,7 +167,7 @@ public class Profile {
         String[] parts = name.split(" ");
         StringBuilder initials = new StringBuilder();
 
-        for (int i = 0 ; i < 2 && i < parts.length; i++) {
+        for (int i = 0; i < 2 && i < parts.length; i++) {
             String part = parts[i];
             if (!part.isEmpty() && Character.isLetter(part.charAt(0))) {
                 initials.append(part.charAt(0));
@@ -178,9 +180,9 @@ public class Profile {
     /**
      * Saves a Bitmap as an image file in the app's files directory.
      *
-     * @param bitmap The bitmap to save.
+     * @param bitmap  The bitmap to save.
      * @param context The application context for file access.
-     * @param name The name used to generate a unique file name.
+     * @param name    The name used to generate a unique file name.
      * @return The file path of the saved image.
      */
     private String saveBitmapAsImage(Bitmap bitmap, Context context, String name) {

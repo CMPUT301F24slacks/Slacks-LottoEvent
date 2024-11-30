@@ -6,11 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.slacks_lottoevent.model.User;
-import com.example.slacks_lottoevent.viewmodel.EntrantViewModel;
-import com.example.slacks_lottoevent.viewmodel.EventViewModel;
 import com.google.android.libraries.places.api.Places;
 
 /**

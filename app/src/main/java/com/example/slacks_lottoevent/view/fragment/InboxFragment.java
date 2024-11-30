@@ -1,5 +1,6 @@
 package com.example.slacks_lottoevent.view.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,14 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.slacks_lottoevent.EventNotificationsArrayAdapter;
@@ -57,7 +56,9 @@ public class InboxFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        sharedPreferences = requireActivity().getSharedPreferences("SlacksLottoEventUserInfo", requireActivity().MODE_PRIVATE);
+        requireActivity();
+        sharedPreferences = requireActivity().getSharedPreferences("SlacksLottoEventUserInfo",
+                                                                   Context.MODE_PRIVATE);
 
         // Initialize Firestore and Collections
         db = FirebaseFirestore.getInstance();
@@ -66,7 +67,8 @@ public class InboxFragment extends Fragment {
         eventList = new ArrayList<>();
 
         // Set up the adapter
-        adapter = new EventNotificationsArrayAdapter(requireContext(), eventList, sharedPreferences);
+        adapter = new EventNotificationsArrayAdapter(requireContext(), eventList,
+                                                     sharedPreferences);
         ListView listView = view.findViewById(R.id.listViewUserInvitations);
         listView.setAdapter(adapter);
 
@@ -77,7 +79,8 @@ public class InboxFragment extends Fragment {
         organizerNotis = view.findViewById(R.id.organizerNotifications);
         boolean notisEnabled = sharedPreferences.getBoolean("notificationsEnabled", false);
 
-        organizerNotis.setImageResource(notisEnabled ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
+        organizerNotis.setImageResource(
+                notisEnabled ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
 
         organizerNotis.setOnClickListener(v -> {
             boolean negation = !notisEnabled;
@@ -85,11 +88,13 @@ public class InboxFragment extends Fragment {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("notificationsEnabled", negation);
             editor.apply();
-            organizerNotis.setImageResource(negation ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
+            organizerNotis.setImageResource(
+                    negation ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
 
             Toast.makeText(requireContext(), negation
-                    ? "Notifications are enabled. To fully disable, revoke the permission in app settings."
-                    : "Notifications are disabled. To fully enable, allow permissions in app settings.", Toast.LENGTH_LONG).show();
+                                   ? "Notifications are enabled. To fully disable, revoke the permission in app settings."
+                                   : "Notifications are disabled. To fully enable, allow permissions in app settings.",
+                           Toast.LENGTH_LONG).show();
 
             // Redirect to the app's notification settings
             Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
@@ -99,7 +104,8 @@ public class InboxFragment extends Fragment {
     }
 
     private void fetchInvitedEvents(String eventTypes, Boolean selected) {
-        String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(),
+                                                    Settings.Secure.ANDROID_ID);
         entrantRef.document(deviceId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 DocumentSnapshot entrantDoc = task.getResult();
@@ -143,7 +149,8 @@ public class InboxFragment extends Fragment {
                         String location = eventDoc.getString("location");
 
                         UserEventNotifications event = new UserEventNotifications(
-                                name + (invited ? ": Selected" : ": Unselected"), date, time, location, eventId, invited);
+                                name + (invited ? ": Selected" : ": Unselected"), date, time,
+                                location, eventId, invited);
                         eventList.add(event);
 
                         adapter.notifyDataSetChanged();
@@ -151,7 +158,8 @@ public class InboxFragment extends Fragment {
                         Log.d("Firestore", "Event document does not exist for ID: " + eventId);
                     }
                 } else {
-                    Log.e("Firestore", "Error fetching event data for ID: " + eventId, task.getException());
+                    Log.e("Firestore", "Error fetching event data for ID: " + eventId,
+                          task.getException());
                 }
             });
         }

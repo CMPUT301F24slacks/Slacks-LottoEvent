@@ -2,66 +2,66 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:layout_gravity="center"
     android:background="#333333"
-    android:layout_gravity="center">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/dialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Craft Your Message"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
         android:gravity="center"
-        android:paddingBottom="16dp" />
+        android:paddingBottom="16dp"
+        android:text="Craft Your Message"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/dialogMessageTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#BDBDBD"
         android:hint="Enter Message"
-        android:textSize="18sp"
-        android:textColorHint="#D3D3D3"
-        android:textColor="#FFFFFF"
         android:paddingBottom="8dp"
-        android:backgroundTint="#BDBDBD" />
+        android:textColor="#FFFFFF"
+        android:textColorHint="#D3D3D3"
+        android:textSize="18sp" />
 
     <EditText
         android:id="@+id/dialogMessageInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#D3D3D3"
+        android:backgroundTint="#BDBDBD"
         android:hint="Type your message here"
         android:inputType="textMultiLine"
         android:minLines="3"
-        android:backgroundTint="#BDBDBD" />
+        android:textColor="#FFFFFF"
+        android:textColorHint="#D3D3D3" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="horizontal">
 
         <!-- Cancel Button -->
         <Button
             android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:text="Cancel"
-            android:textColor="#FFFFFF"
-            android:layout_marginEnd="8dp" />
+            android:textColor="#FFFFFF" />
 
         <!-- OK Button -->
         <Button
             android:id="@+id/confirm_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OK"
             android:backgroundTint="#8E24AA"
+            android:text="OK"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 

@@ -4,14 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -24,6 +16,11 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.example.slacks_lottoevent.Callback;
@@ -123,14 +120,16 @@ public class ProfileFragment extends Fragment {
                     Glide.with(this).load(profile.getProfilePicturePath()).into(profilePhoto);
                 }
             } else {
-                SnackbarUtils.promptSignUp(requireView(), requireContext(), R.id.bottom_app_bar); // Prompt user to sign up
+                SnackbarUtils.promptSignUp(requireView(), requireContext(),
+                                           R.id.bottom_app_bar); // Prompt user to sign up
             }
         });
 
         // edit profile button click listener
         editProfileButton.setOnClickListener(v -> {
             if (profileViewModel.getProfilesLiveData().getValue() == null) {
-                SnackbarUtils.promptSignUp(requireView(), requireContext(), R.id.bottom_app_bar); // Prompt user to sign up
+                SnackbarUtils.promptSignUp(requireView(), requireContext(),
+                                           R.id.bottom_app_bar); // Prompt user to sign up
             } else {
                 editToggle(true);
             }
@@ -151,8 +150,10 @@ public class ProfileFragment extends Fragment {
         // cancel button click listener
         cancelButton.setOnClickListener(v -> {
             nameEditText.setText(profileViewModel.getCurrentProfileLiveData().getValue().getName());
-            emailEditText.setText(profileViewModel.getCurrentProfileLiveData().getValue().getEmail());
-            phoneEditText.setText(profileViewModel.getCurrentProfileLiveData().getValue().getPhone());
+            emailEditText.setText(
+                    profileViewModel.getCurrentProfileLiveData().getValue().getEmail());
+            phoneEditText.setText(
+                    profileViewModel.getCurrentProfileLiveData().getValue().getPhone());
             editToggle(false);
         });
 
@@ -181,7 +182,7 @@ public class ProfileFragment extends Fragment {
                         if (data != null && data.getData() != null) {
                             selectedImageUri = data.getData();
                         }
-                        if (selectedImageUri != null){
+                        if (selectedImageUri != null) {
                             editImage(selectedImageUri);
                         }
                     }
@@ -190,6 +191,7 @@ public class ProfileFragment extends Fragment {
 
     /**
      * Method to validate the inputs
+     *
      * @return
      */
     private boolean validInputs() {
@@ -228,29 +230,35 @@ public class ProfileFragment extends Fragment {
 
     private void editImage(Uri newImageUri) {
         // Step 1: Delete the old image from Google Cloud Storage
-        deleteOldImage(profileViewModel.getCurrentProfileLiveData().getValue().getProfilePicturePath(), () -> {
-            // Step 2: Upload the new image
-            uploadNewImage(newImageUri, newImageUrl -> {
-                // Step 3: Update Firestore with the new image URL
-                updateFirestoreWithNewImage(newImageUrl, success -> {
-                    if (success) {
-                        refreshUI(newImageUrl); // Update the UI
-                    } else {
-                        Toast.makeText(requireActivity(), "Failed to update Firestore", Toast.LENGTH_SHORT).show();
-                    }
+        deleteOldImage(
+                profileViewModel.getCurrentProfileLiveData().getValue().getProfilePicturePath(),
+                () -> {
+                    // Step 2: Upload the new image
+                    uploadNewImage(newImageUri, newImageUrl -> {
+                        // Step 3: Update Firestore with the new image URL
+                        updateFirestoreWithNewImage(newImageUrl, success -> {
+                            if (success) {
+                                refreshUI(newImageUrl); // Update the UI
+                            } else {
+                                Toast.makeText(requireActivity(), "Failed to update Firestore",
+                                               Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    });
                 });
-            });
-        });
     }
 
     private void deleteOldImage(String oldImageUrl, Runnable onSuccess) {
-        if (oldImageUrl != null && !oldImageUrl.isEmpty() && !profileViewModel.getCurrentProfileLiveData().getValue().getUsingDefaultPicture()) {
-            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(oldImageUrl);
+        if (oldImageUrl != null && !oldImageUrl.isEmpty() &&
+            !profileViewModel.getCurrentProfileLiveData().getValue().getUsingDefaultPicture()) {
+            StorageReference storageReference = FirebaseStorage.getInstance()
+                                                               .getReferenceFromUrl(oldImageUrl);
             storageReference.delete()
-                    .addOnSuccessListener(aVoid -> onSuccess.run())
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(requireActivity(), "Failed to delete old image", Toast.LENGTH_SHORT).show();
-                    });
+                            .addOnSuccessListener(aVoid -> onSuccess.run())
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(requireActivity(), "Failed to delete old image",
+                                               Toast.LENGTH_SHORT).show();
+                            });
         } else {
             onSuccess.run(); // No old image to delete, continue
         }
@@ -260,27 +268,29 @@ public class ProfileFragment extends Fragment {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
         Date now = new Date();
         String fileName = formatter.format(now);
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference("profile-pictures/" + fileName);
+        StorageReference storageRef = FirebaseStorage.getInstance()
+                                                     .getReference("profile-pictures/" + fileName);
 
         storageRef.putFile(newImageUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    Log.d("Storage", "Successfully uploaded");
+                  .addOnSuccessListener(taskSnapshot -> {
+                      Log.d("Storage", "Successfully uploaded");
 
-                    // Retrieve the download URL
-                    storageRef.getDownloadUrl()
-                            .addOnSuccessListener(uri -> {
-                                String eventPosterURL = uri.toString();
-                                callback.onComplete(eventPosterURL); // Pass the URL to the callback
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("Error", "Failed to get download URL", e);
-                                callback.onComplete(null); // Return null to indicate failure
-                            });
-                })
-                .addOnFailureListener(e -> {
-                    Log.d("Storage", "Failed to upload");
-                    callback.onComplete(null); // Return null to indicate failure
-                });
+                      // Retrieve the download URL
+                      storageRef.getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    String eventPosterURL = uri.toString();
+                                    callback.onComplete(
+                                            eventPosterURL); // Pass the URL to the callback
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Error", "Failed to get download URL", e);
+                                    callback.onComplete(null); // Return null to indicate failure
+                                });
+                  })
+                  .addOnFailureListener(e -> {
+                      Log.d("Storage", "Failed to upload");
+                      callback.onComplete(null); // Return null to indicate failure
+                  });
     }
 
     private void updateFirestoreWithNewImage(String newImageUrl, Callback<Boolean> callback) {

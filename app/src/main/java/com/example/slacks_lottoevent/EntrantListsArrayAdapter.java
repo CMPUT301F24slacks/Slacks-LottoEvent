@@ -16,8 +16,9 @@ public class EntrantListsArrayAdapter extends ArrayAdapter<String> {
 
     /**
      * Constructor for the custom ArrayAdapter
+     *
      * @param context The current context
-     * @param items The list of items to display
+     * @param items   The list of items to display
      */
     public EntrantListsArrayAdapter(Context context, List<String> items) {
         super(context, 0, items);
@@ -25,9 +26,10 @@ public class EntrantListsArrayAdapter extends ArrayAdapter<String> {
 
     /**
      * Get a View that displays the data at the specified position in the data set
-     * @param position The position of the item within the adapter's data set
+     *
+     * @param position    The position of the item within the adapter's data set
      * @param convertView The old view to reuse, if possible
-     * @param parent The parent that this view will eventually be attached to
+     * @param parent      The parent that this view will eventually be attached to
      * @return A View corresponding to the data at the specified position
      */
     @Override
@@ -36,7 +38,8 @@ public class EntrantListsArrayAdapter extends ArrayAdapter<String> {
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+            convertView = LayoutInflater.from(getContext())
+                                        .inflate(R.layout.list_item, parent, false);
 
             // Create a ViewHolder to cache the TextView
             holder = new ViewHolder();

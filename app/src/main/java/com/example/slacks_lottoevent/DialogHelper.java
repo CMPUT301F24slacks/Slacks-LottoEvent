@@ -11,7 +11,8 @@ import android.widget.Toast;
 public class DialogHelper {
 
     // This method can be used to show the message crafting dialog
-    public static void showMessageDialog(Context context, Notifications notifications, String eventId, String listToUse) {
+    public static void showMessageDialog(Context context, Notifications notifications,
+                                         String eventId, String listToUse) {
         // Inflate the custom dialog layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View dialogView = inflater.inflate(R.layout.dialog_custom_message, null);
@@ -41,7 +42,8 @@ public class DialogHelper {
                 dialog.dismiss(); // Close the dialog after sending
             } else {
                 // Show a Toast if inputs are empty
-                Toast.makeText(context, "Message and title cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Message and title cannot be empty", Toast.LENGTH_SHORT)
+                     .show();
             }
         });
 

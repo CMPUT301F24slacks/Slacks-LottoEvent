@@ -8,8 +8,6 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,14 +21,13 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import com.bumptech.glide.Glide;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -63,6 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     /**
      * OnCreate method for the ProfileActivity
+     *
      * @param savedInstanceState
      */
     @Override
@@ -158,12 +156,11 @@ public class ProfileActivity extends AppCompatActivity {
                             if (data != null && data.getData() != null) {
                                 selectedImageUri = data.getData();
                             }
-                            if (selectedImageUri != null){
+                            if (selectedImageUri != null) {
                                 editImage(selectedImageUri);
                             }
                         }
                     }
-
 
                 });
 
@@ -188,16 +185,17 @@ public class ProfileActivity extends AppCompatActivity {
 
             // Save changes to Firestore
             profilesRef.document(userId).set(profile)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
-                        updateUIWithProfile(); // Refresh UI
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("ProfileActivity", "Failed to update profile: " + e.getMessage());
-                        Toast.makeText(this, "Failed to save changes. Please try again.", Toast.LENGTH_SHORT).show();
-                    });
+                       .addOnSuccessListener(aVoid -> {
+                           Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT)
+                                .show();
+                           updateUIWithProfile(); // Refresh UI
+                       })
+                       .addOnFailureListener(e -> {
+                           Log.e("ProfileActivity", "Failed to update profile: " + e.getMessage());
+                           Toast.makeText(this, "Failed to save changes. Please try again.",
+                                          Toast.LENGTH_SHORT).show();
+                       });
         });
-
 
         // Cancel button listener
         cancelButton.setOnClickListener(v -> {
@@ -218,17 +216,16 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void updateFirestoreWithNewImage(String newImageUrl, Callback<Boolean> callback) {
         profilesRef.document(profile.getDeviceId()).update("profilePicturePath", newImageUrl)
-                .addOnSuccessListener(aVoid -> {
-                    profile.setProfilePicturePath(newImageUrl);
-                    profile.setUsingDefaultPicture(false);
-                    callback.onComplete(true);
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("ProfileActivity", "Failed to update Firestore with new image URL", e);
-                    callback.onComplete(false);
-                });
+                   .addOnSuccessListener(aVoid -> {
+                       profile.setProfilePicturePath(newImageUrl);
+                       profile.setUsingDefaultPicture(false);
+                       callback.onComplete(true);
+                   })
+                   .addOnFailureListener(e -> {
+                       Log.e("ProfileActivity", "Failed to update Firestore with new image URL", e);
+                       callback.onComplete(false);
+                   });
     }
-
 
     private void editImage(Uri newImageUri) {
         // Step 1: Delete the old image from Google Cloud Storage
@@ -240,7 +237,8 @@ public class ProfileActivity extends AppCompatActivity {
                     if (success) {
                         refreshUI(newImageUrl); // Update the UI
                     } else {
-                        Toast.makeText(this, "Failed to update Firestore", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to update Firestore", Toast.LENGTH_SHORT)
+                             .show();
                     }
                 });
             });
@@ -251,40 +249,46 @@ public class ProfileActivity extends AppCompatActivity {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
         Date now = new Date();
         String fileName = formatter.format(now);
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference("profile-pictures/" + fileName);
+        StorageReference storageRef = FirebaseStorage.getInstance()
+                                                     .getReference("profile-pictures/" + fileName);
 
         storageRef.putFile(newImageUri)
-                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
-                        .addOnSuccessListener(uri -> {
-                            String newImageUrl = uri.toString();
-                            callback.onComplete(newImageUrl); // Pass the new URL to the callback
-                        })
-                        .addOnFailureListener(e -> {
-                            Log.e("ProfileActivity", "Failed to get download URL", e);
-                            callback.onComplete(null);
-                        }))
-                .addOnFailureListener(e -> {
-                    Log.e("ProfileActivity", "Failed to upload file", e);
-                    callback.onComplete(null);
-                });
+                  .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
+                                                                  .addOnSuccessListener(uri -> {
+                                                                      String newImageUrl = uri.toString();
+                                                                      callback.onComplete(
+                                                                              newImageUrl); // Pass the new URL to the callback
+                                                                  })
+                                                                  .addOnFailureListener(e -> {
+                                                                      Log.e("ProfileActivity",
+                                                                            "Failed to get download URL",
+                                                                            e);
+                                                                      callback.onComplete(null);
+                                                                  }))
+                  .addOnFailureListener(e -> {
+                      Log.e("ProfileActivity", "Failed to upload file", e);
+                      callback.onComplete(null);
+                  });
     }
 
-
     private void deleteOldImage(String oldImageUrl, Runnable onSuccess) {
-        if (oldImageUrl != null && (oldImageUrl.startsWith("gs://") || oldImageUrl.startsWith("https://firebasestorage.googleapis.com/"))) {
-            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(oldImageUrl);
+        if (oldImageUrl != null && (oldImageUrl.startsWith("gs://") || oldImageUrl.startsWith(
+                "https://firebasestorage.googleapis.com/"))) {
+            StorageReference storageReference = FirebaseStorage.getInstance()
+                                                               .getReferenceFromUrl(oldImageUrl);
             storageReference.delete()
-                    .addOnSuccessListener(aVoid -> onSuccess.run())
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(this, "Failed to delete old image", Toast.LENGTH_SHORT).show();
-                        Log.e("ProfileActivity", "Error deleting old image: ", e);
-                    });
+                            .addOnSuccessListener(aVoid -> onSuccess.run())
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(this, "Failed to delete old image",
+                                               Toast.LENGTH_SHORT).show();
+                                Log.e("ProfileActivity", "Error deleting old image: ", e);
+                            });
         } else {
-            Log.w("ProfileActivity", "Old image URL is not a valid Firebase Storage URL. Skipping deletion.");
+            Log.w("ProfileActivity",
+                  "Old image URL is not a valid Firebase Storage URL. Skipping deletion.");
             onSuccess.run(); // No valid URL to delete, continue with the operation
         }
     }
-
 
     private void selectImage() {
         Intent intent = new Intent();
@@ -295,6 +299,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     /**
      * Method to handle the result of the image picker
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -307,7 +312,8 @@ public class ProfileActivity extends AppCompatActivity {
             Uri selectedImageUri = data.getData();
 
             // Update the ImageView in the dialog
-            ImageView selectedImageView = (ImageView) findViewById(R.id.selected_image_view).getTag(R.id.selected_image_view);
+            ImageView selectedImageView = (ImageView) findViewById(R.id.selected_image_view).getTag(
+                    R.id.selected_image_view);
             selectedImageView.setImageURI(selectedImageUri);
             selectedImageView.setTag(selectedImageUri); // Store URI in the tag for confirmation
         }
@@ -315,6 +321,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     /**
      * Method to open the image picker
+     *
      * @param selectedImageView
      */
     private void openImagePicker(ImageView selectedImageView) {
@@ -328,6 +335,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     /**
      * Method to validate the inputs
+     *
      * @return
      */
     private boolean validateInputs() {
@@ -374,6 +382,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     /**
      * Method to set the fields editable
+     *
      * @param isEditable
      */
     private void setFieldsEditable(boolean isEditable) {
