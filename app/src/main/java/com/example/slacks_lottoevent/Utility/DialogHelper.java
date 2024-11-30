@@ -40,7 +40,7 @@ public class DialogHelper {
 
             if (!message.isEmpty() && !title.isEmpty()) {
                 // Call the method to send the notification
-                notifications.addNotifications(title, message, listToUse, eventId);
+                notifications.addNotifications(title, message, listToUse, eventId, false);
                 dialog.dismiss(); // Close the dialog after sending
             } else {
                 // Show a Toast if inputs are empty

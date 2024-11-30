@@ -19,10 +19,7 @@ import java.util.Map;
  * - "notifications" for storing and managing user-specific notifications.
  */
 public class Notifications {
-    private String title;
-    private String content;
-    private String userId;
-    private String eventId;
+    ArrayList<String> deviceIds;
 
     private final FirebaseFirestore db;
 
@@ -43,13 +40,24 @@ public class Notifications {
      * @param customMessage The message content of the notification.
      * @param listToGrab    The key in the event document representing the list of device IDs.
      * @param eventId       The unique identifier of the event to retrieve the list from.
+     * @param allLists      The flag to determine if we send notifications too all people or just specific.
      */
     public void addNotifications(String customName, String customMessage, String listToGrab,
-                                 String eventId) {
+                                 String eventId, Boolean allLists) {
         db.collection("events").document(eventId).get().addOnSuccessListener(eventDoc -> {
             if (eventDoc.exists()) {
+                ArrayList<String> deviceIds = null;
 //                Grabbing people who want these notifications
-                ArrayList<String> deviceIds = (ArrayList<String>) eventDoc.get(listToGrab);
+                if (allLists) {
+                    deviceIds.addAll((ArrayList<String>) eventDoc.get("waitlistedNotificationsList"));
+                    deviceIds.addAll((ArrayList<String>) eventDoc.get("selectedNotificationsList"));
+                    deviceIds.addAll((ArrayList<String>) eventDoc.get("joinedNotificationsList"));
+                    deviceIds.addAll((ArrayList<String>) eventDoc.get("cancelledNotificationsList"));
+                }
+
+                else{
+                    deviceIds = (ArrayList<String>) eventDoc.get(listToGrab);
+                }
 
                 if (deviceIds != null && !deviceIds.isEmpty()) {
                     // Send individual notifications to each user in the waitlist
