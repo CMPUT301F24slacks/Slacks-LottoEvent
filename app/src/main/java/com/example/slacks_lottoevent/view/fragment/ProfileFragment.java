@@ -1,13 +1,19 @@
 package com.example.slacks_lottoevent.view.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +23,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.example.slacks_lottoevent.Callback;
 import com.example.slacks_lottoevent.Profile;
 import com.example.slacks_lottoevent.R;
-import com.example.slacks_lottoevent.SignUpActivity;
 import com.example.slacks_lottoevent.Utility.SnackbarUtils;
 import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,12 +53,17 @@ public class ProfileFragment extends Fragment {
     private ImageView notificationsIcon;
     private Switch notificationsSwitch;
     private Button editProfileButton;
-    private Button editPictureButton;
+    private Button uploadButton;
+    private Button removeButton;
     private Button confirmButton;
     private Button cancelButton;
 
     // ViewModel
     private ProfileViewModel profileViewModel;
+
+    // Image picker
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private Uri selectedImageUri;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -84,12 +102,13 @@ public class ProfileFragment extends Fragment {
         notificationsIcon = view.findViewById(R.id.notifications_icon);
         notificationsSwitch = view.findViewById(R.id.switch_notifications);
         editProfileButton = view.findViewById(R.id.btn_edit_profile);
-        editPictureButton = view.findViewById(R.id.btn_edit_picture);
+        uploadButton = view.findViewById(R.id.btn_upload);
+        removeButton = view.findViewById(R.id.btn_remove);
         confirmButton = view.findViewById(R.id.btn_confirm);
         cancelButton = view.findViewById(R.id.btn_cancel);
 
         // Set up ViewModel
-        ProfileViewModel profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+        profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
 
         profileViewModel.getCurrentProfileLiveData().observe(getViewLifecycleOwner(), profile -> {
             if (profile != null) {
@@ -100,6 +119,8 @@ public class ProfileFragment extends Fragment {
                 // Set profile photo
                 if (profile.getUsingDefaultPicture()) {
                     profilePhoto.setImageURI(Uri.parse(profile.getProfilePicturePath()));
+                } else {
+                    Glide.with(this).load(profile.getProfilePicturePath()).into(profilePhoto);
                 }
             } else {
                 SnackbarUtils.promptSignUp(requireView(), requireContext(), R.id.bottom_app_bar); // Prompt user to sign up
@@ -129,20 +150,42 @@ public class ProfileFragment extends Fragment {
 
         // cancel button click listener
         cancelButton.setOnClickListener(v -> {
+            nameEditText.setText(profileViewModel.getCurrentProfileLiveData().getValue().getName());
+            emailEditText.setText(profileViewModel.getCurrentProfileLiveData().getValue().getEmail());
+            phoneEditText.setText(profileViewModel.getCurrentProfileLiveData().getValue().getPhone());
+            editToggle(false);
         });
 
-        // edit picture button click listener
-        editPictureButton.setOnClickListener(v -> {
-            profileViewModel.getCurrentProfileLiveData().observe(getViewLifecycleOwner(), profile -> {
-                if (profile != null) {
-                    // Open gallery to select a new profile picture
-                    // Placeholder for opening gallery
-                } else {
-                    SnackbarUtils.promptSignUp(requireView(), requireContext(), R.id.bottom_app_bar); // Prompt user to sign up
-                }
-            });
+        // upload button click listener
+        uploadButton.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            imagePickerLauncher.launch(intent);
         });
 
+        // remove button click listener
+        removeButton.setOnClickListener(v -> {
+            Profile profile = profileViewModel.getCurrentProfileLiveData().getValue();
+            profile.setProfilePicturePath("");
+            profile.setUsingDefaultPicture(true);
+            profile.setName(profile.getName(), requireContext()); // Update the profile picture
+            profileViewModel.updateProfile(profile);
+            profilePhoto.setImageURI(Uri.parse(profile.getProfilePicturePath()));
+        });
+
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null && data.getData() != null) {
+                            selectedImageUri = data.getData();
+                        }
+                        if (selectedImageUri != null){
+                            editImage(selectedImageUri);
+                        }
+                    }
+                });
     }
 
     /**
@@ -178,9 +221,77 @@ public class ProfileFragment extends Fragment {
         nameEditText.setEnabled(edit);
         emailEditText.setEnabled(edit);
         phoneEditText.setEnabled(edit);
-        editPictureButton.setVisibility(edit ? View.GONE : View.VISIBLE);
         editProfileButton.setVisibility(edit ? View.GONE : View.VISIBLE);
         confirmButton.setVisibility(edit ? View.VISIBLE : View.GONE);
         cancelButton.setVisibility(edit ? View.VISIBLE : View.GONE);
+    }
+
+    private void editImage(Uri newImageUri) {
+        // Step 1: Delete the old image from Google Cloud Storage
+        deleteOldImage(profileViewModel.getCurrentProfileLiveData().getValue().getProfilePicturePath(), () -> {
+            // Step 2: Upload the new image
+            uploadNewImage(newImageUri, newImageUrl -> {
+                // Step 3: Update Firestore with the new image URL
+                updateFirestoreWithNewImage(newImageUrl, success -> {
+                    if (success) {
+                        refreshUI(newImageUrl); // Update the UI
+                    } else {
+                        Toast.makeText(requireActivity(), "Failed to update Firestore", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        });
+    }
+
+    private void deleteOldImage(String oldImageUrl, Runnable onSuccess) {
+        if (oldImageUrl != null && !oldImageUrl.isEmpty() && !profileViewModel.getCurrentProfileLiveData().getValue().getUsingDefaultPicture()) {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(oldImageUrl);
+            storageReference.delete()
+                    .addOnSuccessListener(aVoid -> onSuccess.run())
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(requireActivity(), "Failed to delete old image", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            onSuccess.run(); // No old image to delete, continue
+        }
+    }
+
+    private void uploadNewImage(Uri newImageUri, Callback<String> callback) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
+        Date now = new Date();
+        String fileName = formatter.format(now);
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("profile-pictures/" + fileName);
+
+        storageRef.putFile(newImageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    Log.d("Storage", "Successfully uploaded");
+
+                    // Retrieve the download URL
+                    storageRef.getDownloadUrl()
+                            .addOnSuccessListener(uri -> {
+                                String eventPosterURL = uri.toString();
+                                callback.onComplete(eventPosterURL); // Pass the URL to the callback
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("Error", "Failed to get download URL", e);
+                                callback.onComplete(null); // Return null to indicate failure
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.d("Storage", "Failed to upload");
+                    callback.onComplete(null); // Return null to indicate failure
+                });
+    }
+
+    private void updateFirestoreWithNewImage(String newImageUrl, Callback<Boolean> callback) {
+        Profile profile = profileViewModel.getCurrentProfileLiveData().getValue();
+        profile.setProfilePicturePath(newImageUrl);
+        profile.setUsingDefaultPicture(false);
+        profileViewModel.updateProfile(profile);
+    }
+
+    private void refreshUI(String newImageUrl) {
+        Glide.with(this).load(newImageUrl).into(profilePhoto); // Update your ImageView
+        Toast.makeText(requireActivity(), "Image updated successfully", Toast.LENGTH_SHORT).show();
     }
 }

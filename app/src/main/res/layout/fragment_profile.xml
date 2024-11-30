@@ -28,6 +28,32 @@
             app:srcCompat="@drawable/event_image" />
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#2196F3"
+            android:text="Upload Picture"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btn_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#E91E63"
+            android:text="Remove Picture"
+            android:textColor="#FFFFFF"/>
+    </LinearLayout>
+
     <!-- Username -->
     <TextView
         android:id="@+id/username"
@@ -39,53 +65,6 @@
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:textStyle="bold" />
-
-    <!-- Edit Profile and Hidden Buttons -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_edit_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#AA50F8"
-            android:text="Edit Profile"
-            android:textColor="#FFFFFF" />
-
-        <Button
-            android:id="@+id/btn_edit_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:backgroundTint="#03A9F4"
-            android:text="Edit Picture"
-            android:textColor="#FFFFFF" />
-
-        <!-- Hidden Confirm and Cancel Buttons -->
-        <Button
-            android:id="@+id/btn_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:backgroundTint="#4CAF50"
-            android:text="Confirm"
-            android:textColor="#FFFFFF"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/btn_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:backgroundTint="#F44336"
-            android:text="Cancel"
-            android:textColor="#FFFFFF"
-            android:visibility="gone" />
-    </LinearLayout>
 
     <!-- Form Fields -->
     <EditText
@@ -125,5 +104,43 @@
         android:padding="12dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#AAAAAA" />
+
+    <!-- Edit Profile and Hidden Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_edit_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#AA50F8"
+            android:text="Edit Profile"
+            android:textColor="#FFFFFF" />
+
+        <!-- Hidden Confirm and Cancel Buttons -->
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#4CAF50"
+            android:text="Confirm"
+            android:textColor="#FFFFFF"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#F44336"
+            android:text="Cancel"
+            android:textColor="#FFFFFF"
+            android:visibility="gone" />
+    </LinearLayout>
 
 </LinearLayout>
