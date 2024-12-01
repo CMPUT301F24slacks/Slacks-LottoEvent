@@ -31,8 +31,6 @@ public class UserNotifications extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private CollectionReference entrantRef;
-    //    private CollectionReference organizersRef;
-//    private CollectionReference facilitiesRef;
     private ArrayList<UserEventNotifications> eventList;
     private EventNotificationsArrayAdapter adapter;
 
@@ -50,8 +48,6 @@ public class UserNotifications extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
         entrantRef = db.collection("entrants");
-//        organizersRef = db.collection("organizers");
-//        facilitiesRef = db.collection("facilities");
         eventList = new ArrayList<>();
 
         // Set up the adapter
@@ -74,24 +70,6 @@ public class UserNotifications extends AppCompatActivity {
                 notisEnabled ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
 
         organizerNotis.setOnClickListener(v -> {
-//            boolean negation = !notisEnabled;
-//
-//            SharedPreferences.Editor editor = sharedPreferences.edit();
-//            editor.putBoolean("notificationsEnabled", negation);
-//            editor.apply();
-//            organizerNotis.setImageResource(
-//                    negation ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
-//
-//            if (notisEnabled) {
-//                Toast.makeText(this,
-//                               "Notifications are disabled. To fully disable, revoke the permission in app settings.",
-//                               Toast.LENGTH_LONG).show();
-//            } else {
-//                Toast.makeText(this,
-//                               "Notifications are enabled. To fully disable, revoke the permission in app settings.",
-//                               Toast.LENGTH_LONG).show();
-//            }
-
             // Redirect to the app's notification settings
             Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
             intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
@@ -187,8 +165,6 @@ public class UserNotifications extends AppCompatActivity {
                                 name + ": Selected", date, time, location, eventId, true);
                         eventList.add(event);
 
-//                        saveEventAsDisplayed(eventId);
-
                         // Notify adapter of data changes
                         adapter.notifyDataSetChanged();
                     } else if (eventDoc.exists() && !invited) {
@@ -200,8 +176,6 @@ public class UserNotifications extends AppCompatActivity {
                         UserEventNotifications event = new UserEventNotifications(
                                 name + ": Unselected", date, time, location, eventId, false);
                         eventList.add(event);
-
-//                        saveEventAsDisplayed(eventId);
 
                         // Notify adapter of data changes
                         adapter.notifyDataSetChanged();
