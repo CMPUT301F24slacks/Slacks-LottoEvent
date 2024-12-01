@@ -173,9 +173,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPrepareOptionsMenu(android.view.Menu)" class="member-name-link">onPrepareOptionsMenu</a><wbr>(android.view.Menu&nbsp;menu)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onSupportNavigateUp()" class="member-name-link">onSupportNavigateUp</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onRequestPermissionsResult(int,java.lang.String%5B%5D,int%5B%5D)" class="member-name-link">onRequestPermissionsResult</a><wbr>(int&nbsp;requestCode,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;permissions,
+ int[]&nbsp;grantResults)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onSupportNavigateUp()" class="member-name-link">onSupportNavigateUp</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -184,7 +189,7 @@ loadScripts(document, 'script');</script>
 <code>addContentView, attachBaseContext, closeOptionsMenu, dispatchKeyEvent, findViewById, getDelegate, getDrawerToggleDelegate, getMenuInflater, getResources, getSupportActionBar, getSupportParentActivityIntent, invalidateOptionsMenu, onConfigurationChanged, onContentChanged, onCreateSupportNavigateUpTaskStack, onDestroy, onKeyDown, onLocalesChanged, onMenuItemSelected, onMenuOpened, onNightModeChanged, onPanelClosed, onPostCreate, onPostResume, onPrepareSupportNavigateUpTaskStack, onStart, onStop, onSupportActionModeFinished, onSupportActionModeStarted, onSupportContentChanged, onTitleChanged, onWindowStartingSupportActionMode, openOptionsMenu, setContentView, setContentView, setContentView, setSupportActionBar, setSupportProgress, setSupportProgressBarIndeterminate, setSupportProgressBarIndeterminateVisibility, setSupportProgressBarVisibility, setTheme, startSupportActionMode, supportInvalidateOptionsMenu, supportNavigateUpTo, supportRequestWindowFeature, supportShouldUpRecreateTask</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-androidx.fragment.app.FragmentActivity">Methods inherited from class&nbsp;androidx.fragment.app.FragmentActivity</h3>
-<code>dump, getSupportFragmentManager, getSupportLoaderManager, onActivityResult, onAttachFragment, onCreateView, onCreateView, onPause, onRequestPermissionsResult, onResume, onResumeFragments, onStateNotSaved, setEnterSharedElementCallback, setExitSharedElementCallback, startActivityFromFragment, startActivityFromFragment, startIntentSenderFromFragment, supportFinishAfterTransition, supportPostponeEnterTransition, supportStartPostponedEnterTransition, validateRequestPermissionsRequestCode</code></div>
+<code>dump, getSupportFragmentManager, getSupportLoaderManager, onActivityResult, onAttachFragment, onCreateView, onCreateView, onPause, onResume, onResumeFragments, onStateNotSaved, setEnterSharedElementCallback, setExitSharedElementCallback, startActivityFromFragment, startActivityFromFragment, startIntentSenderFromFragment, supportFinishAfterTransition, supportPostponeEnterTransition, supportStartPostponedEnterTransition, validateRequestPermissionsRequestCode</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-androidx.activity.ComponentActivity">Methods inherited from class&nbsp;androidx.activity.ComponentActivity</h3>
 <code>addMenuProvider, addMenuProvider, addMenuProvider, addOnConfigurationChangedListener, addOnContextAvailableListener, addOnMultiWindowModeChangedListener, addOnNewIntentListener, addOnPictureInPictureModeChangedListener, addOnTrimMemoryListener, addOnUserLeaveHintListener, getActivityResultRegistry, getDefaultViewModelCreationExtras, getDefaultViewModelProviderFactory, getFullyDrawnReporter, getLastCustomNonConfigurationInstance, getLifecycle, getOnBackPressedDispatcher, getSavedStateRegistry, getViewModelStore, initializeViewTreeOwners, invalidateMenu, onBackPressed, onCreatePanelMenu, onMultiWindowModeChanged, onMultiWindowModeChanged, onNewIntent, onPictureInPictureModeChanged, onPictureInPictureModeChanged, onPreparePanel, onRetainCustomNonConfigurationInstance, onRetainNonConfigurationInstance, onSaveInstanceState, onTrimMemory, onUserLeaveHint, peekAvailableContext, registerForActivityResult, registerForActivityResult, removeMenuProvider, removeOnConfigurationChangedListener, removeOnContextAvailableListener, removeOnMultiWindowModeChangedListener, removeOnNewIntentListener, removeOnPictureInPictureModeChangedListener, removeOnTrimMemoryListener, removeOnUserLeaveHintListener, reportFullyDrawn, startActivityForResult, startActivityForResult, startIntentSenderForResult, startIntentSenderForResult</code></div>
@@ -283,6 +288,22 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onSupportNavigateUp</code>&nbsp;in class&nbsp;<code>androidx.appcompat.app.AppCompatActivity</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="onRequestPermissionsResult(int,java.lang.String[],int[])">
+<h3>onRequestPermissionsResult</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onRequestPermissionsResult</span><wbr><span class="parameters">(int&nbsp;requestCode,
+ @NonNull
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;permissions,
+ @NonNull
+ int[]&nbsp;grantResults)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>onRequestPermissionsResult</code>&nbsp;in interface&nbsp;<code>androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback</code></dd>
+<dt>Overrides:</dt>
+<dd><code>onRequestPermissionsResult</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.FragmentActivity</code></dd>
 </dl>
 </section>
 </li>
