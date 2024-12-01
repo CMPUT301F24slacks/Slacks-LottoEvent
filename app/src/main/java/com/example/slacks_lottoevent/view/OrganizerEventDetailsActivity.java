@@ -154,8 +154,7 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
                           null
                   );
 
-//                  TODO: ADD EVENT NAME
-                  notifications.addNotifications( "Event Deleted", "This event was deleted by admin, sorry for the inconvienience", null, eventID, true);
+//                  notifications.addNotifications( "Event Deleted", "This event was deleted by admin, sorry for the inconvienience", null, eventID, true);
 
               } else {
                   // Directly delete the event if not from facility
