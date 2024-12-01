@@ -42,7 +42,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="362dp"
+                android:layout_height="410dp"
                 android:layout_marginBottom="16dp"
                 android:background="#333333"
                 android:orientation="vertical"
@@ -160,7 +160,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="Join us for the Tech Innovators Summit 2024, where industry leaders..."
+                    android:text="Join us for the Tech Innovators Summit 2024, where industry leaders helpp aheebuiebdfbeujfbejbfrjehfbfbrhejfbjehfbrhjbfjhrfbrjfbbfhbfrbfrjfbrjhbfjrbfrjfbrjbfjrbfjfjbjrhbfrjbfrjbfrjbfrjbfrfbhrjbfhjrbfhjrbfjrbfjrbfjrbfbjrfbrjbfjrbfjrhfbrhjbrjhbfrhjbfjrbfrjfbrjhbfrjbfjrhbfjhrbfjrfbjrbfjrskibigSohanaDhinsa"
                     android:textColor="#FFFFFF" />
 
 

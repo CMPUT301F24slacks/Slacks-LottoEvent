@@ -6,6 +6,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -18,6 +19,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.slacks_lottoevent.BuildConfig;
 import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.Utility.SnackbarUtils;
+import com.example.slacks_lottoevent.model.Event;
+import com.example.slacks_lottoevent.viewmodel.EventViewModel;
 import com.example.slacks_lottoevent.viewmodel.FacilityViewModel;
 import com.example.slacks_lottoevent.viewmodel.OrganizerViewModel;
 import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;
@@ -38,10 +41,11 @@ import java.util.Map;
  * create an instance of this fragment.
  */
 public class FacilityFragment extends Fragment {
+    private final Map<AutoCompleteTextView, String> validSelections = new HashMap<>();
     private FacilityViewModel facilityViewModel;
     private OrganizerViewModel organizerViewModel;
     private ProfileViewModel profileViewModel;
-
+    private EventViewModel eventViewModel;
     // UI elements
     private TextView title;
     private Button create_button;
@@ -50,11 +54,9 @@ public class FacilityFragment extends Fragment {
     private Button confirm_button;
     private EditText name;
     private AutoCompleteTextView street_address;
-
     // Places API
     private PlacesClient placesClient;
     private AutocompleteSessionToken sessionToken;
-    private final Map<AutoCompleteTextView, String> validSelections = new HashMap<>();
 
     public FacilityFragment() {
         // Required empty public constructor
@@ -120,6 +122,9 @@ public class FacilityFragment extends Fragment {
                                  street_address.setHint("");
                              }
                          });
+
+        // Initialize eventViewModel
+        eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
 
         // Initialize organizerViewModel
         organizerViewModel = new ViewModelProvider(requireActivity()).get(OrganizerViewModel.class);
@@ -267,6 +272,14 @@ public class FacilityFragment extends Fragment {
         autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
             String selectedItem = (String) parent.getItemAtPosition(position);
             validSelections.put(autoCompleteTextView, selectedItem); // Store the selected item
+            autoCompleteTextView.dismissDropDown(); // To dismiss the dropdown
+        });
+        autoCompleteTextView.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO) {
+                autoCompleteTextView.dismissDropDown();
+                return true;
+            }
+            return false;
         });
     }
 
@@ -304,6 +317,11 @@ public class FacilityFragment extends Fragment {
         String facilityName = name.getText().toString().trim();
         String facilityAddress = street_address.getText().toString().trim();
         facilityViewModel.updateFacility(facilityName, facilityAddress);
+        List<Event> events = eventViewModel.getHostingEventsLiveData().getValue();
+        for (Event event : events) {
+            event.setLocation(facilityAddress);
+            eventViewModel.updateEvent(event);
+        }
     }
 
     private void profileObserver() {

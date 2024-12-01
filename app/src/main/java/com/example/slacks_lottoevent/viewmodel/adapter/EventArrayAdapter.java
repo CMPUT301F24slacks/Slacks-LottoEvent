@@ -15,8 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
-import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.R;
+import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.model.User;
 import com.example.slacks_lottoevent.view.EntrantEventDetailsActivity;
 
@@ -94,12 +94,24 @@ public class EventArrayAdapter extends ArrayAdapter<Event> implements Serializab
         String deviceId = user.getDeviceId();
         if (event.getWaitlisted().contains(deviceId)) {
             statusWaitlisted.setVisibility(View.VISIBLE);
+            statusInvited.setVisibility(View.GONE);
+            statusAttending.setVisibility(View.GONE);
+            statusUnselected.setVisibility(View.GONE);
         } else if (event.getSelected().contains(deviceId)) {
             statusInvited.setVisibility(View.VISIBLE);
+            statusWaitlisted.setVisibility(View.GONE);
+            statusAttending.setVisibility(View.GONE);
+            statusUnselected.setVisibility(View.GONE);
         } else if (event.getFinalists().contains(deviceId)) {
             statusAttending.setVisibility(View.VISIBLE);
+            statusWaitlisted.setVisibility(View.GONE);
+            statusInvited.setVisibility(View.GONE);
+            statusUnselected.setVisibility(View.GONE);
         } else if (event.getCancelled().contains(deviceId)) {
             statusUnselected.setVisibility(View.VISIBLE);
+            statusWaitlisted.setVisibility(View.GONE);
+            statusInvited.setVisibility(View.GONE);
+            statusAttending.setVisibility(View.GONE);
         }
 
         // Set an OnClickListener for the event button

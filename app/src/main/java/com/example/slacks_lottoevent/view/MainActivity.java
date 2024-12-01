@@ -55,6 +55,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         db = FirebaseFirestore.getInstance();
 
         usersRef = db.collection("profiles");
@@ -242,7 +243,6 @@ public class MainActivity extends BaseActivity {
         db.collection("notifications").whereEqualTo("userId", deviceId)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
-                        Log.e("Firestore", "Error listening for notifications", e);
                         return;
                     }
 
@@ -251,6 +251,7 @@ public class MainActivity extends BaseActivity {
                             String title = document.getString("title");
                             String messageContent = document.getString("message");
                             notificationHelper.sendNotifications(deviceId, title, messageContent);
+                            Log.d("Notis", "Sent");
                         }
                     }
                     new Notifications().removeNotifications(deviceId);
@@ -284,7 +285,7 @@ public class MainActivity extends BaseActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startFetchingNotifications();
+//                startFetchingNotifications();
                 editor.putBoolean("notificationsEnabled", true);
                 editor.apply();
 
