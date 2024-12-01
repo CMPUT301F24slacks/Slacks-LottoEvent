@@ -23,10 +23,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
-import com.example.slacks_lottoevent.Utility.Callback;
-import com.example.slacks_lottoevent.model.Profile;
 import com.example.slacks_lottoevent.R;
+import com.example.slacks_lottoevent.Utility.Callback;
 import com.example.slacks_lottoevent.Utility.SnackbarUtils;
+import com.example.slacks_lottoevent.model.Profile;
 import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -125,7 +125,7 @@ public class ProfileFragment extends Fragment {
 
         // edit profile button click listener
         editProfileButton.setOnClickListener(v -> {
-            if (profileViewModel.getProfilesLiveData().getValue() == null) {
+            if (profileViewModel.getCurrentProfileLiveData().getValue() == null) {
                 SnackbarUtils.promptSignUp(requireView(), requireContext(),
                                            R.id.bottom_app_bar); // Prompt user to sign up
             } else {
