@@ -55,6 +55,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         db = FirebaseFirestore.getInstance();
 
         usersRef = db.collection("profiles");
