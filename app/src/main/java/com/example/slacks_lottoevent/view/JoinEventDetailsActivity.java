@@ -479,8 +479,10 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      */
     private void navigateToEventsHome() {
         Intent intent = new Intent(JoinEventDetailsActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);  // Bring existing MainActivity to the foreground
         startActivity(intent);
     }
+
 
     /**
      * addEntrantToWaitlist method for the JoinEventDetailsActivity.
