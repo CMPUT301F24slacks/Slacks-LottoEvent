@@ -1,88 +1,71 @@
-//package com.example.slacks_lottoevent;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//
-///**
-// * Unit tests for the Facility class.
-// */
-//public class FacilityUnitTest {
-//    private Facility facility;
-//
-//    /**
-//     * Set up the facility object before each test.
-//     */
-//    @BeforeEach
-//    void setUp(){
-//        facility = new Facility("DICE", "116 St NW", "9211", "T6G 1H9", "jw7e1540320d3c3d", "jw7e1540320d3c3d" );
-//    }
-//
-//    /**
-//     * Test the Facility constructor.
-//     */
-//    @Test
-//    void testFacilityConstructor() {
-//        assertEquals("DICE", facility.getFacilityName());
-//        assertEquals("116 St NW", facility.getStreetAddress1());
-//        assertEquals("9211", facility.getStreetAddress2());
-//
-//        assertEquals("T6G 1H9", facility.getPostalCode());
-//        assertEquals("jw7e1540320d3c3d", facility.getOrganizerId());
-//    }
-//
-//    /**
-//     * Test the Facility constructor with a null facility name.
-//     */
-//    @Test
-//    void testSetAndGetFacilityName() {
-//        facility.setFacilityName("CN Tower");
-//        assertEquals("CN Tower", facility.getFacilityName());
-//    }
-//
-//    /**
-//     * Test the Facility constructor with a null facility name.
-//     */
-//    @Test
-//    void testSetAndGetStreetAddress1() {
-//        facility.setStreetAddress1("290 Bremner Blvd");
-//        assertEquals("290 Bremner Blvd", facility.getStreetAddress1());
-//    }
-//
-//    /**
-//     * Test the Facility constructor with a null facility name.
-//     */
-//    @Test
-//    void testSetAndGetStreetAddress2() {
-//        facility.setStreetAddress2("8900");
-//        assertEquals("8900", facility.getStreetAddress2());
-//    }
-//
-//    /**
-//     * Test the Facility constructor with a null facility name.
-//     */
-//    @Test
-//    void testSetAndGetPostalCode() {
-//        facility.setPostalCode("M5V 3L9");
-//        assertEquals("M5V 3L9", facility.getPostalCode());
-//    }
-//
-//    /**
-//     * Test the Facility constructor with a null facility name.
-//     */
-//    @Test
-//    void testSetAndGetFacilityId() {
-//        facility.setFacilityId("PnALTPQ1wbG9CtqVAPDo");
-//        assertEquals("PnALTPQ1wbG9CtqVAPDo", facility.getFacilityId());
-//    }
-//
-//    /**
-//     * Test the Facility constructor with a null facility name.
-//     */
-//    @Test
-//    void testGetOrganizerId() {
-//        assertEquals("jw7e1540320d3c3d", facility.getOrganizerId());
-//    }
-//
-//}
+package com.example.slacks_lottoevent;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.example.slacks_lottoevent.model.Facility;
+
+class FacilityUnitTest {
+
+    @Test
+    void testDefaultConstructor() {
+        Facility facility = new Facility();
+        assertNull(facility.getFacilityName());
+        assertNull(facility.getStreetAddress());
+        assertNull(facility.getDeviceId());
+    }
+
+    @Test
+    void testParameterizedConstructor() {
+        String facilityName = "DICE";
+        String streetAddress = "9211 116 St NW, Edmonton, AB T6G 1H9";
+        String deviceId = "fe8e1540320d3c3d";
+
+        Facility facility = new Facility(facilityName, streetAddress, deviceId);
+
+        assertEquals(facilityName, facility.getFacilityName());
+        assertEquals(streetAddress, facility.getStreetAddress());
+        assertEquals(deviceId, facility.getDeviceId());
+    }
+
+    @Test
+    void testGetAndSetFacilityName() {
+        Facility facility = new Facility();
+        String facilityName = "Conference Room A";
+
+        facility.setFacilityName(facilityName);
+        assertEquals(facilityName, facility.getFacilityName());
+    }
+
+    @Test
+    void testGetAndSetStreetAddress() {
+        Facility facility = new Facility();
+        String streetAddress = "456 Another Rd.";
+
+        facility.setStreetAddress(streetAddress);
+        assertEquals(streetAddress, facility.getStreetAddress());
+    }
+
+    @Test
+    void testGetAndSetDeviceId() {
+        Facility facility = new Facility();
+        String deviceId = "Device789";
+
+        facility.setDeviceId(deviceId);
+        assertEquals(deviceId, facility.getDeviceId());
+    }
+
+    @Test
+    void testFacilityEquality() {
+        String facilityName = "Gymnasium";
+        String streetAddress = "789 Sports Lane";
+        String deviceId = "Device101";
+
+        Facility facility1 = new Facility(facilityName, streetAddress, deviceId);
+        Facility facility2 = new Facility(facilityName, streetAddress, deviceId);
+
+        assertEquals(facility1.getFacilityName(), facility2.getFacilityName());
+        assertEquals(facility1.getStreetAddress(), facility2.getStreetAddress());
+        assertEquals(facility1.getDeviceId(), facility2.getDeviceId());
+    }
+}

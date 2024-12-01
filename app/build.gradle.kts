@@ -98,9 +98,11 @@ dependencies {
     implementation(libs.firebase.storage)
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.0.1")
     testImplementation(libs.test.core)
+    testImplementation(libs.androidx.core)
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.0.1")
     testImplementation("org.apiguardian:apiguardian-api:1.1.0")
     testImplementation("org.robolectric:robolectric:4.8")
+    testImplementation("org.robolectric:robolectric:4.10")
     testImplementation("org.hamcrest:hamcrest-library:2.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -127,4 +129,6 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 
     implementation("com.google.android.gms:play-services-maps:19.0.0")
+    testImplementation("org.mockito:mockito-core:5.2.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.2.0")
 }

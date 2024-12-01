@@ -94,4 +94,13 @@ public class EntrantUnitTest {
         assertTrue(finalistEvents.contains("4u641403-f93e-4648-9bb0-i890f558jc40"));
         assertTrue(finalistEvents.contains("0q721403-k93e-0648-9bb0-b890f558jc90"));
     }
+
+    @Test
+    void testEmptyListsInitialization() {
+        assertTrue(testEntrant.getWaitlistedEvents().isEmpty());
+        assertTrue(testEntrant.getFinalistEvents().isEmpty());
+        assertTrue(testEntrant.getInvitedEvents().isEmpty());
+        assertTrue(testEntrant.getUninvitedEvents().isEmpty());
+    }
+
 }

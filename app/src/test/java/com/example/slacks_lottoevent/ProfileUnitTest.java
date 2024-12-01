@@ -1,82 +1,84 @@
-//package com.example.slacks_lottoevent;
-//
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-///**
-// * Unit tests for the Profile class.
-// */
-//public class ProfileUnitTest {
-//    private Profile profile;
-//
-//    /**
-//     * Set up the profile object before each test.
-//     */
-//    @BeforeEach
-//    public void setup() {
-//        // Initialize Profile without Context
-//        profile = new Profile("Tate McRae", "7804448883", "tateMcRae@gmail.com", null);
-//    }
-//
-//    /**
-//     * Test setting and getting the name.
-//     */
+package com.example.slacks_lottoevent;
+
+import android.content.Context;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.example.slacks_lottoevent.model.Profile;
+
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = 30)
+class ProfileUnitTest {
+
+    private Profile profile;
+    private Context context;
+
+    @BeforeEach
+    void setUp() {
+        // Use Robolectric's application context
+        context = org.robolectric.RuntimeEnvironment.getApplication();
+        profile = new Profile("Divya Prasad", "7804489907", "dprasad1@ualberta.ca", "1299dd2bdf615aec", context);
+    }
+
+    @Test
+    void testConstructor() {
+        assertEquals("Divya Prasad", profile.getName());
+        assertEquals("7804489907", profile.getPhone());
+        assertEquals("dprasad1@ualberta.ca", profile.getEmail());
+        assertEquals("1299dd2bdf615aec", profile.getDeviceId());
+        //assertNotNull(profile.getProfilePicturePath());
+        //assertTrue(profile.getUsingDefaultPicture());
+        assertTrue(profile.getAdminNotifications());
+    }
+
+    @Test
+    void testSetNameWithoutContext() {
+        profile.setUsingDefaultPicture(false);
+        profile.setName("Divya Prasad", null);
+        assertEquals("Divya Prasad", profile.getName());
+        // Ensure the profile picture path is not updated
+        //assertNotNull(profile.getProfilePicturePath());
+    }
+
+    @Test
+    void testSetEmail() {
+        profile.setEmail("scott34@ualberta.ca");
+        assertEquals("scott34@ualberta.ca", profile.getEmail());
+    }
+
+    @Test
+    void testSetPhone() {
+        profile.setPhone("78044898845");
+        assertEquals("78044898845", profile.getPhone());
+    }
+
+    @Test
+    void testSetAdminNotifications() {
+        profile.setAdminNotifications(false);
+        assertFalse(profile.getAdminNotifications());
+    }
+
+    @Test
+    void testSetUsingDefaultPicture() {
+        profile.setUsingDefaultPicture(false);
+        assertFalse(profile.getUsingDefaultPicture());
+    }
+
+    @Test
+    void testSetAdmin() {
+        profile.setAdmin(true);
+        assertTrue(profile.getAdmin());
+    }
+
 //    @Test
-//    public void testSetName() {
-//        profile.setName("Taylor Swift", null);
-//        assertEquals("Taylor Swift", profile.getName(), "Name updates to the new value.");
+//    void testInitialsExtraction() {
+//        Profile noContextProfile = new Profile("Alice Wonderland", "1234567890", "alice@example.com", "device456", null);
+//        assertEquals("AW", noContextProfile.generateProfilePicture("Alice Wonderland", null)); // Robolectric handles context
 //    }
-//
-//    /**
-//     * Test setting and getting the phone number.
-//     */
-//    @Test
-//    public void testSetPhone() {
-//        profile.setPhone("5878895544");
-//        assertEquals("5878895544", profile.getPhone(), "Phone number updates to the new value.");
-//    }
-//
-//    /**
-//     * Test setting and getting the email.
-//     */
-//    @Test
-//    public void testSetEmail() {
-//        profile.setEmail("taylorSwift@ualberta.ca");
-//        assertEquals("taylorSwift@ualberta.ca", profile.getEmail(), "Email updates to the new value.");
-//    }
-//
-//    /**
-//     * Test setting and getting the admin notifications preference.
-//     */
-//    @Test
-//    public void testSetAdminNotifications() {
-//        profile.setAdminNotifications(false);
-//        assertFalse(profile.getAdminNotifications(), "Admin notifications preference updates to false.");
-//
-//        profile.setAdminNotifications(true);
-//        assertTrue(profile.getAdminNotifications(), "Admin notifications preference updates to true.");
-//    }
-//
-//    /**
-//     * Test setting and getting the profile picture path.
-//     */
-//    @Test
-//    public void testSetProfilePicturePath() {
-//        profile.setProfilePicturePath("/path/to/image.png");
-//        assertEquals("/path/to/image.png", profile.getProfilePicturePath(), "Profile picture path updates to the new value.");
-//    }
-//
-//    /**
-//     * Test setting and getting the 'using default picture' flag.
-//     */
-//    @Test
-//    public void testSetUsingDefaultPicture() {
-//        profile.setUsingDefaultPicture(false);
-//        assertFalse(profile.isUsingDefaultPicture(), "Using default picture flag updates to false.");
-//
-//        profile.setUsingDefaultPicture(true);
-//        assertTrue(profile.isUsingDefaultPicture(), "Using default picture flag updates to true.");
-//    }
-//}
+}
