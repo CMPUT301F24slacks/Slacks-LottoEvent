@@ -64,8 +64,11 @@ public class EventDB {
         }
     }
 
+    public void updateEvent(Event event) {
+        db.collection("events").document(event.getEventID()).set(event);
+    }
+
     public interface EventChangeListener {
         void onEventsChanged(HashMap<String, Event> updatedEvents);
     }
-
 }
