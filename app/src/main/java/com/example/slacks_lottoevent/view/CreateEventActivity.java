@@ -512,27 +512,35 @@ public class CreateEventActivity extends BaseActivity {
             Date eventDate = dateFormat.parse(eventDateStr);
             Date signupDeadline = dateFormat.parse(signupDeadlineStr);
 
-            // Check if eventDate is after signupDeadline
-            if (eventDate != null && signupDeadline != null && eventDate.before(signupDeadline)) {
-                // If eventDate is before signupDeadline, set an error
-                binding.eventDate.setError("Event date must be after the signup deadline");
-                binding.signupDeadline.setError("Signup Deadline must be before the eventDate");
-                Toast.makeText(CreateEventActivity.this,
-                               "Signup deadline must be before the eventDate, event date must be after signup date.",
-                               Toast.LENGTH_SHORT).show();
+            if (eventDate != null && signupDeadline != null) {
+                // Check if the event date is at least two days after the signup deadline
+                Calendar signupDeadlineCal = Calendar.getInstance();
+                signupDeadlineCal.setTime(signupDeadline);
+                signupDeadlineCal.add(Calendar.DAY_OF_YEAR, 2);
 
-                return false;
-            } else {
-                // Clear any existing error if the dates are valid
-                binding.eventDate.setError(null);
-                binding.signupDeadline.setError(null);
-                return true;
+                if (eventDate.before(signupDeadlineCal.getTime())) {
+                    // If eventDate is less than two days after signupDeadline, set an error
+                    binding.eventDate.setError("Event date must be at least two days after the signup deadline");
+                    binding.signupDeadline.setError("Signup deadline must be at least two days before the event date");
+                    Toast.makeText(CreateEventActivity.this,
+                            "Event date must be at least two days after the signup deadline.",
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                } else {
+                    // Clear any existing error if the dates are valid
+                    binding.eventDate.setError(null);
+                    binding.signupDeadline.setError(null);
+                    return true;
+                }
             }
         } catch (ParseException e) {
             e.printStackTrace();
-            return false;
         }
+
+        // Default case if parsing fails
+        return false;
     }
+
 
     /**
      * This method creates an event and adds it to the database.
