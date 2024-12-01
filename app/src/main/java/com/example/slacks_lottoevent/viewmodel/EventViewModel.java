@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.database.EventDB;
+import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.model.User;
 
 import java.util.ArrayList;
@@ -77,6 +77,10 @@ public class EventViewModel extends ViewModel {
             List<Event> organizerEvents = getEventsByIds(eventsHashMap, eventIds);
             hostingEventsLiveData.setValue(organizerEvents);
         }
+    }
+
+    public void updateEvent(Event event) {
+        eventDB.updateEvent(event);
     }
 
 }
