@@ -125,7 +125,7 @@ public class ProfileFragment extends Fragment {
 
         // edit profile button click listener
         editProfileButton.setOnClickListener(v -> {
-            if (profileViewModel.getProfilesLiveData().getValue() == null) {
+            if (profileViewModel.getCurrentProfileLiveData().getValue() == null) {
                 SnackbarUtils.promptSignUp(requireView(), requireContext(),
                                            R.id.bottom_app_bar); // Prompt user to sign up
             } else {

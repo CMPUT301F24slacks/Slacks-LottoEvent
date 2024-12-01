@@ -28,7 +28,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
     boolean isAdmin;
     private final Context context;
     private final ArrayList<Event> events;
-    private final User user = User.getInstance();
+    private final User user;
 
 //    private FirebaseFirestore db;
 //    private CollectionReference facilitiesRef;
@@ -48,6 +48,8 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
         this.context = context;
         this.events = events;
         this.isAdmin = isAdmin;
+        User.initialize(context);
+        user = User.getInstance();
     }
 
     /**
