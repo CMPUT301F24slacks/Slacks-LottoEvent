@@ -13,8 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
-import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.R;
+import com.example.slacks_lottoevent.model.Event;
 import com.example.slacks_lottoevent.model.User;
 import com.example.slacks_lottoevent.view.OrganizerEventDetailsActivity;
 
@@ -25,11 +25,10 @@ import java.util.ArrayList;
  * Custom ArrayAdapter for displaying events in the OrganizerEventsActivity
  */
 public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements Serializable {
-    boolean isAdmin;
     private final Context context;
     private final ArrayList<Event> events;
     private final User user;
-
+    boolean isAdmin;
 //    private FirebaseFirestore db;
 //    private CollectionReference facilitiesRef;
 //    private CollectionReference organizersRef;
