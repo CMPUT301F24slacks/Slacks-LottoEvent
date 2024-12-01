@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.slacks_lottoevent.viewmodel.adapter.EventNotificationsArrayAdapter;
@@ -83,24 +84,43 @@ public class InboxFragment extends Fragment {
                 notisEnabled ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
 
         organizerNotis.setOnClickListener(v -> {
-            boolean negation = !notisEnabled;
-
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("notificationsEnabled", negation);
-            editor.apply();
-            organizerNotis.setImageResource(
-                    negation ? R.drawable.baseline_notifications_active_24 : R.drawable.baseline_circle_notifications_24);
-
-            Toast.makeText(requireContext(), negation
-                                   ? "Notifications are enabled. To fully disable, revoke the permission in app settings."
-                                   : "Notifications are disabled. To fully enable, allow permissions in app settings.",
-                           Toast.LENGTH_LONG).show();
-
             // Redirect to the app's notification settings
             Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
             intent.putExtra(Settings.EXTRA_APP_PACKAGE, requireActivity().getPackageName());
             startActivityForResult(intent, 100);
+
         });
+
+
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 100) {
+            // Check notification status
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(requireContext());
+            boolean areNotificationsEnabled = notificationManager.areNotificationsEnabled();
+            Log.d("NotisEnables", String.valueOf(areNotificationsEnabled));
+
+            // Update shared preferences with the correct notification status
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("notificationsEnabled", areNotificationsEnabled);
+            editor.apply();
+
+            // Update the notification bell icon based on the new status
+            organizerNotis.setImageResource(areNotificationsEnabled ?
+                    R.drawable.baseline_notifications_active_24 :
+                    R.drawable.baseline_circle_notifications_24);
+
+            // Notify user of the current state
+            Toast.makeText(requireContext(), areNotificationsEnabled ?
+                            "Notifications are enabled." :
+                            "Notifications are disabled.",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void fetchInvitedEvents(String eventTypes, Boolean selected) {
