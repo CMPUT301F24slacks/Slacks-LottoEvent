@@ -471,14 +471,22 @@ public class CreateEventActivity extends BaseActivity {
         dateFormat.setLenient(false);
 
         try {
-            Date parsedDate = dateFormat.parse(date); // Parse the date
+            Date parsedDate = dateFormat.parse(date);
 
-            // Get the current date with time set to the start of the day
+            // Get the current date
             Calendar today = Calendar.getInstance();
             today.set(Calendar.HOUR_OF_DAY, 0);
             today.set(Calendar.MINUTE, 0);
             today.set(Calendar.SECOND, 0);
             today.set(Calendar.MILLISECOND, 0);
+
+            // Get the date to check, normalized to midnight
+            Calendar dateToCompare = Calendar.getInstance();
+            dateToCompare.setTime(parsedDate);
+            dateToCompare.set(Calendar.HOUR_OF_DAY, 0);
+            dateToCompare.set(Calendar.MINUTE, 0);
+            dateToCompare.set(Calendar.SECOND, 0);
+            dateToCompare.set(Calendar.MILLISECOND, 0);
 
             // Check if the parsed date is in the future
             return parsedDate.after(today.getTime());
