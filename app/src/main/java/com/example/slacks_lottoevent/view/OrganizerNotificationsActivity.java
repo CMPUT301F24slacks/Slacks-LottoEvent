@@ -328,7 +328,10 @@ public class OrganizerNotificationsActivity extends AppCompatActivity {
                               && (event.getSelected().size() + event.getFinalists().size() <
                                   event.getEventSlots());
 
-        reSelect.setVisibility(canReselect ? View.VISIBLE : View.GONE);
+        boolean finalistsFull = event.getFinalists().size() == event.getEventSlots();
+        boolean waitlistEmpty = event.getWaitlisted().size() > 0;
+
+        reSelect.setVisibility((finalistsFull && waitlistEmpty) || canReselect ? View.VISIBLE : View.GONE);
     }
 
 }
