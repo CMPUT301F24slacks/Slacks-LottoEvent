@@ -207,27 +207,37 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;onSuccess,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;onFailure)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">DeleteEvent method deletes the event from Firestore.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#DeletingAsCancelled(java.lang.String,com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList)" class="member-name-link">DeletingAsCancelled</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;uninvitedEvents)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">DeletingAsCancelled method removes the event ID from the uninvitedEvents array for each entrant.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#DeletingAsFinalist(java.lang.String,com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList)" class="member-name-link">DeletingAsFinalist</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;FinalistEntrants)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">DeletingAsFinalist method removes the event ID from the finalistEvents array for each entrant.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#DeletingAsSelected(java.lang.String,com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList)" class="member-name-link">DeletingAsSelected</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;SelectedEntrants)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">DeletingAsSelected method removes the event ID from the invitedEvents array for each entrant.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#DeletingAsWaitlisted(java.lang.String,com.google.firebase.firestore.FirebaseFirestore,java.util.ArrayList)" class="member-name-link">DeletingAsWaitlisted</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;WaitlistedEntrants)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">DeletingAsWaitlisted method removes the event ID from the waitlistedEvents array for each entrant.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#DeletingEvent(android.content.Context,java.lang.String,com.google.firebase.firestore.FirebaseFirestore,java.lang.Runnable,java.lang.Runnable,boolean)" class="member-name-link">DeletingEvent</a><wbr>(android.content.Context&nbsp;context,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
@@ -235,27 +245,37 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;onSuccess,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;onFailure,
  boolean&nbsp;FromFacility)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">DeletingEvent method deletes the event from Firestore.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#DeletingEventIDinOrganizers(android.content.Context,java.lang.String,java.lang.String,com.google.firebase.firestore.FirebaseFirestore)" class="member-name-link">DeletingEventIDinOrganizers</a><wbr>(android.content.Context&nbsp;context,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">DeletingEventIDinOrganizers method removes the event ID from the events array for the organizer.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#DeletingEventPoster(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,java.lang.String,boolean)" class="member-name-link">DeletingEventPoster</a><wbr>(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;posterURL,
  boolean&nbsp;FromFacility)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">DeletingEventPoster method deletes the event poster from Firestore.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#DeletingQRCode(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.model.Event)" class="member-name-link">DeletingQRCode</a><wbr>(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&nbsp;event)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">DeletingQRCode method deletes the QR code for the event from Firestore.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.zxing.common.BitMatrix</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deserializeBitMatrix(java.lang.String)" class="member-name-link">deserializeBitMatrix</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">deserializeBitMatrix method converts a string representation of a BitMatrix back to a BitMatrix object.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreate(android.os.Bundle)" class="member-name-link">onCreate</a><wbr>(android.os.Bundle&nbsp;savedInstanceState)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -263,14 +283,18 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onOptionsItemSelected(android.view.MenuItem)" class="member-name-link">onOptionsItemSelected</a><wbr>(android.view.MenuItem&nbsp;item)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">onBackPressed method overrides the default back button behavior.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#showQRCodePopup(android.content.Context,com.google.firebase.firestore.FirebaseFirestore,com.example.slacks_lottoevent.model.Event,java.lang.String,boolean)" class="member-name-link">showQRCodePopup</a><wbr>(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&nbsp;event,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qrData,
  boolean&nbsp;isAdmin)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">showQRCodePopup method displays the QR code for the event in a popup dialog.</div>
+</div>
 </div>
 </div>
 </div>
@@ -412,6 +436,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">DeletingQRCode</span><wbr><span class="parameters">(android.content.Context&nbsp;context,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&nbsp;event)</span></div>
+<div class="block">DeletingQRCode method deletes the QR code for the event from Firestore.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - the context of the activity</dd>
+<dd><code>db</code> - the Firestore instance</dd>
+<dd><code>event</code> - the event object</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -421,6 +452,14 @@ loadScripts(document, 'script');</script>
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;posterURL,
  boolean&nbsp;FromFacility)</span></div>
+<div class="block">DeletingEventPoster method deletes the event poster from Firestore.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - the context of the activity</dd>
+<dd><code>db</code> - the Firestore instance</dd>
+<dd><code>posterURL</code> - the URL of the event poster</dd>
+<dd><code>FromFacility</code> - a boolean indicating if the deletion is from the facility</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -432,6 +471,16 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;onSuccess,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;onFailure,
  boolean&nbsp;FromFacility)</span></div>
+<div class="block">DeletingEvent method deletes the event from Firestore.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - the context of the activity</dd>
+<dd><code>eventID</code> - the ID of the event</dd>
+<dd><code>db</code> - the Firestore instance</dd>
+<dd><code>onSuccess</code> - the success callback</dd>
+<dd><code>onFailure</code> - the failure callback</dd>
+<dd><code>FromFacility</code> - a boolean indicating if the deletion is from the facility</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -443,6 +492,16 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;onSuccess,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;onFailure)</span></div>
+<div class="block">DeleteEvent method deletes the event from Firestore.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - the context of the activity</dd>
+<dd><code>db</code> - the Firestore instance</dd>
+<dd><code>current_event</code> - the current event object</dd>
+<dd><code>eventID</code> - the ID of the event</dd>
+<dd><code>onSuccess</code> - the success callback</dd>
+<dd><code>onFailure</code> - the failure callback</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -451,6 +510,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">DeletingAsWaitlisted</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;WaitlistedEntrants)</span></div>
+<div class="block">DeletingAsWaitlisted method removes the event ID from the waitlistedEvents array for each entrant.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventID</code> - the ID of the event</dd>
+<dd><code>db</code> - the Firestore instance</dd>
+<dd><code>WaitlistedEntrants</code> - the list of waitlisted entrants</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -459,6 +525,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">DeletingAsSelected</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;SelectedEntrants)</span></div>
+<div class="block">DeletingAsSelected method removes the event ID from the invitedEvents array for each entrant.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventID</code> - the ID of the event</dd>
+<dd><code>db</code> - the Firestore instance</dd>
+<dd><code>SelectedEntrants</code> - the list of selected entrants</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -467,6 +540,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">DeletingAsFinalist</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;FinalistEntrants)</span></div>
+<div class="block">DeletingAsFinalist method removes the event ID from the finalistEvents array for each entrant.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventID</code> - the ID of the event</dd>
+<dd><code>db</code> - the Firestore instance</dd>
+<dd><code>FinalistEntrants</code> - the list of finalist entrants</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -475,6 +555,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">DeletingAsCancelled</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;uninvitedEvents)</span></div>
+<div class="block">DeletingAsCancelled method removes the event ID from the uninvitedEvents array for each entrant.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventID</code> - the ID of the event</dd>
+<dd><code>db</code> - the Firestore instance</dd>
+<dd><code>uninvitedEvents</code> - the list of uninvited events</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -484,6 +571,14 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventID,
  com.google.firebase.firestore.FirebaseFirestore&nbsp;db)</span></div>
+<div class="block">DeletingEventIDinOrganizers method removes the event ID from the events array for the organizer.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - the context of the activity</dd>
+<dd><code>deviceId</code> - the device ID of the organizer</dd>
+<dd><code>eventID</code> - the ID of the event</dd>
+<dd><code>db</code> - the Firestore instance</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -494,6 +589,15 @@ loadScripts(document, 'script');</script>
  <a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&nbsp;event,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qrData,
  boolean&nbsp;isAdmin)</span></div>
+<div class="block">showQRCodePopup method displays the QR code for the event in a popup dialog.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - the context of the activity</dd>
+<dd><code>db</code> - the Firestore instance</dd>
+<dd><code>event</code> - the event object</dd>
+<dd><code>qrData</code> - the QR data for the event</dd>
+<dd><code>isAdmin</code> - a boolean indicating if the user is an admin</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -501,9 +605,14 @@ loadScripts(document, 'script');</script>
 <h3>deserializeBitMatrix</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.zxing.common.BitMatrix</span>&nbsp;<span class="element-name">deserializeBitMatrix</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</span>
                                                               throws <span class="exceptions">com.google.zxing.WriterException</span></div>
+<div class="block">deserializeBitMatrix method converts a string representation of a BitMatrix back to a BitMatrix object.</div>
 <dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>data</code> - the string representation of the BitMatrix</dd>
+<dt>Returns:</dt>
+<dd>the BitMatrix object</dd>
 <dt>Throws:</dt>
-<dd><code>com.google.zxing.WriterException</code></dd>
+<dd><code>com.google.zxing.WriterException</code> - if there is an error converting the string to a BitMatrix</dd>
 </dl>
 </section>
 </li>
@@ -525,6 +634,7 @@ loadScripts(document, 'script');</script>
 <h3>onOptionsItemSelected</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">onOptionsItemSelected</span><wbr><span class="parameters">(@NonNull
  android.view.MenuItem&nbsp;item)</span></div>
+<div class="block">onBackPressed method overrides the default back button behavior.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onOptionsItemSelected</code>&nbsp;in class&nbsp;<code>android.app.Activity</code></dd>
