@@ -1,12 +1,15 @@
 package com.example.slacks_lottoevent;
 
+/**
+ * UserEventNotifications is a class that represents the user's event notifications.
+ * It takes in the event's name, date, time, location, and event ID.
+ */
 public class UserEventNotifications {
     private final String name;
     private final String date;
     private final String time;
     private final String location;
     private final String eventId; // Add event ID field
-
     private final Boolean selected;
 
     /**

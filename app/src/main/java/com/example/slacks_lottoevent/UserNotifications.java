@@ -76,10 +76,12 @@ public class UserNotifications extends AppCompatActivity {
             Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
             intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
         });
-
-
     }
 
+    /**
+     * Handle the result of the notification settings activity.
+     * Update the notification bell icon based on the new status.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -107,8 +109,6 @@ public class UserNotifications extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         }
     }
-
-
 
     /**
      * Fetch the invited events for the current user and facility location.

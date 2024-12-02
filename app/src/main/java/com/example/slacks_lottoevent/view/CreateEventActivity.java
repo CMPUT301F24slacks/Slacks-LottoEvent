@@ -328,6 +328,9 @@ public class CreateEventActivity extends BaseActivity {
 
     }
 
+    /**
+     * This method launches the image picker activity.
+     */
     private void selectImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -335,7 +338,15 @@ public class CreateEventActivity extends BaseActivity {
         imagePickerLauncher.launch(intent);
     }
 
-    // Handle the result of permission request
+    /**
+     * This method is called when the user responds to a permission request.
+     * @param requestCode The request code passed in
+     * @param permissions The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions
+     *     which is either {@link android.content.pm.PackageManager#PERMISSION_GRANTED}
+     *     or {@link android.content.pm.PackageManager#PERMISSION_DENIED}. Never null.
+     *
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -500,7 +511,6 @@ public class CreateEventActivity extends BaseActivity {
      *
      * @return true if the signUpDeadline is before the eventDate
      */
-
     private Boolean validateDates() {
         // Get the text from the input fields
         String eventDateStr = binding.eventDate.getText().toString().trim();
@@ -636,6 +646,12 @@ public class CreateEventActivity extends BaseActivity {
         }
     }
 
+    /**
+     * This method uploads an image to the Firebase Cloud Storage.
+     *
+     * @param callback the callback to be executed
+     *                 after the image is uploaded
+     */
     private void uploadImageToCloud(Callback<String> callback) {
         if (selectedImageUri == null) {
             Log.d("CreateEventActivity", "No image selected, skipping upload.");
@@ -710,6 +726,12 @@ public class CreateEventActivity extends BaseActivity {
         return sb.toString();
     }
 
+    /**
+     * This method handles the back button click event.
+     *
+     * @param item the menu item that was clicked
+     * @return true if the event was handled, false otherwise
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
