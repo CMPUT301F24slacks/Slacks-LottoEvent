@@ -18,7 +18,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-
+/**
+ * A fragment that displays a list of events for the admin to browser. Apart of the admin events tab.
+ * Evenbs are fetched from the Firestore "events" collection and displayed.
+ *
+ * */
 public class AdminEventsFragment extends Fragment {
 
     private ListView listViewAdminEvents;
@@ -26,18 +30,37 @@ public class AdminEventsFragment extends Fragment {
     private ArrayList<Event> eventsList;
     private OrganizerEventArrayAdapter adapter;
 
-    // Static factory method (optional)
+
+    /**
+     * Creates a new instance of {@link AdminEventsFragment}.
+     * This static factory method can be used to create a new fragment instance.
+     *
+     * @return A new instance of {@link AdminEventsFragment}.
+     */
     public static AdminEventsFragment newInstance() {
         return new AdminEventsFragment();
     }
-
+    /**
+     * Called when the fragment is created.
+     * Initializes Firestore and the events list.
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance(); // Initialize Firestore instance
         eventsList = new ArrayList<>(); // Initialize the profile list
     }
-
+    /**
+     * Called to create the view hierarchy associated with the fragment.
+     * Inflates the layout and initializes the ListView and its adapter.
+     *
+     * @param inflater           The LayoutInflater object used to inflate views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -57,8 +80,8 @@ public class AdminEventsFragment extends Fragment {
     }
 
     /**
-     * Fetches all profiles from the "profiles" collection in Firestore
-     * and populates the profile list.
+     * Fetches all events from the "events" collection in Firestore
+     * and populates the events list.
      */
     private void fetchEventsFromFirestore() {
         db.collection("events").addSnapshotListener((querySnapshot, e) -> {

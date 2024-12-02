@@ -83,9 +83,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">FacilityFragment</span>
 <span class="extends-implements">extends androidx.fragment.app.Fragment</span></div>
-<div class="block">A simple <code>Fragment</code> subclass.
- Use the <a href="#newInstance(java.lang.String,java.lang.String)"><code>newInstance(java.lang.String, java.lang.String)</code></a> factory method to
- create an instance of this fragment.</div>
+<div class="block">A fragment that displays and manages a facility for the organizer.
+ This fragment provides functionality to create, view and edit the facility hosted with that organizer.
+ Integration with Google Places API provides address autocomplete functionality.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -116,7 +116,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">FacilityFragment</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Default constructor required for fragments.</div>
+</div>
 </div>
 </section>
 </li>
@@ -134,16 +136,22 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="FacilityFragment.html" title="class in com.example.slacks_lottoevent.view.fragment">FacilityFragment</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newInstance(java.lang.String,java.lang.String)" class="member-name-link">newInstance</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;param1,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;param2)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Static factory method to create a new instance of FacilityFragment.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>android.view.View</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)" class="member-name-link">onCreateView</a><wbr>(android.view.LayoutInflater&nbsp;inflater,
  android.view.ViewGroup&nbsp;container,
  android.os.Bundle&nbsp;savedInstanceState)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Inflates the layout for the fragment</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onViewCreated(android.view.View,android.os.Bundle)" class="member-name-link">onViewCreated</a><wbr>(android.view.View&nbsp;view,
  android.os.Bundle&nbsp;savedInstanceState)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This method initializes UI elements, sets up ViewModel observers, and handles user interactions.</div>
+</div>
 </div>
 </div>
 </div>
@@ -168,6 +176,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>FacilityFragment</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">FacilityFragment</span>()</div>
+<div class="block">Default constructor required for fragments.</div>
 </section>
 </li>
 </ul>
@@ -183,6 +192,14 @@ loadScripts(document, 'script');</script>
 <h3>newInstance</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="FacilityFragment.html" title="class in com.example.slacks_lottoevent.view.fragment">FacilityFragment</a></span>&nbsp;<span class="element-name">newInstance</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;param1,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;param2)</span></div>
+<div class="block">Static factory method to create a new instance of FacilityFragment.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>param1</code> - Optional parameter 1 for configuration.</dd>
+<dd><code>param2</code> - Optional parameter 2 for configuration.</dd>
+<dt>Returns:</dt>
+<dd>A new instance of FacilityFragment.</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -191,9 +208,16 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">android.view.View</span>&nbsp;<span class="element-name">onCreateView</span><wbr><span class="parameters">(android.view.LayoutInflater&nbsp;inflater,
  android.view.ViewGroup&nbsp;container,
  android.os.Bundle&nbsp;savedInstanceState)</span></div>
+<div class="block">Inflates the layout for the fragment</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onCreateView</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.Fragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>inflater</code> - The LayoutInflanter object used to inflate views in the fragment.</dd>
+<dd><code>container</code> - parent view that the fragment's UI should be attached to.</dd>
+<dd><code>savedInstanceState</code> - fragment is being re-constructed from a previous saved state.</dd>
+<dt>Returns:</dt>
+<dd>The {View for the fragment's UI.</dd>
 </dl>
 </section>
 </li>
@@ -202,9 +226,13 @@ loadScripts(document, 'script');</script>
 <h3>onViewCreated</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onViewCreated</span><wbr><span class="parameters">(android.view.View&nbsp;view,
  android.os.Bundle&nbsp;savedInstanceState)</span></div>
+<div class="block">This method initializes UI elements, sets up ViewModel observers, and handles user interactions. Also sets up Places api.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onViewCreated</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.Fragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>view</code> - The view returned by onCreateView</dd>
+<dd><code>savedInstanceState</code> - If not null, this fragment is being re-constructed from a previously saved state.</dd>
 </dl>
 </section>
 </li>

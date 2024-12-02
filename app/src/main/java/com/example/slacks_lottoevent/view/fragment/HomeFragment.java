@@ -21,10 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+ * A fragment that displays various events the user is either waitlisted, canceled, unselected and attending.
+ * The event data is observed and updated in real-time using ViewModels.
+ * */
 public class HomeFragment extends Fragment {
 
     private EntrantViewModel entrantViewModel;
@@ -40,7 +39,10 @@ public class HomeFragment extends Fragment {
     private List<String> unselectedIds;
     private List<String> invitedIds;
     private List<String> attendingIds;
-
+    /**
+     * Static factory method to create a new instance of HomeFragment.
+     * @return A new instance of HomeFragment.
+     */
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -48,19 +50,35 @@ public class HomeFragment extends Fragment {
     public static HomeFragment newInstance() {
         return new HomeFragment();
     }
-
+    /**
+     * Called when the fragment is being created.
+     * Can be used to initialize any required resources or variables before the view is created.
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
+    /**
+     * Inflates the layout for the fragment
+     * @param inflater The LayoutInflanter object used to inflate views in the fragment.
+     * @param container parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI.
+     * */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
-
+    /**
+     *
+     * This method initializes UI elements, sets up ViewModel observers.
+     * @param view The view returned by onCreateView
+     * @param savedInstanceState If not null, this fragment is being re-constructed from a previously saved state.
+     *
+     * */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

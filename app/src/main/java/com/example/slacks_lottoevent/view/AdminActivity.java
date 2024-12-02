@@ -21,7 +21,12 @@ import com.example.slacks_lottoevent.view.fragment.AdminImagesFragment;
 import com.example.slacks_lottoevent.view.fragment.AdminProfilesFragment;
 import com.example.slacks_lottoevent.R;
 import com.google.android.material.tabs.TabLayout;
-
+/**
+ * This class is responsible for creating and manage the AdminActivity which in turn is responsible
+ * for managing and creating fragments within this Activity that allow Admin users to perform various
+ * admin functionalities. Uses a tab system so admin users can switch between different fragments.
+ *
+ * */
 public class AdminActivity extends AppCompatActivity {
     private FrameLayout frameLayout;
     private TabLayout tabLayout;

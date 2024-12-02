@@ -27,7 +27,6 @@ public class Notifications {
      * Constructs a new instance of {@link Notifications}.
      * Initializes a Firestore database instance for performing database operations.
      */
-
     public Notifications() {
         db = FirebaseFirestore.getInstance();
     }
@@ -77,7 +76,6 @@ public class Notifications {
      *
      * @param deviceId The unique identifier of the user or device whose notifications should be deleted.
      */
-
     public void removeNotifications(String deviceId) {
         db.collection("notifications")
           .whereEqualTo("userId", deviceId)  // Match documents where userId is equal to deviceId

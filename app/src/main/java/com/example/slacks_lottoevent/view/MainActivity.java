@@ -20,7 +20,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.slacks_lottoevent.TempFacilityViewModel;
 import com.example.slacks_lottoevent.Utility.NotificationHelper;
 import com.example.slacks_lottoevent.Utility.Notifications;
 import com.example.slacks_lottoevent.model.Profile;
@@ -38,11 +37,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
+/**
+ * MainActivity serves as the main/primary activity of the application.
+ * It extends BaseActivity and provides additional functionality for:
+ * - Managing user profiles and event interactions
+ * - Handling navigation through a BottomNavigationView and FloatingActionButton
+ * - Displaying notifications and managing notification permissions
+ * - Observing and updating event-related data using ViewModels
+ * - Integrating with Firebase Firestore for data management
+ */
 public class MainActivity extends BaseActivity {
     private EntrantViewModel entrantViewModel;
     private EventViewModel eventViewModel;
     private ProfileViewModel profileViewModel;
-    private TempFacilityViewModel tempFacilityViewModel;
     private OrganizerViewModel organizerViewModel;
     private User user;
     private String deviceId;
@@ -53,11 +60,13 @@ public class MainActivity extends BaseActivity {
 
     private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1;
 
+    /**
+     * Sets up the main application layout, initializes ViewModels, handles navigation and notifications.
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down, this Bundle contains the data it most recently supplied.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         db = FirebaseFirestore.getInstance();
-
         usersRef = db.collection("profiles");
 
         super.onCreate(savedInstanceState);
@@ -78,7 +87,6 @@ public class MainActivity extends BaseActivity {
         entrantViewModel = new ViewModelProvider(this).get(EntrantViewModel.class);
         eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        tempFacilityViewModel = new ViewModelProvider(this).get(TempFacilityViewModel.class);
         organizerViewModel = new ViewModelProvider(this).get(OrganizerViewModel.class);
 
         // Observe the events the entrant is involved in
@@ -214,7 +222,10 @@ public class MainActivity extends BaseActivity {
         return NavigationUI.navigateUp(navController, (AppBarConfiguration) null) ||
                super.onSupportNavigateUp();
     }
-
+    /**
+     * Creates a notification channel for sending notifications.
+     * This is only applicable for Android O (API 26) and above.
+     */
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is not in the Support Library.
@@ -236,7 +247,11 @@ public class MainActivity extends BaseActivity {
             }
         }
     }
-
+    /**
+     * Fetches notifications for the current user from Firestore based on device id and sends them.
+     *
+     * @param deviceId The unique device ID associated with the user.
+     * */
     private void grabbingNotifications(String deviceId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -257,7 +272,10 @@ public class MainActivity extends BaseActivity {
                     new Notifications().removeNotifications(deviceId);
                 });
     }
-
+    /**
+     * Checks and requests notification permissions.
+     * If the permission is already granted, starts fetching notifications.
+     */
     private void checkAndRequestNotificationPermission() {
         SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -296,7 +314,9 @@ public class MainActivity extends BaseActivity {
             }
         }
     }
-
+    /**
+     * Starts fetching notifications for the current user.
+     */
     private void startFetchingNotifications() {
         String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         grabbingNotifications(deviceId);

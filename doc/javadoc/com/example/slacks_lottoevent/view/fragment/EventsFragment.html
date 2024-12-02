@@ -83,6 +83,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">EventsFragment</span>
 <span class="extends-implements">extends androidx.fragment.app.Fragment</span></div>
+<div class="block">A fragment that displays and manages events hosted by the organizer.
+ This fragment provides functionality to view hosted events and navigate to the event creation page.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -113,7 +115,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">EventsFragment</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Default constructor required for a fragment.</div>
+</div>
 </div>
 </section>
 </li>
@@ -135,11 +139,15 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)" class="member-name-link">onCreateView</a><wbr>(android.view.LayoutInflater&nbsp;inflater,
  android.view.ViewGroup&nbsp;container,
  android.os.Bundle&nbsp;savedInstanceState)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Called to create the view hierarchy associated with the fragment.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onViewCreated(android.view.View,android.os.Bundle)" class="member-name-link">onViewCreated</a><wbr>(android.view.View&nbsp;view,
  android.os.Bundle&nbsp;savedInstanceState)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This method initializes UI elements, sets up ViewModel observers, and handles user interactions.</div>
+</div>
 </div>
 </div>
 </div>
@@ -164,6 +172,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>EventsFragment</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EventsFragment</span>()</div>
+<div class="block">Default constructor required for a fragment.</div>
 </section>
 </li>
 </ul>
@@ -190,9 +199,17 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">android.view.View</span>&nbsp;<span class="element-name">onCreateView</span><wbr><span class="parameters">(android.view.LayoutInflater&nbsp;inflater,
  android.view.ViewGroup&nbsp;container,
  android.os.Bundle&nbsp;savedInstanceState)</span></div>
+<div class="block">Called to create the view hierarchy associated with the fragment.
+ Inflates the layout for the fragment.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onCreateView</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.Fragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>inflater</code> - The LayoutInflater object used to inflate views in the fragment.</dd>
+<dd><code>container</code> - If non-null, this is the parent view that the fragment's UI should be attached to.</dd>
+<dd><code>savedInstanceState</code> - If non-null, this fragment is being re-constructed from a previous saved state.</dd>
+<dt>Returns:</dt>
+<dd>The View for the fragment's UI.</dd>
 </dl>
 </section>
 </li>
@@ -201,9 +218,13 @@ loadScripts(document, 'script');</script>
 <h3>onViewCreated</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onViewCreated</span><wbr><span class="parameters">(android.view.View&nbsp;view,
  android.os.Bundle&nbsp;savedInstanceState)</span></div>
+<div class="block">This method initializes UI elements, sets up ViewModel observers, and handles user interactions.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onViewCreated</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.Fragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>view</code> - The view returned by onCreateView</dd>
+<dd><code>savedInstanceState</code> - If not null, this fragment is being re-constructed from a previously saved state.</dd>
 </dl>
 </section>
 </li>

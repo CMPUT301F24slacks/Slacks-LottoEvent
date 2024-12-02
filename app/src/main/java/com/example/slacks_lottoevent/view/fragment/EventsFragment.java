@@ -23,7 +23,10 @@ import com.example.slacks_lottoevent.viewmodel.ProfileViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * A fragment that displays and manages events hosted by the organizer.
+ * This fragment provides functionality to view hosted events and navigate to the event creation page.
+ */
 public class EventsFragment extends Fragment {
     // UI elements
     private Button create_event_button;
@@ -35,7 +38,11 @@ public class EventsFragment extends Fragment {
     private EventViewModel eventViewModel;
     private OrganizerViewModel organizerViewModel;
     private ProfileViewModel profileViewModel;
-
+    /**
+     *
+     * Default constructor required for a fragment.
+     *
+     * */
     public EventsFragment() {
         // Required empty public constructor
     }
@@ -44,14 +51,28 @@ public class EventsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
+    /**
+     * Called to create the view hierarchy associated with the fragment.
+     * Inflates the layout for the fragment.
+     *
+     * @param inflater           The LayoutInflater object used to inflate views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_event, container, false);
     }
-
+    /**
+     *
+     * This method initializes UI elements, sets up ViewModel observers, and handles user interactions.
+      @param view The view returned by onCreateView
+      @param savedInstanceState If not null, this fragment is being re-constructed from a previously saved state.
+     *
+     * */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

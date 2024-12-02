@@ -22,7 +22,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-
+/**
+ * A fragment that displays a list of user profiles in the admin panel.
+ * Profiles are fetched from a Firestore "profiles" collection and displayed in a ListView.
+ */
 public class AdminProfilesFragment extends Fragment {
 
     private ListView listViewAdminProfiles;
@@ -30,18 +33,35 @@ public class AdminProfilesFragment extends Fragment {
     private ArrayList<Profile> profileList;
     private ProfileListArrayAdapter adapter;
 
-    // Static factory method (optional)
+
+    /**
+     * Static factory method to create a new instance of {@link AdminProfilesFragment}.
+     *
+     * @return A new instance of {@link AdminProfilesFragment}.
+     */
     public static AdminProfilesFragment newInstance() {
         return new AdminProfilesFragment();
     }
-
+    /**
+     * Called when the fragment is created.
+     * Initializes Firestore and the profile list.
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance(); // Initialize Firestore instance
         profileList = new ArrayList<>(); // Initialize the profile list
     }
-
+    /**
+     * Called to create the view hierarchy associated with the fragment.
+     * Inflates the layout and initializes the ListView and its adapter.
+     *
+     * @param inflater           The LayoutInflater object used to inflate views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

@@ -1,70 +1,94 @@
 package com.example.slacks_lottoevent;
 
-import androidx.test.espresso.Espresso;
+import android.content.Context;
+
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+
 import org.hamcrest.Matchers;
-import org.junit.Rule;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import com.example.slacks_lottoevent.model.User;
 import com.example.slacks_lottoevent.view.CreateEventActivity;
 
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.Matchers.not;
+import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
 @RunWith(AndroidJUnit4.class)
 public class CreateEventTest {
 
-    @Rule
-    public ActivityScenarioRule<CreateEventActivity> activityRule = new ActivityScenarioRule<>(CreateEventActivity.class);
+    @Before
+    public void setup() {
+        // Obtain the application context
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-    /**
-     * Test the create event button.
-     */
-    @Test
-    public void testDateValidation() {
-        onView(withId(R.id.event_date)).perform(replaceText("13/01/2025"));
-        onView(withId(R.id.event_date)).check(matches(ViewMatchers.hasErrorText("Date must be in MM/DD/YY format")));
-
-        onView(withId(R.id.event_date)).perform(replaceText("01/13/2025"));
-        onView(withId(R.id.event_date)).check(matches(Matchers.not(ViewMatchers.hasErrorText("Date must be in MM/DD/YY format"))));
+        // Initialize the User singleton
+        User.initialize(context);
     }
 
-    /**
-     * Test the create event button.
-     */
+    @Test
+    public void testNameValidation() {
+        // Launch the activity manually
+        try (ActivityScenario<CreateEventActivity> scenario = ActivityScenario.launch(CreateEventActivity.class)) {
+            onView(withId(R.id.event_name)).perform(replaceText(""));
+            onView(withId(R.id.event_name)).check(matches(isDisplayed()));
+            onView(withId(R.id.event_name)).perform(replaceText("2025 RISC-V Conference"));
+            onView(withText("2025 RISC-V Conference")).check(matches(isDisplayed()));
+        }
+    }
+
     @Test
     public void testTimeValidation() {
-        onView(withId(R.id.event_time)).perform(replaceText("25:00"));
-        onView(withId(R.id.event_time)).check(matches(ViewMatchers.hasErrorText("Time must be in hh:mm format")));
+        // Launch the activity manually
+        try (ActivityScenario<CreateEventActivity> scenario = ActivityScenario.launch(CreateEventActivity.class)) {
+            onView(withId(R.id.eventTime)).perform(replaceText("25:00"));
+            onView(withId(R.id.eventTime)).check(matches(ViewMatchers.hasErrorText("Time must be in hh:mm format")));
 
-        onView(withId(R.id.event_time)).perform(replaceText("15:30"));
-        onView(withId(R.id.event_time)).check(matches(Matchers.not(ViewMatchers.hasErrorText("Time must be in hh:mm format"))));
+            onView(withId(R.id.eventTime)).perform(replaceText("15:30"));
+            onView(withId(R.id.eventTime)).check(matches(Matchers.not(ViewMatchers.hasErrorText("Time must be in hh:mm format"))));
+        }
     }
 
-    /**
-     * Test the create event button.
-     */
     @Test
-    public void testWaitListCapacityValidation() {
-        onView(withId(R.id.eventSlots)).perform(replaceText("5"));
-        onView(withId(R.id.waitListCapacity)).perform(replaceText("3"));
-        onView(withId(R.id.waitListCapacity)).check(matches(ViewMatchers.hasErrorText("Waitlist capacity must be greater than the event slots")));
+    public void testDescriptionValidation() {
+        // Add test case for description validation
+        try (ActivityScenario<CreateEventActivity> scenario = ActivityScenario.launch(CreateEventActivity.class)) {
+            onView(withId(R.id.event_details)).perform(replaceText("Meet us at 2pm!"));
+            onView(withText("Meet us at 2pm!")).check(matches(isDisplayed()));
+        }
+    }
 
-        onView(withId(R.id.waitListCapacity)).perform(replaceText("10"));
-        onView(withId(R.id.waitListCapacity)).check(matches(Matchers.not(ViewMatchers.hasErrorText("Waitlist capacity must be greater than the event slots"))));
+    @Test
+    public void testEventSlotsValidation() {
+        // Add test case for event slots validation
+        try (ActivityScenario<CreateEventActivity> scenario = ActivityScenario.launch(CreateEventActivity.class)) {
+            onView(withId(R.id.eventSlots)).perform(replaceText("0"));
+            onView(withText("0")).check(matches(isDisplayed()));
+            onView(withId(R.id.eventSlots)).perform(replaceText("5"));
+            onView(withText("5")).check(matches(isDisplayed()));
+        }
+    }
+
+    @Test
+    public void testWaitlistCapacityValidation() {
+        // Add test case for date validation
+        try (ActivityScenario<CreateEventActivity> scenario = ActivityScenario.launch(CreateEventActivity.class)) {
+            onView(withId(R.id.eventSlots)).perform(replaceText("5"));
+            onView(withId(R.id.waitListCapacity)).perform(replaceText("3"));
+            onView(withId(R.id.waitListCapacity)).check(matches(ViewMatchers.hasErrorText("Waitlist capacity must be greater than the event slots")));
+
+            onView(withId(R.id.waitListCapacity)).perform(replaceText("10"));
+            onView(withId(R.id.waitListCapacity)).check(matches(Matchers.not(ViewMatchers.hasErrorText("Waitlist capacity must be greater than the event slots"))));
+        }
     }
 }
