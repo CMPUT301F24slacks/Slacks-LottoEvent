@@ -7,7 +7,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.slacks_lottoevent.view.fragment.EventsFragment;
 import com.example.slacks_lottoevent.view.fragment.FacilityFragment;
-
+/**
+* TabsAdapter used to go back and fourth between the facility and manage my events fragment within the manage fragment.
+ * */
 public class TabsAdapter extends FragmentStateAdapter {
 
     public TabsAdapter(@NonNull FragmentActivity fragmentActivity) {
