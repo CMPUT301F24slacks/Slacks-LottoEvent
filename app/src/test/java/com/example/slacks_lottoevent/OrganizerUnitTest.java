@@ -29,7 +29,7 @@ public class OrganizerUnitTest {
      * Test the Organizer constructor.
      */
     @Test
-    public void testGetUserId() {
+    public void testGetDeviceId() {
         // Check if the userId is correctly assigned
         assertEquals("fe8e1540320d3c3d", organizer.getDeviceId());
     }
@@ -58,7 +58,7 @@ public class OrganizerUnitTest {
      * Test the Organizer constructor with a null userId.
      */
     @Test
-    public void testAddMultipleEvents() {
+    public void testAddAndRetrievingMultipleEvents() {
         // Add multiple events and verify the events list
         organizer.getEvents().add("1d7577ae-16f9-4f46-9be4-fe65e9a4e690");
         organizer.getEvents().add("2d7277ue-15f9-4f06-8be4-op90e9a4e790");
@@ -80,5 +80,31 @@ public class OrganizerUnitTest {
         assertEquals(1, organizer.getEvents().size());
         assertTrue(organizer.getEvents().contains("7y1196pe-03f9-4f96-4be4-zp76e3a4e307"));
     }
+
+    @Test
+    public void testConstructorWithNullValues() {
+        Organizer nullOrganizer = new Organizer(null, null);
+        assertNull(nullOrganizer.getDeviceId());
+        assertNull(nullOrganizer.getEvents());
+    }
+
+    @Test
+    public void testSetDeviceId() {
+        organizer.setDeviceId("fe8e1540320d3c3d");
+        assertEquals("fe8e1540320d3c3d", organizer.getDeviceId());
+    }
+
+    @Test
+    public void testSetEvents() {
+        ArrayList<String> newEvents = new ArrayList<>();
+        newEvents.add("7y1196pe-03f9-4f96-4be4-zp76e3a4e307");
+        newEvents.add("0d7277ue-15f9-4f06-8be4-op90e9a4e790");
+        organizer.setEvents(newEvents);
+        assertEquals(2, organizer.getEvents().size());
+        assertTrue(organizer.getEvents().contains("7y1196pe-03f9-4f96-4be4-zp76e3a4e307"));
+        assertTrue(organizer.getEvents().contains("0d7277ue-15f9-4f06-8be4-op90e9a4e790"));
+    }
+
+
 
 }

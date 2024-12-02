@@ -31,8 +31,6 @@ public class UserNotifications extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private CollectionReference entrantRef;
-    //    private CollectionReference organizersRef;
-//    private CollectionReference facilitiesRef;
     private ArrayList<UserEventNotifications> eventList;
     private EventNotificationsArrayAdapter adapter;
 
@@ -50,8 +48,6 @@ public class UserNotifications extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
         entrantRef = db.collection("entrants");
-//        organizersRef = db.collection("organizers");
-//        facilitiesRef = db.collection("facilities");
         eventList = new ArrayList<>();
 
         // Set up the adapter
@@ -171,8 +167,6 @@ public class UserNotifications extends AppCompatActivity {
                                 name + ": Selected", date, time, location, eventId, true);
                         eventList.add(event);
 
-//                        saveEventAsDisplayed(eventId);
-
                         // Notify adapter of data changes
                         adapter.notifyDataSetChanged();
                     } else if (eventDoc.exists() && !invited) {
@@ -184,8 +178,6 @@ public class UserNotifications extends AppCompatActivity {
                         UserEventNotifications event = new UserEventNotifications(
                                 name + ": Unselected", date, time, location, eventId, false);
                         eventList.add(event);
-
-//                        saveEventAsDisplayed(eventId);
 
                         // Notify adapter of data changes
                         adapter.notifyDataSetChanged();

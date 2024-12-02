@@ -23,6 +23,7 @@ activity = "1.9.3"
 firebaseStorage = "21.0.1"
 androidxCore = "1.5.0"
 junitJunit = "4.12"
+uiautomator = "2.3.0"
 
 [libraries]
 appcompat-v7 = { module = "com.android.support:appcompat-v7", version.ref = "appcompatV7" }
@@ -49,6 +50,8 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 androidx-core = { group = "androidx.test", name = "core", version.ref = "androidxCore" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+
