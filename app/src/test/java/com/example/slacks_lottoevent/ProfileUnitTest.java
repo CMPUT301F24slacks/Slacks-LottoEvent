@@ -32,8 +32,6 @@ class ProfileUnitTest {
         assertEquals("7804489907", profile.getPhone());
         assertEquals("dprasad1@ualberta.ca", profile.getEmail());
         assertEquals("1299dd2bdf615aec", profile.getDeviceId());
-        //assertNotNull(profile.getProfilePicturePath());
-        //assertTrue(profile.getUsingDefaultPicture());
         assertTrue(profile.getAdminNotifications());
     }
 
@@ -42,8 +40,6 @@ class ProfileUnitTest {
         profile.setUsingDefaultPicture(false);
         profile.setName("Divya Prasad", null);
         assertEquals("Divya Prasad", profile.getName());
-        // Ensure the profile picture path is not updated
-        //assertNotNull(profile.getProfilePicturePath());
     }
 
     @Test
@@ -75,10 +71,4 @@ class ProfileUnitTest {
         profile.setAdmin(true);
         assertTrue(profile.getAdmin());
     }
-
-//    @Test
-//    void testInitialsExtraction() {
-//        Profile noContextProfile = new Profile("Alice Wonderland", "1234567890", "alice@example.com", "device456", null);
-//        assertEquals("AW", noContextProfile.generateProfilePicture("Alice Wonderland", null)); // Robolectric handles context
-//    }
 }
