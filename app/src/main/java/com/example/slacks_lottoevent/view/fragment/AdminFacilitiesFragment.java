@@ -20,7 +20,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-
+/**
+ * A fragment that displays a list of facilities in the admin panel.
+ * The facilities are fetched from a Firestore "facilities" collection
+ * and displayed in a ListView.
+ */
 public class AdminFacilitiesFragment extends Fragment {
 
     private ListView listViewAdminFacilities;
@@ -28,18 +32,35 @@ public class AdminFacilitiesFragment extends Fragment {
     private ArrayList<Facility> facilitiesList;
     private FacilityListArrayAdapter adapter;
 
-    // Static factory method (optional)
+    /**
+     * Static factory method to create a new instance of AdminFacilitiesFragment.
+     *
+     * @return A new instance of AdminFacilitiesFragment.
+     */
     public static AdminFacilitiesFragment newInstance() {
         return new AdminFacilitiesFragment();
     }
-
+    /**
+     * Called when the fragment is created.
+     * Initializes Firestore and the facilities list.
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance(); // Initialize Firestore instance
         facilitiesList = new ArrayList<>(); // Initialize the profile list
     }
-
+    /**
+     * Called to create the view hierarchy associated with the fragment.
+     * Inflates the layout and initializes the {@link ListView} and its adapter.
+     *
+     * @param inflater           The { LayoutInflater object used to inflate views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -83,11 +104,6 @@ public class AdminFacilitiesFragment extends Fragment {
                 facilitiesList.clear(); // Clear the list before adding new data
 
                 for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                    // Create Facility object from Firestore data
-//                    String deviceId = document.getString("deviceId");
-//                    String name = document.getString("name");
-//                    String streetAddress1 = document.getString("streetAddress1");
-//                    Facility facility = new Facility(name, streetAddress1, deviceId, deviceId);
                     Facility facility = document.toObject(Facility.class);
 
                     facilitiesList.add(facility); // Add to the list

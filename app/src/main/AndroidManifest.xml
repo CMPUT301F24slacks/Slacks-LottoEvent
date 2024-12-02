@@ -69,10 +69,6 @@
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />
         <activity
-            android:name=".UserNotifications"
-            android:exported="true"
-            android:theme="@style/Theme.SlacksLottoEvent" />
-        <activity
             android:name=".view.OrganizerNotificationsActivity"
             android:exported="true"
             android:theme="@style/Theme.SlacksLottoEvent" />

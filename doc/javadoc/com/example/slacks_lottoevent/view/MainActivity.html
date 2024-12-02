@@ -99,6 +99,13 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MainActivity</span>
 <span class="extends-implements">extends <a href="BaseActivity.html" title="class in com.example.slacks_lottoevent.view">BaseActivity</a></span></div>
+<div class="block">MainActivity serves as the main/primary activity of the application.
+ It extends BaseActivity and provides additional functionality for:
+ - Managing user profiles and event interactions
+ - Handling navigation through a BottomNavigationView and FloatingActionButton
+ - Displaying notifications and managing notification permissions
+ - Observing and updating event-related data using ViewModels
+ - Integrating with Firebase Firestore for data management</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -161,7 +168,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreate(android.os.Bundle)" class="member-name-link">onCreate</a><wbr>(android.os.Bundle&nbsp;savedInstanceState)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets up the main application layout, initializes ViewModels, handles navigation and notifications.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreateOptionsMenu(android.view.Menu)" class="member-name-link">onCreateOptionsMenu</a><wbr>(android.view.Menu&nbsp;menu)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -243,9 +252,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onCreate(android.os.Bundle)">
 <h3>onCreate</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onCreate</span><wbr><span class="parameters">(android.os.Bundle&nbsp;savedInstanceState)</span></div>
+<div class="block">Sets up the main application layout, initializes ViewModels, handles navigation and notifications.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="BaseActivity.html#onCreate(android.os.Bundle)">onCreate</a></code>&nbsp;in class&nbsp;<code><a href="BaseActivity.html" title="class in com.example.slacks_lottoevent.view">BaseActivity</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>savedInstanceState</code> - If the activity is being re-initialized after previously being shut down, this Bundle contains the data it most recently supplied.</dd>
 </dl>
 </section>
 </li>
