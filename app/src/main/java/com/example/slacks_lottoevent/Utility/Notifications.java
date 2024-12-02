@@ -46,18 +46,18 @@ public class Notifications {
                                  String eventId, Boolean allLists) {
         db.collection("events").document(eventId).get().addOnSuccessListener(eventDoc -> {
             if (eventDoc.exists()) {
-                ArrayList<String> deviceIds = null;
-//                Grabbing people who want these notifications
-                if (allLists && listToGrab == null) {
-                    deviceIds.addAll((ArrayList<String>) eventDoc.get("waitlistedNotificationsList"));
-                    deviceIds.addAll((ArrayList<String>) eventDoc.get("selectedNotificationsList"));
-                    deviceIds.addAll((ArrayList<String>) eventDoc.get("joinedNotificationsList"));
-                    deviceIds.addAll((ArrayList<String>) eventDoc.get("cancelledNotificationsList"));
-                }
-
-                else{
-                    deviceIds = (ArrayList<String>) eventDoc.get(listToGrab);
-                }
+//                ArrayList<String> deviceIds = null;
+////                Grabbing people who want these notifications
+//                if (allLists && listToGrab == null) {
+//                    deviceIds.addAll((ArrayList<String>) eventDoc.get("waitlistedNotificationsList"));
+//                    deviceIds.addAll((ArrayList<String>) eventDoc.get("selectedNotificationsList"));
+//                    deviceIds.addAll((ArrayList<String>) eventDoc.get("joinedNotificationsList"));
+//                    deviceIds.addAll((ArrayList<String>) eventDoc.get("cancelledNotificationsList"));
+//                }
+//
+//                else{
+//                    deviceIds = (ArrayList<String>) eventDoc.get(listToGrab);
+//                }
 
                 if (deviceIds != null && !deviceIds.isEmpty()) {
                     // Send individual notifications to each user in the waitlist

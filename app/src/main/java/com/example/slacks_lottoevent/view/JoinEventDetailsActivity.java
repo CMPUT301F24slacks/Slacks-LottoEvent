@@ -319,8 +319,11 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         description = document.getString("description");
         signupDeadline = document.getString("signupDeadline");
         eventPosterURL = document.getString("eventPosterURL");
-        Long eventSlots = document.getLong("eventSlots");
+        List<Object> finalist = (List<Object>) document.get("finalists");
+        Integer eventSlot = document.getLong("eventSlots").intValue();
         Integer waitingListCapacity = document.getLong("waitListCapacity").intValue();
+        Integer eventSlots = eventSlot.intValue() - finalist.size();
+        String capacityAsString = eventSlots.toString();
 
         handleDatesAndCapacity(document, signupDeadline);
 
@@ -335,7 +338,7 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
         binding.eventLocation.setText(location);
         binding.eventDescription.setText(description);
         binding.waitlistCapacity.setText("Waiting List Capacity: " + waitingListCapacity);
-        binding.eventSlots.setText("Event Slots: " + eventSlots.intValue());
+        binding.eventSlots.setText("Event Slots: " + capacityAsString);
 
         if (waitingListCapacity <= 0) {
             binding.waitlistCapacity.setVisibility(View.GONE);
@@ -479,8 +482,10 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      */
     private void navigateToEventsHome() {
         Intent intent = new Intent(JoinEventDetailsActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);  // Bring existing MainActivity to the foreground
         startActivity(intent);
     }
+
 
     /**
      * addEntrantToWaitlist method for the JoinEventDetailsActivity.

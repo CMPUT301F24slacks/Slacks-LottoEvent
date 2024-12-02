@@ -154,8 +154,7 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
                           null
                   );
 
-//                  TODO: ADD EVENT NAME
-                  notifications.addNotifications( "Event Deleted", "This event was deleted by admin, sorry for the inconvienience", null, eventID, true);
+//                  notifications.addNotifications( "Event Deleted", "This event was deleted by admin, sorry for the inconvienience", null, eventID, true);
 
               } else {
                   // Directly delete the event if not from facility
@@ -472,10 +471,12 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
                   binding.eventTitle.setText(eventName);
                   binding.eventDate.setText(date);
                   List<Object> waitlisted = (List<Object>) document.get("waitlisted");
+                  List<Object> finalist = (List<Object>) document.get("finalists");
                   Long capacity = (Long) document.get("eventSlots");
                   Long waitListCapacity = (Long) document.get("waitListCapacity");
                   assert capacity != null;
-                  String capacityAsString = capacity.toString();
+                  Integer eventSlots = capacity.intValue() - finalist.size();
+                  String capacityAsString = eventSlots.toString();
 
                   if (waitListCapacity == 0) {
 //                          Does not show badges if there is no waitlistCapacity section

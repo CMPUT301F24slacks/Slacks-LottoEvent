@@ -6,6 +6,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -271,6 +272,14 @@ public class FacilityFragment extends Fragment {
         autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
             String selectedItem = (String) parent.getItemAtPosition(position);
             validSelections.put(autoCompleteTextView, selectedItem); // Store the selected item
+            autoCompleteTextView.dismissDropDown(); // To dismiss the dropdown
+        });
+        autoCompleteTextView.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO) {
+                autoCompleteTextView.dismissDropDown();
+                return true;
+            }
+            return false;
         });
     }
 
