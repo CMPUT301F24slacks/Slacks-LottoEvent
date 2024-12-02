@@ -18,9 +18,11 @@ import com.example.slacks_lottoevent.view.CreateEventActivity;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class CreateEventTest {
@@ -38,11 +40,42 @@ public class CreateEventTest {
     public void testNameValidation() {
         // Launch the activity manually
         try (ActivityScenario<CreateEventActivity> scenario = ActivityScenario.launch(CreateEventActivity.class)) {
+            onView(withId(R.id.event_name)).perform(replaceText(""));
+            onView(withId(R.id.event_name)).check(matches(isDisplayed()));
+            onView(withId(R.id.event_name)).perform(replaceText("2025 RISC-V Conference"));
+            onView(withText("2025 RISC-V Conference")).check(matches(isDisplayed()));
+        }
+    }
+
+    @Test
+    public void testTimeValidation() {
+        // Launch the activity manually
+        try (ActivityScenario<CreateEventActivity> scenario = ActivityScenario.launch(CreateEventActivity.class)) {
             onView(withId(R.id.eventTime)).perform(replaceText("25:00"));
             onView(withId(R.id.eventTime)).check(matches(ViewMatchers.hasErrorText("Time must be in hh:mm format")));
 
             onView(withId(R.id.eventTime)).perform(replaceText("15:30"));
             onView(withId(R.id.eventTime)).check(matches(Matchers.not(ViewMatchers.hasErrorText("Time must be in hh:mm format"))));
+        }
+    }
+
+    @Test
+    public void testDescriptionValidation() {
+        // Add test case for description validation
+        try (ActivityScenario<CreateEventActivity> scenario = ActivityScenario.launch(CreateEventActivity.class)) {
+            onView(withId(R.id.event_details)).perform(replaceText("Meet us at 2pm!"));
+            onView(withText("Meet us at 2pm!")).check(matches(isDisplayed()));
+        }
+    }
+
+    @Test
+    public void testEventSlotsValidation() {
+        // Add test case for event slots validation
+        try (ActivityScenario<CreateEventActivity> scenario = ActivityScenario.launch(CreateEventActivity.class)) {
+            onView(withId(R.id.eventSlots)).perform(replaceText("0"));
+            onView(withText("0")).check(matches(isDisplayed()));
+            onView(withId(R.id.eventSlots)).perform(replaceText("5"));
+            onView(withText("5")).check(matches(isDisplayed()));
         }
     }
 
