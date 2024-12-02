@@ -108,6 +108,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.test:rules:1.5.0")
     androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation ("androidx.test:runner:1.5.2")
     implementation(libs.preference)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
@@ -134,4 +135,7 @@ dependencies {
     testImplementation ("androidx.arch.core:core-testing:2.1.0")
     testImplementation ("org.mockito:mockito-core:4.8.1")
     testImplementation ("junit:junit:4.13.2")
+    implementation ("androidx.test:core:1.4.1-alpha04")
+    testImplementation ("androidx.test:monitor:1.4.0")
+    debugImplementation ("androidx.test:monitor:1.6.0")
 }
