@@ -464,7 +464,6 @@ public class JoinEventDetailsActivity extends AppCompatActivity {
      *
      * @param userId The unique user ID
      */
-
     private void createNewEntrant(String userId) {
         Entrant newEntrant = new Entrant();
         newEntrant.addWaitlistedEvents(qrCodeValue); // Add the event to the waitlist

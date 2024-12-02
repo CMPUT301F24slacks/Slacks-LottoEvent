@@ -3,6 +3,8 @@ package com.example.slacks_lottoevent;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -12,6 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -20,7 +23,9 @@ import androidx.test.uiautomator.UiSelector;
 
 
 import com.example.slacks_lottoevent.view.MainActivity;
-
+import com.example.slacks_lottoevent.view.QRScannerActivity;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -110,5 +115,23 @@ public class BottomNavBarTest {
             NavController navController = Navigation.findNavController(activity.findViewById(R.id.nav_host_main));
             assertThat(navController.getCurrentDestination().getId(), is(R.id.profileFragment));
         });
+    }
+
+    @Before
+    public void setUp() {
+        Intents.init();
+    }
+
+    @Test
+    public void testBottomNavigationView_navigateToQRScanner(){
+        handleNotificationPermissionDialog();
+
+        onView(withId(R.id.fabQR)).perform(click());
+
+        intended(hasComponent(QRScannerActivity.class.getName()));
+    }
+    @After
+    public void tearDown() {
+        Intents.release();
     }
 }

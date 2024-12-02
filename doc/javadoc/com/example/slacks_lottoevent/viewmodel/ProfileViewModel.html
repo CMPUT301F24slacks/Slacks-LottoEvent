@@ -79,6 +79,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ProfileViewModel</span>
 <span class="extends-implements">extends androidx.lifecycle.ViewModel</span></div>
+<div class="block">ViewModel for the ProfileFragment. Manages the current profile and all profiles in Firestore.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -91,7 +92,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">ProfileViewModel</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructor for the ProfileViewModel.</div>
+</div>
 </div>
 </section>
 </li>
@@ -108,13 +111,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>androidx.lifecycle.LiveData&lt;<a href="../model/Profile.html" title="class in com.example.slacks_lottoevent.model">Profile</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentProfileLiveData()" class="member-name-link">getCurrentProfileLiveData</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the current profile LiveData.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>androidx.lifecycle.LiveData&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="../model/Profile.html" title="class in com.example.slacks_lottoevent.model">Profile</a>&gt;&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getProfilesLiveData()" class="member-name-link">getProfilesLiveData</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the profiles LiveData.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateProfile(com.example.slacks_lottoevent.model.Profile)" class="member-name-link">updateProfile</a><wbr>(<a href="../model/Profile.html" title="class in com.example.slacks_lottoevent.model">Profile</a>&nbsp;profile)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Adds a new profile to Firestore.</div>
+</div>
 </div>
 </div>
 </div>
@@ -139,6 +148,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>ProfileViewModel</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ProfileViewModel</span>()</div>
+<div class="block">Constructor for the ProfileViewModel. Initializes the ProfileDB and sets the listener for
+ profile changes.</div>
 </section>
 </li>
 </ul>
@@ -153,18 +164,33 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getProfilesLiveData()">
 <h3>getProfilesLiveData</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">androidx.lifecycle.LiveData&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="../model/Profile.html" title="class in com.example.slacks_lottoevent.model">Profile</a>&gt;&gt;</span>&nbsp;<span class="element-name">getProfilesLiveData</span>()</div>
+<div class="block">Returns the profiles LiveData.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The profiles LiveData.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getCurrentProfileLiveData()">
 <h3>getCurrentProfileLiveData</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">androidx.lifecycle.LiveData&lt;<a href="../model/Profile.html" title="class in com.example.slacks_lottoevent.model">Profile</a>&gt;</span>&nbsp;<span class="element-name">getCurrentProfileLiveData</span>()</div>
+<div class="block">Returns the current profile LiveData.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The current profile LiveData.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="updateProfile(com.example.slacks_lottoevent.model.Profile)">
 <h3>updateProfile</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateProfile</span><wbr><span class="parameters">(<a href="../model/Profile.html" title="class in com.example.slacks_lottoevent.model">Profile</a>&nbsp;profile)</span></div>
+<div class="block">Adds a new profile to Firestore.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>profile</code> - The profile to add.</dd>
+</dl>
 </section>
 </li>
 </ul>

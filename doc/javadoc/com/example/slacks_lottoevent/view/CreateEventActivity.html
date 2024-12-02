@@ -185,12 +185,16 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onOptionsItemSelected(android.view.MenuItem)" class="member-name-link">onOptionsItemSelected</a><wbr>(android.view.MenuItem&nbsp;item)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This method handles the back button click event.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onRequestPermissionsResult(int,java.lang.String%5B%5D,int%5B%5D)" class="member-name-link">onRequestPermissionsResult</a><wbr>(int&nbsp;requestCode,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;permissions,
  int[]&nbsp;grantResults)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This method is called when the user responds to a permission request.</div>
+</div>
 </div>
 </div>
 </div>
@@ -305,11 +309,18 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;permissions,
  @NonNull
  int[]&nbsp;grantResults)</span></div>
+<div class="block">This method is called when the user responds to a permission request.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>onRequestPermissionsResult</code>&nbsp;in interface&nbsp;<code>androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback</code></dd>
 <dt>Overrides:</dt>
 <dd><code>onRequestPermissionsResult</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.FragmentActivity</code></dd>
+<dt>Parameters:</dt>
+<dd><code>requestCode</code> - The request code passed in</dd>
+<dd><code>permissions</code> - The requested permissions. Never null.</dd>
+<dd><code>grantResults</code> - The grant results for the corresponding permissions
+     which is either <code>PackageManager.PERMISSION_GRANTED</code>
+     or <code>PackageManager.PERMISSION_DENIED</code>. Never null.</dd>
 </dl>
 </section>
 </li>
@@ -318,9 +329,14 @@ loadScripts(document, 'script');</script>
 <h3>onOptionsItemSelected</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">onOptionsItemSelected</span><wbr><span class="parameters">(@NonNull
  android.view.MenuItem&nbsp;item)</span></div>
+<div class="block">This method handles the back button click event.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onOptionsItemSelected</code>&nbsp;in class&nbsp;<code>android.app.Activity</code></dd>
+<dt>Parameters:</dt>
+<dd><code>item</code> - the menu item that was clicked</dd>
+<dt>Returns:</dt>
+<dd>true if the event was handled, false otherwise</dd>
 </dl>
 </section>
 </li>
