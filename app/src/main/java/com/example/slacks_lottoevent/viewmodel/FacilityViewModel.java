@@ -10,33 +10,51 @@ import com.example.slacks_lottoevent.model.User;
 
 import java.util.HashMap;
 
+/**
+ * FacilityViewModel is a class that provides the UI with the data it needs to display facilities.
+ */
 public class FacilityViewModel extends ViewModel {
     private final MutableLiveData<HashMap<String, Facility>> facilitiesLiveData = new MutableLiveData<>();
     private final MutableLiveData<Facility> currentFacilityLiveData = new MutableLiveData<>();
     private final FacilityDB facilityDB;
     private final User user = User.getInstance();
 
+    /**
+     * FacilityViewModel is a constructor that initializes the FacilityDB and sets the facility change listener.
+     */
     public FacilityViewModel() {
         facilityDB = FacilityDB.getInstance();
         facilityDB.setFacilityChangeListener(this::updateFacilities);
     }
 
-    // Update facilities locally when notified by FacilityDB
+    /**
+     * updateFacilities is a method that updates the facilities live data.
+     * @param updatedFacilities is a HashMap of facilities to update the live data with.
+     */
     private void updateFacilities(HashMap<String, Facility> updatedFacilities) {
         facilitiesLiveData.setValue(updatedFacilities);
         updateCurrentFacility(); // Automatically update the current facility
     }
 
-    // Expose live data for observing in the UI
+    /**
+     * getFacilitiesLiveData is a method that returns the facilities live data.
+     * @return the facilities live data.
+     */
     public LiveData<HashMap<String, Facility>> getFacilitiesLiveData() {
         return facilitiesLiveData;
     }
 
+    /**
+     * getCurrentFacilityLiveData is a method that returns the current facility live data.
+     * @return the current facility live data.
+     */
     public LiveData<Facility> getCurrentFacilityLiveData() {
         return currentFacilityLiveData;
     }
 
-    // Directly update the current facility based on the device ID
+    /**
+     * updateCurrentFacility is a method that updates the current facility live data.
+     */
     private void updateCurrentFacility() {
         HashMap<String, Facility> facilities = facilitiesLiveData.getValue();
         if (facilities != null) {

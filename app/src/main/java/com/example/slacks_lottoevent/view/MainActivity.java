@@ -156,12 +156,18 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    /**
+     * Observes the current profile and updates the menu items accordingly.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_base, menu);
         return true;
     }
 
+    /**
+     * Prepares the menu items based on the current profile.
+     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // Iterate through all menu items and make them visible
@@ -188,6 +194,9 @@ public class MainActivity extends BaseActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
+    /**
+     * Handles the selection of menu items.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d("MainActivity", "Menu item selected: " + item.getItemId());
@@ -214,6 +223,9 @@ public class MainActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Handles the navigation up action.
+     */
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = ((NavHostFragment) getSupportFragmentManager()
@@ -222,6 +234,7 @@ public class MainActivity extends BaseActivity {
         return NavigationUI.navigateUp(navController, (AppBarConfiguration) null) ||
                super.onSupportNavigateUp();
     }
+
     /**
      * Creates a notification channel for sending notifications.
      * This is only applicable for Android O (API 26) and above.
@@ -247,6 +260,7 @@ public class MainActivity extends BaseActivity {
             }
         }
     }
+
     /**
      * Fetches notifications for the current user from Firestore based on device id and sends them.
      *
@@ -272,6 +286,7 @@ public class MainActivity extends BaseActivity {
                     new Notifications().removeNotifications(deviceId);
                 });
     }
+
     /**
      * Checks and requests notification permissions.
      * If the permission is already granted, starts fetching notifications.
@@ -296,6 +311,9 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Handles the result of the permission request.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         SharedPreferences sharedPreferences = getSharedPreferences("SlacksLottoEventUserInfo", MODE_PRIVATE);
@@ -314,6 +332,7 @@ public class MainActivity extends BaseActivity {
             }
         }
     }
+
     /**
      * Starts fetching notifications for the current user.
      */

@@ -174,22 +174,30 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreateOptionsMenu(android.view.Menu)" class="member-name-link">onCreateOptionsMenu</a><wbr>(android.view.Menu&nbsp;menu)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Inflate the menu items into the top app bar</div>
+<div class="block">Observes the current profile and updates the menu items accordingly.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onOptionsItemSelected(android.view.MenuItem)" class="member-name-link">onOptionsItemSelected</a><wbr>(android.view.MenuItem&nbsp;item)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Handles the selection of menu items.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPrepareOptionsMenu(android.view.Menu)" class="member-name-link">onPrepareOptionsMenu</a><wbr>(android.view.Menu&nbsp;menu)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Prepares the menu items based on the current profile.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onRequestPermissionsResult(int,java.lang.String%5B%5D,int%5B%5D)" class="member-name-link">onRequestPermissionsResult</a><wbr>(int&nbsp;requestCode,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;permissions,
  int[]&nbsp;grantResults)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Handles the result of the permission request.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onSupportNavigateUp()" class="member-name-link">onSupportNavigateUp</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Handles the navigation up action.</div>
+</div>
 </div>
 </div>
 </div>
@@ -265,8 +273,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onCreateOptionsMenu(android.view.Menu)">
 <h3>onCreateOptionsMenu</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">onCreateOptionsMenu</span><wbr><span class="parameters">(android.view.Menu&nbsp;menu)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="BaseActivity.html#onCreateOptionsMenu(android.view.Menu)">BaseActivity</a></code></span></div>
-<div class="block">Inflate the menu items into the top app bar</div>
+<div class="block">Observes the current profile and updates the menu items accordingly.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="BaseActivity.html#onCreateOptionsMenu(android.view.Menu)">onCreateOptionsMenu</a></code>&nbsp;in class&nbsp;<code><a href="BaseActivity.html" title="class in com.example.slacks_lottoevent.view">BaseActivity</a></code></dd>
@@ -277,6 +284,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onPrepareOptionsMenu(android.view.Menu)">
 <h3>onPrepareOptionsMenu</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">onPrepareOptionsMenu</span><wbr><span class="parameters">(android.view.Menu&nbsp;menu)</span></div>
+<div class="block">Prepares the menu items based on the current profile.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onPrepareOptionsMenu</code>&nbsp;in class&nbsp;<code>android.app.Activity</code></dd>
@@ -287,6 +295,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onOptionsItemSelected(android.view.MenuItem)">
 <h3>onOptionsItemSelected</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">onOptionsItemSelected</span><wbr><span class="parameters">(android.view.MenuItem&nbsp;item)</span></div>
+<div class="block">Handles the selection of menu items.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onOptionsItemSelected</code>&nbsp;in class&nbsp;<code>android.app.Activity</code></dd>
@@ -297,6 +306,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onSupportNavigateUp()">
 <h3>onSupportNavigateUp</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">onSupportNavigateUp</span>()</div>
+<div class="block">Handles the navigation up action.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onSupportNavigateUp</code>&nbsp;in class&nbsp;<code>androidx.appcompat.app.AppCompatActivity</code></dd>
@@ -311,6 +321,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;permissions,
  @NonNull
  int[]&nbsp;grantResults)</span></div>
+<div class="block">Handles the result of the permission request.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>onRequestPermissionsResult</code>&nbsp;in interface&nbsp;<code>androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback</code></dd>
