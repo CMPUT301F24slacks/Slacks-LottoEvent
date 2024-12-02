@@ -21,6 +21,8 @@ coreVersion = "1.6.1"
 fragmentTesting = "1.8.5"
 activity = "1.9.3"
 firebaseStorage = "21.0.1"
+androidxCore = "1.5.0"
+junitJunit = "4.12"
 
 [libraries]
 appcompat-v7 = { module = "com.android.support:appcompat-v7", version.ref = "appcompatV7" }
@@ -45,7 +47,8 @@ test-core = { group = "androidx.test", name = "core", version.ref = "coreVersion
 fragment-testing = { group = "androidx.fragment", name = "fragment-testing", version.ref = "fragmentTesting" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
+androidx-core = { group = "androidx.test", name = "core", version.ref = "androidxCore" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-
