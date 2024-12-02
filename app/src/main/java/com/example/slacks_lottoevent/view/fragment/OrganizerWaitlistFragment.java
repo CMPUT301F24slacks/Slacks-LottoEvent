@@ -20,7 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A fragment of OrganizerNotificationsActivity to display Wait-listed Entrants for an event
  * Use the {@link OrganizerWaitlistFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
@@ -52,7 +52,12 @@ public class OrganizerWaitlistFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+    /**
+     * Called when the activity is starting.
+     * Sets up the fragment layout and initializes data base and list of entrants.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down, this Bundle contains the data it most recently supplied. Otherwise, it is null.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +69,9 @@ public class OrganizerWaitlistFragment extends Fragment {
         }
     }
 
+    /**
+     * Inflate the waitlisted list for the listView Tab
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

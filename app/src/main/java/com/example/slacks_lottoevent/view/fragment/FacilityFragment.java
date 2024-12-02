@@ -36,10 +36,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link FacilityFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+ * A fragment that displays and manages a facility for the organizer.
+ * This fragment provides functionality to create, view and edit the facility hosted with that organizer.
+ * Integration with Google Places API provides address autocomplete functionality.
+ * */
 public class FacilityFragment extends Fragment {
     private final Map<AutoCompleteTextView, String> validSelections = new HashMap<>();
     private FacilityViewModel facilityViewModel;
@@ -57,25 +57,45 @@ public class FacilityFragment extends Fragment {
     // Places API
     private PlacesClient placesClient;
     private AutocompleteSessionToken sessionToken;
-
+    /**
+     * Default constructor required for fragments.
+     */
     public FacilityFragment() {
         // Required empty public constructor
     }
-
+    /**
+     * Static factory method to create a new instance of FacilityFragment.
+     *
+     * @param param1 Optional parameter 1 for configuration.
+     * @param param2 Optional parameter 2 for configuration.
+     * @return A new instance of FacilityFragment.
+     */
     public static FacilityFragment newInstance(String param1, String param2) {
         FacilityFragment fragment = new FacilityFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
-
+    /**
+     * Inflates the layout for the fragment
+     * @param inflater The LayoutInflanter object used to inflate views in the fragment.
+     * @param container parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState fragment is being re-constructed from a previous saved state.
+     * @return The {View for the fragment's UI.
+     * */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_facility, container, false);
     }
-
+    /**
+     *
+     * This method initializes UI elements, sets up ViewModel observers, and handles user interactions. Also sets up Places api.
+     * @param view The view returned by onCreateView
+     * @param savedInstanceState If not null, this fragment is being re-constructed from a previously saved state.
+      *
+      * */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -295,7 +315,11 @@ public class FacilityFragment extends Fragment {
         // if the user doesn't select something from the dropdown validSelection will be null and thus return false.
         return validSelection != null && validSelection.equals(currentText);
     }
-
+    /**
+     * Validates the input fields for creating or updating a facility.
+     *
+     * @return True if the inputs are valid and false otherwise.
+     * */
     private boolean facilityInputCheck() {
         String facilityName = name.getText().toString().trim();
         String facilityAddress = street_address.getText().toString().trim();
@@ -323,7 +347,10 @@ public class FacilityFragment extends Fragment {
             eventViewModel.updateEvent(event);
         }
     }
-
+    /**
+     * Observes the profile LiveData and prompts the user to sign up if they don't have a profile.
+     *
+     * */
     private void profileObserver() {
         profileViewModel.getCurrentProfileLiveData().observe(getViewLifecycleOwner(), profile -> {
             if (profile == null) {
@@ -332,7 +359,10 @@ public class FacilityFragment extends Fragment {
             }
         });
     }
-
+    /**
+     * Checks if the user has signed up by verifying their profile existence
+     * @return True if the user has signed up and false otherwise.
+     * */
     private boolean isUserSignedUp() {
         if (profileViewModel.getCurrentProfileLiveData().getValue() == null) {
             SnackbarUtils.promptSignUp(requireView(), requireContext(), R.id.bottom_app_bar);

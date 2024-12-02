@@ -27,7 +27,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * A fragment that displays event invitations  and other notifications for the user.
+ * The user can see both selected and unselected event notifications/invitations and manage notification settings.
+ * */
 public class InboxFragment extends Fragment {
 
     private FirebaseFirestore db;
@@ -46,13 +49,23 @@ public class InboxFragment extends Fragment {
     public static InboxFragment newInstance() {
         return new InboxFragment();
     }
-
+    /**
+     * Inflates the layout for the fragment
+     * @param inflater The LayoutInflanter object used to inflate views in the fragment.
+     * @param container parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI.
+     * */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_invites, container, false);
     }
-
+    /**
+     * Sets up UI elements, initializes Firestore collections, and fetches user invitations.
+     * @param view The View returned by onCreateView.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -93,7 +106,13 @@ public class InboxFragment extends Fragment {
 
 
     }
-
+    /**
+     * Handles the result from the notification settings activity.
+     * Updates the notification icon and shared preferences based on the current status.
+     * @param requestCode The request code used when starting the activity.
+     * @param resultCode  The result code returned by the activity.
+     * @param data Any additional data returned by the activity.
+     */
     @Override
     @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -122,7 +141,11 @@ public class InboxFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();
         }
     }
-
+    /**
+     * Fetches event invitations for the user based on the event type (invited or uninvited).
+     * @param eventTypes The key representing the event type in the entrant's document.
+     * @param selected True if fetching invited events, false for uninvited events.
+     */
     private void fetchInvitedEvents(String eventTypes, Boolean selected) {
         String deviceId = Settings.Secure.getString(requireActivity().getContentResolver(),
                                                     Settings.Secure.ANDROID_ID);
@@ -146,7 +169,12 @@ public class InboxFragment extends Fragment {
             }
         });
     }
-
+    /**
+     * Fetches event details from Firestore for a list of event IDs.
+     * Populates the ListView with event information.
+     * @param eventIds A list of event IDs to fetch details for.
+     * @param invited  True if the events are invited, false if uninvited.
+     */
     private void fetchEventDetails(List<String> eventIds, Boolean invited) {
         for (String eventId : eventIds) {
             if (eventId == null || eventId.isEmpty()) {
@@ -184,7 +212,11 @@ public class InboxFragment extends Fragment {
             });
         }
     }
-
+    /**
+     * Checks if an event with the given ID is already displayed in the list.
+     * @param eventId The ID of the event to check.
+     * @return True if the event is already displayed, false otherwise.
+     */
     private boolean isEventDisplayed(String eventId) {
         return sharedPreferences.getBoolean(eventId, false);
     }

@@ -77,6 +77,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">EventDB</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">EventDB is a singleton class that manages the events in the Firestore database.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -91,7 +92,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="EventDB.EventChangeListener.html" class="type-name-link" title="interface in com.example.slacks_lottoevent.database">EventDB.EventChangeListener</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Interface for listening to changes in the events in the Firestore database.</div>
+</div>
 </div>
 </section>
 </li>
@@ -108,22 +111,34 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="EventDB.html" title="class in com.example.slacks_lottoevent.database">EventDB</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInstance()" class="member-name-link">getInstance</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the singleton instance of EventDB.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#notifyEventChangeListener()" class="member-name-link">notifyEventChangeListener</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Notifies the EventChangeListener that the events have changed.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEventChangeListener(com.example.slacks_lottoevent.database.EventDB.EventChangeListener)" class="member-name-link">setEventChangeListener</a><wbr>(<a href="EventDB.EventChangeListener.html" title="interface in com.example.slacks_lottoevent.database">EventDB.EventChangeListener</a>&nbsp;listener)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the EventChangeListener for this EventDB.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startListening()" class="member-name-link">startListening</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Starts listening for Firestore updates for the events collection.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stopListening()" class="member-name-link">stopListening</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Stops listening to the events in the Firestore database.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateEvent(com.example.slacks_lottoevent.model.Event)" class="member-name-link">updateEvent</a><wbr>(<a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&nbsp;event)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Adds an event to the Firestore database.</div>
+</div>
 </div>
 </div>
 </div>
@@ -145,36 +160,54 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getInstance()">
 <h3>getInstance</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="EventDB.html" title="class in com.example.slacks_lottoevent.database">EventDB</a></span>&nbsp;<span class="element-name">getInstance</span>()</div>
+<div class="block">Returns the singleton instance of EventDB.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the singleton instance of EventDB</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="startListening()">
 <h3>startListening</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startListening</span>()</div>
+<div class="block">Starts listening for Firestore updates for the events collection.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="stopListening()">
 <h3>stopListening</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stopListening</span>()</div>
+<div class="block">Stops listening to the events in the Firestore database.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="setEventChangeListener(com.example.slacks_lottoevent.database.EventDB.EventChangeListener)">
 <h3>setEventChangeListener</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEventChangeListener</span><wbr><span class="parameters">(<a href="EventDB.EventChangeListener.html" title="interface in com.example.slacks_lottoevent.database">EventDB.EventChangeListener</a>&nbsp;listener)</span></div>
+<div class="block">Sets the EventChangeListener for this EventDB.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>listener</code> - the EventChangeListener to set</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="notifyEventChangeListener()">
 <h3>notifyEventChangeListener</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">notifyEventChangeListener</span>()</div>
+<div class="block">Notifies the EventChangeListener that the events have changed.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="updateEvent(com.example.slacks_lottoevent.model.Event)">
 <h3>updateEvent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateEvent</span><wbr><span class="parameters">(<a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&nbsp;event)</span></div>
+<div class="block">Adds an event to the Firestore database.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>event</code> - the event to add</dd>
+</dl>
 </section>
 </li>
 </ul>

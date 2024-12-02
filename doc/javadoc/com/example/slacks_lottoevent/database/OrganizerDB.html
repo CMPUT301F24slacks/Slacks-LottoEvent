@@ -77,6 +77,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">OrganizerDB</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">OrganizerDB is a singleton class that manages the Firestore database for organizers.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -91,7 +92,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="OrganizerDB.OrganizerChangeListener.html" class="type-name-link" title="interface in com.example.slacks_lottoevent.database">OrganizerDB.OrganizerChangeListener</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Interface for listening to changes in the organizers collection.</div>
+</div>
 </div>
 </section>
 </li>
@@ -108,20 +111,30 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="OrganizerDB.html" title="class in com.example.slacks_lottoevent.database">OrganizerDB</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInstance()" class="member-name-link">getInstance</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Get the singleton instance of OrganizerDB.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setOrganizerChangeListener(com.example.slacks_lottoevent.database.OrganizerDB.OrganizerChangeListener)" class="member-name-link">setOrganizerChangeListener</a><wbr>(<a href="OrganizerDB.OrganizerChangeListener.html" title="interface in com.example.slacks_lottoevent.database">OrganizerDB.OrganizerChangeListener</a>&nbsp;listener)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set the listener for changes in the organizers collection.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startListening()" class="member-name-link">startListening</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Start listening to Firestore updates for the organizers collection.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stopListening()" class="member-name-link">stopListening</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Stop listening to Firestore updates.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateOrganizer(java.lang.String,java.util.ArrayList)" class="member-name-link">updateOrganizer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;eventIds)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Update the organizer in the Firestore database.</div>
+</div>
 </div>
 </div>
 </div>
@@ -143,24 +156,36 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getInstance()">
 <h3>getInstance</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="OrganizerDB.html" title="class in com.example.slacks_lottoevent.database">OrganizerDB</a></span>&nbsp;<span class="element-name">getInstance</span>()</div>
+<div class="block">Get the singleton instance of OrganizerDB.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The singleton instance of OrganizerDB.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="startListening()">
 <h3>startListening</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startListening</span>()</div>
+<div class="block">Start listening to Firestore updates for the organizers collection.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="stopListening()">
 <h3>stopListening</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stopListening</span>()</div>
+<div class="block">Stop listening to Firestore updates.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="setOrganizerChangeListener(com.example.slacks_lottoevent.database.OrganizerDB.OrganizerChangeListener)">
 <h3>setOrganizerChangeListener</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setOrganizerChangeListener</span><wbr><span class="parameters">(<a href="OrganizerDB.OrganizerChangeListener.html" title="interface in com.example.slacks_lottoevent.database">OrganizerDB.OrganizerChangeListener</a>&nbsp;listener)</span></div>
+<div class="block">Set the listener for changes in the organizers collection.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>listener</code> - the listener for changes in the organizers collection</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -168,6 +193,12 @@ loadScripts(document, 'script');</script>
 <h3>updateOrganizer</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateOrganizer</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;eventIds)</span></div>
+<div class="block">Update the organizer in the Firestore database.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>deviceId</code> - the device ID of the organizer</dd>
+<dd><code>eventIds</code> - the list of event IDs</dd>
+</dl>
 </section>
 </li>
 </ul>

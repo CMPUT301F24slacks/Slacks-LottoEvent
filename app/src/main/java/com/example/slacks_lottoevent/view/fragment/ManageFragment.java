@@ -12,7 +12,9 @@ import com.example.slacks_lottoevent.R;
 import com.example.slacks_lottoevent.viewmodel.adapter.TabsAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
+/**
+ *  A fragment that displays two tabs for organizers the "Events" and "Facility" tabs.
+ * */
 public class ManageFragment extends Fragment {
 
     public ManageFragment() {

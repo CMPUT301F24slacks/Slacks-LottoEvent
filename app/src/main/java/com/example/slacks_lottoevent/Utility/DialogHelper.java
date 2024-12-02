@@ -10,9 +10,18 @@ import android.widget.Toast;
 
 import com.example.slacks_lottoevent.R;
 
+/**
+ * This class contains a helper method to show a custom dialog for crafting messages
+ */
 public class DialogHelper {
 
-    // This method can be used to show the message crafting dialog
+    /**
+     * This method creates a custom dialog for crafting messages
+     * @param context The context of the activity
+     * @param notifications The Notifications object to send the message
+     * @param eventId The event ID to send the message to
+     * @param listToUse The list to send the message to
+     */
     public static void showMessageDialog(Context context, Notifications notifications,
                                          String eventId, String listToUse) {
         // Inflate the custom dialog layout

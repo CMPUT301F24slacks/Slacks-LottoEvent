@@ -77,6 +77,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ProfileDB</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">ProfileDB is a singleton class that manages the Firestore database for profiles.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -91,7 +92,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="ProfileDB.ProfileChangeListener.html" class="type-name-link" title="interface in com.example.slacks_lottoevent.database">ProfileDB.ProfileChangeListener</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Interface for listening to changes in the profiles cache.</div>
+</div>
 </div>
 </section>
 </li>
@@ -108,19 +111,29 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ProfileDB.html" title="class in com.example.slacks_lottoevent.database">ProfileDB</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInstance()" class="member-name-link">getInstance</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Get the singleton instance of ProfileDB.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProfileChangeListener(com.example.slacks_lottoevent.database.ProfileDB.ProfileChangeListener)" class="member-name-link">setProfileChangeListener</a><wbr>(<a href="ProfileDB.ProfileChangeListener.html" title="interface in com.example.slacks_lottoevent.database">ProfileDB.ProfileChangeListener</a>&nbsp;listener)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set the listener for profile changes.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startListening()" class="member-name-link">startListening</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Start listening to Firestore updates for the profiles collection.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stopListening()" class="member-name-link">stopListening</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Stop listening to Firestore updates.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateProfile(com.example.slacks_lottoevent.model.Profile)" class="member-name-link">updateProfile</a><wbr>(<a href="../model/Profile.html" title="class in com.example.slacks_lottoevent.model">Profile</a>&nbsp;profile)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the profiles cache.</div>
+</div>
 </div>
 </div>
 </div>
@@ -142,30 +155,47 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getInstance()">
 <h3>getInstance</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ProfileDB.html" title="class in com.example.slacks_lottoevent.database">ProfileDB</a></span>&nbsp;<span class="element-name">getInstance</span>()</div>
+<div class="block">Get the singleton instance of ProfileDB.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The singleton instance of ProfileDB.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="startListening()">
 <h3>startListening</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startListening</span>()</div>
+<div class="block">Start listening to Firestore updates for the profiles collection.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="stopListening()">
 <h3>stopListening</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stopListening</span>()</div>
+<div class="block">Stop listening to Firestore updates.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="setProfileChangeListener(com.example.slacks_lottoevent.database.ProfileDB.ProfileChangeListener)">
 <h3>setProfileChangeListener</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setProfileChangeListener</span><wbr><span class="parameters">(<a href="ProfileDB.ProfileChangeListener.html" title="interface in com.example.slacks_lottoevent.database">ProfileDB.ProfileChangeListener</a>&nbsp;listener)</span></div>
+<div class="block">Set the listener for profile changes.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>listener</code> - the listener for profile changes</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="updateProfile(com.example.slacks_lottoevent.model.Profile)">
 <h3>updateProfile</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateProfile</span><wbr><span class="parameters">(<a href="../model/Profile.html" title="class in com.example.slacks_lottoevent.model">Profile</a>&nbsp;profile)</span></div>
+<div class="block">Get the profiles cache.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>profile</code> - the profile to add to the cache</dd>
+</dl>
 </section>
 </li>
 </ul>

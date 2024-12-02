@@ -83,6 +83,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">AdminProfilesFragment</span>
 <span class="extends-implements">extends androidx.fragment.app.Fragment</span></div>
+<div class="block">A fragment that displays a list of user profiles in the admin panel.
+ Profiles are fetched from a Firestore "profiles" collection and displayed in a ListView.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -130,15 +132,21 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="AdminProfilesFragment.html" title="class in com.example.slacks_lottoevent.view.fragment">AdminProfilesFragment</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newInstance()" class="member-name-link">newInstance</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Static factory method to create a new instance of <a href="AdminProfilesFragment.html" title="class in com.example.slacks_lottoevent.view.fragment"><code>AdminProfilesFragment</code></a>.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreate(android.os.Bundle)" class="member-name-link">onCreate</a><wbr>(android.os.Bundle&nbsp;savedInstanceState)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Called when the fragment is created.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>android.view.View</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)" class="member-name-link">onCreateView</a><wbr>(android.view.LayoutInflater&nbsp;inflater,
  android.view.ViewGroup&nbsp;container,
  android.os.Bundle&nbsp;savedInstanceState)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Called to create the view hierarchy associated with the fragment.</div>
+</div>
 </div>
 </div>
 </div>
@@ -177,15 +185,24 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="newInstance()">
 <h3>newInstance</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="AdminProfilesFragment.html" title="class in com.example.slacks_lottoevent.view.fragment">AdminProfilesFragment</a></span>&nbsp;<span class="element-name">newInstance</span>()</div>
+<div class="block">Static factory method to create a new instance of <a href="AdminProfilesFragment.html" title="class in com.example.slacks_lottoevent.view.fragment"><code>AdminProfilesFragment</code></a>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>A new instance of <a href="AdminProfilesFragment.html" title="class in com.example.slacks_lottoevent.view.fragment"><code>AdminProfilesFragment</code></a>.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="onCreate(android.os.Bundle)">
 <h3>onCreate</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onCreate</span><wbr><span class="parameters">(android.os.Bundle&nbsp;savedInstanceState)</span></div>
+<div class="block">Called when the fragment is created.
+ Initializes Firestore and the profile list.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onCreate</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.Fragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>savedInstanceState</code> - If the fragment is being re-created from a previous saved state, this is the state.</dd>
 </dl>
 </section>
 </li>
@@ -199,9 +216,17 @@ loadScripts(document, 'script');</script>
  android.view.ViewGroup&nbsp;container,
  @Nullable
  android.os.Bundle&nbsp;savedInstanceState)</span></div>
+<div class="block">Called to create the view hierarchy associated with the fragment.
+ Inflates the layout and initializes the ListView and its adapter.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onCreateView</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.Fragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>inflater</code> - The LayoutInflater object used to inflate views in the fragment.</dd>
+<dd><code>container</code> - If non-null, this is the parent view that the fragment's UI should be attached to.</dd>
+<dd><code>savedInstanceState</code> - If non-null, this fragment is being re-constructed from a previous saved state.</dd>
+<dt>Returns:</dt>
+<dd>The View for the fragment's UI.</dd>
 </dl>
 </section>
 </li>

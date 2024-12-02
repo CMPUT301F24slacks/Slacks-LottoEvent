@@ -20,9 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link OrganizerEnrolledFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A fragment that displays a list of profiles for organizers of entrants who have been enrolled/attending a event.
  */
 public class OrganizerEnrolledFragment extends Fragment {
 

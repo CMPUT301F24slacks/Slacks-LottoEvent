@@ -61,11 +61,17 @@ public class ProfileFragment extends Fragment {
     // Image picker
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     private Uri selectedImageUri;
-
+    /**
+     * Default constructor
+     */
     public ProfileFragment() {
         // Required empty public constructor
     }
-
+    /**
+     * Factory method to create a new instance of the ProfileFragment.
+     *
+     * @return A new instance of ProfileFragment.
+     */
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
@@ -73,18 +79,36 @@ public class ProfileFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Called when the fragment is being created. Initializes the fragment.
+     *
+     * @param savedInstanceState A bundle containing the saved state of the fragment, if any.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
+    /**
+     * Called to inflate the fragment's UI layout.
+     *
+     * @param inflater The LayoutInflater object used to inflate the view.
+     * @param container The parent view that the fragment's UI will be attached to.
+     * @param savedInstanceState A bundle containing the saved state of the fragment.
+     * @return The view for the fragment's UI.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
-
+    /**
+     * Called when the fragment's view has been created. Initializes UI elements
+     * and sets up ViewModel observers and listeners.
+     *
+     * @param view The root view of the fragment's layout.
+     * @param savedInstanceState A bundle containing the saved state of the fragment.
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -188,9 +212,11 @@ public class ProfileFragment extends Fragment {
     }
 
     /**
-     * Method to validate the inputs
+     * Validates the input fields for name, email, and phone number.
+     * Ensures that the name is not empty, the email is in a valid format,
+     * and the phone number, if provided, only contains numbers.
      *
-     * @return
+     * @return true if all inputs are valid, false otherwise.
      */
     private boolean validInputs() {
         String name = nameEditText.getText().toString().trim();
@@ -216,7 +242,13 @@ public class ProfileFragment extends Fragment {
         }
         return true;
     }
-
+    /**
+     * Toggles the editable state of the profile fields and buttons.
+     * When `edit` is true, the input fields are enabled, and the edit buttons are hidden.
+     * Otherwise, the input fields are disabled, and the confirm and cancel buttons are shown.
+     *
+     * @param edit true to enable editing, false to disable editing.
+     */
     private void editToggle(boolean edit) {
         nameEditText.setEnabled(edit);
         emailEditText.setEnabled(edit);
@@ -225,7 +257,13 @@ public class ProfileFragment extends Fragment {
         confirmButton.setVisibility(edit ? View.VISIBLE : View.GONE);
         cancelButton.setVisibility(edit ? View.VISIBLE : View.GONE);
     }
-
+    /**
+     * Handles the image change process by first deleting the old image from Google Cloud Storage,
+     * then uploading the new image, and finally updating the Firestore profile document with the
+     * new image URL. The UI is updated to reflect the new image.
+     *
+     * @param newImageUri The URI of the new image to be uploaded.
+     */
     private void editImage(Uri newImageUri) {
         // Step 1: Delete the old image from Google Cloud Storage
         deleteOldImage(
@@ -245,7 +283,13 @@ public class ProfileFragment extends Fragment {
                     });
                 });
     }
-
+    /**
+     * Deletes the old profile image from Google Cloud Storage if it exists.
+     * This ensures that the old image is removed before uploading a new one.
+     *
+     * @param oldImageUrl The URL of the old image to be deleted.
+     * @param onSuccess The callback to be invoked when the image is successfully deleted.
+     */
     private void deleteOldImage(String oldImageUrl, Runnable onSuccess) {
         if (oldImageUrl != null && !oldImageUrl.isEmpty() &&
             !profileViewModel.getCurrentProfileLiveData().getValue().getUsingDefaultPicture()) {
@@ -261,7 +305,12 @@ public class ProfileFragment extends Fragment {
             onSuccess.run(); // No old image to delete, continue
         }
     }
-
+    /**
+     * Uploads the new profile image to Google Cloud Storage and retrieves the image's download URL.
+     *
+     * @param newImageUri The URI of the new image to upload.
+     * @param callback The callback to handle the resulting download URL.
+     */
     private void uploadNewImage(Uri newImageUri, Callback<String> callback) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
         Date now = new Date();
@@ -290,14 +339,24 @@ public class ProfileFragment extends Fragment {
                       callback.onComplete(null); // Return null to indicate failure
                   });
     }
-
+    /**
+     * Updates the Firestore profile document with the new profile image URL.
+     *
+     * @param newImageUrl The URL of the new profile image.
+     * @param callback The callback to indicate success or failure of the update operation.
+     */
     private void updateFirestoreWithNewImage(String newImageUrl, Callback<Boolean> callback) {
         Profile profile = profileViewModel.getCurrentProfileLiveData().getValue();
         profile.setProfilePicturePath(newImageUrl);
         profile.setUsingDefaultPicture(false);
         profileViewModel.updateProfile(profile);
     }
-
+    /**
+     * Refreshes the UI to display the updated profile image.
+     * It also shows a toast message indicating that the image was updated successfully.
+     *
+     * @param newImageUrl The URL of the new profile image.
+     */
     private void refreshUI(String newImageUrl) {
         Glide.with(this).load(newImageUrl).into(profilePhoto); // Update your ImageView
         Toast.makeText(requireActivity(), "Image updated successfully", Toast.LENGTH_SHORT).show();

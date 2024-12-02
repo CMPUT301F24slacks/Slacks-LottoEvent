@@ -77,6 +77,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">FacilityDB</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">FacilityDB is a singleton class that manages the Firestore database for facilities.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -91,7 +92,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="FacilityDB.FacilityChangeListener.html" class="type-name-link" title="interface in com.example.slacks_lottoevent.database">FacilityDB.FacilityChangeListener</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Interface for listening to changes in the facilities collection.</div>
+</div>
 </div>
 </section>
 </li>
@@ -108,21 +111,31 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="FacilityDB.html" title="class in com.example.slacks_lottoevent.database">FacilityDB</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInstance()" class="member-name-link">getInstance</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Get the singleton instance of FacilityDB.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFacilityChangeListener(com.example.slacks_lottoevent.database.FacilityDB.FacilityChangeListener)" class="member-name-link">setFacilityChangeListener</a><wbr>(<a href="FacilityDB.FacilityChangeListener.html" title="interface in com.example.slacks_lottoevent.database">FacilityDB.FacilityChangeListener</a>&nbsp;listener)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set the facility change listener.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startListening()" class="member-name-link">startListening</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Start listening to Firestore updates for the facilities collection.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stopListening()" class="member-name-link">stopListening</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Stop listening to Firestore updates.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.android.gms.tasks.Task&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateFacility(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">updateFacility</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;streetAddress,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Add a new facility to the Firestore database.</div>
+</div>
 </div>
 </div>
 </div>
@@ -144,24 +157,36 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getInstance()">
 <h3>getInstance</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="FacilityDB.html" title="class in com.example.slacks_lottoevent.database">FacilityDB</a></span>&nbsp;<span class="element-name">getInstance</span>()</div>
+<div class="block">Get the singleton instance of FacilityDB.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the singleton instance of FacilityDB</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="startListening()">
 <h3>startListening</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startListening</span>()</div>
+<div class="block">Start listening to Firestore updates for the facilities collection.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="stopListening()">
 <h3>stopListening</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stopListening</span>()</div>
+<div class="block">Stop listening to Firestore updates.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="setFacilityChangeListener(com.example.slacks_lottoevent.database.FacilityDB.FacilityChangeListener)">
 <h3>setFacilityChangeListener</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setFacilityChangeListener</span><wbr><span class="parameters">(<a href="FacilityDB.FacilityChangeListener.html" title="interface in com.example.slacks_lottoevent.database">FacilityDB.FacilityChangeListener</a>&nbsp;listener)</span></div>
+<div class="block">Set the facility change listener.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>listener</code> - the facility change listener</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -170,6 +195,15 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.android.gms.tasks.Task&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;</span>&nbsp;<span class="element-name">updateFacility</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;streetAddress,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;deviceId)</span></div>
+<div class="block">Add a new facility to the Firestore database.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>name</code> - the name of the facility</dd>
+<dd><code>streetAddress</code> - the street address of the facility</dd>
+<dd><code>deviceId</code> - the device ID of the organizer</dd>
+<dt>Returns:</dt>
+<dd>a Task representing the completion of the operation</dd>
+</dl>
 </section>
 </li>
 </ul>

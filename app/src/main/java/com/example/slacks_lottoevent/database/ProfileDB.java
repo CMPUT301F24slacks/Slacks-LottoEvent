@@ -7,6 +7,9 @@ import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.HashMap;
 
+/**
+ * ProfileDB is a singleton class that manages the Firestore database for profiles.
+ */
 public class ProfileDB {
     private static ProfileDB instance;
     private final FirebaseFirestore db;
@@ -14,12 +17,18 @@ public class ProfileDB {
     private ListenerRegistration listenerRegistration;
     private ProfileChangeListener profileChangeListener;
 
+    /**
+     * Private constructor to prevent instantiation from outside the class.
+     */
     private ProfileDB() {
         db = FirebaseFirestore.getInstance();
         profilesCache = new HashMap<>();
     }
 
-    // Singleton pattern
+    /**
+     * Get the singleton instance of ProfileDB.
+     * @return The singleton instance of ProfileDB.
+     */
     public static synchronized ProfileDB getInstance() {
         if (instance == null) {
             instance = new ProfileDB();
@@ -27,7 +36,9 @@ public class ProfileDB {
         return instance;
     }
 
-    // Start listening to the "profiles" collection for changes
+    /**
+     * Start listening to Firestore updates for the profiles collection.
+     */
     public void startListening() {
         if (listenerRegistration == null) {
             listenerRegistration = db.collection("profiles")
@@ -48,7 +59,9 @@ public class ProfileDB {
         }
     }
 
-    // Stop listening to Firestore updates
+    /**
+     * Stop listening to Firestore updates.
+     */
     public void stopListening() {
         if (listenerRegistration != null) {
             listenerRegistration.remove();
@@ -56,26 +69,41 @@ public class ProfileDB {
         }
     }
 
-    // Set a listener to notify when profiles change
+    /**
+     * Set the listener for profile changes.
+     * @param listener the listener for profile changes
+     */
     public void setProfileChangeListener(ProfileChangeListener listener) {
         this.profileChangeListener = listener;
         startListening();
     }
 
-    // Notify the ViewModel about the updated profiles
+    /**
+     * Notify the profile change listener of changes in the profiles collection.
+     */
     private void notifyProfileChangeListener() {
         if (profileChangeListener != null) {
             profileChangeListener.onProfilesChanged(new HashMap<>(profilesCache));
         }
     }
 
-    // Update a profile in Firestore
+    /**
+     * Get the profiles cache.
+     * @param profile the profile to add to the cache
+     */
     public void updateProfile(Profile profile) {
         db.collection("profiles").document(profile.getDeviceId()).set(profile);
     }
 
-    // Interface for notifying profile changes
+    /**
+     * Interface for listening to changes in the profiles cache.
+     */
     public interface ProfileChangeListener {
+
+        /**
+         * Called when the profiles have changed.
+         * @param updatedProfiles the updated profiles
+         */
         void onProfilesChanged(HashMap<String, Profile> updatedProfiles);
     }
 }

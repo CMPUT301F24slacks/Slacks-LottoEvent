@@ -99,6 +99,8 @@ dependencies {
     implementation(libs.ext.junit)
     implementation(libs.espresso.core)
     implementation(libs.androidx.uiautomator)
+    implementation(libs.ext.junit)
+    implementation(libs.espresso.core)
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.0.1")
     testImplementation(libs.test.core)
     testImplementation(libs.androidx.core)
