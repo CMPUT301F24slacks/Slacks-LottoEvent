@@ -7,6 +7,9 @@ import android.view.View;
 import com.example.slacks_lottoevent.view.SignUpActivity;
 import com.google.android.material.snackbar.Snackbar;
 
+/**
+ * SnackbarUtils is a utility class that provides methods to display snackbars.
+ */
 public class SnackbarUtils {
 
     /**
@@ -27,6 +30,13 @@ public class SnackbarUtils {
                 .show();
     }
 
+    /**
+     * Display a snackbar prompting the user to create a facility.
+     *
+     * @param view         The view to anchor the snackbar.
+     * @param context      The context to start the activity.
+     * @param anchorViewId The ID of the view to anchor the snackbar.
+     */
     public static void promptCreateFacility(View view, Context context, int anchorViewId) {
         Snackbar.make(view, "Please create a facility first.", Snackbar.LENGTH_LONG)
                 .setAnchorView(anchorViewId) // Anchor to the specified view

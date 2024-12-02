@@ -20,7 +20,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.slacks_lottoevent.TempFacilityViewModel;
 import com.example.slacks_lottoevent.Utility.NotificationHelper;
 import com.example.slacks_lottoevent.Utility.Notifications;
 import com.example.slacks_lottoevent.model.Profile;
@@ -37,6 +36,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
+
 /**
  * MainActivity serves as the main/primary activity of the application.
  * It extends BaseActivity and provides additional functionality for:
@@ -50,7 +50,6 @@ public class MainActivity extends BaseActivity {
     private EntrantViewModel entrantViewModel;
     private EventViewModel eventViewModel;
     private ProfileViewModel profileViewModel;
-    private TempFacilityViewModel tempFacilityViewModel;
     private OrganizerViewModel organizerViewModel;
     private User user;
     private String deviceId;
@@ -60,6 +59,7 @@ public class MainActivity extends BaseActivity {
     private NotificationHelper notificationHelper;
 
     private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1;
+
     /**
      * Sets up the main application layout, initializes ViewModels, handles navigation and notifications.
      * @param savedInstanceState If the activity is being re-initialized after previously being shut down, this Bundle contains the data it most recently supplied.
@@ -87,7 +87,6 @@ public class MainActivity extends BaseActivity {
         entrantViewModel = new ViewModelProvider(this).get(EntrantViewModel.class);
         eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        tempFacilityViewModel = new ViewModelProvider(this).get(TempFacilityViewModel.class);
         organizerViewModel = new ViewModelProvider(this).get(OrganizerViewModel.class);
 
         // Observe the events the entrant is involved in
