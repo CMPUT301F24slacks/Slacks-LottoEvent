@@ -32,6 +32,8 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
+ * This is the activity that displays the join locations of entrants on the waitlist to the event organizer on a interactive
+ * map. Provides a tab system that allows organizers to filter by radius relative to event location.
  * Relevant Documentation
  * https://developers.google.com/android/reference/com/google/android/gms/maps/MapFragment
  * https://developers.google.com/android/reference/com/google/android/gms/maps/OnMapReadyCallback
@@ -278,7 +280,11 @@ public class GeolocationMapsActivity extends AppCompatActivity implements OnMapR
         LatLngBounds bounds = boundsBuilder.build();
         googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
     }
-
+    /**
+     *
+     * Interface that is used as a callback listener to notify when a function has finished executing. Used with
+     * fetchAddressAndWaitlistLocations to work with the async nature of getMapAsync.
+     * */
     public interface OnDataFetchCompleteListener {
         void onDataFetchComplete();
     }
