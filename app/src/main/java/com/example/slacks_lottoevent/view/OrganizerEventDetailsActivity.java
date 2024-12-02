@@ -613,8 +613,33 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
 
             binding.editEventButton.setText("Delete Event Poster");
             binding.editEventButton.setOnClickListener(view -> {
-                DeletingEventPoster(this, db, event.getEventPosterURL(), false);
+                showAdminAlertDialog(
+                        this,
+                        () -> {
+                            // This is the action for the first dialog's confirm button
+                            showAdminAlertDialog(
+                                    this,
+                                    () -> {
+                                        // Action for the second dialog's confirm button
+                                        DeletingEventPoster(this, db, event.getEventPosterURL(), true);
+                                    },
+                                    "Confirm Deletion?",
+                                    null,
+                                    "WARNING: DELETION CANNOT BE UNDONE",
+                                    "Cancel",
+                                    "Confirm",
+                                    null
+                            );
+                        },
+                        "Delete Event Poster?",
+                        "Continue to Confirm",
+                        "WARNING: DELETION CANNOT BE UNDONE",
+                        "Cancel",
+                        "Delete",
+                        event.getEventPosterURL()
+                );
             });
+
 
             binding.entrantListButton.setVisibility(View.VISIBLE);
             binding.entrantListButton.setText("Delete Event");
