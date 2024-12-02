@@ -83,6 +83,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">InboxFragment</span>
 <span class="extends-implements">extends androidx.fragment.app.Fragment</span></div>
+<div class="block">A fragment that displays event invitations  and other notifications for the user.
+ The user can see both selected and unselected event notifications/invitations and manage notification settings.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -135,16 +137,22 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onActivityResult(int,int,android.content.Intent)" class="member-name-link">onActivityResult</a><wbr>(int&nbsp;requestCode,
  int&nbsp;resultCode,
  android.content.Intent&nbsp;data)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Handles the result from the notification settings activity.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>android.view.View</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)" class="member-name-link">onCreateView</a><wbr>(android.view.LayoutInflater&nbsp;inflater,
  android.view.ViewGroup&nbsp;container,
  android.os.Bundle&nbsp;savedInstanceState)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Inflates the layout for the fragment</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onViewCreated(android.view.View,android.os.Bundle)" class="member-name-link">onViewCreated</a><wbr>(android.view.View&nbsp;view,
  android.os.Bundle&nbsp;savedInstanceState)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets up UI elements, initializes Firestore collections, and fetches user invitations.</div>
+</div>
 </div>
 </div>
 </div>
@@ -192,9 +200,16 @@ loadScripts(document, 'script');</script>
  android.view.LayoutInflater&nbsp;inflater,
  android.view.ViewGroup&nbsp;container,
  android.os.Bundle&nbsp;savedInstanceState)</span></div>
+<div class="block">Inflates the layout for the fragment</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onCreateView</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.Fragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>inflater</code> - The LayoutInflanter object used to inflate views in the fragment.</dd>
+<dd><code>container</code> - parent view that the fragment's UI should be attached to.</dd>
+<dd><code>savedInstanceState</code> - fragment is being re-constructed from a previous saved state.</dd>
+<dt>Returns:</dt>
+<dd>The View for the fragment's UI.</dd>
 </dl>
 </section>
 </li>
@@ -205,9 +220,13 @@ loadScripts(document, 'script');</script>
  android.view.View&nbsp;view,
  @Nullable
  android.os.Bundle&nbsp;savedInstanceState)</span></div>
+<div class="block">Sets up UI elements, initializes Firestore collections, and fetches user invitations.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onViewCreated</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.Fragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>view</code> - The View returned by onCreateView.</dd>
+<dd><code>savedInstanceState</code> - If non-null, this fragment is being re-constructed from a previous saved state.</dd>
 </dl>
 </section>
 </li>
@@ -217,9 +236,15 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onActivityResult</span><wbr><span class="parameters">(int&nbsp;requestCode,
  int&nbsp;resultCode,
  android.content.Intent&nbsp;data)</span></div>
+<div class="block">Handles the result from the notification settings activity.
+ Updates the notification icon and shared preferences based on the current status.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onActivityResult</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.Fragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>requestCode</code> - The request code used when starting the activity.</dd>
+<dd><code>resultCode</code> - The result code returned by the activity.</dd>
+<dd><code>data</code> - Any additional data returned by the activity.</dd>
 </dl>
 </section>
 </li>
