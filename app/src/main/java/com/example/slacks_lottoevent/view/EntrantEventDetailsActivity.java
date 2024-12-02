@@ -69,11 +69,13 @@ public class EntrantEventDetailsActivity extends AppCompatActivity {
                   entrantsChosen = document.getBoolean("entrantsChosen");
 
                   List<Object> waitlisted = (List<Object>) document.get("waitlisted");
+                  List<Object> finalist = (List<Object>) document.get("finalists");
 
                   Long capacity = (Long) document.get("eventSlots");
                   Long waitListCapacity = (Long) document.get("waitListCapacity");
                   assert capacity != null;
-                  String capacityAsString = capacity.toString();
+                  Integer eventSlots = capacity.intValue() - finalist.size();
+                  String capacityAsString = eventSlots.toString();
 
                   spotsRemaining = waitListCapacity.intValue() - waitlisted.size();
 
