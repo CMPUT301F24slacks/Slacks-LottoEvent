@@ -29,11 +29,6 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> implements S
     private final ArrayList<Event> events;
     private final User user;
     boolean isAdmin;
-//    private FirebaseFirestore db;
-//    private CollectionReference facilitiesRef;
-//    private CollectionReference organizersRef;
-//    private CollectionReference eventsRef;
-//    private DocumentReference entrantsRef;
 
     /**
      * Constructor for the OrganzierEventArrayAdapter
