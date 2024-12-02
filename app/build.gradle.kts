@@ -134,7 +134,7 @@ dependencies {
     implementation("com.google.android.libraries.places:places:4.1.0")
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
-
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.4.0")
     implementation("com.google.android.gms:play-services-maps:19.0.0")
     testImplementation("org.mockito:mockito-core:5.2.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.2.0")
@@ -144,4 +144,6 @@ dependencies {
     implementation ("androidx.test:core:1.4.1-alpha04")
     testImplementation ("androidx.test:monitor:1.4.0")
     debugImplementation ("androidx.test:monitor:1.6.0")
+
+
 }

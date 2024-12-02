@@ -119,7 +119,7 @@ public class MainActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.top_app_bar));
 
         // Set up the BottomNavigationView and FloatingActionButton
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fabQR);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // Set up the NavController
