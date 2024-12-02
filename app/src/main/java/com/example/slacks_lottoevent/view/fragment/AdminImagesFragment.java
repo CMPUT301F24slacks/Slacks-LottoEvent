@@ -20,21 +20,37 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * A fragment that displays and manages a list of images (event posters and profile pictures)
+ * in the admin panel. The images are fetched from Firestore and displayed in a RecyclerView.
+ */
 public class AdminImagesFragment extends Fragment {
 
     private RecyclerView RecyclerViewImages;
     private AdminImagesAdapter adapter;
     private final List<ImageMetadata> imageList = new ArrayList<>(); // Updated to use ImageMetadata
-
+    /**
+     * Default constructor required for a fragment.
+     */
     public AdminImagesFragment() {
         // Required empty public constructor
     }
-
+    /**
+     * Static factory method to create a new instance of {@link AdminImagesFragment}.
+     *
+     * @return A new instance of {@link AdminImagesFragment}.
+     */
     public static AdminImagesFragment newInstance() {
         return new AdminImagesFragment();
     }
-
+    /**
+     * Called to create the view hierarchy associated with the fragment.
+     * Initializes the RecyclerView and fetches images from Firestore.
+     * @param inflater           The LayoutInflater object used to inflate views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -57,7 +73,10 @@ public class AdminImagesFragment extends Fragment {
         fetchImages();
         return view;
     }
-
+    /**
+     * Fetches images from Firestore, including event posters and profile pictures.
+     * Updates the UI with real-time changes using Firestore listeners.
+     */
     private void fetchImages() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<ImageMetadata> tempEventImages = new ArrayList<>();
@@ -105,7 +124,12 @@ public class AdminImagesFragment extends Fragment {
             }
         });
     }
-
+    /**
+     * Updates the RecyclerView with the latest images fetched from Firestore.
+     * Combines event images and profile images into a single list.
+     * @param tempEventImages  A list of event poster images.
+     * @param tempProfileImages A list of profile picture images.
+     */
     private void updateImageList(List<ImageMetadata> tempEventImages,
                                  List<ImageMetadata> tempProfileImages) {
         imageList.clear();
