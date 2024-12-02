@@ -31,7 +31,7 @@ class FacilityUnitTest {
     @Test
     void testGetAndSetFacilityName() {
         Facility facility = new Facility();
-        String facilityName = "Conference Room A";
+        String facilityName = "Donnadeo ICE 8-244";
 
         facility.setFacilityName(facilityName);
         assertEquals(facilityName, facility.getFacilityName());
@@ -40,7 +40,7 @@ class FacilityUnitTest {
     @Test
     void testGetAndSetStreetAddress() {
         Facility facility = new Facility();
-        String streetAddress = "456 Another Rd.";
+        String streetAddress = "9120 116 St NW, Edmonton, AB T6G 2V4";
 
         facility.setStreetAddress(streetAddress);
         assertEquals(streetAddress, facility.getStreetAddress());
@@ -49,7 +49,7 @@ class FacilityUnitTest {
     @Test
     void testGetAndSetDeviceId() {
         Facility facility = new Facility();
-        String deviceId = "Device789";
+        String deviceId = "le8e1540320d5c6d";
 
         facility.setDeviceId(deviceId);
         assertEquals(deviceId, facility.getDeviceId());
@@ -57,9 +57,9 @@ class FacilityUnitTest {
 
     @Test
     void testFacilityEquality() {
-        String facilityName = "Gymnasium";
-        String streetAddress = "789 Sports Lane";
-        String deviceId = "Device101";
+        String facilityName = "ETLC";
+        String streetAddress = "9120 116 St NW, Edmonton, AB T6G 2V4";
+        String deviceId = "pj8e1390320d5c6e";
 
         Facility facility1 = new Facility(facilityName, streetAddress, deviceId);
         Facility facility2 = new Facility(facilityName, streetAddress, deviceId);
