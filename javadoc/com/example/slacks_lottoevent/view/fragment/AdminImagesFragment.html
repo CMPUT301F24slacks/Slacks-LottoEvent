@@ -83,6 +83,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">AdminImagesFragment</span>
 <span class="extends-implements">extends androidx.fragment.app.Fragment</span></div>
+<div class="block">A fragment that displays and manages a list of images (event posters and profile pictures)
+ in the admin panel. The images are fetched from Firestore and displayed in a RecyclerView.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -113,7 +115,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">AdminImagesFragment</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Default constructor required for a fragment.</div>
+</div>
 </div>
 </section>
 </li>
@@ -130,12 +134,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="AdminImagesFragment.html" title="class in com.example.slacks_lottoevent.view.fragment">AdminImagesFragment</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newInstance()" class="member-name-link">newInstance</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Static factory method to create a new instance of <a href="AdminImagesFragment.html" title="class in com.example.slacks_lottoevent.view.fragment"><code>AdminImagesFragment</code></a>.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>android.view.View</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)" class="member-name-link">onCreateView</a><wbr>(android.view.LayoutInflater&nbsp;inflater,
  android.view.ViewGroup&nbsp;container,
  android.os.Bundle&nbsp;savedInstanceState)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Called to create the view hierarchy associated with the fragment.</div>
+</div>
 </div>
 </div>
 </div>
@@ -160,6 +168,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>AdminImagesFragment</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AdminImagesFragment</span>()</div>
+<div class="block">Default constructor required for a fragment.</div>
 </section>
 </li>
 </ul>
@@ -174,6 +183,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="newInstance()">
 <h3>newInstance</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="AdminImagesFragment.html" title="class in com.example.slacks_lottoevent.view.fragment">AdminImagesFragment</a></span>&nbsp;<span class="element-name">newInstance</span>()</div>
+<div class="block">Static factory method to create a new instance of <a href="AdminImagesFragment.html" title="class in com.example.slacks_lottoevent.view.fragment"><code>AdminImagesFragment</code></a>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>A new instance of <a href="AdminImagesFragment.html" title="class in com.example.slacks_lottoevent.view.fragment"><code>AdminImagesFragment</code></a>.</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -186,9 +200,17 @@ loadScripts(document, 'script');</script>
  android.view.ViewGroup&nbsp;container,
  @Nullable
  android.os.Bundle&nbsp;savedInstanceState)</span></div>
+<div class="block">Called to create the view hierarchy associated with the fragment.
+ Initializes the RecyclerView and fetches images from Firestore.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onCreateView</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.Fragment</code></dd>
+<dt>Parameters:</dt>
+<dd><code>inflater</code> - The LayoutInflater object used to inflate views in the fragment.</dd>
+<dd><code>container</code> - If non-null, this is the parent view that the fragment's UI should be attached to.</dd>
+<dd><code>savedInstanceState</code> - If non-null, this fragment is being re-constructed from a previous saved state.</dd>
+<dt>Returns:</dt>
+<dd>The View for the fragment's UI.</dd>
 </dl>
 </section>
 </li>
