@@ -110,8 +110,6 @@ public class UserNotifications extends AppCompatActivity {
         }
     }
 
-
-
     /**
      * Fetch the invited events for the current user and facility location.
      */
