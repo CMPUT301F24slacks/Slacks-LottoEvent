@@ -40,24 +40,12 @@ public class Notifications {
      * @param customMessage The message content of the notification.
      * @param listToGrab    The key in the event document representing the list of device IDs.
      * @param eventId       The unique identifier of the event to retrieve the list from.
-     * @param allLists      The flag to determine if we send notifications too all people or just specific.
      */
     public void addNotifications(String customName, String customMessage, String listToGrab,
-                                 String eventId, Boolean allLists) {
+                                 String eventId) {
         db.collection("events").document(eventId).get().addOnSuccessListener(eventDoc -> {
             if (eventDoc.exists()) {
-//                ArrayList<String> deviceIds = null;
-////                Grabbing people who want these notifications
-//                if (allLists && listToGrab == null) {
-//                    deviceIds.addAll((ArrayList<String>) eventDoc.get("waitlistedNotificationsList"));
-//                    deviceIds.addAll((ArrayList<String>) eventDoc.get("selectedNotificationsList"));
-//                    deviceIds.addAll((ArrayList<String>) eventDoc.get("joinedNotificationsList"));
-//                    deviceIds.addAll((ArrayList<String>) eventDoc.get("cancelledNotificationsList"));
-//                }
-//
-//                else{
-//                    deviceIds = (ArrayList<String>) eventDoc.get(listToGrab);
-//                }
+                deviceIds = (ArrayList<String>) eventDoc.get(listToGrab);
 
                 if (deviceIds != null && !deviceIds.isEmpty()) {
                     // Send individual notifications to each user in the waitlist
