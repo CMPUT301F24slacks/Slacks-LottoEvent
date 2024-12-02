@@ -79,6 +79,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">EventViewModel</span>
 <span class="extends-implements">extends androidx.lifecycle.ViewModel</span></div>
+<div class="block">EventViewModel is a class that provides the UI with the data it needs to display events.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -91,7 +92,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">EventViewModel</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">EventViewModel is a constructor that initializes the EventDB and sets the event change listener.</div>
+</div>
 </div>
 </section>
 </li>
@@ -108,25 +111,37 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>androidx.lifecycle.LiveData&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&gt;&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEntrantEventsLiveData()" class="member-name-link">getEntrantEventsLiveData</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">getEntrantEventsLiveData is a method that returns the entrant events live data.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>androidx.lifecycle.LiveData&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&gt;&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEventsLiveData()" class="member-name-link">getEventsLiveData</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">getEventsLiveData is a method that returns the events live data.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>androidx.lifecycle.LiveData&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&gt;&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getHostingEventsLiveData()" class="member-name-link">getHostingEventsLiveData</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">getHostingEventsLiveData is a method that returns the hosting events live data.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateEvent(com.example.slacks_lottoevent.model.Event)" class="member-name-link">updateEvent</a><wbr>(<a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&nbsp;event)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">addEvent is a method that adds an event to the database.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateEventLists(java.util.List,java.util.List,java.util.List,java.util.List)" class="member-name-link">updateEventLists</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;waitlistedIds,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;unselectedIds,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;invitedIds,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;attendingIds)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">updateEventLists is a method that updates the entrant events live data.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateOrganizerEvents(java.util.List)" class="member-name-link">updateOrganizerEvents</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;eventIds)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">updateOrganizerEvents is a method that updates the hosting events live data.</div>
+</div>
 </div>
 </div>
 </div>
@@ -151,6 +166,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>EventViewModel</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EventViewModel</span>()</div>
+<div class="block">EventViewModel is a constructor that initializes the EventDB and sets the event change listener.</div>
 </section>
 </li>
 </ul>
@@ -165,18 +181,33 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getEventsLiveData()">
 <h3>getEventsLiveData</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">androidx.lifecycle.LiveData&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&gt;&gt;</span>&nbsp;<span class="element-name">getEventsLiveData</span>()</div>
+<div class="block">getEventsLiveData is a method that returns the events live data.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the events live data.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getEntrantEventsLiveData()">
 <h3>getEntrantEventsLiveData</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">androidx.lifecycle.LiveData&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&gt;&gt;</span>&nbsp;<span class="element-name">getEntrantEventsLiveData</span>()</div>
+<div class="block">getEntrantEventsLiveData is a method that returns the entrant events live data.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the entrant events live data.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getHostingEventsLiveData()">
 <h3>getHostingEventsLiveData</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">androidx.lifecycle.LiveData&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&gt;&gt;</span>&nbsp;<span class="element-name">getHostingEventsLiveData</span>()</div>
+<div class="block">getHostingEventsLiveData is a method that returns the hosting events live data.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the hosting events live data.</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -186,18 +217,36 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;unselectedIds,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;invitedIds,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;attendingIds)</span></div>
+<div class="block">updateEventLists is a method that updates the entrant events live data.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>waitlistedIds</code> - is a list of waitlisted event IDs.</dd>
+<dd><code>unselectedIds</code> - is a list of unselected event IDs.</dd>
+<dd><code>invitedIds</code> - is a list of invited event IDs.</dd>
+<dd><code>attendingIds</code> - is a list of attending event IDs.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="updateOrganizerEvents(java.util.List)">
 <h3>updateOrganizerEvents</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateOrganizerEvents</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;eventIds)</span></div>
+<div class="block">updateOrganizerEvents is a method that updates the hosting events live data.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventIds</code> - is a list of event IDs.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="updateEvent(com.example.slacks_lottoevent.model.Event)">
 <h3>updateEvent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateEvent</span><wbr><span class="parameters">(<a href="../model/Event.html" title="class in com.example.slacks_lottoevent.model">Event</a>&nbsp;event)</span></div>
+<div class="block">addEvent is a method that adds an event to the database.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>event</code> - is an event to add.</dd>
+</dl>
 </section>
 </li>
 </ul>
