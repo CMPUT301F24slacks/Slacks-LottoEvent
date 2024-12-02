@@ -77,6 +77,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">EntrantDB</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">EntrantDB is a singleton class that listens to Firestore for changes to the "entrants" collection.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -91,7 +92,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="EntrantDB.EntrantChangeListener.html" class="type-name-link" title="interface in com.example.slacks_lottoevent.database">EntrantDB.EntrantChangeListener</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Interface for listening to changes in the entrants cache.</div>
+</div>
 </div>
 </section>
 </li>
@@ -108,16 +111,24 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="EntrantDB.html" title="class in com.example.slacks_lottoevent.database">EntrantDB</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInstance()" class="member-name-link">getInstance</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Get the singleton instance of EntrantDB.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEntrantChangeListener(com.example.slacks_lottoevent.database.EntrantDB.EntrantChangeListener)" class="member-name-link">setEntrantChangeListener</a><wbr>(<a href="EntrantDB.EntrantChangeListener.html" title="interface in com.example.slacks_lottoevent.database">EntrantDB.EntrantChangeListener</a>&nbsp;listener)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the entrants cache.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startListening()" class="member-name-link">startListening</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Start listening to Firestore updates for the entrants collection.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stopListening()" class="member-name-link">stopListening</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Stop listening to Firestore updates.</div>
+</div>
 </div>
 </div>
 </div>
@@ -139,24 +150,36 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getInstance()">
 <h3>getInstance</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="EntrantDB.html" title="class in com.example.slacks_lottoevent.database">EntrantDB</a></span>&nbsp;<span class="element-name">getInstance</span>()</div>
+<div class="block">Get the singleton instance of EntrantDB.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The singleton instance of EntrantDB.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="startListening()">
 <h3>startListening</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startListening</span>()</div>
+<div class="block">Start listening to Firestore updates for the entrants collection.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="stopListening()">
 <h3>stopListening</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stopListening</span>()</div>
+<div class="block">Stop listening to Firestore updates.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="setEntrantChangeListener(com.example.slacks_lottoevent.database.EntrantDB.EntrantChangeListener)">
 <h3>setEntrantChangeListener</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEntrantChangeListener</span><wbr><span class="parameters">(<a href="EntrantDB.EntrantChangeListener.html" title="interface in com.example.slacks_lottoevent.database">EntrantDB.EntrantChangeListener</a>&nbsp;listener)</span></div>
+<div class="block">Get the entrants cache.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>listener</code> - </dd>
+</dl>
 </section>
 </li>
 </ul>
