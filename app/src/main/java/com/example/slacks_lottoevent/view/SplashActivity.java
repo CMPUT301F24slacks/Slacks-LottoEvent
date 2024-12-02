@@ -16,6 +16,10 @@ import com.google.android.libraries.places.api.Places;
  */
 public class SplashActivity extends AppCompatActivity {
 
+    /**
+     * onCreate is called when the activity is starting.
+     * @param savedInstanceState a Bundle object containing the activity's previously saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

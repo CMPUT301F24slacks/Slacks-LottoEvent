@@ -84,6 +84,12 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
 
     private static Notifications notifications = new Notifications();
 
+    /**
+     * DeletingQRCode method deletes the QR code for the event from Firestore.
+     * @param context the context of the activity
+     * @param db the Firestore instance
+     * @param event the event object
+     */
     public static void DeletingQRCode(Context context, FirebaseFirestore db, Event event) {
         // Validate inputs
         if (event == null || db == null || event.getEventID() == null ||
@@ -113,6 +119,13 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
           });
     }
 
+    /**
+     * DeletingEventPoster method deletes the event poster from Firestore.
+     * @param context the context of the activity
+     * @param db the Firestore instance
+     * @param posterURL the URL of the event poster
+     * @param FromFacility a boolean indicating if the deletion is from the facility
+     */
     public static void DeletingEventPoster(Context context, FirebaseFirestore db, String posterURL,
                                            boolean FromFacility) {
         if (posterURL != null && !posterURL.isEmpty() && !FromFacility) {
@@ -130,6 +143,15 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * DeletingEvent method deletes the event from Firestore.
+     * @param context the context of the activity
+     * @param eventID the ID of the event
+     * @param db the Firestore instance
+     * @param onSuccess the success callback
+     * @param onFailure the failure callback
+     * @param FromFacility a boolean indicating if the deletion is from the facility
+     */
     public static void DeletingEvent(Context context, String eventID, FirebaseFirestore db,
                                      Runnable onSuccess, Runnable onFailure, boolean FromFacility) {
         // Fetch the event document from Firestore
@@ -170,6 +192,15 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
           });
     }
 
+    /**
+     * DeleteEvent method deletes the event from Firestore.
+     * @param context the context of the activity
+     * @param db the Firestore instance
+     * @param current_event the current event object
+     * @param eventID the ID of the event
+     * @param onSuccess the success callback
+     * @param onFailure the failure callback
+     */
     public static void DeleteEvent(Context context, FirebaseFirestore db, Event current_event,
                                    String eventID, Runnable onSuccess, Runnable onFailure) {
         if (current_event == null || db == null || eventID == null || eventID.isEmpty()) {
@@ -213,6 +244,12 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
           });
     }
 
+    /**
+     * DeletingAsWaitlisted method removes the event ID from the waitlistedEvents array for each entrant.
+     * @param eventID the ID of the event
+     * @param db the Firestore instance
+     * @param WaitlistedEntrants the list of waitlisted entrants
+     */
     public static void DeletingAsWaitlisted(String eventID, FirebaseFirestore db,
                                             ArrayList<String> WaitlistedEntrants) {
         if (WaitlistedEntrants == null || WaitlistedEntrants.isEmpty()) {
@@ -238,8 +275,12 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         }
     }
 
-    // Handle entrants associated with the event
-
+    /**
+     * DeletingAsSelected method removes the event ID from the invitedEvents array for each entrant.
+     * @param eventID the ID of the event
+     * @param db the Firestore instance
+     * @param SelectedEntrants the list of selected entrants
+     */
     public static void DeletingAsSelected(String eventID, FirebaseFirestore db,
                                           ArrayList<String> SelectedEntrants) {
         if (SelectedEntrants == null || SelectedEntrants.isEmpty()) {
@@ -265,6 +306,12 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * DeletingAsFinalist method removes the event ID from the finalistEvents array for each entrant.
+     * @param eventID the ID of the event
+     * @param db the Firestore instance
+     * @param FinalistEntrants the list of finalist entrants
+     */
     public static void DeletingAsFinalist(String eventID, FirebaseFirestore db,
                                           ArrayList<String> FinalistEntrants) {
         if (FinalistEntrants == null || FinalistEntrants.isEmpty()) {
@@ -290,6 +337,12 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * DeletingAsCancelled method removes the event ID from the uninvitedEvents array for each entrant.
+     * @param eventID the ID of the event
+     * @param db the Firestore instance
+     * @param uninvitedEvents the list of uninvited events
+     */
     public static void DeletingAsCancelled(String eventID, FirebaseFirestore db,
                                            ArrayList<String> uninvitedEvents) {
         if (uninvitedEvents == null || uninvitedEvents.isEmpty()) {
@@ -315,6 +368,13 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * DeletingEventIDinOrganizers method removes the event ID from the events array for the organizer.
+     * @param context the context of the activity
+     * @param deviceId the device ID of the organizer
+     * @param eventID the ID of the event
+     * @param db the Firestore instance
+     */
     public static void DeletingEventIDinOrganizers(Context context, String deviceId, String eventID,
                                                    FirebaseFirestore db) {
         db.collection("organizers")
@@ -331,6 +391,14 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
           });
     }
 
+    /**
+     * showQRCodePopup method displays the QR code for the event in a popup dialog.
+     * @param context the context of the activity
+     * @param db the Firestore instance
+     * @param event the event object
+     * @param qrData the QR data for the event
+     * @param isAdmin a boolean indicating if the user is an admin
+     */
     public static void showQRCodePopup(Context context, FirebaseFirestore db, Event event,
                                        String qrData, boolean isAdmin) {
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -376,6 +444,12 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
 
     }
 
+    /**
+     * deserializeBitMatrix method converts a string representation of a BitMatrix back to a BitMatrix object.
+     * @param data the string representation of the BitMatrix
+     * @return the BitMatrix object
+     * @throws WriterException if there is an error converting the string to a BitMatrix
+     */
     public static BitMatrix deserializeBitMatrix(String data) throws WriterException {
         String[] lines = data.split("\n");
         int width = lines[0].length();
@@ -678,6 +752,10 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * updateLotteryButtonVisibility method updates the visibility of the lottery button based on the entrants chosen.
+     * @param newImageUri the new image URI
+     */
     private void editImage(Uri newImageUri) {
         // Step 1: Delete the old image from Google Cloud Storage
         deleteOldImage(eventPosterURL, () -> {
@@ -696,11 +774,20 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         });
     }
 
+    /**
+     *  refreshUI method refreshes the UI with the new image URL.
+     * @param newImageUrl the new image URL
+     */
     private void refreshUI(String newImageUrl) {
         Glide.with(this).load(newImageUrl).into(binding.eventImage); // Update your ImageView
         Toast.makeText(this, "Image updated successfully", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * updateFirestoreWithNewImage method updates Firestore with the new image URL.
+     * @param newImageUrl the new image URL
+     * @param callback the callback function
+     */
     private void updateFirestoreWithNewImage(String newImageUrl, Callback<Boolean> callback) {
         eventsRef.document(eventID).update("eventPosterURL", newImageUrl)
                  .addOnSuccessListener(aVoid -> {
@@ -711,6 +798,11 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
                  });
     }
 
+    /**
+     * uploadNewImage method uploads a new image to Google Cloud Storage.
+     * @param newImageUri the new image URI
+     * @param callback the callback function
+     */
     private void uploadNewImage(Uri newImageUri, Callback<String> callback) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
         Date now = new Date();
@@ -740,6 +832,11 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
                   });
     }
 
+    /**
+     * deleteOldImage method deletes the old image from Google Cloud Storage.
+     * @param oldImageUrl the old image URL
+     * @param onSuccess the success callback
+     */
     private void deleteOldImage(String oldImageUrl, Runnable onSuccess) {
         if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
             StorageReference storageReference = FirebaseStorage.getInstance()
@@ -755,6 +852,9 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * selectImage method allows the user to select an image from the device's gallery.
+     */
     private void selectImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -762,6 +862,10 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         imagePickerLauncher.launch(intent);
     }
 
+    /**
+     * updateSelectedEntrants method updates the selected entrants in Firestore.
+     * @param event the event object
+     */
     private void updateSelectedEntrants(Event event) {
         db.collection("events").whereEqualTo("eventID", event.getEventID()).get()
           .addOnCompleteListener(task -> {
@@ -783,6 +887,10 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
           });
     }
 
+    /**
+     * updateUnSelectedEntrants method updates the unselected entrants in Firestore.
+     * @param event the event object
+     */
     private void updateUnSelectedEntrants(Event event) {
         db.collection("events").whereEqualTo("eventID", event.getEventID()).get()
           .addOnCompleteListener(task -> {
@@ -800,6 +908,10 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
           });
     }
 
+    /**
+     * updateInvitedEntrants method updates the invited entrants in Firestore.
+     * @param event the event object
+     */
     private void updateInvitedEntrants(Event event) {
         for (String entrant : event.getSelected()) {
             DocumentReference entrantsRef = db.collection("entrants").document(entrant);
@@ -817,7 +929,10 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         }
     }
 
-    //    Updating everyone who did not get selected and who do not want too be reselected
+    /**
+     * updateUninvitedEntrants method updates the uninvited entrants in Firestore.
+     * @param event the event object
+     */
     private void updateUninvitedEntrants(Event event) {
         for (String entrant : event.getWaitlisted()) {
             DocumentReference entrantsRef = db.collection("entrants").document(entrant);
@@ -837,9 +952,12 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
             });
         }
         event.setWaitlisted(event.getReselected());
-
     }
 
+    /**
+     * updateLotteryButtonVisibility method updates the visibility of the lottery button based on the entrants chosen.
+     * @param isAdmin a boolean indicating if the user is an admin
+     */
     private void updateLotteryButtonVisibility(boolean isAdmin) {
         if (event == null) {
             binding.lotterySystemButton.setVisibility(View.GONE);
@@ -852,6 +970,9 @@ public class OrganizerEventDetailsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * onBackPressed method overrides the default back button behavior.
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
