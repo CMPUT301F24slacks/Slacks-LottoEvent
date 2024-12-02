@@ -440,6 +440,6 @@ public class Event implements Serializable {
         this.selectedNotificationsList.remove(entrant);
         this.waitlistedNotificationsList.remove(entrant);
         this.joinedNotificationsList.remove(entrant);
-        this.joinLocations.removeIf(map -> map.containsKey(User.getInstance().getDeviceId()));
+        this.joinLocations.removeIf(map -> map.containsKey(entrant));
     }
 }
