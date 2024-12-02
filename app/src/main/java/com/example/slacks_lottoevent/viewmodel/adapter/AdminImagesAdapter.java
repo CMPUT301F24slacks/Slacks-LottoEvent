@@ -22,6 +22,9 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
+/**
+ * Custom ArrayAdapter for displaying event posters and profile pictures in a RecyclerView.
+ */
 public class AdminImagesAdapter extends RecyclerView.Adapter<AdminImagesAdapter.ViewHolder> {
     private final Context context;
     private final List<ImageMetadata> imageList;
